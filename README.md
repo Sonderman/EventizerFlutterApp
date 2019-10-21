@@ -1,6 +1,6 @@
 # eventizer
 
-Eventizer
+Eventizer App
 
 ## Getting Started
 

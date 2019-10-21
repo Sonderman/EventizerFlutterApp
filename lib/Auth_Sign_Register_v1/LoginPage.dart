@@ -1,0 +1,133 @@
+import 'package:flutter/material.dart';
+import 'Auth.dart';
+
+class LoginPage extends StatefulWidget {
+  LoginPage({this.auth,this.onSignedIn});
+  final BaseAuth auth;
+  final VoidCallback onSignedIn;
+
+  @override
+  State<StatefulWidget> createState() => _LoginPageState();
+}
+
+enum FormType { login, register }
+
+class _LoginPageState extends State<LoginPage> {
+  final formkey = GlobalKey<FormState>();
+
+  String _email;
+  String _password;
+  FormType _formType = FormType.login;
+
+  bool validateAndSave() {
+    final form = formkey.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    } else
+      return false;
+  }
+
+  void validateAndSubmit() async {
+    if (validateAndSave()) {
+      try {
+        if (_formType == FormType.login) {
+          String userId = await widget.auth.signInWithEmailAndPassword(_email, _password);
+          print('Signed in: $userId');
+          widget.onSignedIn;
+        } else {
+          String userId = await widget.auth.createUserWithEmailAndPassword(_email, _password);
+          print('Registered user: $userId');
+        }
+      } catch (e) {
+        print('Error: $e');
+      }
+    }
+  }
+
+  void moveToRegister() {
+    formkey.currentState.reset();
+    setState(() {
+      _formType = FormType.register;
+    });
+  }
+
+  void moveToLogin() {
+    formkey.currentState.reset();
+    setState(() {
+      _formType = FormType.login;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Sisteme Giriş'),
+      ),
+      body: Container(
+        padding: EdgeInsets.all(16.0),
+        child: Form(
+            key: formkey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: buildInputs() + buildSubmitButtons(),
+            )),
+      ),
+    );
+  }
+
+  List<Widget> buildInputs() {
+    return [
+      TextFormField(
+        decoration: InputDecoration(labelText: 'Email'),
+        validator: (value) => value.isEmpty ? 'Email boş olamaz' : null,
+        onSaved: (value) => _email = value,
+      ),
+      TextFormField(
+        decoration: InputDecoration(labelText: 'Şifre'),
+        validator: (value) => value.isEmpty ? 'Şifre boş olamaz' : null,
+        onSaved: (value) => _password = value,
+        obscureText: true,
+      ),
+    ];
+  }
+
+  List<Widget> buildSubmitButtons() {
+    if (_formType == FormType.login) {
+      return [
+        RaisedButton(
+          onPressed: validateAndSubmit,
+          child: Text(
+            'Giriş',
+            style: TextStyle(fontSize: 20.0),
+          ),
+        ),
+        FlatButton(
+          child: Text(
+            'Hesap oluştur',
+            style: TextStyle(fontSize: 20.0),
+          ),
+          onPressed: moveToRegister,
+        ),
+      ];
+    } else {
+      return [
+        RaisedButton(
+          onPressed: validateAndSubmit,
+          child: Text(
+            'Bir hesap oluştur',
+            style: TextStyle(fontSize: 20.0),
+          ),
+        ),
+        FlatButton(
+          child: Text(
+            'Zaten bir hesabınız mı var? Giriş Yapın',
+            style: TextStyle(fontSize: 20.0),
+          ),
+          onPressed: moveToLogin,
+        ),
+      ];
+    }
+  }
+}

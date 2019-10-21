@@ -1,5 +1,5 @@
 name: eventizer
-description: Eventizer
+description: Eventizer App
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -17,11 +17,8 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
-  firebase_core: ^0.4.0+9
-  firebase_analytics: ^5.0.2
-  firebase_auth: ^0.14.0+5
-  #cloud_firestore: ^0.12.9+5
-
+  firebase_core:
+  firebase_auth:
   flutter:
     sdk: flutter
 
