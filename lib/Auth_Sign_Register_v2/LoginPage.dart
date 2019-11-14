@@ -1,8 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:eventizer/Auth_Sign_Register_v2/AuthCheck.dart';
 import 'package:flutter/material.dart';
-import 'HomePage.dart';
+import 'BaseAuth.dart';
 
 class LoginPage extends StatefulWidget {
+  LoginPage({this.auth, this.loginCallback});
+  final BaseAuth auth;
+  final VoidCallback loginCallback;
   @override
   State<StatefulWidget> createState() => _LoginPageState();
 }
@@ -11,7 +14,7 @@ enum FormType { login, register }
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
-
+  String userId = "";
   String _email;
   String _password;
   FormType _formType = FormType.login;
@@ -29,23 +32,18 @@ class _LoginPageState extends State<LoginPage> {
     if (validateAndSave()) {
       try {
         if (_formType == FormType.login) {
-          FirebaseUser user = (await FirebaseAuth.instance
-                  .signInWithEmailAndPassword(
-                      email: _email, password: _password))
-              .user;
-          print('Signed in: $user');  
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomePage()));
+          userId = await widget.auth.signIn(_email, _password);
+          print('Signed in: $userId');
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (BuildContext context) => AuthCheck(auth: widget.auth)));
         } else {
-          FirebaseUser user = (await FirebaseAuth.instance
-                  .createUserWithEmailAndPassword(
-                      email: _email, password: _password))
-              .user;
-              //user.sendEmailVerification();
-          print('Registered user: $user');
+          userId = await widget.auth.signUp(_email, _password);
+          //widget.auth.sendEmailVerification();
+          //_showVerifyEmailSentDialog();
+          print('Registered user: $userId');
         }
       } catch (e) {
         print('Error: $e');
-
       }
     }
   }

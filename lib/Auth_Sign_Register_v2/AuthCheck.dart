@@ -1,43 +1,85 @@
 import 'package:eventizer/Auth_Sign_Register_v2/HomePage.dart';
 import 'package:eventizer/Auth_Sign_Register_v2/LoginPage.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'BaseAuth.dart';
 
-enum AuthStatus { Signed, NotSigned }
+enum AuthStatus { Signed, NotSigned, NotDetemined }
 
 class AuthCheck extends StatefulWidget {
-  //AuthCheck({Key key}) : super(key: key);
-final FirebaseAuth _auth = FirebaseAuth.instance;
+  const AuthCheck({Key key, this.auth}) : super(key: key);
+  final BaseAuth auth;
   _AuthCheckState createState() => _AuthCheckState();
 }
 
 class _AuthCheckState extends State<AuthCheck> {
-  AuthStatus authstatus = AuthStatus.NotSigned;
+  AuthStatus authstatus = AuthStatus.NotDetemined;
+  String _userId = "";
+
+  void loginCallback() {
+    widget.auth.getCurrentUser().then((user) {
+      setState(() {
+        _userId = user.uid.toString();
+      });
+    });
+    setState(() {
+      authstatus = AuthStatus.Signed;
+    });
+  }
+
+  void logoutCallback() {
+    setState(() {
+      authstatus = AuthStatus.NotSigned;
+      _userId = "";
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    Future<String> currentUser() async {
-      final FirebaseUser user = await widget._auth.currentUser();
-      return user.uid.toString();
-    }
+    widget.auth.getCurrentUser().then((user) {
+      setState(() {
+        if (user != null) {
+          _userId = user?.uid;
+        }
+        authstatus =
+            user?.uid == null ? AuthStatus.NotSigned : AuthStatus.Signed;
+      });
+    });
+  }
 
-    if (currentUser() == null) {
-      authstatus = AuthStatus.NotSigned;
-    } else {
-      authstatus = AuthStatus.Signed;
-    }
-    print(currentUser());
+  Widget buildWaitingScreen() {
+    return Scaffold(
+      body: Container(
+        alignment: Alignment.center,
+        child: CircularProgressIndicator(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    
-
-    if (authstatus == AuthStatus.Signed) {
-      return HomePage();
-    } else {
-      return LoginPage();
+    switch (authstatus) {
+      case AuthStatus.NotDetemined:
+        return buildWaitingScreen();
+        break;
+      case AuthStatus.NotSigned:
+        return LoginPage(
+          auth: widget.auth,
+          loginCallback: loginCallback,
+        );
+        break;
+      case AuthStatus.Signed:
+        if (_userId.length > 0 && _userId != null) {
+          return new HomePage(
+            userId: _userId,
+            auth: widget.auth,
+            logoutCallback: logoutCallback,
+          );
+        } else
+          return buildWaitingScreen();
+        break;
+      default:
+        return buildWaitingScreen();
     }
   }
 }

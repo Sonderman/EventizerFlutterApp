@@ -1,6 +1,6 @@
-import 'package:eventizer/Auth_Sign_Register_v2/LoginPage.dart';
 import 'package:flutter/material.dart';
 import 'Auth_Sign_Register_v2/AuthCheck.dart';
+import 'Auth_Sign_Register_v2/BaseAuth.dart';
 
 
 void main() => runApp(MyApp());
@@ -11,10 +11,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue
       ),
-      home: LoginPage(),
+      home: AuthCheck(auth: Auth())
     );
   }
 }
