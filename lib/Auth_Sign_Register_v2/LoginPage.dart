@@ -1,5 +1,5 @@
-import 'package:eventizer/Auth_Sign_Register_v2/AuthCheck.dart';
 import 'package:flutter/material.dart';
+import 'AuthCheck.dart';
 import 'BaseAuth.dart';
 
 class LoginPage extends StatefulWidget {
