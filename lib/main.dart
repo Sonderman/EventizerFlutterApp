@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'Auth_Sign_Register_v2/AuthCheck.dart';
-import 'Auth_Sign_Register_v2/BaseAuth.dart';
-
+import 'Services/AuthCheck.dart';
+import 'Services/AuthProvider.dart';
+import 'Services/BaseAuth.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,13 +9,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue
+    return AuthProvider(
+          auth: Auth(),
+          child: MaterialApp(
+        title: 'Flutter',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue
+        ),
+        home: AuthCheck()
       ),
-      home: AuthCheck(auth: Auth())
     );
   }
 }

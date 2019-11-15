@@ -1,11 +1,8 @@
+import 'package:eventizer/Services/AuthCheck.dart';
+import 'package:eventizer/Services/AuthProvider.dart';
 import 'package:flutter/material.dart';
-import 'AuthCheck.dart';
-import 'BaseAuth.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({this.auth, this.loginCallback});
-  final BaseAuth auth;
-  final VoidCallback loginCallback;
   @override
   State<StatefulWidget> createState() => _LoginPageState();
 }
@@ -14,7 +11,7 @@ enum FormType { login, register }
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  String userId = "";
+  String userId = "null";
   String _email;
   String _password;
   FormType _formType = FormType.login;
@@ -31,13 +28,14 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> validateAndSubmit() async {
     if (validateAndSave()) {
       try {
+        var auth = AuthProvider.of(context).auth;
         if (_formType == FormType.login) {
-          userId = await widget.auth.signIn(_email, _password);
+          userId = await auth.signIn(_email, _password);
           print('Signed in: $userId');
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (BuildContext context) => AuthCheck(auth: widget.auth)));
+              MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
         } else {
-          userId = await widget.auth.signUp(_email, _password);
+          userId = await auth.signUp(_email, _password);
           //widget.auth.sendEmailVerification();
           //_showVerifyEmailSentDialog();
           print('Registered user: $userId');

@@ -1,17 +1,10 @@
-import 'package:eventizer/Auth_Sign_Register_v2/BaseAuth.dart';
-import 'package:eventizer/Navigation/ProfilePage.dart';
+import 'package:eventizer/Services/AuthProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'ProfilePage.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.auth, this.userId, this.logoutCallback})
-      : super(key: key);
-
-  final BaseAuth auth;
-  final VoidCallback logoutCallback;
-  final String userId;
-
   _HomePageState createState() => _HomePageState();
 }
 
@@ -20,7 +13,8 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> getUserEmail() async {
     try {
-      userEmail = await widget.auth.getUserEmail();
+      var auth = AuthProvider.of(context).auth;
+      userEmail = await auth.getUserEmail();
     } catch (e) {
       print('Kullanıcı maili alınırken hata : $e');
     } finally {
@@ -28,10 +22,10 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  @override
-  initState() {
-    super.initState();
+ @override
+  void didChangeDependencies() {
     getUserEmail();
+    super.didChangeDependencies();
   }
 
   @override
@@ -46,10 +40,8 @@ class _HomePageState extends State<HomePage> {
 
 //Bottom Navigation Widget kısmı
 class BottomNavWidget extends StatefulWidget {
-final BaseAuth auth;
-final String userId;
-final VoidCallback logoutCallback;
-  BottomNavWidget({this.auth, this.userId, this.logoutCallback});
+
+  BottomNavWidget();
   @override
   _BottomNavWidgetState createState() => _BottomNavWidgetState();
 }
@@ -57,16 +49,7 @@ final VoidCallback logoutCallback;
 //State kısmı
 class _BottomNavWidgetState extends State<BottomNavWidget> {
   int _selectedIndex = 0;
-  BaseAuth auth;
-  String userId;
-  VoidCallback logoutCallback;
-  @override
-  initState() {
-    super.initState();
-    auth=widget.auth;
-    userId=widget.userId;
-    logoutCallback=widget.logoutCallback;
-  }
+
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
