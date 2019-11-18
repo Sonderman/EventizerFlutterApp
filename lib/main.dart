@@ -1,3 +1,4 @@
+import 'package:eventizer/Test/Login1.dart';
 import 'package:flutter/material.dart';
 import 'Services/AuthCheck.dart';
 import 'Services/AuthProvider.dart';
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue
         ),
         home: AuthCheck()
+        //home: Login1(),
       ),
     );
   }

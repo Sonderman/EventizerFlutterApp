@@ -29,11 +29,17 @@ Stream<String> get onAuthStateChanged{
 
 @override
   Future<String> signIn(String email, String password) async {
-    FirebaseUser user = (await _firebaseAuth.signInWithEmailAndPassword(
+    FirebaseUser user;
+    try{
+        user = (await _firebaseAuth.signInWithEmailAndPassword(
             email: email, password: password))
         .user;
-    return user.uid;
+    }catch(e){
+      print('Error: Giriş işleminde Hata!: $e');
+    }
+    return user?.uid;
   }
+
 @override
   Future<String> signUp(String email, String password) async {
     FirebaseUser user = (await _firebaseAuth.createUserWithEmailAndPassword(

@@ -13,21 +13,29 @@ description: Eventizer App
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 version: 1.0.0+1
 
+module:
+  androidX: true
+
 environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
-  provider: ^3.1.0+1
+  image_picker: ^0.6.1+11
+  get_it: ^3.0.3
+  find_dropdown: ^0.1.7+1
   font_awesome_flutter: 8.5.0
-  material_design_icons_flutter: 3.3.4595
+  fluttertoast: ^3.1.3
   firebase_core: ^0.4.1+5
   firebase_auth: ^0.14.0+9
+  cloud_firestore: ^0.12.10
   flutter:
     sdk: flutter
-
+    
+  
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
+  
 
 dev_dependencies:
   flutter_test:
@@ -39,6 +47,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+  assets:
+    - assets/images/user.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
@@ -61,12 +71,17 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  fonts:
-    - family:  EventizerIconSet
-      fonts:
-        - asset: icons/EventizerIconSet.ttf
-         
-  
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

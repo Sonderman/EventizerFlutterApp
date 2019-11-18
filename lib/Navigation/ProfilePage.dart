@@ -8,6 +8,10 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+
+String userEmail ="loading..";
+  
+
   void _signedOut(BuildContext context) {
     var auth = AuthProvider.of(context).auth;
     auth.signOut();
@@ -16,12 +20,24 @@ class _ProfilePageState extends State<ProfilePage> {
                     MaterialPageRoute(
                         builder: (BuildContext context) => AuthCheck()));
   }
+  Future<void> _getUserEmail(BuildContext context) async{
+    var auth=AuthProvider.of(context).auth;
+    userEmail=await auth.getUserEmail();
+    setState(() {
+      
+    });
+  }
 
+  @override
+  void didChangeDependencies() {
+    _getUserEmail(context);
+    super.didChangeDependencies();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Kullanıcı adı'),
+        title: Text('Mail: $userEmail'),
         actions: <Widget>[
           FlatButton(
             child: Text(

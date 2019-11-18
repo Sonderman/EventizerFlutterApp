@@ -1,5 +1,5 @@
-import 'package:eventizer/Services/BaseAuth.dart';
 import 'package:flutter/material.dart';
+import 'BaseAuth.dart';
 
 class AuthProvider extends InheritedWidget{
   AuthProvider({Key key,this.auth, Widget child}) : super(key: key, child: child);

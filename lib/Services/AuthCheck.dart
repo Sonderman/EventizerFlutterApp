@@ -1,8 +1,8 @@
 import 'package:eventizer/Navigation/HomePage.dart';
 import 'package:eventizer/Navigation/LoginPage.dart';
-import 'package:eventizer/Services/AuthProvider.dart';
-import 'package:eventizer/Services/BaseAuth.dart';
 import 'package:flutter/material.dart';
+import 'AuthProvider.dart';
+import 'BaseAuth.dart';
 
 //enum AuthStatus { Signed, NotSigned, NotDetemined }
 

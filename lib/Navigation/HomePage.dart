@@ -1,7 +1,6 @@
 import 'package:eventizer/Services/AuthProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'ProfilePage.dart';
 
 class HomePage extends StatefulWidget {
@@ -48,7 +47,7 @@ class BottomNavWidget extends StatefulWidget {
 
 //State kısmı
 class _BottomNavWidgetState extends State<BottomNavWidget> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
