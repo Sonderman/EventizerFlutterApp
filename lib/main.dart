@@ -1,7 +1,7 @@
+import 'package:eventizer/Providers/AuthProvider.dart';
 import 'package:eventizer/Test/Login1.dart';
 import 'package:flutter/material.dart';
 import 'Services/AuthCheck.dart';
-import 'Services/AuthProvider.dart';
 import 'Services/BaseAuth.dart';
 
 void main() => runApp(MyApp());

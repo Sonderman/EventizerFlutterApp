@@ -1,5 +1,6 @@
+import 'package:eventizer/Providers/AuthProvider.dart';
 import 'package:eventizer/Services/AuthCheck.dart';
-import 'package:eventizer/Services/AuthProvider.dart';
+
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -50,7 +51,7 @@ String userEmail ="loading..";
       ),
       body: Center(
         child: Container(
-          child: Text('TestBody'),
+          child: Text('Profile Page'),
         ),
       ),
     );

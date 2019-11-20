@@ -1,10 +1,10 @@
-import 'dart:io';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eventizer/Providers/AuthProvider.dart';
 import 'package:eventizer/Services/AuthCheck.dart';
-import 'package:eventizer/Services/AuthProvider.dart';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'RegisterDialog.dart';
+import 'RegisterPage.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -16,8 +16,6 @@ class _LoginPageState extends State<LoginPage> {
   String userId;
   String _email;
   String _password;
-  
-  
 
   bool validateAndSave() {
     final form = formkey.currentState;
@@ -30,9 +28,20 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> validateAndSubmit() async {
     if (validateAndSave()) {
+      
       var auth = AuthProvider.of(context).auth;
       userId = await auth.signIn(_email, _password);
-
+      Firestore.instance
+                .collection('users')
+                .document(userId)
+                .setData({
+                  "LastLoggedIn" : FieldValue.serverTimestamp()
+              }).whenComplete((){
+                print('Başarılı: lastlogin set edildi!');
+              }).catchError((e){
+                print(e);
+              });
+  
       if (userId == null) {
         Fluttertoast.showToast(
             msg: "Şifre veya Eposta yanlış!",
@@ -53,86 +62,100 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF004d40),
       appBar: AppBar(
+        //backgroundColor: Colors.red,
         elevation: 2.0,
         centerTitle: true,
         title: Text('Sisteme Giriş'),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                width: 300,
-                height: 200,
-                //color: Colors.red,
-                /*child: Image.network(
-                  'https://picsum.photos/250?image=9',
-                )*/
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('Giris Yapınız'),
-              ),
-              Form(
-                  key: formkey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      TextFormField(
-                        decoration: InputDecoration(labelText: 'Eposta'),
-                        validator: (value) =>
-                            value.isEmpty ? 'Email boş olamaz' : null,
-                        onSaved: (value) => _email = value,
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(labelText: 'Şifre'),
-                        validator: (value) =>
-                            value.isEmpty ? 'Şifre boş olamaz' : null,
-                        onSaved: (value) => _password = value,
-                        obscureText: true,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Material(
-                          borderRadius: BorderRadius.circular(30.0),
-                          //elevation: 5.0,
-                          child: MaterialButton(
-                            onPressed: validateAndSubmit,
-                            minWidth: 150.0,
-                            height: 50.0,
-                            color: Color(0xFF179CDF),
-                            child: Text(
-                              "Giriş",
-                              style: TextStyle(
-                                fontSize: 20.0,
-                                color: Colors.white,
+      body: Container(
+        padding: EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  width: 350,
+                  height:250,
+                  
+                  child: Image(image: AssetImage('assets/images/etkinlik.jpg'))
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Giriş Yapınız',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Card(
+                  elevation: 8.0,
+                  child: Form(
+                      key: formkey,
+                      child: Column(
+                        //crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          TextFormField(
+                            decoration: InputDecoration(labelText: 'Eposta'),
+                            validator: (value) =>
+                                value.isEmpty ? 'Email boş olamaz' : null,
+                            onSaved: (value) => _email = value,
+                          ),
+                          TextFormField(
+                            decoration: InputDecoration(labelText: 'Şifre'),
+                            validator: (value) =>
+                                value.isEmpty ? 'Şifre boş olamaz' : null,
+                            onSaved: (value) => _password = value,
+                            obscureText: true,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Material(
+                              borderRadius: BorderRadius.circular(30.0),
+                              //elevation: 5.0,
+                              child: MaterialButton(
+                                onPressed: validateAndSubmit,
+                                minWidth: 150.0,
+                                height: 50.0,
+                                color: Color(0xFF179CDF),
+                                child: Text(
+                                  "Giriş",
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      RegisterDialog()));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "Hesabım yok",
-                            style: TextStyle(fontSize: 16.0),
-                          ),
-                        ),
-                      )
-                    ],
-                  )),
-            ],
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          RegisterPage()));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                "Hesabım yok",
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      )),
+                ),
+              ],
+            ),
           ),
         ),
       ),

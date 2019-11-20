@@ -16,6 +16,8 @@ abstract class BaseAuth {
   
   Future<String> getUserEmail();
 
+  Future<String> getUserUid();
+
   Stream<String> get onAuthStateChanged;
 }
 
@@ -70,6 +72,12 @@ Stream<String> get onAuthStateChanged{
   Future<String> getUserEmail() async {
      FirebaseUser user = await _firebaseAuth.currentUser();
     return user.email;
+  }
+
+  @override
+  Future<String> getUserUid() async {
+    FirebaseUser user = await _firebaseAuth.currentUser();
+    return user.uid;
   }
 
   

@@ -1,4 +1,5 @@
-import 'package:eventizer/Services/AuthProvider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eventizer/Providers/AuthProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'ProfilePage.dart';
@@ -9,28 +10,35 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String userEmail = "not received yet!";
-
-  Future<void> getUserEmail() async {
+  String userUid;
+  Future<void> setThings() async {
     try {
       var auth = AuthProvider.of(context).auth;
-      userEmail = await auth.getUserEmail();
+
+      userUid = await auth.getUserUid();
     } catch (e) {
       print('Kullanıcı maili alınırken hata : $e');
     } finally {
       setState(() {});
     }
+    Firestore.instance
+        .collection('users')
+        .document(userUid)
+        .setData({"test": "test"}, merge: true).catchError((e) {
+      print(e);
+    });
   }
 
- @override
+  @override
   void didChangeDependencies() {
-    getUserEmail();
+    setThings();
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner:false,
+      debugShowCheckedModeBanner: false,
       title: "BottomNavDeneme",
       home: BottomNavWidget(),
     );
@@ -39,7 +47,6 @@ class _HomePageState extends State<HomePage> {
 
 //Bottom Navigation Widget kısmı
 class BottomNavWidget extends StatefulWidget {
-
   BottomNavWidget();
   @override
   _BottomNavWidgetState createState() => _BottomNavWidgetState();
@@ -55,11 +62,11 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
 // Sayfaların bulunduğu liste
   List<Widget> _widgetOptions = <Widget>[
     Text(
-      'Index 0: Home',
+      'Mesajlaşma Sayfası',
       style: optionStyle,
     ),
     Text(
-      'Index 1: Business',
+      'Keşfet Sayfası',
       style: optionStyle,
     ),
     ProfilePage()
