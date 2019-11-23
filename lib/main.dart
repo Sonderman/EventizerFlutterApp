@@ -1,13 +1,28 @@
 import 'package:eventizer/Providers/AuthProvider.dart';
-import 'package:eventizer/Test/Login1.dart';
-import 'package:flutter/material.dart';
-import 'Services/AuthCheck.dart';
-import 'Services/BaseAuth.dart';
+import 'package:eventizer/Services/AuthCheck.dart';
+import 'package:eventizer/Services/BaseAuth.dart';
 
-void main() => runApp(MyApp());
+
+import 'package:eventizer/locator.dart';
+import 'package:flutter/material.dart';
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  setupLocator();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
+  
 
+  /* //Test için
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: LocatorTest(),
+      );
+  }
+ */
   @override
   Widget build(BuildContext context) {
     return AuthProvider(
@@ -23,4 +38,5 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+
 }

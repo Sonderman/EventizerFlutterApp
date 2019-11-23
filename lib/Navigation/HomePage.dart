@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventizer/Providers/AuthProvider.dart';
+import 'package:eventizer/Services/UserWorker.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'ProfilePage.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,6 +13,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String userEmail = "not received yet!";
   String userUid;
+
   Future<void> setThings() async {
     try {
       var auth = AuthProvider.of(context).auth;
@@ -18,8 +21,6 @@ class _HomePageState extends State<HomePage> {
       userUid = await auth.getUserUid();
     } catch (e) {
       print('Kullanıcı maili alınırken hata : $e');
-    } finally {
-      setState(() {});
     }
     Firestore.instance
         .collection('users')
@@ -37,6 +38,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "BottomNavDeneme",
@@ -47,7 +49,7 @@ class _HomePageState extends State<HomePage> {
 
 //Bottom Navigation Widget kısmı
 class BottomNavWidget extends StatefulWidget {
-  BottomNavWidget();
+
   @override
   _BottomNavWidgetState createState() => _BottomNavWidgetState();
 }
@@ -55,6 +57,7 @@ class BottomNavWidget extends StatefulWidget {
 //State kısmı
 class _BottomNavWidgetState extends State<BottomNavWidget> {
   int _selectedIndex = 1;
+  
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -80,6 +83,7 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       /*appBar: AppBar(
         title: const Text('BottomNavigationBar Sample'),
