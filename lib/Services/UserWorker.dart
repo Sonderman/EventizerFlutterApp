@@ -1,8 +1,6 @@
 import 'package:eventizer/Models/UserModel.dart';
 import 'package:flutter/material.dart';
 
-
-
 class UserWorker with ChangeNotifier{
   User _usermodel;
   UserWorker(String userId){

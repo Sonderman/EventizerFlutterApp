@@ -1,5 +1,6 @@
-cloud_firestore=/home/virus/Sdks/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-0.12.10/
+cloud_firestore=/home/virus/Sdks/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-0.12.10+2/
 firebase_auth=/home/virus/Sdks/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-0.14.0+9/
-firebase_core=/home/virus/Sdks/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.4.1+5/
+firebase_core=/home/virus/Sdks/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.4.2/
+firebase_storage=/home/virus/Sdks/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_storage-3.0.8/
 fluttertoast=/home/virus/Sdks/flutter/.pub-cache/hosted/pub.dartlang.org/fluttertoast-3.1.3/
-image_picker=/home/virus/Sdks/flutter/.pub-cache/hosted/pub.dartlang.org/image_picker-0.6.1+11/
+image_picker=/home/virus/Sdks/flutter/.pub-cache/hosted/pub.dartlang.org/image_picker-0.6.2+1/

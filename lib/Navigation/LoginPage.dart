@@ -28,20 +28,15 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> validateAndSubmit() async {
     if (validateAndSave()) {
-      
       var auth = AuthProvider.of(context).auth;
       userId = await auth.signIn(_email, _password);
-      Firestore.instance
-                .collection('users')
-                .document(userId)
-                .setData({
-                  "LastLoggedIn" : FieldValue.serverTimestamp()
-              }).whenComplete((){
-                print('Başarılı: lastlogin set edildi!');
-              }).catchError((e){
-                print(e);
-              });
-  
+      Firestore.instance.collection('users').document(userId).updateData(
+          {"LastLoggedIn": FieldValue.serverTimestamp()}).whenComplete(() {
+        print('Başarılı: lastlogin set edildi!');
+      }).catchError((e) {
+        print(e);
+      });
+
       if (userId == null) {
         Fluttertoast.showToast(
             msg: "Şifre veya Eposta yanlış!",
@@ -76,11 +71,10 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               children: <Widget>[
                 Container(
-                  width: 350,
-                  height:250,
-                  
-                  child: Image(image: AssetImage('assets/images/etkinlik.jpg'))
-                ),
+                    width: 350,
+                    height: 250,
+                    child:
+                        Image(image: AssetImage('assets/images/etkinlik.jpg'))),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
@@ -145,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
                                 "Hesabım yok",
                                 style: TextStyle(
                                   fontSize: 15.0,
-                                fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.bold,
                                   color: Colors.red,
                                 ),
                               ),

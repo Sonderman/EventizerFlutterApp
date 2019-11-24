@@ -38,7 +38,10 @@ class _ProfilePageState extends State<ProfilePage> {
     String userName = userWorker.getName();
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Color(0XFF001970),
+        elevation: 8.0,
         title: FutureBuilder<String>(
           future: getUserEmail(context),
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -63,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Text('İsim:$userName\nId:${userWorker.getUserId()}'),
         ),
       ),
-      floatingActionButton: Column(
+      /*floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           FloatingActionButton(
@@ -79,7 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
             },
           )
         ],
-      ),
+      ),*/
     );
   }
 }

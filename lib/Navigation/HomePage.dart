@@ -22,12 +22,7 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       print('Kullanıcı maili alınırken hata : $e');
     }
-    Firestore.instance
-        .collection('users')
-        .document(userUid)
-        .setData({"test": "test"}, merge: true).catchError((e) {
-      print(e);
-    });
+    
   }
 
   @override
@@ -56,7 +51,7 @@ class BottomNavWidget extends StatefulWidget {
 
 //State kısmı
 class _BottomNavWidgetState extends State<BottomNavWidget> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 2;
   
 
   static const TextStyle optionStyle =
@@ -85,14 +80,19 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
   Widget build(BuildContext context) {
     
     return Scaffold(
-      /*appBar: AppBar(
-        title: const Text('BottomNavigationBar Sample'),
-      ),*/
+
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        elevation: 8.0,
+        backgroundColor: Color(0XFF001970),
+        iconSize: 30.0,
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.yellowAccent,
+        unselectedItemColor: Colors.white,
+        onTap: _onItemTapped,
+        items:<BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.comments, size: 26.0),
             title: Text('Mesajlar'),
@@ -106,9 +106,6 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
             title: Text('Profil'),
           ),
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.red,
-        onTap: _onItemTapped,
       ),
     );
   }
