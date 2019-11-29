@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eventizer/Navigation/Settings.dart';
 import 'package:eventizer/Providers/AuthProvider.dart';
 import 'package:eventizer/Services/UserWorker.dart';
+import 'package:eventizer/Test/List1.dart';
+import 'package:eventizer/Test/RepeatWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +25,6 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       print('Kullanıcı maili alınırken hata : $e');
     }
-    
   }
 
   @override
@@ -33,7 +35,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "BottomNavDeneme",
@@ -44,7 +45,6 @@ class _HomePageState extends State<HomePage> {
 
 //Bottom Navigation Widget kısmı
 class BottomNavWidget extends StatefulWidget {
-
   @override
   _BottomNavWidgetState createState() => _BottomNavWidgetState();
 }
@@ -52,22 +52,16 @@ class BottomNavWidget extends StatefulWidget {
 //State kısmı
 class _BottomNavWidgetState extends State<BottomNavWidget> {
   int _selectedIndex = 2;
-  
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
 // Sayfaların bulunduğu liste
   List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Mesajlaşma Sayfası',
-      style: optionStyle,
-    ),
-    Text(
-      'Keşfet Sayfası',
-      style: optionStyle,
-    ),
-    ProfilePage()
+    Splash(),
+    AppHome(),
+    ProfilePage(),
+    Settings()
   ];
 
   void _onItemTapped(int index) {
@@ -78,35 +72,54 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
-
+      backgroundColor: Colors.yellow,
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        elevation: 8.0,
-        backgroundColor: Color(0XFF001970),
-        iconSize: 30.0,
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.yellowAccent,
-        unselectedItemColor: Colors.white,
-        onTap: _onItemTapped,
-        items:<BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.comments, size: 26.0),
-            title: Text('Mesajlar'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.search),
-            title: Text('Keşfet'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.user),
-            title: Text('Profil'),
-          ),
-        ],
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        notchMargin: 1.0,
+        clipBehavior: Clip.antiAlias,
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          elevation: 8.0,
+          backgroundColor: Color(0XFF001970),
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.yellowAccent,
+          unselectedItemColor: Colors.white,
+          onTap: _onItemTapped,
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.comments),
+              title: Text('Mesajlar'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.search),
+              title: Text('Keşfet'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.user),
+              title: Text('Profil'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              title: Text('Ayarlar'),
+            ),
+          ],
+        ),
       ),
+      floatingActionButton: FloatingActionButton(
+        mini: true,
+        backgroundColor: Color(0XFF001970),
+        foregroundColor: Colors.white,
+        onPressed: () {},
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+            side: BorderSide(color: Colors.white, width: 5)),
+        child: Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
