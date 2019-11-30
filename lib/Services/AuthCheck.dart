@@ -1,7 +1,9 @@
 import 'package:eventizer/Navigation/HomePage.dart';
 import 'package:eventizer/Navigation/LoginPage.dart';
 import 'package:eventizer/Providers/AuthProvider.dart';
+import 'package:eventizer/Services/FirebaseDb.dart';
 import 'package:eventizer/Services/UserWorker.dart';
+import 'package:eventizer/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'BaseAuth.dart';
@@ -17,7 +19,6 @@ class AuthCheck extends StatelessWidget {
     yazdirUid();
     */
 
-
     return StreamBuilder<String>(
       stream: auth.onAuthStateChanged,
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -30,7 +31,8 @@ class AuthCheck extends StatelessWidget {
                       (BuildContext context, AsyncSnapshot<String> snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       return ChangeNotifierProvider<UserWorker>(
-                        builder: (context) => UserWorker(snapshot.data),
+                        builder: (context) =>
+                            UserWorker(snapshot.data, locator<StorageWorks>()),
                         child: HomePage(),
                       );
                     } else {

@@ -84,6 +84,7 @@ class _RegisterPageState extends State<RegisterPage> {
   void signUp() async {
     var auth = AuthProvider.of(context).auth;
     String userId;
+    String url;
     auth.signUp(_eposta, _sifre).then((value) {
       userId = value;
       if (userId != null) {
@@ -94,6 +95,7 @@ class _RegisterPageState extends State<RegisterPage> {
           "Gender": _cinsiyet,
           "Birthday": _dogumtarihi,
           "City": _sehir,
+          //"ProfilePhotoUrl": "null",
           "RegisteredAt": FieldValue.serverTimestamp()
         }).whenComplete(() {
           StorageReference storageReference = FirebaseStorage()
@@ -102,13 +104,24 @@ class _RegisterPageState extends State<RegisterPage> {
               .child(userId)
               .child('images')
               .child('profile')
-              .child('displayedImage');
+              .child('ProfileImage');
           StorageUploadTask uploadTask = storageReference.putFile(_image);
+
           StreamSubscription<StorageTaskEvent> streamSubscription =
               uploadTask.events.listen((event) {
             print('UploadingProfile Image :${event.type}');
           });
-          uploadTask.onComplete.then((onValue) {}).whenComplete(() {
+          uploadTask.onComplete.then((onValue) {
+            onValue.ref.getDownloadURL().then((value) {
+              url = value.toString();
+              print("Url:" + url);
+            }).whenComplete(() {
+              Firestore.instance
+                  .collection('users')
+                  .document(userId)
+                  .updateData({"ProfilePhotoUrl": url});
+            });
+          }).whenComplete(() {
             streamSubscription.cancel();
           });
           print(
@@ -135,6 +148,9 @@ class _RegisterPageState extends State<RegisterPage> {
           backgroundColor: Colors.red,
           textColor: Colors.white,
           fontSize: 18.0);
+      setState(() {
+        progressIndicator = false;
+      });
     });
   }
 
@@ -174,7 +190,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 .child(userId)
                 .child('images')
                 .child('profile')
-                .child('displayedImage');
+                .child('ProfileImage');
             StorageUploadTask uploadTask = storageReference.putFile(_image);
             StreamSubscription<StorageTaskEvent> streamSubscription =
                 uploadTask.events.listen((event) {

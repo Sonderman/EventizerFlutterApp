@@ -1,9 +1,8 @@
 import 'dart:io';
-
-import 'package:eventizer/Navigation/ImageViewer.dart';
 import 'package:eventizer/Providers/AuthProvider.dart';
 import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/UserWorker.dart';
+import 'package:eventizer/Tools/ImageViewer.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -261,25 +260,37 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Card profilPhotoCard(Color myBlueColor) {
+    var userWorker = Provider.of<UserWorker>(context);
     return Card(
       child: Column(
         children: <Widget>[
           Padding(
             padding: EdgeInsets.all(8.0),
-            child: GestureDetector(
-                child: Container(
-              width: 150.0,
-              height: 150.0,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: ExactAssetImage('assets/images/user.png'),
-                    fit: BoxFit.fill),
-                borderRadius: BorderRadius.circular(120.0),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(120.0),
-              ),
-            )),
+            child: FutureBuilder(
+              future: userWorker.firebaseStorageWorks
+                  .getUserProfilePhotoUrl(userWorker.getUserId()),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return Container(
+                    width: 150.0,
+                    height: 150.0,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: NetworkImage(snapshot.data), fit: BoxFit.fill),
+                      borderRadius: BorderRadius.circular(120.0),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(120.0),
+                    ),
+                  );
+                } else
+                  return Container(
+                    height: 150,
+                    width: 150,
+                    child: CircularProgressIndicator(),
+                  );
+              },
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-class User{
+class User {
   final String userID;
   String userName;
   String userSurname;
   String userEmail;
-  
+  String profilePhotoUrl;
+
   User({@required this.userID});
 
   Map<String, dynamic> toMap() {
@@ -16,5 +17,4 @@ class User{
       'userEmail': userEmail ?? 'null'
     };
   }
- 
 }

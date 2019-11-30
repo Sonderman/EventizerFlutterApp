@@ -1,5 +1,7 @@
+import 'package:eventizer/Services/UserWorker.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_icons/line_awesome_icons.dart';
+import 'package:provider/provider.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -10,6 +12,7 @@ class _SettingsState extends State<Settings> {
   Color myBlueColor = Color(0XFF001970);
   @override
   Widget build(BuildContext context) {
+    var userWorker = Provider.of<UserWorker>(context);
     return Scaffold(
       backgroundColor: myBlueColor,
       appBar: AppBar(

@@ -1,12 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventizer/Navigation/Settings.dart';
 import 'package:eventizer/Providers/AuthProvider.dart';
-import 'package:eventizer/Services/UserWorker.dart';
 import 'package:eventizer/Test/List1.dart';
 import 'package:eventizer/Test/RepeatWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
+
 import 'ProfilePage.dart';
 
 class HomePage extends StatefulWidget {
