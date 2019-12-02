@@ -4,7 +4,7 @@ import 'package:eventizer/Services/FirebaseDb.dart';
 GetIt locator = GetIt.instance;
 
 void setupLocator() {
-  locator.registerSingleton<UserWorks>(UserWorks());
+  locator.registerSingleton<DatabaseWorks>(DatabaseWorks());
   locator.registerSingleton<StorageWorks>(StorageWorks());
   //locator.registerSingleton<GetSayac>(GetSayac()); // Testiçin
 }

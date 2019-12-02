@@ -81,7 +81,7 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  void signUp() async {
+  void signUp() {
     var auth = AuthProvider.of(context).auth;
     String userId;
     String url;
@@ -111,6 +111,7 @@ class _RegisterPageState extends State<RegisterPage> {
               uploadTask.events.listen((event) {
             print('UploadingProfile Image :${event.type}');
           });
+
           uploadTask.onComplete.then((onValue) {
             onValue.ref.getDownloadURL().then((value) {
               url = value.toString();
@@ -124,6 +125,7 @@ class _RegisterPageState extends State<RegisterPage> {
           }).whenComplete(() {
             streamSubscription.cancel();
           });
+
           print(
               'Başarılı: Kayıt oluşturuldu: $userId\nAd:$_ad\nSoyad:$_soyad\nEposta:$_eposta\nSifre:$_sifre\nCinsiyet:$_cinsiyet\nDoğum Tarihi:$_dogumtarihi\nŞehir:$_sehir');
         }).catchError((e) {
@@ -171,7 +173,7 @@ class _RegisterPageState extends State<RegisterPage> {
     });
     getImageFromGalery().then((onValue) {}).whenComplete(() {
       var auth = AuthProvider.of(context).auth;
-      String userId;
+      String userId, url;
       auth.signUp("test@test.com", "123123").then((value) {
         userId = value;
         if (userId != null) {
@@ -196,7 +198,18 @@ class _RegisterPageState extends State<RegisterPage> {
                 uploadTask.events.listen((event) {
               print('UploadingProfile Image :${event.type}');
             });
-            uploadTask.onComplete.then((onValue) {}).whenComplete(() {
+
+            uploadTask.onComplete.then((onValue) {
+              onValue.ref.getDownloadURL().then((value) {
+                url = value.toString();
+                print("Url:" + url);
+              }).whenComplete(() {
+                Firestore.instance
+                    .collection('users')
+                    .document(userId)
+                    .updateData({"ProfilePhotoUrl": url});
+              });
+            }).whenComplete(() {
               streamSubscription.cancel();
               Future.delayed(const Duration(milliseconds: 200), () {
                 Navigator.pushReplacement(
@@ -205,10 +218,16 @@ class _RegisterPageState extends State<RegisterPage> {
                         builder: (BuildContext context) => AuthCheck()));
               });
             });
+
             print('Başarılı: TestUser oluşturuldu.');
           }).catchError((e) {
             print(e);
           });
+        } else {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => AuthCheck()));
         }
       }, onError: (e) {
         print('ERROR:Kayıt olurken hata!: $e');
@@ -326,6 +345,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   validator: (value) =>
                       value.isEmpty ? 'Şifre boş olamaz' : null,
                   onSaved: (value) => _sifre = value,
+                  obscureText: true,
                 ),
               ),
               Row(

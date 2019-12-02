@@ -1,7 +1,7 @@
+import 'package:eventizer/Navigation/ChatPage.dart';
 import 'package:eventizer/Navigation/Settings.dart';
 import 'package:eventizer/Providers/AuthProvider.dart';
 import 'package:eventizer/Test/List1.dart';
-import 'package:eventizer/Test/RepeatWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -49,14 +49,14 @@ class BottomNavWidget extends StatefulWidget {
 
 //State kısmı
 class _BottomNavWidgetState extends State<BottomNavWidget> {
-  int _selectedIndex = 2;
+  int _selectedIndex = 3;
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
 // Sayfaların bulunduğu liste
   List<Widget> _widgetOptions = <Widget>[
-    Splash(),
+    ChatPage(),
     AppHome(),
     ProfilePage(),
     Settings()

@@ -10,13 +10,17 @@ abstract class BaseAuth {
 
   Future<void> sendEmailVerification();
 
-  Future<void> signOut();
+  void signOut();
 
   Future<bool> isEmailVerified();
 
   Future<String> getUserEmail();
 
   Future<String> getUserUid();
+
+  Future<bool> checkPassword(String mail, String password);
+
+  void sendPasswordResetEmail(String email);
 
   Stream<String> get onAuthStateChanged;
 }
@@ -58,7 +62,7 @@ class Auth implements BaseAuth {
   }
 
   @override
-  Future<void> signOut() async {
+  void signOut() async {
     return _firebaseAuth.signOut();
   }
 
@@ -84,5 +88,32 @@ class Auth implements BaseAuth {
   Future<String> getUserUid() async {
     FirebaseUser user = await _firebaseAuth.currentUser();
     return user.uid;
+  }
+
+  @override
+  Future<bool> checkPassword(String email, String password) async {
+    String userId;
+    try {
+      userId = (await _firebaseAuth.signInWithEmailAndPassword(
+              email: email, password: password))
+          .user
+          .uid;
+    } catch (e) {
+      return false;
+    }
+    if (userId != null) {
+      //print("UserId: " + userId);
+      return true;
+    } else
+      return false;
+  }
+
+  @override
+  void sendPasswordResetEmail(String email) {
+    try {
+      _firebaseAuth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      print(e);
+    }
   }
 }

@@ -267,7 +267,7 @@ class _ProfilePageState extends State<ProfilePage> {
           Padding(
             padding: EdgeInsets.all(8.0),
             child: FutureBuilder(
-              future: userWorker.firebaseStorageWorks
+              future: userWorker.firebaseDatabaseWorks
                   .getUserProfilePhotoUrl(userWorker.getUserId()),
               builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {

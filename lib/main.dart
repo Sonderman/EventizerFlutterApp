@@ -13,8 +13,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  
-
   /* //Test için
   @override
   Widget build(BuildContext context) {
@@ -26,17 +24,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AuthProvider(
-          auth: Auth(),
-          child: MaterialApp(
-        title: 'Flutter',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue
-        ),
-        home: AuthCheck()
-        //home: Login1(),
-      ),
+      auth: Auth(),
+      child: MaterialApp(debugShowCheckedModeBanner: false, home: AuthCheck()
+          //home: Login1(),
+          ),
     );
   }
-
 }
