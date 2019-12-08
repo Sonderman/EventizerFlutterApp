@@ -14,22 +14,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     UserWorker userWorker = Provider.of<UserWorker>(context);
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: mapList(userWorker),
-        ),
-      ),
+      body: Center(child: Text("Chat Page")),
     );
-  }
-
-  List<Widget> mapList(UserWorker userWorker) {
-    List<Widget> wlist = [];
-    var userMap = userWorker.getUserMap();
-    userMap.forEach((k, v) {
-      wlist.add(Text("$k: $v"));
-    });
-
-    return wlist;
   }
 }

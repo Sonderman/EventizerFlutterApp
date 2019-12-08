@@ -1,8 +1,10 @@
 import 'package:eventizer/Navigation/HomePage.dart';
 import 'package:eventizer/Navigation/LoginPage.dart';
 import 'package:eventizer/Providers/AuthProvider.dart';
-import 'package:eventizer/Services/FirebaseDb.dart';
+import 'package:eventizer/Services/EventManager.dart';
+import 'package:eventizer/Services/Firebase.dart';
 import 'package:eventizer/Services/UserWorker.dart';
+
 import 'package:eventizer/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,11 +27,27 @@ class AuthCheck extends StatelessWidget {
                       (BuildContext context, AsyncSnapshot<String> snapshot) {
                     if (snapshot.connectionState == ConnectionState.done ||
                         snapshot.data != null) {
-                      return ChangeNotifierProvider<UserWorker>(
+                      return MultiProvider(
+                        providers: [
+                          ChangeNotifierProvider<UserWorker>(
+                              builder: (context) => UserWorker(
+                                  snapshot.data,
+                                  locator<DatabaseWorks>(),
+                                  locator<StorageWorks>())),
+                          ChangeNotifierProvider<EventManager>(
+                              builder: (context) => EventManager(
+                                  locator<DatabaseWorks>(),
+                                  locator<StorageWorks>()))
+                        ],
+                        child: HomePage(),
+                      );
+
+                      /*ChangeNotifierProvider<UserWorker>(
                         builder: (context) => UserWorker(snapshot.data,
                             locator<DatabaseWorks>(), locator<StorageWorks>()),
                         child: HomePage(),
-                      );
+                      );*/
+
                     } else {
                       return buildWaitingScreen();
                     }

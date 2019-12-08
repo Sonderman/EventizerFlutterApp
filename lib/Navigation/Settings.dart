@@ -460,6 +460,7 @@ class _SettingsState extends State<Settings> {
             : userWorker.getUserTelno());
 
     return AlertDialog(
+      title: Text("Bilgileri Düzenle"),
       content: StatefulBuilder(
         builder: (context, StateSetter setState) {
           /////Builder
@@ -479,8 +480,24 @@ class _SettingsState extends State<Settings> {
 
           return SingleChildScrollView(
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              // mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                Container(
+                  width: 150.0,
+                  height: 150.0,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image:
+                            NetworkImage(userWorker.getUserProfilePhotoUrl()),
+                        fit: BoxFit.fill),
+                    borderRadius: BorderRadius.circular(120.0),
+                  ),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(120.0),
+                      child: _image == null
+                          ? null //Text('Resim seçilmedi!.')
+                          : Image.file(_image)),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -495,22 +512,6 @@ class _SettingsState extends State<Settings> {
                               borderRadius: BorderRadius.circular(120.0),
                             ),
                             child: Icon(FontAwesomeIcons.camera))),
-                    Container(
-                      width: 150.0,
-                      height: 150.0,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: NetworkImage(
-                                userWorker.getUserProfilePhotoUrl()),
-                            fit: BoxFit.fill),
-                        borderRadius: BorderRadius.circular(120.0),
-                      ),
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(120.0),
-                          child: _image == null
-                              ? null //Text('Resim seçilmedi!.')
-                              : Image.file(_image)),
-                    ),
                     GestureDetector(
                         onTap: getImageFromGalery,
                         child: Container(

@@ -1,11 +1,12 @@
 import 'package:get_it/get_it.dart';
-import 'package:eventizer/Services/FirebaseDb.dart';
+import 'package:eventizer/Services/Firebase.dart';
 
 GetIt locator = GetIt.instance;
 
 void setupLocator() {
   locator.registerSingleton<DatabaseWorks>(DatabaseWorks());
   locator.registerSingleton<StorageWorks>(StorageWorks());
+
   //locator.registerSingleton<GetSayac>(GetSayac()); // Testiçin
 }
 

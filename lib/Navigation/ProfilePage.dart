@@ -9,16 +9,22 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
+  final userID;
+  ProfilePage(this.userID);
+
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  _ProfilePageState createState() => _ProfilePageState(userID);
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final userID;
   List<Widget> images = [];
   int imageCounter = 0;
   List<File> _imagefile = [];
   int imageFileCounter = 0;
   Color myBlueColor = Color(0XFF001970);
+
+  _ProfilePageState(this.userID);
 
   void _signedOut() {
     var auth = AuthProvider.of(context).auth;
@@ -187,16 +193,20 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.fromLTRB(8, 16, 8, 0),
-                    child: profilPhotoCard(myBlueColor),
+                    child: profilPhotoCard(myBlueColor, userID),
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
                     child: aboutCard(
-                        baslikTextStyle, normalTextStyle, myBlueColor),
+                        baslikTextStyle, normalTextStyle, myBlueColor, userID),
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
-                    child: slidePicturesCard(myBlueColor, images),
+                    child: slidePicturesCard(myBlueColor, images, userID),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                    child: infoCard(userID),
                   ),
                   SizedBox(
                     height: 400.0,
@@ -210,8 +220,54 @@ class _ProfilePageState extends State<ProfilePage> {
     ));
   }
 
-  Card aboutCard(
-      TextStyle baslikTextStyle, TextStyle normalTextStyle, Color myBlueColor) {
+  Widget infoCard(userID) {
+    UserWorker userWorker = Provider.of<UserWorker>(context);
+
+    List<Widget> mapList(UserWorker userWorker) {
+      List<Widget> wlist = [];
+
+      var userMap = userWorker.getUserMap();
+      userMap.forEach((k, v) {
+        wlist.add(Text("$k: $v"));
+      });
+      return wlist;
+    }
+
+    List<Widget> mapListTemp(Map<String, dynamic> data) {
+      List<Widget> wlist = [];
+      data.forEach((k, v) {
+        wlist.add(Text("$k: $v"));
+      });
+      return wlist;
+    }
+
+    if (userID == userWorker.getUserId()) {
+      return Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: mapList(userWorker),
+        ),
+      );
+    } else {
+      return FutureBuilder(
+        future: userWorker.getTempUserMap(userID),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> infoData) {
+          if (infoData.connectionState == ConnectionState.done) {
+            return Card(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: mapListTemp(infoData.data),
+              ),
+            );
+          } else
+            return Card(child: CircularProgressIndicator());
+        },
+      );
+    }
+  }
+
+  Card aboutCard(TextStyle baslikTextStyle, TextStyle normalTextStyle,
+      Color myBlueColor, userID) {
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -259,7 +315,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Card profilPhotoCard(Color myBlueColor) {
+  Card profilPhotoCard(Color myBlueColor, userID) {
     var userWorker = Provider.of<UserWorker>(context);
     return Card(
       child: Column(
@@ -268,7 +324,7 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: EdgeInsets.all(8.0),
             child: FutureBuilder(
               future: userWorker.firebaseDatabaseWorks
-                  .getUserProfilePhotoUrl(userWorker.getUserId()),
+                  .getUserProfilePhotoUrl(userID),
               builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return Container(
@@ -335,7 +391,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Card slidePicturesCard(Color myBlueColor, List<Widget> images) {
+  Card slidePicturesCard(Color myBlueColor, List<Widget> images, userID) {
     return Card(
       child: Column(
         children: <Widget>[

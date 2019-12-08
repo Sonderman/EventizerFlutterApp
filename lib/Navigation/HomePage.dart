@@ -1,10 +1,12 @@
 import 'package:eventizer/Navigation/ChatPage.dart';
+import 'package:eventizer/Navigation/Explore.dart';
 import 'package:eventizer/Navigation/Settings.dart';
 import 'package:eventizer/Providers/AuthProvider.dart';
-import 'package:eventizer/Test/List1.dart';
+import 'package:eventizer/Services/UserWorker.dart';
+import 'package:eventizer/Tools/CreateEvent.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+import 'package:provider/provider.dart';
 import 'ProfilePage.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,16 +14,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+/*
   String userEmail = "not received yet!";
   String userUid;
-
   Future<void> setThings() async {
     try {
       var auth = AuthProvider.of(context).auth;
 
       userUid = await auth.getUserUid();
     } catch (e) {
-      print('Kullanıcı maili alınırken hata : $e');
+      print('Kullanıcı IDsi alınırken hata : $e');
     }
   }
 
@@ -30,12 +32,12 @@ class _HomePageState extends State<HomePage> {
     setThings();
     super.didChangeDependencies();
   }
+*/
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "BottomNavDeneme",
       home: BottomNavWidget(),
     );
   }
@@ -47,20 +49,11 @@ class BottomNavWidget extends StatefulWidget {
   _BottomNavWidgetState createState() => _BottomNavWidgetState();
 }
 
-//State kısmı
 class _BottomNavWidgetState extends State<BottomNavWidget> {
-  int _selectedIndex = 3;
+  int _selectedIndex = 1;
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-
-// Sayfaların bulunduğu liste
-  List<Widget> _widgetOptions = <Widget>[
-    ChatPage(),
-    AppHome(),
-    ProfilePage(),
-    Settings()
-  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -70,6 +63,15 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
 
   @override
   Widget build(BuildContext context) {
+    UserWorker userWorker = Provider.of<UserWorker>(context);
+
+    List<Widget> _widgetOptions = <Widget>[
+      ChatPage(),
+      ExplorePage(),
+      ProfilePage(userWorker.getUserId()),
+      Settings()
+    ];
+
     return Scaffold(
       backgroundColor: Colors.yellow,
       body: Center(
@@ -111,7 +113,12 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
         mini: true,
         backgroundColor: Color(0XFF001970),
         foregroundColor: Colors.white,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => CreateEvent()));
+        },
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
             side: BorderSide(color: Colors.white, width: 5)),

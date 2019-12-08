@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:eventizer/Models/UserModel.dart';
-import 'package:eventizer/Services/FirebaseDb.dart';
+import 'package:eventizer/Services/Firebase.dart';
 import 'package:flutter/material.dart';
 
 class UserWorker with ChangeNotifier {
@@ -29,8 +29,15 @@ class UserWorker with ChangeNotifier {
     }
   }
 
-  void refresh() {
-    notifyListeners();
+  Future<Map<String, dynamic>> getTempUserMap(String userID) async {
+    return await firebaseDatabaseWorks.getUserInfoMap(userID).then((map) {
+      print("Temp user name:" + map["Name"]);
+      return map;
+    });
+  }
+
+  Future<Map<String, dynamic>> findUserbyID(String userID) {
+    return firebaseDatabaseWorks.findUserbyID(userID);
   }
 
   Future<bool> updateProfilePhoto(File image) async {
@@ -60,6 +67,10 @@ class UserWorker with ChangeNotifier {
     });
   }
 
+  Map<String, dynamic> getUserMap() {
+    return _usermodel.toMap();
+  }
+
   String getUserProfilePhotoUrl() {
     if (_usermodel.profilePhotoUrl == null) {
       return "https://farm5.staticflickr.com/4363/36346283311_74018f6e7d_o.png";
@@ -83,10 +94,6 @@ class UserWorker with ChangeNotifier {
 
   String getUserBirthday() => _usermodel.birthday;
 
-  Map<String, dynamic> getUserMap() {
-    return _usermodel.toMap();
-  }
-
   void setUserName(String name) {
     _usermodel.name = name;
   }
@@ -109,6 +116,10 @@ class UserWorker with ChangeNotifier {
 
   void updateInfo(String maptext, String changedtext) {
     firebaseDatabaseWorks.updateInfo(_usermodel.userID, maptext, changedtext);
+  }
+
+  void refresh() {
+    notifyListeners();
   }
 
 // buraya getter ve setter leri tanımla
