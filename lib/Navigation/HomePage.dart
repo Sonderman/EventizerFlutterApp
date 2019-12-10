@@ -1,8 +1,7 @@
-import 'package:eventizer/Navigation/ChatPage.dart';
+import 'package:eventizer/Navigation/ChatsPage.dart';
 import 'package:eventizer/Navigation/Explore.dart';
 import 'package:eventizer/Navigation/Settings.dart';
-import 'package:eventizer/Providers/AuthProvider.dart';
-import 'package:eventizer/Services/UserWorker.dart';
+import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/CreateEvent.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -63,10 +62,10 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
 
   @override
   Widget build(BuildContext context) {
-    UserWorker userWorker = Provider.of<UserWorker>(context);
+    UserService userWorker = Provider.of<UserService>(context);
 
     List<Widget> _widgetOptions = <Widget>[
-      ChatPage(),
+      ChatsPage(),
       ExplorePage(),
       ProfilePage(userWorker.getUserId()),
       Settings()

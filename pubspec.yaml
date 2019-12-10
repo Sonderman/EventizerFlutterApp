@@ -20,6 +20,7 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  dash_chat: ^1.0.9
   line_awesome_icons: ^1.0.4+2
   get_it: ^3.0.3
   provider: ^3.1.0+1

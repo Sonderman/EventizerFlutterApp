@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:eventizer/Providers/AuthProvider.dart';
 import 'package:eventizer/Services/BaseAuth.dart';
-import 'package:eventizer/Services/UserWorker.dart';
+import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/assets/Sehirler.dart';
 import 'package:find_dropdown/find_dropdown.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,7 +24,7 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    var userWorker = Provider.of<UserWorker>(context);
+    var userWorker = Provider.of<UserService>(context);
     return Scaffold(
       backgroundColor: myBlueColor,
       appBar: AppBar(
@@ -137,7 +137,7 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  AlertDialog myChangeEmailDialog(UserWorker userWorker) {
+  AlertDialog myChangeEmailDialog(UserService userWorker) {
     final BaseAuth auth = AuthProvider.of(context).auth;
     FirebaseUser user;
     TextEditingController controllerMevcut = TextEditingController();
@@ -256,7 +256,7 @@ class _SettingsState extends State<Settings> {
     }));
   }
 
-  AlertDialog myUpdatePasswordDialog(UserWorker userWorker) {
+  AlertDialog myUpdatePasswordDialog(UserService userWorker) {
     final BaseAuth auth = AuthProvider.of(context).auth;
     FirebaseUser user;
     TextEditingController controllerYeni2Password = TextEditingController();
@@ -443,7 +443,7 @@ class _SettingsState extends State<Settings> {
     }));
   }
 
-  AlertDialog myUpdatePersonalInfoDialog(UserWorker userWorker) {
+  AlertDialog myUpdatePersonalInfoDialog(UserService userWorker) {
     File _image;
 
     TextEditingController controllerAd;

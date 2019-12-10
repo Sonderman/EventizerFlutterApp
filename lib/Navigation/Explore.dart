@@ -1,6 +1,5 @@
 import 'package:eventizer/Navigation/EventPage.dart';
-import 'package:eventizer/Services/EventManager.dart';
-import 'package:eventizer/Services/UserWorker.dart';
+import 'package:eventizer/Services/Repository.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +13,7 @@ class ExplorePage extends StatefulWidget {
 class _ExplorePageState extends State<ExplorePage> {
   @override
   Widget build(BuildContext context) {
-    final EventManager _eventManager = Provider.of<EventManager>(context);
+    final EventService _eventManager = Provider.of<EventService>(context);
     return Scaffold(
         appBar: AppBar(
           title: Text("Keşfet"),
@@ -42,7 +41,7 @@ class _ExplorePageState extends State<ExplorePage> {
   }
 
   Widget eventItem(Map<String, dynamic> eventDatas) {
-    UserWorker userWorker = Provider.of<UserWorker>(context);
+    UserService userWorker = Provider.of<UserService>(context);
     Color myBlueColor = Color(0XFF001970);
     String title = eventDatas['Title'];
     String ownerID = eventDatas['OwnerID'];

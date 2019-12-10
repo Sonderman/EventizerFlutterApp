@@ -1,5 +1,4 @@
-import 'package:eventizer/Services/EventManager.dart';
-import 'package:eventizer/Services/UserWorker.dart';
+import 'package:eventizer/Services/Repository.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -41,9 +40,9 @@ class _CreateEventState extends State<CreateEvent> {
                   padding: const EdgeInsets.all(8.0),
                   child: MaterialButton(
                     onPressed: () async {
-                      final eventManager = Provider.of<EventManager>(context);
+                      final eventManager = Provider.of<EventService>(context);
                       final userID =
-                          Provider.of<UserWorker>(context).getUserId();
+                          Provider.of<UserService>(context).getUserId();
                       Map<String, dynamic> eventData = {
                         "OwnerID": userID,
                         "Title": controllerAd.text

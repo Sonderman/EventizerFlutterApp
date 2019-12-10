@@ -1,5 +1,8 @@
 import 'package:eventizer/Navigation/ProfilePage.dart';
+import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/Tools/Message.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class EventPage extends StatefulWidget {
   final Map<String, dynamic> eventData;
@@ -19,6 +22,7 @@ class _EventPageState extends State<EventPage> {
 
   @override
   Widget build(BuildContext context) {
+    UserService userService = Provider.of<UserService>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(eventData['Title']),
@@ -36,8 +40,14 @@ class _EventPageState extends State<EventPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: MaterialButton(
-                      onPressed: () {
-                        Navigator.pop(context);
+                      onPressed: () async {
+                        if (userService.getUserId() != eventData["OwnerID"]) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) => Message(
+                                      userService, eventData["OwnerID"])));
+                        }
                       },
                       minWidth: 50.0,
                       height: 30.0,

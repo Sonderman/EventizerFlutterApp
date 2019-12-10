@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dash_chat/dash_chat.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class AutoIdGenerator {
@@ -69,12 +70,6 @@ class DatabaseWorks {
   }
 
   Future<Map<String, dynamic>> getUserInfoMap(String userId) async {
-    /*Map<String, dynamic> dataMap;
-    instance.collection("users").document(userId).get().then((data) {
-      dataMap = data.data;
-    }).whenComplete(() {
-      print("Ad : " + dataMap["Name"]);
-    });*/
     var data = await ref.collection("users").document(userId).get();
     return data.data;
   }
@@ -108,6 +103,83 @@ class DatabaseWorks {
       print(e);
       return {};
     }
+  }
+
+  Stream<QuerySnapshot> getSnapshot(String chatID) {
+    return ref
+        .collection('messagePool')
+        .document(chatID)
+        .collection('messages')
+        .snapshots();
+  }
+
+  Future sendMessage(ChatMessage message, String chatID, String currentUser,
+      String otherUser) async {
+    if (chatID == "temp") {
+      chatID = AutoIdGenerator.autoId();
+
+      await Firestore.instance.runTransaction((transaction) async {
+        await transaction.set(
+            Firestore.instance
+                .collection('users')
+                .document(currentUser)
+                .collection('messages')
+                .document(chatID),
+            {"OtherUserID": otherUser});
+        await transaction.set(
+            Firestore.instance
+                .collection('users')
+                .document(otherUser)
+                .collection('messages')
+                .document(chatID),
+            {"OtherUserID": currentUser});
+      });
+    }
+    var messageRef = Firestore.instance
+        .collection('messagePool')
+        .document(chatID)
+        .collection('messages')
+        .document(DateTime.now().millisecondsSinceEpoch.toString());
+    Firestore.instance.runTransaction((transaction) async {
+      await transaction.set(
+        messageRef,
+        message.toJson(),
+      );
+    }, timeout: Duration(seconds: 1));
+  }
+
+  Future<String> checkConversation(String currentUser, String otherUser) async {
+    try {
+      return await Firestore.instance
+          .collection('users')
+          .document(currentUser)
+          .collection('messages')
+          .where("OtherUserID", isEqualTo: otherUser)
+          .limit(1)
+          .getDocuments()
+          .then((data) {
+        return data.documents.first.documentID;
+      });
+    } catch (e) {
+      print(e);
+      return "bos";
+    }
+  }
+
+  Future sendImageMessage(
+      ChatMessage message, String time, String chatID) async {
+    var messageRef = ref
+        .collection('messagePool')
+        .document(chatID)
+        .collection('messages')
+        .document(time);
+
+    await ref.runTransaction((transaction) async {
+      await transaction.set(
+        messageRef,
+        message.toJson(),
+      );
+    });
   }
 }
 
@@ -155,6 +227,25 @@ class StorageWorks {
     }).catchError((e) {
       print(e);
     }));
+  }
+
+  Future sendImageMessage(File image, ChatUser user, String currentUser,
+      String chatID, String time) async {
+    final StorageReference storageRef =
+        ref.child("users").child(currentUser).child("images").child(time);
+
+    StorageUploadTask uploadTask = storageRef.putFile(
+      image,
+      StorageMetadata(
+        contentType: 'image/jpg',
+      ),
+    );
+    StorageTaskSnapshot download = await uploadTask.onComplete;
+
+    return await download.ref.getDownloadURL().then((url) {
+      ChatMessage message = ChatMessage(text: "", user: user, image: url);
+      return message;
+    });
   }
 
   // diğer yöntem Not working

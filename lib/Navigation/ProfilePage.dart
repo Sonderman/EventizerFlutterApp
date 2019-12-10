@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:eventizer/Providers/AuthProvider.dart';
 import 'package:eventizer/Services/AuthCheck.dart';
-import 'package:eventizer/Services/UserWorker.dart';
+import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/ImageViewer.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -137,7 +137,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    //final userWorker = Provider.of<UserWorker>(context);
+    //final userWorker = Provider.of<UserService>(context);
     if (images.length == 0) {
       initImages();
     }
@@ -221,9 +221,9 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget infoCard(userID) {
-    UserWorker userWorker = Provider.of<UserWorker>(context);
+    UserService userWorker = Provider.of<UserService>(context);
 
-    List<Widget> mapList(UserWorker userWorker) {
+    List<Widget> mapList(UserService userWorker) {
       List<Widget> wlist = [];
 
       var userMap = userWorker.getUserMap();
@@ -316,7 +316,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Card profilPhotoCard(Color myBlueColor, userID) {
-    var userWorker = Provider.of<UserWorker>(context);
+    var userWorker = Provider.of<UserService>(context);
     return Card(
       child: Column(
         children: <Widget>[
