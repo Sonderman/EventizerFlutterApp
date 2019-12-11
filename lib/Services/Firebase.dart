@@ -181,6 +181,14 @@ class DatabaseWorks {
       );
     });
   }
+
+  Stream<QuerySnapshot> getUserChatsSnapshots(String currentUser) {
+    return ref
+        .collection('users')
+        .document(currentUser)
+        .collection('messages')
+        .snapshots();
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

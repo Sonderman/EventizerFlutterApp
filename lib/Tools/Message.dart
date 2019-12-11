@@ -23,6 +23,7 @@ class _MessageState extends State<Message> {
   String chatID;
   String currentUserID;
   String otherUserID;
+  String currenUserPhotoUrl;
   var i = 0;
   bool runFutureOnce = false;
 
@@ -32,10 +33,11 @@ class _MessageState extends State<Message> {
   void initState() {
     currentUserID = widget.userService.getUserId();
     otherUserID = widget.otherUserID;
+    currenUserPhotoUrl = widget.userService.getUserProfilePhotoUrl();
     user = ChatUser(
       name: widget.userService.getUserName(),
       uid: currentUserID,
-      avatar: "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
+      avatar: currenUserPhotoUrl,
     );
     super.initState();
   }
@@ -118,6 +120,7 @@ class _MessageState extends State<Message> {
                       ),
                       shouldShowLoadEarlier: false,
                       showTraillingBeforeSend: true,
+                      scrollToBottom: false,
                       trailing: <Widget>[
                         IconButton(
                           icon: Icon(Icons.photo),
@@ -125,8 +128,8 @@ class _MessageState extends State<Message> {
                             File result = await ImagePicker.pickImage(
                               source: ImageSource.gallery,
                               imageQuality: 100,
-                              maxHeight: 400,
-                              maxWidth: 400,
+                              maxHeight: 300,
+                              maxWidth: 300,
                             );
                             if (result != null) {
                               String time = DateTime.now()

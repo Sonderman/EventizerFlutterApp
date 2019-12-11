@@ -149,109 +149,113 @@ class _SettingsState extends State<Settings> {
 
     return AlertDialog(
         content: StatefulBuilder(builder: (context, StateSetter setState) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              controller: controllerMevcut,
-              decoration: InputDecoration(labelText: 'Mevcut Email adresiniz'),
-              validator: (value) =>
-                  value.isEmpty ? 'Geçerli email girilmeli' : null,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              obscureText: true,
-              controller: controllerMevcutPassword,
-              decoration: InputDecoration(labelText: 'Mevcut şifreniz'),
-              validator: (value) =>
-                  value.isEmpty ? 'Şifrenizi kontrol edin' : null,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              controller: controllerYeni,
-              decoration: InputDecoration(labelText: 'Yeni email adresiniz'),
-              validator: (value) =>
-                  value.isEmpty ? 'Geçerli email girilmeli' : null,
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Material(
-                borderRadius: BorderRadius.circular(30.0),
-                //elevation: 5.0,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: MaterialButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    minWidth: 50.0,
-                    height: 30.0,
-                    color: Color(0xFF179CDF),
-                    child: Text(
-                      "İptal",
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
+      return SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: controllerMevcut,
+                decoration:
+                    InputDecoration(labelText: 'Mevcut Email adresiniz'),
+                validator: (value) =>
+                    value.isEmpty ? 'Geçerli email girilmeli' : null,
               ),
-              Material(
-                borderRadius: BorderRadius.circular(30.0),
-                //elevation: 5.0,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: MaterialButton(
-                    onPressed: () async {
-                      if (controllerMevcut.text == userWorker.getUserEmail() &&
-                          controllerYeni.text != null &&
-                          await auth.checkPassword(controllerMevcut.text,
-                              controllerMevcutPassword.text)) {
-                        user.updateEmail(controllerYeni.text);
-                        triggerToast = true;
-                        userWorker.setEmail(controllerYeni.text);
-                        userWorker.updateInfo(
-                            "Email", userWorker.getUserEmail());
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                obscureText: true,
+                controller: controllerMevcutPassword,
+                decoration: InputDecoration(labelText: 'Mevcut şifreniz'),
+                validator: (value) =>
+                    value.isEmpty ? 'Şifrenizi kontrol edin' : null,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: controllerYeni,
+                decoration: InputDecoration(labelText: 'Yeni email adresiniz'),
+                validator: (value) =>
+                    value.isEmpty ? 'Geçerli email girilmeli' : null,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Material(
+                  borderRadius: BorderRadius.circular(30.0),
+                  //elevation: 5.0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: MaterialButton(
+                      onPressed: () {
                         Navigator.pop(context);
-                      } else {
-                        Fluttertoast.showToast(
-                            msg: "Hata: Lütfen bilgileri kontrol ediniz!.",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            timeInSecForIos: 2,
-                            backgroundColor: Colors.red,
-                            textColor: Colors.white,
-                            fontSize: 18.0);
-                        controllerYeni.clear();
-                        controllerMevcut.clear();
-                        controllerMevcutPassword.clear();
-                      }
-                    },
-                    minWidth: 50.0,
-                    height: 30.0,
-                    color: Color(0xFF179CDF),
-                    child: Text(
-                      "Güncelle",
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.white,
+                      },
+                      minWidth: 50.0,
+                      height: 30.0,
+                      color: Color(0xFF179CDF),
+                      child: Text(
+                        "İptal",
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              )
-            ],
-          )
-        ],
+                Material(
+                  borderRadius: BorderRadius.circular(30.0),
+                  //elevation: 5.0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: MaterialButton(
+                      onPressed: () async {
+                        if (controllerMevcut.text ==
+                                userWorker.getUserEmail() &&
+                            controllerYeni.text != null &&
+                            await auth.checkPassword(controllerMevcut.text,
+                                controllerMevcutPassword.text)) {
+                          user.updateEmail(controllerYeni.text);
+                          triggerToast = true;
+                          userWorker.setEmail(controllerYeni.text);
+                          userWorker.updateInfo(
+                              "Email", userWorker.getUserEmail());
+                          Navigator.pop(context);
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: "Hata: Lütfen bilgileri kontrol ediniz!.",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIos: 2,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 18.0);
+                          controllerYeni.clear();
+                          controllerMevcut.clear();
+                          controllerMevcutPassword.clear();
+                        }
+                      },
+                      minWidth: 50.0,
+                      height: 30.0,
+                      color: Color(0xFF179CDF),
+                      child: Text(
+                        "Güncelle",
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
       );
     }));
   }
@@ -268,177 +272,179 @@ class _SettingsState extends State<Settings> {
 
     return AlertDialog(
         content: StatefulBuilder(builder: (context, StateSetter setState) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              controller: controllerMevcutPassword,
-              obscureText: true,
-              decoration: InputDecoration(labelText: 'Mevcut şifreniz'),
-              validator: (value) => value.isEmpty ? 'Boş olamaz' : null,
+      return SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: controllerMevcutPassword,
+                obscureText: true,
+                decoration: InputDecoration(labelText: 'Mevcut şifreniz'),
+                validator: (value) => value.isEmpty ? 'Boş olamaz' : null,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              controller: controllerYeniPassword,
-              obscureText: true,
-              decoration: InputDecoration(labelText: 'Yeni şifreniz'),
-              validator: (value) => value.isEmpty ? 'Boş olamaz' : null,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: controllerYeniPassword,
+                obscureText: true,
+                decoration: InputDecoration(labelText: 'Yeni şifreniz'),
+                validator: (value) => value.isEmpty ? 'Boş olamaz' : null,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              controller: controllerYeni2Password,
-              obscureText: true,
-              decoration: InputDecoration(labelText: 'Yeni şifreniz(Tekrar)'),
-              validator: (value) => value.isEmpty ? 'Boş olamaz' : null,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: controllerYeni2Password,
+                obscureText: true,
+                decoration: InputDecoration(labelText: 'Yeni şifreniz(Tekrar)'),
+                validator: (value) => value.isEmpty ? 'Boş olamaz' : null,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: GestureDetector(
-              onTap: () {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text("Onayla"),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Text(userWorker.getUserEmail() +
-                                "\nBu email adresine bir şifre sıfırlama epostası gönderilecektir.\nOnaylıyormusunuz?")
-                          ],
-                        ),
-                        actions: <Widget>[
-                          Material(
-                            borderRadius: BorderRadius.circular(30.0),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: MaterialButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                minWidth: 50.0,
-                                height: 30.0,
-                                color: Color(0xFF179CDF),
-                                child: Text(
-                                  "İptal",
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("Onayla"),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Text(userWorker.getUserEmail() +
+                                  "\nBu email adresine bir şifre sıfırlama epostası gönderilecektir.\nOnaylıyormusunuz?")
+                            ],
                           ),
-                          Material(
-                            borderRadius: BorderRadius.circular(30.0),
-                            //elevation: 5.0,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: MaterialButton(
-                                onPressed: () {
-                                  auth.sendPasswordResetEmail(
-                                      userWorker.getUserEmail());
-                                  Navigator.pop(context);
-                                },
-                                minWidth: 50.0,
-                                height: 30.0,
-                                color: Color(0xFF179CDF),
-                                child: Text(
-                                  "Onayla",
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.white,
+                          actions: <Widget>[
+                            Material(
+                              borderRadius: BorderRadius.circular(30.0),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: MaterialButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  minWidth: 50.0,
+                                  height: 30.0,
+                                  color: Color(0xFF179CDF),
+                                  child: Text(
+                                    "İptal",
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          )
-                        ],
-                      );
-                    }).whenComplete(() {
-                  Navigator.pop(context);
-                });
-              },
-              child: Text(
-                "Şifremi unuttum.",
-                style: TextStyle(color: myBlueColor),
+                            Material(
+                              borderRadius: BorderRadius.circular(30.0),
+                              //elevation: 5.0,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: MaterialButton(
+                                  onPressed: () {
+                                    auth.sendPasswordResetEmail(
+                                        userWorker.getUserEmail());
+                                    Navigator.pop(context);
+                                  },
+                                  minWidth: 50.0,
+                                  height: 30.0,
+                                  color: Color(0xFF179CDF),
+                                  child: Text(
+                                    "Onayla",
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        );
+                      }).whenComplete(() {
+                    Navigator.pop(context);
+                  });
+                },
+                child: Text(
+                  "Şifremi unuttum.",
+                  style: TextStyle(color: myBlueColor),
+                ),
               ),
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Material(
-                borderRadius: BorderRadius.circular(30.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: MaterialButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    minWidth: 50.0,
-                    height: 30.0,
-                    color: Color(0xFF179CDF),
-                    child: Text(
-                      "İptal",
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Material(
-                borderRadius: BorderRadius.circular(30.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: MaterialButton(
-                    onPressed: () async {
-                      if (controllerYeniPassword.text ==
-                              controllerYeni2Password.text &&
-                          await auth.checkPassword(userWorker.getUserEmail(),
-                              controllerYeniPassword.text)) {
-                        user.updatePassword(controllerYeniPassword.text);
-                        triggerToast = true;
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Material(
+                  borderRadius: BorderRadius.circular(30.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: MaterialButton(
+                      onPressed: () {
                         Navigator.pop(context);
-                      } else {
-                        Fluttertoast.showToast(
-                            msg: "Hata: Lütfen bilgileri kontrol ediniz!.",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            timeInSecForIos: 2,
-                            backgroundColor: Colors.red,
-                            textColor: Colors.white,
-                            fontSize: 18.0);
-                      }
-                      controllerMevcutPassword.clear();
-                      controllerYeniPassword.clear();
-                      controllerYeni2Password.clear();
-                    },
-                    minWidth: 50.0,
-                    height: 30.0,
-                    color: Color(0xFF179CDF),
-                    child: Text(
-                      "Kaydet",
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.white,
+                      },
+                      minWidth: 50.0,
+                      height: 30.0,
+                      color: Color(0xFF179CDF),
+                      child: Text(
+                        "İptal",
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              )
-            ],
-          )
-        ],
+                Material(
+                  borderRadius: BorderRadius.circular(30.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: MaterialButton(
+                      onPressed: () async {
+                        if (controllerYeniPassword.text ==
+                                controllerYeni2Password.text &&
+                            await auth.checkPassword(userWorker.getUserEmail(),
+                                controllerYeniPassword.text)) {
+                          user.updatePassword(controllerYeniPassword.text);
+                          triggerToast = true;
+                          Navigator.pop(context);
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: "Hata: Lütfen bilgileri kontrol ediniz!.",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIos: 2,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 18.0);
+                        }
+                        controllerMevcutPassword.clear();
+                        controllerYeniPassword.clear();
+                        controllerYeni2Password.clear();
+                      },
+                      minWidth: 50.0,
+                      height: 30.0,
+                      color: Color(0xFF179CDF),
+                      child: Text(
+                        "Kaydet",
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
       );
     }));
   }

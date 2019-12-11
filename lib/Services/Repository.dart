@@ -172,9 +172,13 @@ class MessagingService with ChangeNotifier {
   checkConversation(String currentUserID, String otherUserID) {
     return firebaseDatabaseWorks.checkConversation(currentUserID, otherUserID);
   }
+
+  Stream<QuerySnapshot> getUserChatsSnapshot(String currentUser) {
+    return firebaseDatabaseWorks.getUserChatsSnapshots(currentUser);
+  }
 }
 
 /*
 Provider kullanımı
-final  userWorker = Provider.of<UserWorker>(context);
+final  userService = Provider.of<UserService>(context);
 */
