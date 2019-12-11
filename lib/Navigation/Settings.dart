@@ -19,6 +19,9 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  TextEditingController controllerAd;
+  TextEditingController controllerSoyad;
+  TextEditingController controllerTelNo;
   Color myBlueColor = Color(0XFF001970);
   bool triggerToast = false;
 
@@ -452,18 +455,18 @@ class _SettingsState extends State<Settings> {
   AlertDialog myUpdatePersonalInfoDialog(UserService userWorker) {
     File _image;
 
-    TextEditingController controllerAd;
-    TextEditingController controllerSoyad;
-    TextEditingController controllerTelNo;
     String birthday = "${userWorker.getUserBirthday()}";
     String displayedBirthday = "Şuanki doğum tarihiniz:" + birthday;
     String city;
-    controllerAd = TextEditingController(text: userWorker.getUserName());
-    controllerSoyad = TextEditingController(text: userWorker.getUserSurname());
-    controllerTelNo = TextEditingController(
-        text: userWorker.getUserTelno() == "null"
-            ? ""
-            : userWorker.getUserTelno());
+    if (controllerAd == null) {
+      controllerAd = TextEditingController(text: userWorker.getUserName());
+      controllerSoyad =
+          TextEditingController(text: userWorker.getUserSurname());
+      controllerTelNo = TextEditingController(
+          text: userWorker.getUserTelno() == "null"
+              ? ""
+              : userWorker.getUserTelno());
+    }
 
     return AlertDialog(
       title: Text("Bilgileri Düzenle"),

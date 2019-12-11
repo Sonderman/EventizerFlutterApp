@@ -83,7 +83,7 @@ class _MessageState extends State<Message> {
                         items.map((i) => ChatMessage.fromJson(i.data)).toList();
                     return DashChat(
                       key: _chatViewKey,
-
+                      scrollController: scrollController,
                       inverted: false,
                       onSend: (ChatMessage message) {
                         messageService
@@ -92,6 +92,9 @@ class _MessageState extends State<Message> {
                             .whenComplete(() {
                           setState(() {});
                         });
+                      },
+                      onLoadEarlier: () {
+                        print("loading...");
                       },
                       user: user,
                       inputDecoration:
