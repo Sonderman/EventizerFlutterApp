@@ -17,9 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return AuthProvider(
       auth: Auth(),
-      child: MaterialApp(debugShowCheckedModeBanner: false, home: AuthCheck()
-          //home: Login1(),
-          ),
+      child: MaterialApp(debugShowCheckedModeBanner: false, home: AuthCheck()),
     );
   }
 }
