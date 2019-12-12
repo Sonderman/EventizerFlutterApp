@@ -6,21 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 void main() {
-  //WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  /* //Test için
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: LocatorTest(),
-      );
-  }
- */
   @override
   Widget build(BuildContext context) {
     return AuthProvider(

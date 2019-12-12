@@ -28,18 +28,18 @@ class AuthCheck extends StatelessWidget {
                       return MultiProvider(
                         providers: [
                           ChangeNotifierProvider<UserService>(
-                              builder: (context) => UserService(
+                              create: (context) => UserService(
                                   snapshot.data,
                                   locator<DatabaseWorks>(),
                                   locator<StorageWorks>())),
                           ChangeNotifierProvider<EventService>(
-                              builder: (context) => EventService(
+                              create: (context) => EventService(
                                   locator<DatabaseWorks>(),
                                   locator<StorageWorks>())),
                           ChangeNotifierProvider<MessagingService>(
-                              builder: (context) => MessagingService(
+                              create: (context) => MessagingService(
                                   locator<DatabaseWorks>(),
-                                  locator<StorageWorks>()))
+                                  locator<StorageWorks>())),
                         ],
                         child: HomePage(),
                       );

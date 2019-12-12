@@ -1,5 +1,5 @@
 name: eventizer
-description: Eventizer App
+description: A social App
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -20,26 +20,24 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
-  dash_chat: ^1.0.9
-  line_awesome_icons: ^1.0.4+2
   get_it: ^3.0.3
-  provider: ^3.1.0+1
-  image_picker: ^0.6.1+11
+  line_awesome_icons: ^1.0.4+2
+  font_awesome_flutter: ^8.5.0
+  provider: ^3.2.0
+  dash_chat: ^1.0.9
+  firebase_core: ^0.4.3+1
+  firebase_auth: ^0.15.2
+  cloud_firestore: ^0.13.0+1
+  firebase_storage: ^3.1.0
+  image_picker: ^0.6.2+3
   find_dropdown: ^0.1.7+1
-  font_awesome_flutter: 8.5.0
   fluttertoast: ^3.1.3
-  firebase_core: ^0.4.1+5
-  firebase_auth: ^0.14.0+9
-  cloud_firestore: ^0.12.10
-  firebase_storage: ^3.0.8
   flutter:
     sdk: flutter
-    
-  
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
-  
 
 dev_dependencies:
   flutter_test:
