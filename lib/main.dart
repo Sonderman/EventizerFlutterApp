@@ -1,5 +1,5 @@
-import 'package:eventizer/Providers/AuthProvider.dart';
 import 'package:eventizer/Services/AuthCheck.dart';
+import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/BaseAuth.dart';
 import 'package:eventizer/locator.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +15,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return AuthProvider(
+    return AuthService(
       auth: Auth(),
       child: MaterialApp(debugShowCheckedModeBanner: false, home: AuthCheck()),
     );

@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eventizer/Providers/AuthProvider.dart';
 import 'package:eventizer/Services/AuthCheck.dart';
+import 'package:eventizer/Services/AuthService.dart';
 import 'package:find_dropdown/find_dropdown.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -82,7 +82,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void signUp() {
-    var auth = AuthProvider.of(context).auth;
+    var auth = AuthService.of(context).auth;
     String userId;
     String url;
     auth.signUp(_eposta, _sifre).then((value) {
@@ -172,7 +172,7 @@ class _RegisterPageState extends State<RegisterPage> {
       progressIndicator = true;
     });
     getImageFromGalery().then((onValue) {}).whenComplete(() {
-      var auth = AuthProvider.of(context).auth;
+      var auth = AuthService.of(context).auth;
       String userId, url;
       auth.signUp("test@test.com", "123123").then((value) {
         userId = value;

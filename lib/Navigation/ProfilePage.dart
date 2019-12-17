@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:eventizer/Providers/AuthProvider.dart';
 import 'package:eventizer/Services/AuthCheck.dart';
+import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/ImageViewer.dart';
 import 'package:flutter/material.dart';
@@ -27,14 +27,14 @@ class _ProfilePageState extends State<ProfilePage> {
   _ProfilePageState(this.userID);
 
   void _signedOut() {
-    var auth = AuthProvider.of(context).auth;
+    var auth = AuthService.of(context).auth;
     auth.signOut();
     Navigator.pushReplacement(context,
         MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
   }
 
   Future<String> getUserEmail(BuildContext context) async {
-    var auth = AuthProvider.of(context).auth;
+    var auth = AuthService.of(context).auth;
     String userEmail = await auth.getUserEmail();
     return userEmail;
     //setState(() {});

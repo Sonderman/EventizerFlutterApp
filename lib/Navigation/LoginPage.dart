@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eventizer/Providers/AuthProvider.dart';
 import 'package:eventizer/Services/AuthCheck.dart';
-
+import 'package:eventizer/Services/AuthService.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'RegisterPage.dart';
@@ -28,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> validateAndSubmit() async {
     if (validateAndSave()) {
-      var auth = AuthProvider.of(context).auth;
+      var auth = AuthService.of(context).auth;
       userId = await auth.signIn(_email, _password);
       Firestore.instance.collection('users').document(userId).updateData(
           {"LastLoggedIn": FieldValue.serverTimestamp()}).whenComplete(() {

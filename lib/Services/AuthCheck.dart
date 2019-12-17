@@ -1,6 +1,6 @@
 import 'package:eventizer/Navigation/HomePage.dart';
 import 'package:eventizer/Navigation/LoginPage.dart';
-import 'package:eventizer/Providers/AuthProvider.dart';
+import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/Firebase.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/locator.dart';
@@ -11,7 +11,7 @@ import 'BaseAuth.dart';
 class AuthCheck extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final BaseAuth auth = AuthProvider.of(context).auth;
+    final BaseAuth auth = AuthService.of(context).auth;
 
     return StreamBuilder<String>(
       stream: auth.onAuthStateChanged,

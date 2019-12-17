@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:eventizer/Providers/AuthProvider.dart';
+import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/BaseAuth.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/assets/Sehirler.dart';
@@ -141,7 +141,7 @@ class _SettingsState extends State<Settings> {
   }
 
   AlertDialog myChangeEmailDialog(UserService userWorker) {
-    final BaseAuth auth = AuthProvider.of(context).auth;
+    final BaseAuth auth = AuthService.of(context).auth;
     FirebaseUser user;
     TextEditingController controllerMevcut = TextEditingController();
     TextEditingController controllerYeni = TextEditingController();
@@ -264,7 +264,7 @@ class _SettingsState extends State<Settings> {
   }
 
   AlertDialog myUpdatePasswordDialog(UserService userWorker) {
-    final BaseAuth auth = AuthProvider.of(context).auth;
+    final BaseAuth auth = AuthService.of(context).auth;
     FirebaseUser user;
     TextEditingController controllerYeni2Password = TextEditingController();
     TextEditingController controllerYeniPassword = TextEditingController();
