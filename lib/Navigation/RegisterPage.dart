@@ -63,12 +63,13 @@ class _RegisterPageState extends State<RegisterPage> {
       return false;
   }
 
-  Future<void> validateAndSubmit() async {
+  bool validateAndSubmit() {
     if (validateAndSave()) {
       switch (genderIndex) {
         case 0:
           print('Error:Cinsiyet secilmedi!');
-          return;
+          validationToastMessage("Cinsiyet seçilmedi!");
+          return false;
           break;
         case 1:
           _cinsiyet = "Erkek";
@@ -77,14 +78,39 @@ class _RegisterPageState extends State<RegisterPage> {
           _cinsiyet = "Kadın";
           break;
       }
-      signUp();
     }
+    if (!isDateSelected) {
+      print("Doğum tarihi seçilmedi!");
+      validationToastMessage("Doğum tarihi seçilmedi!");
+      return false;
+    } else if (_image == null) {
+      print("Profil Fotoğrafı seçilmedi!");
+      validationToastMessage("Profil Fotoğrafı seçilmedi!");
+      return false;
+    } else if (_sehir == null) {
+      print("Sehir seçilmedi!");
+      validationToastMessage("Sehir seçilmedi!");
+      return false;
+    } else
+      return true;
+  }
+
+  void validationToastMessage(String message) {
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 2,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 18.0);
   }
 
   void signUp() {
     var auth = AuthService.of(context).auth;
     String userId;
     String url;
+
     auth.signUp(_eposta, _sifre).then((value) {
       userId = value;
       if (userId != null) {
@@ -441,10 +467,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: MaterialButton(
                     onPressed: () {
-                      setState(() {
-                        progressIndicator = true;
-                      });
-                      validateAndSubmit();
+                      if (validateAndSubmit()) {
+                        signUp();
+                        setState(() {
+                          progressIndicator = true;
+                        });
+                      }
                     },
                     minWidth: 150.0,
                     height: 50.0,
