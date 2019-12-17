@@ -20,7 +20,7 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
-
+  LoginAndRegister loginAndRegister = LoginAndRegister();
   String _ad;
   String _soyad;
   String _eposta;
@@ -106,68 +106,26 @@ class _RegisterPageState extends State<RegisterPage> {
         fontSize: 18.0);
   }
 
-  void signUp() {
-    var auth = AuthService.of(context).auth;
-    String userId;
-    String url;
+  void signUp() async {
+    List<String> datalist = [
+      _ad,
+      _soyad,
+      _eposta,
+      _cinsiyet,
+      _dogumtarihi,
+      _sehir,
+    ];
 
-    auth.signUp(_eposta, _sifre).then((value) {
-      userId = value;
-      if (userId != null) {
-        Firestore.instance.collection('users').document(userId).setData({
-          "Name": _ad,
-          "Surname": _soyad,
-          "Email": _eposta,
-          "Gender": _cinsiyet,
-          "Birthday": _dogumtarihi,
-          "City": _sehir,
-          //"ProfilePhotoUrl": "null",
-          "RegisteredAt": FieldValue.serverTimestamp()
-        }).whenComplete(() {
-          StorageReference storageReference = FirebaseStorage()
-              .ref()
-              .child('users')
-              .child(userId)
-              .child('images')
-              .child('profile')
-              .child('ProfileImage');
-          StorageUploadTask uploadTask = storageReference.putFile(_image);
-
-          StreamSubscription<StorageTaskEvent> streamSubscription =
-              uploadTask.events.listen((event) {
-            print('UploadingProfile Image :${event.type}');
-          });
-
-          uploadTask.onComplete.then((onValue) {
-            onValue.ref.getDownloadURL().then((value) {
-              url = value.toString();
-              print("Url:" + url);
-            }).whenComplete(() {
-              Firestore.instance
-                  .collection('users')
-                  .document(userId)
-                  .updateData({"ProfilePhotoUrl": url});
-            });
-          }).whenComplete(() {
-            streamSubscription.cancel();
-          });
-
-          print(
-              'Başarılı: Kayıt oluşturuldu: $userId\nAd:$_ad\nSoyad:$_soyad\nEposta:$_eposta\nSifre:$_sifre\nCinsiyet:$_cinsiyet\nDoğum Tarihi:$_dogumtarihi\nŞehir:$_sehir');
-        }).catchError((e) {
-          print(e);
-        });
-        //auth.sendEmailVerification();
-        emailVerifyToastMessage();
-        Future.delayed(const Duration(milliseconds: 200), () {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => AuthCheck()));
-        });
-      }
-    }, onError: (e) {
-      print('ERROR:Kayıt olurken hata!: $e');
+    await loginAndRegister
+        .registerUser(context, _eposta, _sifre, datalist, _image)
+        .whenComplete(() {
+      emailVerifyToastMessage();
+      Future.delayed(const Duration(milliseconds: 200), () {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
+      });
+    }).catchError((error) {
+      print(error);
       Fluttertoast.showToast(
           msg: "Girdileri gözden geçiriniz!",
           toastLength: Toast.LENGTH_SHORT,
