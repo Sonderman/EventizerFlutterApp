@@ -20,6 +20,7 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  splashscreen: ^1.2.0
   get_it: ^3.0.3
   line_awesome_icons: ^1.0.4+2
   font_awesome_flutter: ^8.5.0

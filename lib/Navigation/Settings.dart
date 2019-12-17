@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/BaseAuth.dart';
 import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/assets/Colors.dart';
 import 'package:eventizer/assets/Sehirler.dart';
 import 'package:find_dropdown/find_dropdown.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,17 +23,17 @@ class _SettingsState extends State<Settings> {
   TextEditingController controllerAd;
   TextEditingController controllerSoyad;
   TextEditingController controllerTelNo;
-  Color myBlueColor = Color(0XFF001970);
+
   bool triggerToast = false;
 
   @override
   Widget build(BuildContext context) {
     var userWorker = Provider.of<UserService>(context);
     return Scaffold(
-      backgroundColor: myBlueColor,
+      backgroundColor: MyColors().blueThemeColor,
       appBar: AppBar(
         title: Text("Ayarlar"),
-        backgroundColor: myBlueColor,
+        backgroundColor: MyColors().blueThemeColor,
         centerTitle: true,
       ),
       body: Center(
@@ -376,7 +377,7 @@ class _SettingsState extends State<Settings> {
                 },
                 child: Text(
                   "Şifremi unuttum.",
-                  style: TextStyle(color: myBlueColor),
+                  style: TextStyle(color: MyColors().blueThemeColor),
                 ),
               ),
             ),
