@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
-import 'package:find_dropdown/find_dropdown.dart';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_search_panel/flutter_search_panel.dart';
+import 'package:flutter_search_panel/search_item.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:eventizer/assets/Sehirler.dart';
@@ -290,6 +292,10 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Card cardFormFields(BuildContext context) {
+    List<SearchItem<int>> sehirler = [];
+    for (int i = 1; i <= 81; i++) {
+      sehirler.add(SearchItem(i, Sehirler().sehirler[i - 1]));
+    }
     return Card(
       elevation: 8.0,
       child: Form(
@@ -409,7 +415,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       }),
                 ],
               ),
-              FindDropdown(
+              /*FindDropdown(
                 items: Sehirler().sehirler,
                 onChanged: (String item) {
                   setState(() {
@@ -417,6 +423,30 @@ class _RegisterPageState extends State<RegisterPage> {
                   });
                 },
                 selectedItem: "Şehir Seçiniz",
+              ),*/
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text("Şehir Seçiniz:"),
+                  SizedBox(
+                    width: 25,
+                  ),
+                  FlutterSearchPanel<int>(
+                    selected: 1,
+                    title: "Şehir Seçiniz",
+                    data: sehirler,
+                    icon: Icon(Icons.check_circle, color: Colors.white),
+                    color: Colors.red,
+                    textStyle: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12.0,
+                        decorationStyle: TextDecorationStyle.dotted),
+                    onChanged: (int item) {
+                      _sehir = Sehirler().sehirler[item - 1];
+                    },
+                  ),
+                ],
               ),
               Material(
                 borderRadius: BorderRadius.circular(30.0),

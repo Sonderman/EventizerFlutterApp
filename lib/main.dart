@@ -14,6 +14,19 @@ void main() {
   runApp(MyApp());
 }
 
+class TestRun extends StatelessWidget {
+  const TestRun({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: Text("Test"),
+      ),
+    );
+  }
+}
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -32,7 +45,7 @@ class MyApp extends StatelessWidget {
           loadingText: Text("Loading"),
           navigateAfterSeconds: AuthCheck(),
           title: Text("Eventizer",
-              style: TextStyle(fontSize: 48, color: Colors.deepOrange)),
+              style: TextStyle(fontSize: 48, color: Colors.white)),
           loaderColor: MyColors().blueThemeColor,
         ),
       ),

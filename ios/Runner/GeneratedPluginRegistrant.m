@@ -28,6 +28,12 @@
 @import firebase_storage;
 #endif
 
+#if __has_include(<flutter_search_panel/FlutterSearchPanelPlugin.h>)
+#import <flutter_search_panel/FlutterSearchPanelPlugin.h>
+#else
+@import flutter_search_panel;
+#endif
+
 #if __has_include(<fluttertoast/FluttertoastPlugin.h>)
 #import <fluttertoast/FluttertoastPlugin.h>
 #else
@@ -47,6 +53,7 @@
   [FLTFirebaseAuthPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseAuthPlugin"]];
   [FLTFirebaseCorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseCorePlugin"]];
   [FLTFirebaseStoragePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseStoragePlugin"]];
+  [FlutterSearchPanelPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterSearchPanelPlugin"]];
   [FluttertoastPlugin registerWithRegistrar:[registry registrarForPlugin:@"FluttertoastPlugin"]];
   [FLTImagePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTImagePickerPlugin"]];
 }
