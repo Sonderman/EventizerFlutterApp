@@ -11,10 +11,16 @@ class CreateEvent extends StatefulWidget {
 
 class _CreateEventState extends State<CreateEvent> {
   Color myBlueColor = Color(0XFF001970);
-  TextEditingController controllerAd;
+  TextEditingController controllerAd = TextEditingController();
+
+  String category;
+  List<String> categoryItems = [
+    "Doğumgünü Partisi",
+    "Balık Tutma",
+    "Turistik Gezi"
+  ];
   @override
   Widget build(BuildContext context) {
-    controllerAd = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: myBlueColor,
@@ -24,13 +30,27 @@ class _CreateEventState extends State<CreateEvent> {
         child: Container(
           child: Column(
             children: <Widget>[
+              DropdownButton<String>(
+                  hint: Text("Kategori Seçiniz"),
+                  value: category != null ? category : null,
+                  items: categoryItems
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (chosen) {
+                    setState(() {
+                      category = chosen;
+                    });
+                  }),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   controller: controllerAd,
                   decoration: InputDecoration(labelText: 'Etkinlik Adı'),
                   validator: (value) => value.isEmpty ? 'boş olamaz' : null,
-                  onSaved: (value) => null,
                 ),
               ),
               Material(
@@ -40,14 +60,18 @@ class _CreateEventState extends State<CreateEvent> {
                   padding: const EdgeInsets.all(8.0),
                   child: MaterialButton(
                     onPressed: () async {
-                      final eventManager = Provider.of<EventService>(context);
+                      final eventManager =
+                          Provider.of<EventService>(context, listen: false);
                       final userID =
-                          Provider.of<UserService>(context).getUserId();
+                          Provider.of<UserService>(context, listen: false)
+                              .getUserId();
                       Map<String, dynamic> eventData = {
                         "OwnerID": userID,
-                        "Title": controllerAd.text
+                        "Title": controllerAd.text,
+                        "Category": category
                       };
-                      if (controllerAd.text != null &&
+                      if (controllerAd.text != "" &&
+                          category != null &&
                           await eventManager.createEvent(userID, eventData)) {
                         print("Event oluşturma başarılı");
                         Navigator.pop(context);
