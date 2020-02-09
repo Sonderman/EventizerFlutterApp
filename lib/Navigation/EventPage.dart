@@ -41,12 +41,13 @@ class _EventPageState extends State<EventPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: MaterialButton(
                       onPressed: () async {
-                        if (userService.getUserId() != eventData["OwnerID"]) {
+                        if (userService.getUserId() !=
+                            eventData["OrganizerID"]) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (BuildContext context) => Message(
-                                      userService, eventData["OwnerID"])));
+                                      userService, eventData["OrganizerID"])));
                         }
                       },
                       minWidth: 50.0,
@@ -72,7 +73,7 @@ class _EventPageState extends State<EventPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    ProfilePage(eventData["OwnerID"])));
+                                    ProfilePage(eventData["OrganizerID"])));
                       },
                       minWidth: 50.0,
                       height: 30.0,

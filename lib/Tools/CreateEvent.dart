@@ -66,7 +66,8 @@ class _CreateEventState extends State<CreateEvent> {
                           Provider.of<UserService>(context, listen: false)
                               .getUserId();
                       Map<String, dynamic> eventData = {
-                        "OwnerID": userID,
+                        //Veri tabanında yazılan yer burası , burası için bir çözüm bul
+                        "OrganizerID": userID,
                         "Title": controllerAd.text,
                         "Category": category
                       };
