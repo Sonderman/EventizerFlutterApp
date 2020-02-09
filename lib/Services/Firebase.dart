@@ -69,6 +69,26 @@ class DatabaseWorks {
     }
   }
 
+  Future<List<Map<String, dynamic>>> fetchActiveEventListsByCategory(
+      String category) async {
+    try {
+      List<Map<String, dynamic>> eventList = [];
+      return await ref
+          .collection("activeEvents")
+          .where("Category", isEqualTo: category)
+          .getDocuments()
+          .then((docs) {
+        docs.documents.forEach((event) {
+          eventList.add(event.data);
+        });
+        return eventList;
+      });
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   Future<Map<String, dynamic>> getUserInfoMap(String userId) async {
     var data = await ref.collection("users").document(userId).get();
     return data.data;

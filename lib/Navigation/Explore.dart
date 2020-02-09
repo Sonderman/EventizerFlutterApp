@@ -11,6 +11,12 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> {
+  List<String> categoryItems = [
+    "Doğumgünü Partisi",
+    "Balık Tutma",
+    "Turistik Gezi"
+  ];
+  String category;
   @override
   Widget build(BuildContext context) {
     final EventService _eventManager = Provider.of<EventService>(context);
@@ -18,26 +24,47 @@ class _ExplorePageState extends State<ExplorePage> {
         appBar: AppBar(
           title: Text("Keşfet"),
         ),
-        body: Center(
-          child: FutureBuilder(
-            future: _eventManager.fetchActiveEventLists(),
-            builder: (BuildContext context, AsyncSnapshot fetchedlist) {
-              if (fetchedlist.connectionState == ConnectionState.done) {
-                List<Map<String, dynamic>> listofMaps = fetchedlist.data;
-
-                return ListView.builder(
-                  itemCount: listofMaps.length,
-                  itemBuilder: (context, index) {
-                    return listofMaps.isNotEmpty
-                        ? eventItem(listofMaps[index])
-                        : Text("Etkinlik Yok");
-                  },
+        body: Column(children: <Widget>[
+          DropdownButton<String>(
+              hint: Text("Kategori Seçiniz"),
+              value: category != null ? category : null,
+              items:
+                  categoryItems.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
                 );
-              } else
-                return CircularProgressIndicator();
-            },
+              }).toList(),
+              onChanged: (chosen) {
+                setState(() {
+                  category = chosen;
+                });
+              }),
+          Expanded(
+            child: Center(
+              child: FutureBuilder(
+                future: category == null
+                    ? _eventManager.fetchActiveEventLists()
+                    : _eventManager.fetchActiveEventListsByCategory(category),
+                builder: (BuildContext context, AsyncSnapshot fetchedlist) {
+                  if (fetchedlist.connectionState == ConnectionState.done) {
+                    List<Map<String, dynamic>> listofMaps = fetchedlist.data;
+
+                    return ListView.builder(
+                      itemCount: listofMaps.length,
+                      itemBuilder: (context, index) {
+                        return listofMaps.isNotEmpty
+                            ? eventItem(listofMaps[index])
+                            : Text("Etkinlik Yok");
+                      },
+                    );
+                  } else
+                    return CircularProgressIndicator();
+                },
+              ),
+            ),
           ),
-        ));
+        ]));
   }
 
   Widget eventItem(Map<String, dynamic> eventDatas) {
@@ -45,6 +72,7 @@ class _ExplorePageState extends State<ExplorePage> {
     Color myBlueColor = Color(0XFF001970);
     String title = eventDatas['Title'];
     String ownerID = eventDatas['OwnerID'];
+    String category = eventDatas['Category'];
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: FutureBuilder(
@@ -66,7 +94,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   child: Card(
                       color: myBlueColor,
                       child: Text(
-                          ("Etkinlik adı: $title\nEtkinlik sahibi: $name"),
+                          ("Etkinlik adı: $title\nKategori: $category\nEtkinlik sahibi: $name"),
                           style: TextStyle(color: Colors.white))));
             } else
               return CircularProgressIndicator();

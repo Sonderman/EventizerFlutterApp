@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eventizer/Providers/AuthProvider.dart';
 import 'package:eventizer/Services/AuthCheck.dart';
-import 'package:find_dropdown/find_dropdown.dart';
+import 'package:eventizer/Services/AuthService.dart';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_search_panel/flutter_search_panel.dart';
+import 'package:flutter_search_panel/search_item.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:eventizer/assets/Sehirler.dart';
@@ -20,7 +22,7 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
-
+  LoginAndRegister loginAndRegister = LoginAndRegister();
   String _ad;
   String _soyad;
   String _eposta;
@@ -63,12 +65,13 @@ class _RegisterPageState extends State<RegisterPage> {
       return false;
   }
 
-  Future<void> validateAndSubmit() async {
+  bool validateAndSubmit() {
     if (validateAndSave()) {
       switch (genderIndex) {
         case 0:
           print('Error:Cinsiyet secilmedi!');
-          return;
+          validationToastMessage("Cinsiyet seçilmedi!");
+          return false;
           break;
         case 1:
           _cinsiyet = "Erkek";
@@ -77,71 +80,54 @@ class _RegisterPageState extends State<RegisterPage> {
           _cinsiyet = "Kadın";
           break;
       }
-      signUp();
     }
+    if (!isDateSelected) {
+      print("Doğum tarihi seçilmedi!");
+      validationToastMessage("Doğum tarihi seçilmedi!");
+      return false;
+    } else if (_image == null) {
+      print("Profil Fotoğrafı seçilmedi!");
+      validationToastMessage("Profil Fotoğrafı seçilmedi!");
+      return false;
+    } else if (_sehir == null) {
+      print("Sehir seçilmedi!");
+      validationToastMessage("Sehir seçilmedi!");
+      return false;
+    } else
+      return true;
   }
 
-  void signUp() {
-    var auth = AuthProvider.of(context).auth;
-    String userId;
-    String url;
-    auth.signUp(_eposta, _sifre).then((value) {
-      userId = value;
-      if (userId != null) {
-        Firestore.instance.collection('users').document(userId).setData({
-          "Name": _ad,
-          "Surname": _soyad,
-          "Email": _eposta,
-          "Gender": _cinsiyet,
-          "Birthday": _dogumtarihi,
-          "City": _sehir,
-          //"ProfilePhotoUrl": "null",
-          "RegisteredAt": FieldValue.serverTimestamp()
-        }).whenComplete(() {
-          StorageReference storageReference = FirebaseStorage()
-              .ref()
-              .child('users')
-              .child(userId)
-              .child('images')
-              .child('profile')
-              .child('ProfileImage');
-          StorageUploadTask uploadTask = storageReference.putFile(_image);
+  void validationToastMessage(String message) {
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 2,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 18.0);
+  }
 
-          StreamSubscription<StorageTaskEvent> streamSubscription =
-              uploadTask.events.listen((event) {
-            print('UploadingProfile Image :${event.type}');
-          });
+  void signUp() async {
+    List<String> datalist = [
+      _ad,
+      _soyad,
+      _eposta,
+      _cinsiyet,
+      _dogumtarihi,
+      _sehir,
+    ];
 
-          uploadTask.onComplete.then((onValue) {
-            onValue.ref.getDownloadURL().then((value) {
-              url = value.toString();
-              print("Url:" + url);
-            }).whenComplete(() {
-              Firestore.instance
-                  .collection('users')
-                  .document(userId)
-                  .updateData({"ProfilePhotoUrl": url});
-            });
-          }).whenComplete(() {
-            streamSubscription.cancel();
-          });
-
-          print(
-              'Başarılı: Kayıt oluşturuldu: $userId\nAd:$_ad\nSoyad:$_soyad\nEposta:$_eposta\nSifre:$_sifre\nCinsiyet:$_cinsiyet\nDoğum Tarihi:$_dogumtarihi\nŞehir:$_sehir');
-        }).catchError((e) {
-          print(e);
-        });
-        //auth.sendEmailVerification();
-        emailVerifyToastMessage();
-        Future.delayed(const Duration(milliseconds: 200), () {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => AuthCheck()));
-        });
-      }
-    }, onError: (e) {
-      print('ERROR:Kayıt olurken hata!: $e');
+    await loginAndRegister
+        .registerUser(context, _eposta, _sifre, datalist, _image)
+        .whenComplete(() {
+      emailVerifyToastMessage();
+      Future.delayed(const Duration(milliseconds: 200), () {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
+      });
+    }).catchError((error) {
+      print(error);
       Fluttertoast.showToast(
           msg: "Girdileri gözden geçiriniz!",
           toastLength: Toast.LENGTH_SHORT,
@@ -172,7 +158,7 @@ class _RegisterPageState extends State<RegisterPage> {
       progressIndicator = true;
     });
     getImageFromGalery().then((onValue) {}).whenComplete(() {
-      var auth = AuthProvider.of(context).auth;
+      var auth = AuthService.of(context).auth;
       String userId, url;
       auth.signUp("test@test.com", "123123").then((value) {
         userId = value;
@@ -306,6 +292,10 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Card cardFormFields(BuildContext context) {
+    List<SearchItem<int>> sehirler = [];
+    for (int i = 1; i <= 81; i++) {
+      sehirler.add(SearchItem(i, Sehirler().sehirler[i - 1]));
+    }
     return Card(
       elevation: 8.0,
       child: Form(
@@ -425,7 +415,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       }),
                 ],
               ),
-              FindDropdown(
+              /*FindDropdown(
                 items: Sehirler().sehirler,
                 onChanged: (String item) {
                   setState(() {
@@ -433,6 +423,30 @@ class _RegisterPageState extends State<RegisterPage> {
                   });
                 },
                 selectedItem: "Şehir Seçiniz",
+              ),*/
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text("Şehir Seçiniz:"),
+                  SizedBox(
+                    width: 25,
+                  ),
+                  FlutterSearchPanel<int>(
+                    selected: 1,
+                    title: "Şehir Seçiniz",
+                    data: sehirler,
+                    icon: Icon(Icons.check_circle, color: Colors.white),
+                    color: Colors.red,
+                    textStyle: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12.0,
+                        decorationStyle: TextDecorationStyle.dotted),
+                    onChanged: (int item) {
+                      _sehir = Sehirler().sehirler[item - 1];
+                    },
+                  ),
+                ],
               ),
               Material(
                 borderRadius: BorderRadius.circular(30.0),
@@ -441,10 +455,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: MaterialButton(
                     onPressed: () {
-                      setState(() {
-                        progressIndicator = true;
-                      });
-                      validateAndSubmit();
+                      if (validateAndSubmit()) {
+                        signUp();
+                        setState(() {
+                          progressIndicator = true;
+                        });
+                      }
                     },
                     minWidth: 150.0,
                     height: 50.0,

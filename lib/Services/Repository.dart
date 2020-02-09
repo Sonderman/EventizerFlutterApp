@@ -141,6 +141,11 @@ class EventService with ChangeNotifier {
   Future<List<Map<String, dynamic>>> fetchActiveEventLists() {
     return firebaseDatabaseWorks.fetchActiveEventLists();
   }
+
+  Future<List<Map<String, dynamic>>> fetchActiveEventListsByCategory(
+      String category) {
+    return firebaseDatabaseWorks.fetchActiveEventListsByCategory(category);
+  }
 }
 
 ///MessageService*****************************************************************************************************

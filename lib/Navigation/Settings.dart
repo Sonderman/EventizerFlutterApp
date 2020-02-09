@@ -1,12 +1,15 @@
 import 'dart:io';
-import 'package:eventizer/Providers/AuthProvider.dart';
+import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/BaseAuth.dart';
 import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/assets/Colors.dart';
 import 'package:eventizer/assets/Sehirler.dart';
-import 'package:find_dropdown/find_dropdown.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_search_panel/flutter_search_panel.dart';
+import 'package:flutter_search_panel/search_item.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,17 +25,17 @@ class _SettingsState extends State<Settings> {
   TextEditingController controllerAd;
   TextEditingController controllerSoyad;
   TextEditingController controllerTelNo;
-  Color myBlueColor = Color(0XFF001970);
+
   bool triggerToast = false;
 
   @override
   Widget build(BuildContext context) {
     var userWorker = Provider.of<UserService>(context);
     return Scaffold(
-      backgroundColor: myBlueColor,
+      backgroundColor: MyColors().blueThemeColor,
       appBar: AppBar(
         title: Text("Ayarlar"),
-        backgroundColor: myBlueColor,
+        backgroundColor: MyColors().blueThemeColor,
         centerTitle: true,
       ),
       body: Center(
@@ -141,7 +144,7 @@ class _SettingsState extends State<Settings> {
   }
 
   AlertDialog myChangeEmailDialog(UserService userWorker) {
-    final BaseAuth auth = AuthProvider.of(context).auth;
+    final BaseAuth auth = AuthService.of(context).auth;
     FirebaseUser user;
     TextEditingController controllerMevcut = TextEditingController();
     TextEditingController controllerYeni = TextEditingController();
@@ -264,7 +267,7 @@ class _SettingsState extends State<Settings> {
   }
 
   AlertDialog myUpdatePasswordDialog(UserService userWorker) {
-    final BaseAuth auth = AuthProvider.of(context).auth;
+    final BaseAuth auth = AuthService.of(context).auth;
     FirebaseUser user;
     TextEditingController controllerYeni2Password = TextEditingController();
     TextEditingController controllerYeniPassword = TextEditingController();
@@ -376,7 +379,7 @@ class _SettingsState extends State<Settings> {
                 },
                 child: Text(
                   "Şifremi unuttum.",
-                  style: TextStyle(color: myBlueColor),
+                  style: TextStyle(color: MyColors().blueThemeColor),
                 ),
               ),
             ),
@@ -485,6 +488,11 @@ class _SettingsState extends State<Settings> {
                 .whenComplete(() {
               setState(() {});
             });
+          }
+
+          List<SearchItem<int>> sehirler = [];
+          for (int i = 1; i <= 81; i++) {
+            sehirler.add(SearchItem(i, Sehirler().sehirler[i - 1]));
           }
 
           return SingleChildScrollView(
@@ -598,12 +606,36 @@ class _SettingsState extends State<Settings> {
                         }),
                   ],
                 ),
-                FindDropdown(
+                /*FindDropdown(
                   items: Sehirler().sehirler,
                   onChanged: (String item) {
                     city = item;
                   },
                   selectedItem: "Şehir Seçiniz",
+                ),*/
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text("Şehir Seçiniz:"),
+                    SizedBox(
+                      width: 25,
+                    ),
+                    FlutterSearchPanel<int>(
+                      selected: 1,
+                      title: "Şehir Seçiniz",
+                      data: sehirler,
+                      icon: Icon(Icons.check_circle, color: Colors.white),
+                      color: Colors.red,
+                      textStyle: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12.0,
+                          decorationStyle: TextDecorationStyle.dotted),
+                      onChanged: (int item) {
+                        city = Sehirler().sehirler[item - 1];
+                      },
+                    ),
+                  ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
