@@ -397,7 +397,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                   GestureDetector(
-                      child: new Icon(Icons.date_range),
+                      child: Icon(Icons.date_range),
                       onTap: () async {
                         final datePick = await showDatePicker(
                             context: context,
