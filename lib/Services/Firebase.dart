@@ -26,6 +26,7 @@ class AutoIdGenerator {
   }
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class DatabaseWorks {
   final Firestore ref = Firestore.instance;
   DatabaseWorks() {
@@ -35,6 +36,7 @@ class DatabaseWorks {
   Future<bool> createEvent(
       String userId, Map<String, dynamic> eventData) async {
     String generatedID = AutoIdGenerator.autoId();
+    //print("2.url:" + eventData['EventImageUrl'].toString());
     try {
       await ref
           .collection("users")
@@ -209,6 +211,19 @@ class DatabaseWorks {
         .collection('messages')
         .snapshots();
   }
+
+  Future<List<String>> getEventCategories() {
+    List<String> categories;
+    return ref
+        .collection('Settings')
+        .document('Event')
+        .get()
+        .then((eventSettings) {
+      categories = List.from(eventSettings.data['Categories']);
+      print(categories);
+      return categories;
+    });
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -276,23 +291,28 @@ class StorageWorks {
     });
   }
 
-  // diğer yöntem Not working
-  Future<Uint8List> getUserProfilePhoto(String userId) {
-    Uint8List image;
+  Future<String> sendEventImage(Uint8List image) async {
+    String url;
+    StorageUploadTask uploadTask = ref
+        .child('events')
+        .child('images')
+        .child(AutoIdGenerator.autoId() + '.jpeg')
+        .putData(image);
 
-    ref
-        .child("users")
-        .child(userId)
-        .child("images")
-        .child("profile")
-        .child("ProfileImage");
-
-    ref.getData(2 * 1024 * 1024).then((data) {
-      image = data;
+    StreamSubscription<StorageTaskEvent> streamSubscription =
+        uploadTask.events.listen((event) {
+      print('UpdatingProfile Image :${event.type}');
     });
-    if (image != null)
-      return image as Future<Uint8List>;
-    else
-      return null;
+
+    return await uploadTask.onComplete.then((onValue) {
+      return onValue.ref.getDownloadURL().then((value) {
+        url = value.toString();
+        print("Gelen Url:" + url);
+        streamSubscription.cancel();
+        return value.toString();
+      });
+    }).catchError((e) {
+      print(e);
+    });
   }
 }

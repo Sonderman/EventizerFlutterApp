@@ -1,5 +1,7 @@
 import 'package:eventizer/Navigation/EventPage.dart';
 import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/Settings/EventSettings.dart';
+import 'package:eventizer/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,11 +13,7 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> {
-  List<String> categoryItems = [
-    "Doğumgünü Partisi",
-    "Balık Tutma",
-    "Turistik Gezi"
-  ];
+  List<String> categoryItems = locator<EventSettings>().categoryItems;
   String category;
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,8 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/Settings/EventSettings.dart';
 import 'package:eventizer/Tools/ImageEditor.dart';
+import 'package:eventizer/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,15 +16,11 @@ class CreateEvent extends StatefulWidget {
 }
 
 class _CreateEventState extends State<CreateEvent> {
+  final GlobalKey<FormState> formkey = GlobalKey<FormState>();
   Color myBlueColor = Color(0XFF001970);
   TextEditingController controllerAd = TextEditingController();
-
+  List<String> categoryItems = locator<EventSettings>().categoryItems;
   String category;
-  List<String> categoryItems = [
-    "Doğumgünü Partisi",
-    "Balık Tutma",
-    "Turistik Gezi"
-  ];
   String eventStartDate;
   DateTime eventStartDateTime;
   String eventFinishDate;
@@ -100,12 +97,15 @@ class _CreateEventState extends State<CreateEvent> {
                         category = chosen;
                       });
                     }),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    controller: controllerAd,
-                    decoration: InputDecoration(labelText: 'Etkinlik Adı'),
-                    validator: (value) => value.isEmpty ? 'boş olamaz' : null,
+                Form(
+                  key: formkey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: controllerAd,
+                      decoration: InputDecoration(labelText: 'Etkinlik Adı'),
+                      validator: (value) => value.isEmpty ? 'boş olamaz' : null,
+                    ),
                   ),
                 ),
                 Row(
@@ -191,6 +191,7 @@ class _CreateEventState extends State<CreateEvent> {
                     padding: const EdgeInsets.all(8.0),
                     child: MaterialButton(
                       onPressed: () async {
+                        formkey.currentState.validate();
                         final eventManager =
                             Provider.of<EventService>(context, listen: false);
                         final userID =
@@ -200,11 +201,14 @@ class _CreateEventState extends State<CreateEvent> {
                           //Veri tabanında yazılan yer burası , burası için bir çözüm bul
                           "OrganizerID": userID,
                           "Title": controllerAd.text,
-                          "Category": category
+                          "Category": category,
+                          "StartDate": eventStartDate,
+                          "FinishDate": eventFinishDate,
                         };
                         if (controllerAd.text != "" &&
                             category != null &&
-                            await eventManager.createEvent(userID, eventData)) {
+                            await eventManager.createEvent(
+                                userID, eventData, _image)) {
                           print("Event oluşturma başarılı");
                           Navigator.pop(context);
                         } else {

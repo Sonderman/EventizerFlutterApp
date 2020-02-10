@@ -43,13 +43,6 @@ class AuthCheck extends StatelessWidget {
                         ],
                         child: HomePage(),
                       );
-
-                      /*ChangeNotifierProvider<UserService>(
-                        builder: (context) => UserService(snapshot.data,
-                            locator<DatabaseWorks>(), locator<StorageWorks>()),
-                        child: HomePage(),
-                      );*/
-
                     } else {
                       return buildWaitingScreen();
                     }
