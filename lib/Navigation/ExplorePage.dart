@@ -1,5 +1,7 @@
 import 'package:eventizer/Navigation/EventPage.dart';
 import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/Settings/EventSettings.dart';
+import 'package:eventizer/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,11 +13,7 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> {
-  List<String> categoryItems = [
-    "Doğumgünü Partisi",
-    "Balık Tutma",
-    "Turistik Gezi"
-  ];
+  List<String> categoryItems = locator<EventSettings>().categoryItems;
   String category;
   @override
   Widget build(BuildContext context) {
@@ -49,15 +47,16 @@ class _ExplorePageState extends State<ExplorePage> {
                 builder: (BuildContext context, AsyncSnapshot fetchedlist) {
                   if (fetchedlist.connectionState == ConnectionState.done) {
                     List<Map<String, dynamic>> listofMaps = fetchedlist.data;
-
-                    return ListView.builder(
-                      itemCount: listofMaps.length,
-                      itemBuilder: (context, index) {
-                        return listofMaps.isNotEmpty
-                            ? eventItem(listofMaps[index])
-                            : Text("Etkinlik Yok");
-                      },
-                    );
+                    if (listofMaps.length == 0) {
+                      return Text("Etkinlik Yok");
+                    } else {
+                      return ListView.builder(
+                        itemCount: listofMaps.length,
+                        itemBuilder: (context, index) {
+                          return eventItem(listofMaps[index]);
+                        },
+                      );
+                    }
                   } else
                     return CircularProgressIndicator();
                 },
@@ -71,7 +70,7 @@ class _ExplorePageState extends State<ExplorePage> {
     UserService userWorker = Provider.of<UserService>(context);
     Color myBlueColor = Color(0XFF001970);
     String title = eventDatas['Title'];
-    String ownerID = eventDatas['OwnerID'];
+    String ownerID = eventDatas['OrganizerID'];
     String category = eventDatas['Category'];
     return Padding(
         padding: const EdgeInsets.all(8.0),

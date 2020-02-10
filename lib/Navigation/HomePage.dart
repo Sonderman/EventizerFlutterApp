@@ -1,6 +1,6 @@
 import 'package:eventizer/Navigation/ChatsPage.dart';
-import 'package:eventizer/Navigation/Explore.dart';
-import 'package:eventizer/Navigation/Settings.dart';
+import 'package:eventizer/Navigation/ExplorePage.dart';
+import 'package:eventizer/Navigation/SettingsPage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/CreateEvent.dart';
 import 'package:flutter/material.dart';
@@ -68,7 +68,7 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
       ChatsPage(),
       ExplorePage(),
       ProfilePage(userWorker.getUserId()),
-      Settings()
+      SettingsPage()
     ];
 
     return Scaffold(

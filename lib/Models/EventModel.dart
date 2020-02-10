@@ -1,11 +1,11 @@
 class Event {
   final String eventId;
-  final String ownerId;
+  final String organizerId;
   String title;
 
-  Event(this.eventId, this.ownerId);
+  Event(this.eventId, this.organizerId);
 
   Map<String, dynamic> toMap() {
-    return {"OwnerID": ownerId, "Title": title};
+    return {"OrganizerID": organizerId, "Title": title};
   }
 }

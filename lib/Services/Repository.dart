@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat/dash_chat.dart';
 import 'package:eventizer/Models/UserModel.dart';
@@ -134,8 +135,16 @@ class EventService with ChangeNotifier {
   EventService(this.firebaseDatabaseWorks, this.firebaseStorageWorks);
 
   Future<bool> createEvent(
-      String userId, Map<String, dynamic> eventData) async {
-    return await firebaseDatabaseWorks.createEvent(userId, eventData);
+      String userId, Map<String, dynamic> eventData, Uint8List image) async {
+    if (image != null) {
+      eventData['EventImageUrl'] =
+          await firebaseStorageWorks.sendEventImage(image);
+      //print("1.url:" + eventData['EventImageUrl'].toString());
+      return await firebaseDatabaseWorks.createEvent(userId, eventData);
+    } else {
+      eventData['EventImageUrl'] = 'none';
+      return await firebaseDatabaseWorks.createEvent(userId, eventData);
+    }
   }
 
   Future<List<Map<String, dynamic>>> fetchActiveEventLists() {
