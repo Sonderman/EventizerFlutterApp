@@ -5,9 +5,9 @@ class EventSettings {
   final DatabaseWorks firebaseDatabaseWorks = locator<DatabaseWorks>();
   List<String> categoryItems;
   EventSettings() {
-    initCategories();
+    getCategories();
   }
-  void initCategories() async {
+  void getCategories() async {
     categoryItems = await firebaseDatabaseWorks.getEventCategories();
   }
 }

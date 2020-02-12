@@ -19,7 +19,7 @@ class _CreateEventState extends State<CreateEvent> {
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
   Color myBlueColor = Color(0XFF001970);
   TextEditingController controllerAd = TextEditingController();
-  List<String> categoryItems = locator<EventSettings>().categoryItems;
+  List<String> categoryItems = locator<EventSettings>().categoryItems ?? [];
   String category;
   String eventStartDate;
   DateTime eventStartDateTime;
