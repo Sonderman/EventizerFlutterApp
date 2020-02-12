@@ -13,32 +13,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-/*
-  String userEmail = "not received yet!";
-  String userUid;
-  Future<void> setThings() async {
-    try {
-      var auth = AuthProvider.of(context).auth;
 
-      userUid = await auth.getUserUid();
-    } catch (e) {
-      print('Kullanıcı IDsi alınırken hata : $e');
-    }
-  }
-
-  @override
-  void didChangeDependencies() {
-    setThings();
-    super.didChangeDependencies();
-  }
-*/
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: BottomNavWidget(),
-    );
+    return  BottomNavWidget();
+    
   }
 }
 

@@ -13,7 +13,7 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> {
-  List<String> categoryItems = locator<EventSettings>().categoryItems;
+  List<String> categoryItems = locator<EventSettings>().categoryItems ?? [];
   String category;
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,16 @@ class _ExplorePageState extends State<ExplorePage> {
                     if (listofMaps.length == 0) {
                       return Text("Etkinlik Yok");
                     } else {
-                      return ListView.builder(
+                      /*return ListView.builder(
+                        itemCount: listofMaps.length,
+                        itemBuilder: (context, index) {
+                          return eventItem(listofMaps[index]);
+                        },
+                      );*/
+                      return GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                        ),
                         itemCount: listofMaps.length,
                         itemBuilder: (context, index) {
                           return eventItem(listofMaps[index]);
@@ -72,6 +81,8 @@ class _ExplorePageState extends State<ExplorePage> {
     String title = eventDatas['Title'];
     String ownerID = eventDatas['OrganizerID'];
     String category = eventDatas['Category'];
+    String imageUrl = eventDatas['EventImageUrl'];
+    String startDate = eventDatas['StartDate'];
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: FutureBuilder(
@@ -90,14 +101,92 @@ class _ExplorePageState extends State<ExplorePage> {
                                   userData: userData.data,
                                 )));
                   },
-                  child: Card(
-                      color: myBlueColor,
-                      child: Text(
-                          ("Etkinlik adı: $title\nKategori: $category\nEtkinlik sahibi: $name"),
-                          style: TextStyle(color: Colors.white))));
+                  child: itemCard(
+                      myBlueColor, title, category, name, imageUrl, startDate));
             } else
               return CircularProgressIndicator();
           },
         ));
+  }
+
+  Widget itemCard(Color myBlueColor, String title, String category, String name,
+      String imageUrl, String startDate) {
+    return Stack(
+      children: <Widget>[
+        Positioned.fill(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10.0),
+            child: imageUrl != 'none'
+                ? Image.network(
+                    imageUrl,
+                    fit: BoxFit.fill,
+                  )
+                : Image.asset('assets/images/etkinlik.jpg', fit: BoxFit.fill),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            height: 200.0,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [
+                  Colors.black.withOpacity(1),
+                  Colors.black.withOpacity(0.9),
+                  Colors.black.withOpacity(0.8),
+                  Colors.black.withOpacity(0.7),
+                  Colors.black.withOpacity(0.6),
+                  Colors.black.withOpacity(0.5),
+                  Colors.black.withOpacity(0.4),
+                  Colors.black.withOpacity(0.1),
+                  Colors.black.withOpacity(0.05),
+                  Colors.black.withOpacity(0.025),
+                  Colors.black.withOpacity(0),
+                ],
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Text(
+                  title,
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        category,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        startDate,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 10),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
