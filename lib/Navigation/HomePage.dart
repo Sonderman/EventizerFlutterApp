@@ -1,8 +1,9 @@
 import 'package:eventizer/Navigation/ChatsPage.dart';
+import 'package:eventizer/Navigation/CreateEvent.dart';
 import 'package:eventizer/Navigation/ExplorePage.dart';
 import 'package:eventizer/Navigation/SettingsPage.dart';
 import 'package:eventizer/Services/Repository.dart';
-import 'package:eventizer/Tools/CreateEvent.dart';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -13,12 +14,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-
   @override
   Widget build(BuildContext context) {
-    return  BottomNavWidget();
-    
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: BottomNavWidget(),
+    );
   }
 }
 

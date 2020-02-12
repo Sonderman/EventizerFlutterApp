@@ -12,7 +12,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(MaterialApp(home: MyApp()));
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {

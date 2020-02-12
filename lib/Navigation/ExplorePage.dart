@@ -83,6 +83,7 @@ class _ExplorePageState extends State<ExplorePage> {
     String category = eventDatas['Category'];
     String imageUrl = eventDatas['EventImageUrl'];
     String startDate = eventDatas['StartDate'];
+    //String detail = eventDatas['Detail'];
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: FutureBuilder(

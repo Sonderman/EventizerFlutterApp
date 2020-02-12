@@ -165,7 +165,7 @@ class _ProfilePageState extends State<ProfilePage> {
           title: Text('Profil'),
           backgroundColor: myBlueColor,
           centerTitle: true,
-          expandedHeight: 280.0,
+          expandedHeight: MediaQuery.of(context).size.height * 0.45,
           floating: false,
           pinned: true,
           flexibleSpace: FlexibleSpaceBar(
@@ -282,7 +282,6 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               style: normalTextStyle,
-
               cursorColor: myBlueColor,
               //expands: true,
               enableInteractiveSelection: true,
