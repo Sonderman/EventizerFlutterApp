@@ -4,6 +4,7 @@ import 'package:eventizer/Services/AuthService.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'RegisterPage.dart';
+import 'package:eventizer/animations/FadeAnimation.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -55,103 +56,186 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Color(0xFF004d40),
-      appBar: AppBar(
-        //backgroundColor: Colors.red,
-        elevation: 2.0,
-        centerTitle: true,
-        title: Text('Sisteme Giriş'),
-      ),
-      body: Container(
-        padding: EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Center(
-            child: Column(
+      backgroundColor: Colors.white,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            height: 400,
+            child: Stack(
               children: <Widget>[
-                Container(
-                    width: 350,
-                    height: 250,
-                    child:
-                        Image(image: AssetImage('assets/images/etkinlik.jpg'))),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Giriş Yapınız',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.white,
+                Positioned(
+                  top: -40,
+                  height: 400,
+                  width: width,
+                  child: FadeAnimation(
+                    1,
+                    Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/background.png'),
+                          fit: BoxFit.fill,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-                Card(
-                  elevation: 8.0,
-                  child: Form(
-                      key: formkey,
-                      child: Column(
-                        //crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          TextFormField(
-                            decoration: InputDecoration(labelText: 'Eposta'),
-                            validator: (value) =>
-                                value.isEmpty ? 'Email boş olamaz' : null,
-                            onSaved: (value) => _email = value,
-                          ),
-                          TextFormField(
-                            decoration: InputDecoration(labelText: 'Şifre'),
-                            validator: (value) =>
-                                value.isEmpty ? 'Şifre boş olamaz' : null,
-                            onSaved: (value) => _password = value,
-                            obscureText: true,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Material(
-                              borderRadius: BorderRadius.circular(30.0),
-                              //elevation: 5.0,
-                              child: MaterialButton(
-                                onPressed: validateAndSubmit,
-                                minWidth: 150.0,
-                                height: 50.0,
-                                color: Color(0xFF179CDF),
-                                child: Text(
-                                  "Giriş",
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          RegisterPage()));
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "Hesabım yok",
-                                style: TextStyle(
-                                  fontSize: 15.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      )),
+                Positioned(
+                  height: 400,
+                  width: width + 20,
+                  child: FadeAnimation(
+                    1.3,
+                    Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/background-2.png'),
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
-        ),
+          Form(
+            key: formkey,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 40),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  FadeAnimation(
+                    1.5,
+                    Text(
+                      "Giriş",
+                      style: TextStyle(
+                        color: Color.fromRGBO(49, 39, 79, 1),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  FadeAnimation(
+                    1.7,
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromRGBO(196, 135, 198, .3),
+                              blurRadius: 20,
+                              offset: Offset(0, 10),
+                            ),
+                          ]),
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                border: Border(
+                              bottom: BorderSide(
+                                color: Colors.grey[200],
+                              ),
+                            )),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: "Email Adress",
+                                hintStyle: TextStyle(color: Colors.grey),
+                              ),
+                              validator: (value) => value.isEmpty
+                                  ? 'Email Adress Boş Olamaz'
+                                  : null,
+                              onSaved: (value) => _email = value,
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: "Şifre",
+                                hintStyle: TextStyle(color: Colors.grey),
+                              ),
+                              validator: (value) => value.isEmpty
+                                  ? 'Email Adress Boş Olamaz'
+                                  : null,
+                              onSaved: (value) => _password = value,
+                              obscureText: true,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  FadeAnimation(
+                    1.7,
+                    Center(
+                        child: Text(
+                      "Şifremi Unuttum?",
+                      style: TextStyle(color: Color.fromRGBO(196, 135, 198, 1)),
+                    )),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  FadeAnimation(
+                    1.9,
+                    MaterialButton(
+                      onPressed: validateAndSubmit,
+                      child: Container(
+                        height: 50,
+                        margin: EdgeInsets.symmetric(horizontal: 70),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Color.fromRGBO(49, 39, 79, 1),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Giriş",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  FadeAnimation(
+                    2,
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (BuildContext context)=>RegisterPage()));
+                      },
+                      child: Center(
+                          child: Text(
+                        "Hesabım Yok",
+                        style: TextStyle(color: Color.fromRGBO(49, 39, 79, .6)),
+                      )),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
+   
   }
 }
