@@ -1,6 +1,7 @@
 import 'package:eventizer/Navigation/EventPage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Settings/EventSettings.dart';
+import 'package:eventizer/assets/Colors.dart';
 import 'package:eventizer/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,8 @@ class _ExplorePageState extends State<ExplorePage> {
     final EventService _eventManager = Provider.of<EventService>(context);
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: MyColors().blueThemeColor,
           title: Text("Keşfet"),
         ),
         body: Column(children: <Widget>[
@@ -50,12 +53,6 @@ class _ExplorePageState extends State<ExplorePage> {
                     if (listofMaps.length == 0) {
                       return Text("Etkinlik Yok");
                     } else {
-                      /*return ListView.builder(
-                        itemCount: listofMaps.length,
-                        itemBuilder: (context, index) {
-                          return eventItem(listofMaps[index]);
-                        },
-                      );*/
                       return GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
@@ -77,7 +74,8 @@ class _ExplorePageState extends State<ExplorePage> {
 
   Widget eventItem(Map<String, dynamic> eventDatas) {
     UserService userWorker = Provider.of<UserService>(context);
-    Color myBlueColor = Color(0XFF001970);
+    var eventService = Provider.of<EventService>(context);
+    String eventID = eventDatas['eventID'];
     String title = eventDatas['Title'];
     String ownerID = eventDatas['OrganizerID'];
     String category = eventDatas['Category'];
@@ -93,25 +91,31 @@ class _ExplorePageState extends State<ExplorePage> {
             if (userData.connectionState == ConnectionState.done) {
               String name = userData.data['Name'];
               return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => EventPage(
-                                  eventData: eventDatas,
-                                  userData: userData.data,
-                                )));
+                  onTap: () async {
+                    eventService
+                        .amIparticipant(userWorker.getUserId(), eventID)
+                        .then((amIparticipant) {
+                      print("Kullanıcı bu etkinliğe katılmış:" +
+                          amIparticipant.toString());
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => EventPage(
+                                    eventData: eventDatas,
+                                    userData: userData.data,
+                                    amIparticipant: amIparticipant,
+                                  )));
+                    });
                   },
-                  child: itemCard(
-                      myBlueColor, title, category, name, imageUrl, startDate));
+                  child: itemCard(title, category, name, imageUrl, startDate));
             } else
               return CircularProgressIndicator();
           },
         ));
   }
 
-  Widget itemCard(Color myBlueColor, String title, String category, String name,
-      String imageUrl, String startDate) {
+  Widget itemCard(String title, String category, String name, String imageUrl,
+      String startDate) {
     return Stack(
       children: <Widget>[
         Positioned.fill(

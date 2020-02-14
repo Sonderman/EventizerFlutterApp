@@ -32,6 +32,7 @@ class UserService with ChangeNotifier {
     }
   }
 
+  //FIXME Aynı şeyi yapıyor findUserByID
   Future<Map<String, dynamic>> getTempUserMap(String userID) async {
     return await firebaseDatabaseWorks.getUserInfoMap(userID).then((map) {
       print("Temp user name:" + map["Name"]);
@@ -81,13 +82,9 @@ class UserService with ChangeNotifier {
       return _usermodel.profilePhotoUrl;
   }
 
-  String getUserId() {
-    return _usermodel.userID;
-  }
+  String getUserId() => _usermodel.userID;
 
-  String getUserName() {
-    return _usermodel.name;
-  }
+  String getUserName() => _usermodel.name;
 
   String getUserEmail() => _usermodel.email;
 
@@ -128,12 +125,22 @@ class UserService with ChangeNotifier {
 
 ///EventService*****************************************************************************************************
 class EventService with ChangeNotifier {
-  //Event _event;
   final DatabaseWorks firebaseDatabaseWorks;
   final StorageWorks firebaseStorageWorks;
 
   EventService(this.firebaseDatabaseWorks, this.firebaseStorageWorks);
 
+  //ANCHOR etkinliğe tıklandığıda zaten katılımcımıyız kontrol etmek için
+  Future<bool> amIparticipant(String userId, String eventID) async {
+    return await firebaseDatabaseWorks.amIparticipant(userId, eventID);
+  }
+
+  //ANCHOR Etkinliğe katılmak butonuna basılında veritabanına yazmak için
+  Future<bool> joinEvent(String userID, String eventID) async {
+    return await firebaseDatabaseWorks.joinEvent(userID, eventID);
+  }
+
+  //ANCHOR Etkinlik oluşturur
   Future<bool> createEvent(
       String userId, Map<String, dynamic> eventData, Uint8List image) async {
     if (image != null) {

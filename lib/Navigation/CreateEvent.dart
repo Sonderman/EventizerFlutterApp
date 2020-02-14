@@ -117,7 +117,8 @@ class _CreateEventState extends State<CreateEvent> {
                     style: TextStyle(color: myBlueColor, fontSize: 14.0),
                     controller: controllerDetay,
                     cursorColor: myBlueColor,
-                    //expands: true,
+                    maxLines: null,
+                    minLines: null,
                     enableInteractiveSelection: true,
                     maxLength: 256,
                     textCapitalization: TextCapitalization.sentences,
@@ -233,7 +234,7 @@ class _CreateEventState extends State<CreateEvent> {
                               Provider.of<UserService>(context, listen: false)
                                   .getUserId();
                           Map<String, dynamic> eventData = {
-                            //Veri tabanında yazılan yer burası , burası için bir çözüm bul
+                            // REVIEW Veri tabanında yazılan yer burası , burası için bir çözüm bul
                             "OrganizerID": userID,
                             "Title": controllerAd.text,
                             "Category": category,

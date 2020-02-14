@@ -1,28 +1,35 @@
 import 'package:eventizer/Navigation/ProfilePage.dart';
 import 'package:eventizer/Services/Repository.dart';
-import 'package:eventizer/Tools/Message.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:provider/provider.dart';
 
 class EventPage extends StatefulWidget {
   final Map<String, dynamic> eventData;
   final Map<String, dynamic> userData;
-
-  const EventPage({Key key, this.eventData, this.userData}) : super(key: key);
-
+  final bool amIparticipant;
+  const EventPage({Key key, this.eventData, this.userData, this.amIparticipant})
+      : super(key: key);
+//ANCHOR User ve Event verileri parametre ile geliyor ve statefull class a gönderiliyor
   @override
-  _EventPageState createState() => _EventPageState(eventData, userData);
+  _EventPageState createState() =>
+      _EventPageState(eventData, userData, amIparticipant);
 }
 
 class _EventPageState extends State<EventPage> {
   final Map<String, dynamic> eventData;
-  final Map<String, dynamic> userData;
+  final Map<String, dynamic> organizerData;
+  bool katilbutton;
+  _EventPageState(this.eventData, this.organizerData, this.katilbutton);
 
-  _EventPageState(this.eventData, this.userData);
+  void toggleJoinButton() {
+    katilbutton ? katilbutton = false : katilbutton = true;
+  }
 
   @override
   Widget build(BuildContext context) {
+    // ANCHOR Provider ile userServis nesnesi getiriliyor , bu sayede içerisindeki metodlara ulaşıyoruz.
     UserService userService = Provider.of<UserService>(context);
     return DefaultTabController(
       length: 3,
@@ -37,9 +44,11 @@ class _EventPageState extends State<EventPage> {
                     title: Text(eventData['Title']),
                     backgroundColor: MyColors().blueThemeColor,
                     centerTitle: true,
+                    // REVIEW  Resim yüksekliğine göre uzunluk veren bir metod kullan
                     expandedHeight: MediaQuery.of(context).size.height * 0.45,
                     floating: true,
                     pinned: true,
+                    snap: false,
                     flexibleSpace: FlexibleSpaceBar(
                         background: Padding(
                             padding:
@@ -60,6 +69,7 @@ class _EventPageState extends State<EventPage> {
                                     height: 140.0,
                                     width: double.infinity,
                                     //color: Colors.black.withOpacity(0.6),
+                                    // ANCHOR Koyuluk oluşturuyor
                                     decoration: BoxDecoration(
                                       //borderRadius: BorderRadius.circular(10.0),
                                       gradient: LinearGradient(
@@ -85,6 +95,8 @@ class _EventPageState extends State<EventPage> {
                               ],
                             ))),
                     bottom: TabBar(
+                      indicatorWeight: 4,
+                      indicatorColor: Colors.green,
                       tabs: <Tab>[
                         Tab(
                           text: "Detaylar",
@@ -101,114 +113,124 @@ class _EventPageState extends State<EventPage> {
             },
             body: TabBarView(
               children: <Widget>[
-                aboutPage(context, userService, eventData),
-                aboutPage(context, userService, eventData),
-                aboutPage(context, userService, eventData),
+                aboutPage(context, eventData, katilbutton),
+                commentsPage(userService),
+                participantsPage(),
               ],
             )),
       ),
     );
   }
 
+  //ANCHOR Detay kısmı
   Widget aboutPage(
-      BuildContext context, userService, Map<String, dynamic> eventData) {
+      BuildContext context, Map<String, dynamic> eventData, bool katilbutton) {
+    var eventService = Provider.of<EventService>(context);
+    var userService = Provider.of<UserService>(context);
+    print("Katilbutton:" + katilbutton.toString());
     return Scaffold(
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.3,
-            child: MaterialButton(
-              onPressed: () {},
-              minWidth: 50.0,
-              height: 30.0,
-              color: Color(0xFF179CDF),
-              child: Text(
-                "Katıl",
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.3,
-            child: Material(
-              borderRadius: BorderRadius.circular(30.0),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: MaterialButton(
-                  onPressed: () async {
-                    if (userService.getUserId() != eventData["OrganizerID"]) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) => Message(
-                                  userService, eventData["OrganizerID"])));
-                    }
-                  },
-                  minWidth: 50.0,
-                  height: 30.0,
-                  color: Color(0xFF179CDF),
-                  child: Text(
-                    "Mesaj",
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.3,
-            child: Material(
-              borderRadius: BorderRadius.circular(30.0),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: MaterialButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                ProfilePage(eventData["OrganizerID"])));
-                  },
-                  minWidth: 50.0,
-                  height: 30.0,
-                  color: Color(0xFF179CDF),
-                  child: Text(
-                    "Profil",
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      bottomNavigationBar: Container(
+        color: MyColors().blueThemeColor,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Text("Organizator : " +
-                userData['Name'] +
-                "\n Detay:" +
-                eventData['Detail']),
+            katilbutton
+                ? SizedBox(
+                    width: MediaQuery.of(context).size.width *
+                        0.3, // ANCHOR ekran genişliğinin 3de1 uzunluğunu veriyor
+                    child: FlatButton.icon(
+                      icon: Icon(LineAwesomeIcons.user_times),
+                      color: Colors.green,
+                      label: Text(
+                        "Katılma",
+                        style: TextStyle(fontSize: 12.0),
+                      ),
+                      textColor: Colors.black,
+                      onPressed: () async {
+                        //TODO Databaseden etkinliğin participants bölümünden kullanıcının idsini sil
+                        //Bu sayede kullanıcı katılma işlemini iptal etmiş olur
+                      },
+                    ),
+                  )
+                : SizedBox(
+                    width: MediaQuery.of(context).size.width *
+                        0.3, // ANCHOR ekran genişliğinin 3de1 uzunluğunu veriyor
+                    child: FlatButton.icon(
+                      icon: Icon(LineAwesomeIcons.user_plus),
+                      color: Colors.green,
+                      label: Text(
+                        "Katıl",
+                        style: TextStyle(fontSize: 15.0),
+                      ),
+                      textColor: Colors.black,
+                      onPressed: () async {
+                        if (await eventService.joinEvent(
+                            userService.getUserId(), eventData['eventID'])) {
+                          setState(() {
+                            toggleJoinButton();
+                            print("Katıldı");
+                          });
+                        }
+                      },
+                    ),
+                  ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.3,
+              child: FlatButton.icon(
+                icon: Icon(LineAwesomeIcons.black_tie),
+                color: Colors.green,
+                label: Text(
+                  "İletişim\nKur",
+                  style: TextStyle(fontSize: 10.0),
+                ),
+                textColor: Colors.black,
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              ProfilePage(eventData["OrganizerID"], true)));
+                },
+              ),
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.3,
+              child: FlatButton.icon(
+                icon: Icon(Icons.share),
+                color: Colors.green,
+                label: Text(
+                  "Paylaş",
+                  style: TextStyle(fontSize: 15.0),
+                ),
+                textColor: Colors.black,
+                onPressed: () {},
+              ),
+            ),
           ],
         ),
+      ),
+      // TODO  Burada Sayfa tasarımı yapılacak
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Text("Organizator : " +
+                organizerData['Name'] +
+                "\n Detay:" +
+                eventData['Detail']),
+          ),
+        ],
       ),
     );
   }
 
+  // TODO Yorum Sayfası tasarımı yapılacak
   Widget commentsPage(UserService userService) {
-    return SingleChildScrollView(
-      child: null,
-    );
+    return SingleChildScrollView();
+  }
+
+  // TODO Katılımcılar Sayfası tasarımı yapılacak
+  Widget participantsPage() {
+    return SingleChildScrollView();
   }
 }

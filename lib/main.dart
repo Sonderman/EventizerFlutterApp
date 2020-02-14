@@ -48,8 +48,8 @@ class _MyAppState extends State<MyApp> {
                   return AuthCheck();
                 } else {
                   return Container(
-                    // NOTE background image icin renk karisimini saglayan bir ozellik
-                    // NOTE 2 den fazla renk eklenebilir https://alligator.io/flutter/flutter-gradient/
+                    // ANCHOR  background image icin renk karisimini saglayan bir ozellik
+                    // ANCHOR  2 den fazla renk eklenebilir https://alligator.io/flutter/flutter-gradient/
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                           begin: Alignment.topRight,
@@ -68,11 +68,11 @@ class _MyAppState extends State<MyApp> {
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             )),
-                        // NOTE text ile loading isareti arasina 200 height birakir
+                        // ANCHOR  text ile loading isareti arasina 200 height birakir
                         SizedBox(
                           height: 200.0,
                         ),
-                        // NOTE spinkit package kullanildi https://pub.dev/packages/flutter_spinkit
+                        // ANCHOR  spinkit package kullanildi https://pub.dev/packages/flutter_spinkit
                         SpinKitFoldingCube(
                           color: Colors.white,
                           size: 100.0,
