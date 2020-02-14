@@ -130,6 +130,11 @@ class EventService with ChangeNotifier {
 
   EventService(this.firebaseDatabaseWorks, this.firebaseStorageWorks);
 
+  // ANCHOR Etkinlikten Ayrılmayı sağlar, firestore dan participant da userid yi siler
+  Future<bool> leaveEvent(String userID, String eventID) async {
+    return await firebaseDatabaseWorks.leaveEvent(userID, eventID);
+  }
+
   //ANCHOR etkinliğe tıklandığıda zaten katılımcımıyız kontrol etmek için
   Future<bool> amIparticipant(String userId, String eventID) async {
     return await firebaseDatabaseWorks.amIparticipant(userId, eventID);
@@ -141,6 +146,7 @@ class EventService with ChangeNotifier {
   }
 
   //ANCHOR Etkinlik oluşturur
+  //TODO kullanıcı etkinlik oluşturduğunda otomatikman kendiside participant olmalı
   Future<bool> createEvent(
       String userId, Map<String, dynamic> eventData, Uint8List image) async {
     if (image != null) {

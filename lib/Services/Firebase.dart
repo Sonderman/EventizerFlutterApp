@@ -256,6 +256,23 @@ class DatabaseWorks {
       return false;
     }
   }
+
+  Future<bool> leaveEvent(String userID, String eventID) async {
+    try {
+      return await ref
+          .collection("activeEvents")
+          .document(eventID)
+          .collection("Participants")
+          .document(userID)
+          .delete()
+          .then((_) {
+        return true;
+      });
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

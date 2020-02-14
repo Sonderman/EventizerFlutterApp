@@ -147,8 +147,15 @@ class _EventPageState extends State<EventPage> {
                       ),
                       textColor: Colors.black,
                       onPressed: () async {
-                        //TODO Databaseden etkinliğin participants bölümünden kullanıcının idsini sil
-                        //Bu sayede kullanıcı katılma işlemini iptal etmiş olur
+                        if (await eventService.leaveEvent(
+                            userService.getUserId(), eventData['eventID'])) {
+                          setState(() {
+                            toggleJoinButton();
+                            print("Ayrıldın");
+                          });
+                        } else {
+                          print("Hata");
+                        }
                       },
                     ),
                   )
@@ -170,6 +177,8 @@ class _EventPageState extends State<EventPage> {
                             toggleJoinButton();
                             print("Katıldı");
                           });
+                        } else {
+                          print("Hata");
                         }
                       },
                     ),
