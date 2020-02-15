@@ -273,6 +273,44 @@ class DatabaseWorks {
       return false;
     }
   }
+
+  Future<bool> sendComment(
+      String eventID, String userID, String comment) async {
+    try {
+      return await ref
+          .collection("activeEvents")
+          .document(eventID)
+          .collection("Comments")
+          .document(DateTime.now().millisecondsSinceEpoch.toString())
+          .setData({"Comment": comment, "CommentOwnerID": userID}).then((_) {
+        return true;
+      });
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getComments(String eventID) async {
+    List<Map<String, dynamic>> commmentList = [];
+    try {
+      return await ref
+          .collection("activeEvents")
+          .document(eventID)
+          .collection("Comments")
+          .getDocuments()
+          .then((docs) {
+        docs.documents.forEach((comment) {
+          commmentList.add(comment.data);
+        });
+        //print("Comments:" + commmentList.toString());
+        return commmentList;
+      });
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

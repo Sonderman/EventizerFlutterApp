@@ -168,6 +168,16 @@ class EventService with ChangeNotifier {
       String category) {
     return firebaseDatabaseWorks.fetchActiveEventListsByCategory(category);
   }
+
+  //ANCHOR Yapılan yorumu firestore da event içerisine kaydeder
+  Future<bool> sendComment(
+      String eventID, String userID, String comment) async {
+    return await firebaseDatabaseWorks.sendComment(eventID, userID, comment);
+  }
+
+  Future<List<Map<String, dynamic>>> getComments(String eventID) async {
+    return await firebaseDatabaseWorks.getComments(eventID);
+  }
 }
 
 ///MessageService*****************************************************************************************************
