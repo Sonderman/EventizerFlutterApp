@@ -311,6 +311,27 @@ class DatabaseWorks {
       return null;
     }
   }
+
+  Future<List<Map<String, dynamic>>> getParticipants(String eventID) async {
+    List<Map<String, dynamic>> participants = [];
+    try {
+      return await ref
+          .collection("activeEvents")
+          .document(eventID)
+          .collection("Participants")
+          .getDocuments()
+          .then((docs) {
+        docs.documents.forEach((participant) {
+          participants.add(participant.data);
+        });
+        //print("Comments:" + commmentList.toString());
+        return participants;
+      });
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

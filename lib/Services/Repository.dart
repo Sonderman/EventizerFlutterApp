@@ -178,6 +178,10 @@ class EventService with ChangeNotifier {
   Future<List<Map<String, dynamic>>> getComments(String eventID) async {
     return await firebaseDatabaseWorks.getComments(eventID);
   }
+
+  Future<List<Map<String, dynamic>>> getParticipants(String eventID) {
+    return firebaseDatabaseWorks.getParticipants(eventID);
+  }
 }
 
 ///MessageService*****************************************************************************************************

@@ -26,14 +26,13 @@ class _EventPageState extends State<EventPage> {
 
   _EventPageState(this.eventData, this.organizerData, this.katilbutton);
 
+  //ANCHOR katıl butonunun değişmesi için
   void toggleJoinButton() {
     katilbutton ? katilbutton = false : katilbutton = true;
   }
 
   @override
   Widget build(BuildContext context) {
-    // ANCHOR Provider ile userServis nesnesi getiriliyor , bu sayede içerisindeki metodlara ulaşıyoruz.
-    UserService userService = Provider.of<UserService>(context);
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -119,7 +118,7 @@ class _EventPageState extends State<EventPage> {
             body: TabBarView(
               children: <Widget>[
                 aboutPage(eventData, katilbutton),
-                commentsPage(userService),
+                commentsPage(),
                 participantsPage(),
               ],
             )),
@@ -129,6 +128,7 @@ class _EventPageState extends State<EventPage> {
 
   //ANCHOR Detay kısmı
   Widget aboutPage(Map<String, dynamic> eventData, bool katilbutton) {
+    // ANCHOR Provider ile userServis nesnesi getiriliyor , bu sayede içerisindeki metodlara ulaşıyoruz.
     var eventService = Provider.of<EventService>(context);
     var userService = Provider.of<UserService>(context);
     print("Katilbutton:" + katilbutton.toString());
@@ -238,7 +238,7 @@ class _EventPageState extends State<EventPage> {
   }
 
   // REVIEW  Yorum Sayfası tasarımı gözden geçir
-  Widget commentsPage(UserService userService) {
+  Widget commentsPage() {
     var eventService = Provider.of<EventService>(context);
     var userService = Provider.of<UserService>(context);
 
@@ -272,7 +272,6 @@ class _EventPageState extends State<EventPage> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         Expanded(
-          flex: 3,
           //ANCHOR Yorumlar burada listelenmekte
           child: FutureBuilder(
             future: eventService.getComments(eventData['eventID']),
@@ -347,11 +346,11 @@ class _EventPageState extends State<EventPage> {
             },
           ),
         ),
-        Expanded(
-            flex: 1,
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Row(
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Wrap(
+            children: <Widget>[
+              Row(
                 children: <Widget>[
                   Expanded(
                     flex: 3,
@@ -424,13 +423,72 @@ class _EventPageState extends State<EventPage> {
                           )))
                 ],
               ),
-            ))
+            ],
+          ),
+        )
       ],
     );
   }
 
-  // TODO Katılımcılar Sayfası tasarımı yapılacak
+  //ANCHOR Katılımcıların listelendiği sayfa
   Widget participantsPage() {
-    return SingleChildScrollView();
+    var eventService = Provider.of<EventService>(context);
+    var userService = Provider.of<UserService>(context);
+    return FutureBuilder(
+      future: eventService.getParticipants(eventData['eventID']),
+      builder: (BuildContext context,
+          AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.data.length == 0) {
+            return Text("Katılımcı Yok");
+          } else {
+            return ListView.separated(
+              separatorBuilder: (BuildContext context, int index) => Divider(),
+              itemCount: snapshot.data.length,
+              itemBuilder: (BuildContext context, int index) {
+                return FutureBuilder(
+                  future: userService
+                      .findUserbyID(snapshot.data[index]['ParticipantID']),
+                  builder: (BuildContext context, AsyncSnapshot user) {
+                    if (user.connectionState == ConnectionState.done) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Card(
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                  flex: 3,
+                                  child: AspectRatio(
+                                    aspectRatio: 1,
+                                    child: CircleAvatar(
+                                      radius: 120,
+                                      backgroundImage: NetworkImage(
+                                          user.data['ProfilePhotoUrl']),
+                                    ),
+                                  )),
+                              Expanded(flex: 1, child: SizedBox()),
+                              Expanded(
+                                flex: 8,
+                                child: Text(user.data['Name'] +
+                                    " " +
+                                    user.data['Surname']),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    } else {
+                      return CircularProgressIndicator();
+                    }
+                  },
+                );
+              },
+            );
+          }
+        } else {
+          return CircularProgressIndicator();
+        }
+      },
+    );
   }
 }
