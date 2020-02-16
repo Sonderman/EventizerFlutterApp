@@ -1,11 +1,9 @@
 import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/BaseAuth.dart';
-//import 'package:eventizer/assets/Colors.dart';
 import 'package:eventizer/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-//import 'package:splashscreen/splashscreen.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 void main() {

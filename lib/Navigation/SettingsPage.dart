@@ -4,7 +4,7 @@ import 'package:eventizer/Services/BaseAuth.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:eventizer/assets/Sehirler.dart';
-
+import 'package:extended_image/extended_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +60,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       showDialog(
                           context: context,
                           builder: (context) {
-                            return myUpdatePersonalInfoDialog(userWorker);
+                            return updateMyPersonalInfoDialog(userWorker);
                           }).whenComplete(() {
                         if (triggerToast) {
                           userWorker.userModelUpdater(userWorker.getUserId());
@@ -455,7 +455,7 @@ class _SettingsPageState extends State<SettingsPage> {
     }));
   }
 
-  AlertDialog myUpdatePersonalInfoDialog(UserService userWorker) {
+  Widget updateMyPersonalInfoDialog(UserService userWorker) {
     File _image;
 
     String birthday = "${userWorker.getUserBirthday()}";
@@ -471,11 +471,12 @@ class _SettingsPageState extends State<SettingsPage> {
               : userWorker.getUserTelno());
     }
 
+    //REVIEW Alertdialog default ayarları sebebiyle yanlardan ayarlama yapılamıyor gerekirse custom birşeyler yap
     return AlertDialog(
       title: Text("Bilgileri Düzenle"),
+      //ANCHOR dialoğun içinde ayrıyeten bir statefull oluşturdum
       content: StatefulBuilder(
         builder: (context, StateSetter setState) {
-          /////Builder
           Future<void> getImageFromCamera() async {
             _image = await ImagePicker.pickImage(source: ImageSource.camera)
                 .whenComplete(() {
@@ -504,8 +505,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   height: 150.0,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                        image:
-                            NetworkImage(userWorker.getUserProfilePhotoUrl()),
+                        image: ExtendedNetworkImageProvider(
+                            userWorker.getUserProfilePhotoUrl(),
+                            cache: true),
                         fit: BoxFit.fill),
                     borderRadius: BorderRadius.circular(120.0),
                   ),

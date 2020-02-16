@@ -1,6 +1,7 @@
 import 'package:eventizer/Navigation/ProfilePage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/assets/Colors.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:provider/provider.dart';
@@ -61,8 +62,9 @@ class _EventPageState extends State<EventPage> {
                               children: <Widget>[
                                 Positioned.fill(
                                     child: eventData['EventImageUrl'] != 'none'
-                                        ? Image.network(
+                                        ? ExtendedImage.network(
                                             eventData['EventImageUrl'],
+                                            cache: true,
                                             fit: BoxFit.fill)
                                         : Image.asset(
                                             'assets/images/etkinlik.jpg',
@@ -308,8 +310,11 @@ class _EventPageState extends State<EventPage> {
                                           aspectRatio: 1,
                                           child: CircleAvatar(
                                             radius: 120,
-                                            backgroundImage: NetworkImage(
-                                                user.data['ProfilePhotoUrl']),
+                                            backgroundImage:
+                                                ExtendedNetworkImageProvider(
+                                                    user.data[
+                                                        'ProfilePhotoUrl'],
+                                                    cache: true),
                                           ),
                                         )),
                                     Expanded(flex: 1, child: SizedBox()),
@@ -462,8 +467,10 @@ class _EventPageState extends State<EventPage> {
                                     aspectRatio: 1,
                                     child: CircleAvatar(
                                       radius: 120,
-                                      backgroundImage: NetworkImage(
-                                          user.data['ProfilePhotoUrl']),
+                                      backgroundImage:
+                                          ExtendedNetworkImageProvider(
+                                              user.data['ProfilePhotoUrl'],
+                                              cache: true),
                                     ),
                                   )),
                               Expanded(flex: 1, child: SizedBox()),

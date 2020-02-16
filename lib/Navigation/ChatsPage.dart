@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/Message.dart';
 import 'package:eventizer/assets/Colors.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -58,7 +59,14 @@ class _ChatsPageState extends State<ChatsPage> {
                               child: Row(
                                 children: <Widget>[
                                   CircleAvatar(
-                                    child: Image.network(url),
+                                      child: ExtendedImage.network(
+                                    url,
+                                    cache: true,
+                                  )
+                                      //Image.network(url),
+                                      ),
+                                  SizedBox(
+                                    width: 20,
                                   ),
                                   Text(userName)
                                 ],

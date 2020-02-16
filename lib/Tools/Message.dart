@@ -4,6 +4,7 @@ import 'package:dash_chat/dash_chat.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -44,7 +45,7 @@ class _MessageState extends State<Message> {
     user = ChatUser(
       name: userService.getUserName(),
       uid: currentUserID,
-      avatar: currentUserPhotoUrl, //ANCHOR Kendi url miz
+      avatar: currentUserPhotoUrl, // Kendi url miz
     );
   }
 
@@ -92,7 +93,6 @@ class _MessageState extends State<Message> {
                     return DashChat(
                       key: _chatViewKey,
                       scrollController: scrollController,
-                      inverted: false,
                       onSend: (ChatMessage message) {
                         messageService
                             .sendMessage(
@@ -101,6 +101,8 @@ class _MessageState extends State<Message> {
                           setState(() {});
                         });
                       },
+                      shouldShowLoadEarlier: true,
+                      showLoadEarlierWidget: () => CircularProgressIndicator(),
                       onLoadEarlier: () {
                         print("loading...");
                       },
@@ -112,8 +114,6 @@ class _MessageState extends State<Message> {
                       messages: messages,
                       showUserAvatar: false,
                       showAvatarForEveryMessage: false,
-
-                      //scrollToBottom: false,
                       onPressAvatar: (ChatUser user) {
                         print("OnPressAvatar: ${user.name}");
                       },
@@ -123,15 +123,24 @@ class _MessageState extends State<Message> {
                       inputMaxLines: 5,
                       messageContainerPadding:
                           EdgeInsets.only(left: 5.0, right: 5.0),
-                      alwaysShowSend: false,
                       inputTextStyle: TextStyle(fontSize: 16.0),
                       inputContainerStyle: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
                         border: Border.all(width: 0.0),
                         color: Colors.white,
                       ),
-                      shouldShowLoadEarlier: false,
-                      showTraillingBeforeSend: true,
+                      //REVIEW ScrolltoBottom problemini çöz
                       scrollToBottom: false,
+                      //TODO Gerçek emoji mesajları gönderebilmeyi sağla
+                      leading: <Widget>[
+                        IconButton(
+                            icon: Icon(
+                              FontAwesomeIcons.smile,
+                              color: Colors.deepOrange[700],
+                            ),
+                            onPressed: () {})
+                      ],
+                      inputCursorColor: MyColors().blueThemeColor,
                       trailing: <Widget>[
                         IconButton(
                           icon: Icon(Icons.photo),

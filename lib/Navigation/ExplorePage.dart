@@ -3,6 +3,7 @@ import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Settings/EventSettings.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:eventizer/locator.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +19,7 @@ class _ExplorePageState extends State<ExplorePage> {
   String category;
   @override
   Widget build(BuildContext context) {
-    final EventService _eventManager = Provider.of<EventService>(context);
+    var _eventManager = Provider.of<EventService>(context);
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -121,12 +122,25 @@ class _ExplorePageState extends State<ExplorePage> {
         Positioned.fill(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10.0),
-            child: imageUrl != 'none'
+            //ANCHOR resimlerin cache de saklanması sağlandı
+            child: FadeInImage.assetNetwork(
+              placeholder: 'assets/images/etkinlik.jpg',
+              image: imageUrl,
+              fit: BoxFit.fill,
+            ),
+            /*imageUrl != 'none'
+                  ? ExtendedImage.network(
+                      imageUrl,
+                      fit: BoxFit.fill,
+                      cache: true,
+                    )
+                  : Image.asset('assets/images/etkinlik.jpg', fit: BoxFit.fill)*/
+            /* imageUrl != 'none'
                 ? Image.network(
                     imageUrl,
                     fit: BoxFit.fill,
                   )
-                : Image.asset('assets/images/etkinlik.jpg', fit: BoxFit.fill),
+                : Image.asset('assets/images/etkinlik.jpg', fit: BoxFit.fill),*/
           ),
         ),
         Align(
