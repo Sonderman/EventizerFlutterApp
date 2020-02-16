@@ -3,8 +3,10 @@ import 'package:eventizer/Navigation/CreateEvent.dart';
 import 'package:eventizer/Navigation/ExplorePage.dart';
 import 'package:eventizer/Navigation/SettingsPage.dart';
 import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:provider/provider.dart';
 import 'ProfilePage.dart';
 
@@ -63,15 +65,15 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           elevation: 8.0,
-          backgroundColor: Color(0XFF001970),
+          backgroundColor: MyColors().blueThemeColor,
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.yellowAccent,
           unselectedItemColor: Colors.white,
           onTap: _onItemTapped,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.comments),
-              title: Text('Mesajlar'),
+              icon: Icon(FontAwesomeIcons.inbox),
+              title: Text('Gelen Kutusu'),
             ),
             BottomNavigationBarItem(
               icon: Icon(FontAwesomeIcons.search),
@@ -90,7 +92,7 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
       ),
       floatingActionButton: FloatingActionButton(
         mini: true,
-        backgroundColor: Color(0XFF001970),
+        backgroundColor: MyColors().blueThemeColor,
         foregroundColor: Colors.white,
         onPressed: () {
           Navigator.push(

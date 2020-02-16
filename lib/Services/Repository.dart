@@ -32,14 +32,6 @@ class UserService with ChangeNotifier {
     }
   }
 
-  //FIXME Aynı şeyi yapıyor findUserByID
-  Future<Map<String, dynamic>> getTempUserMap(String userID) async {
-    return await firebaseDatabaseWorks.getUserInfoMap(userID).then((map) {
-      print("Temp user name:" + map["Name"]);
-      return map;
-    });
-  }
-
   Future<Map<String, dynamic>> findUserbyID(String userID) {
     return firebaseDatabaseWorks.findUserbyID(userID);
   }

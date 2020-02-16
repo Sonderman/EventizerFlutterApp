@@ -21,7 +21,7 @@ class _ChatsPageState extends State<ChatsPage> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: MyColors().blueThemeColor,
-        title: Text("Sohbetler"),
+        title: Text("Gelen Kutusu"),
       ),
       body: StreamBuilder(
         stream: messageService.getUserChatsSnapshot(userService.getUserId()),

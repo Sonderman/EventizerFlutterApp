@@ -232,7 +232,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget infoCard(userID) {
     UserService userWorker = Provider.of<UserService>(context);
 
-    List<Widget> mapList(UserService userWorker) {
+    List<Widget> mapList() {
       List<Widget> wlist = [];
 
       var userMap = userWorker.getUserMap();
@@ -250,16 +250,17 @@ class _ProfilePageState extends State<ProfilePage> {
       return wlist;
     }
 
+    //ANCHOR bu sayfaya gelen kişinin cihaza kayıtlı olan kişimi yoksa başkasımı anlıyoruz
     if (userID == userWorker.getUserId()) {
       return Card(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: mapList(userWorker),
+          children: mapList(),
         ),
       );
     } else {
       return FutureBuilder(
-        future: userWorker.getTempUserMap(userID),
+        future: userWorker.findUserbyID(userID),
         builder: (BuildContext context, AsyncSnapshot<dynamic> infoData) {
           if (infoData.connectionState == ConnectionState.done) {
             return Card(

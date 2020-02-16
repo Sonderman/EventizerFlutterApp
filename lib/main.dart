@@ -12,7 +12,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(MyApp());
+  return runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -21,11 +21,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Future redirectAuth() {
     return Future.delayed(Duration(seconds: 2));
   }
