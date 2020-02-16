@@ -3,14 +3,17 @@ import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/ImageViewer.dart';
+import 'package:eventizer/Tools/Message.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
   final userID;
-  ProfilePage(this.userID);
+  final isFromEvent;
+  ProfilePage(this.userID, this.isFromEvent);
 
   @override
   _ProfilePageState createState() => _ProfilePageState(userID);
@@ -165,7 +168,7 @@ class _ProfilePageState extends State<ProfilePage> {
           title: Text('Profil'),
           backgroundColor: myBlueColor,
           centerTitle: true,
-          expandedHeight: 280.0,
+          expandedHeight: MediaQuery.of(context).size.height * 0.45,
           floating: false,
           pinned: true,
           flexibleSpace: FlexibleSpaceBar(
@@ -195,6 +198,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     padding: EdgeInsets.fromLTRB(8, 16, 8, 0),
                     child: profilPhotoCard(myBlueColor, userID),
                   ),
+                  widget.isFromEvent
+                      ? Padding(
+                          padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
+                          child: messageButtonCard(),
+                        )
+                      : Container(),
                   Padding(
                     padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
                     child: aboutCard(
@@ -282,9 +291,9 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               style: normalTextStyle,
-
               cursorColor: myBlueColor,
-              //expands: true,
+              maxLines: null,
+              minLines: null,
               enableInteractiveSelection: true,
               maxLength: 256,
               textCapitalization: TextCapitalization.sentences,
@@ -401,6 +410,41 @@ class _ProfilePageState extends State<ProfilePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: images)),
         ],
+      ),
+    );
+  }
+
+  Card messageButtonCard() {
+    UserService userService = Provider.of<UserService>(context);
+    return Card(
+      child: Center(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width *
+              0.3, // ANCHOR ekran genişliğinin 3de1 uzunluğunu veriyor
+          child: FlatButton.icon(
+            icon: Icon(LineAwesomeIcons.envelope),
+            color: Colors.green,
+            label: Text(
+              "Mesaj\nGönder",
+              style: TextStyle(fontSize: 10.0),
+            ),
+            textColor: Colors.black,
+            onPressed: () async {
+              // ANCHOR  Mesaj sayfasına gitmek için
+              if (userService.getUserId() != widget.userID) {
+                //ANCHOR mesajlaşma sayfasında karşıdaki kişinin ismini getirip parametre olarak veriyoruz,
+                //Bu sayede appbarda ismi görünüyor
+                await userService.findUserbyID(widget.userID).then((data) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              Message(widget.userID, data['Name'])));
+                });
+              }
+            },
+          ),
+        ),
       ),
     );
   }

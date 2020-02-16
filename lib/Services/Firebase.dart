@@ -37,6 +37,7 @@ class DatabaseWorks {
       String userId, Map<String, dynamic> eventData) async {
     String generatedID = AutoIdGenerator.autoId();
     //print("2.url:" + eventData['EventImageUrl'].toString());
+    eventData['eventID'] = generatedID;
     try {
       await ref
           .collection("users")
@@ -223,6 +224,113 @@ class DatabaseWorks {
       print(categories);
       return categories;
     });
+  }
+
+  Future<bool> joinEvent(String userID, String eventID) async {
+    try {
+      ref
+          .collection('activeEvents')
+          .document(eventID)
+          .collection('Participants')
+          .document(userID)
+          .setData({"ParticipantID": userID});
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  //ANCHOR kullanıcı bu etkinliğe kayıtlımı kontrol eder
+  Future<bool> amIparticipant(String userId, String eventID) async {
+    try {
+      var doc = await ref
+          .collection('activeEvents')
+          .document(eventID)
+          .collection('Participants')
+          .document(userId)
+          .get();
+      return doc.exists && doc.data != null ? true : false;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> leaveEvent(String userID, String eventID) async {
+    try {
+      return await ref
+          .collection("activeEvents")
+          .document(eventID)
+          .collection("Participants")
+          .document(userID)
+          .delete()
+          .then((_) {
+        return true;
+      });
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> sendComment(
+      String eventID, String userID, String comment) async {
+    try {
+      return await ref
+          .collection("activeEvents")
+          .document(eventID)
+          .collection("Comments")
+          .document(DateTime.now().millisecondsSinceEpoch.toString())
+          .setData({"Comment": comment, "CommentOwnerID": userID}).then((_) {
+        return true;
+      });
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getComments(String eventID) async {
+    List<Map<String, dynamic>> commmentList = [];
+    try {
+      return await ref
+          .collection("activeEvents")
+          .document(eventID)
+          .collection("Comments")
+          .getDocuments()
+          .then((docs) {
+        docs.documents.forEach((comment) {
+          commmentList.add(comment.data);
+        });
+        //print("Comments:" + commmentList.toString());
+        return commmentList;
+      });
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getParticipants(String eventID) async {
+    List<Map<String, dynamic>> participants = [];
+    try {
+      return await ref
+          .collection("activeEvents")
+          .document(eventID)
+          .collection("Participants")
+          .getDocuments()
+          .then((docs) {
+        docs.documents.forEach((participant) {
+          participants.add(participant.data);
+        });
+        //print("Comments:" + commmentList.toString());
+        return participants;
+      });
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 }
 
