@@ -1,6 +1,6 @@
 # eventizer
 
-Eventizer App
+Social App
 
 ## Getting Started
 

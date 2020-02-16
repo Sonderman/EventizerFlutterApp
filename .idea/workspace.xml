@@ -1,70 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f748c47b-2229-4100-912d-0ea25026babf" name="Default Changelist" comment="">
+    <list default="true" id="acf10fe4-b608-47a5-9fbb-f441cf333a58" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_for_Android.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/KotlinJavaRuntime.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/main_dart.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.metadata" beforeDir="false" afterPath="$PROJECT_DIR$/.metadata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/cache.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/caches/build_file_checksums.ser" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/codeStyles/Project.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/gradle.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/libraries/Gradle__androidx_annotation_annotation_1_0_0_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/libraries/Gradle__com_google_android_gms_play_services_base_16_0_1_aar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/libraries/Gradle__com_google_android_gms_play_services_basement_16_1_0_aar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/libraries/Gradle__com_google_android_gms_play_services_tasks_16_0_1_aar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/libraries/Gradle__com_google_auto_value_auto_value_annotations_1_6_3_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/libraries/Gradle__com_google_code_gson_gson_2_8_5_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/libraries/Gradle__com_google_firebase_firebase_auth_interop_17_0_0_aar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/libraries/Gradle__com_google_firebase_firebase_common_17_0_0_aar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/libraries/Gradle__com_squareup_javawriter_2_1_1_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/libraries/Gradle__javax_inject_javax_inject_1_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/libraries/Gradle__junit_junit_4_12_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/libraries/Gradle__net_sf_kxml_kxml2_2_3_0_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/libraries/Gradle__org_hamcrest_hamcrest_core_1_3_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/libraries/Gradle__org_hamcrest_hamcrest_integration_1_3_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/libraries/Gradle__org_hamcrest_hamcrest_library_1_3_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/libraries/Gradle__org_jetbrains_annotations_13_0_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/runConfigurations.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/android.iml" beforeDir="false" afterPath="$PROJECT_DIR$/android/android.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-hdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-hdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-mdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-mdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/local.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/GeneratedPluginRegistrant.m" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner/GeneratedPluginRegistrant.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Flutter/Generated.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Flutter/Generated.xcconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Flutter/flutter_export_environment.sh" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Flutter/flutter_export_environment.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/widget_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/test/widget_test.dart" afterDir="false" />
     </list>
+    <ignored path="$PROJECT_DIR$/.dart_tool/" />
+    <ignored path="$PROJECT_DIR$/.idea/" />
+    <ignored path="$PROJECT_DIR$/.pub/" />
+    <ignored path="$PROJECT_DIR$/build/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="emulator-5554" />
+  <component name="DefaultGradleProjectSettings">
+    <option name="testRunner" value="GRADLE" />
+    <option name="delegatedBuild" value="true" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="QLF7N15C29033297" />
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="618">
-              <caret line="92" column="24" lean-forward="true" selection-start-line="92" selection-start-column="24" selection-end-line="92" selection-end-column="24" />
+            <state relative-caret-position="340">
+              <caret line="17" column="36" selection-start-line="17" selection-start-column="36" selection-end-line="17" selection-end-column="36" />
               <folding>
                 <element signature="e#0#51#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pubspec.yaml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="420">
+              <caret line="21" column="23" selection-start-line="21" selection-start-column="23" selection-end-line="21" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -74,9 +71,16 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-7" />
-    <option name="width" value="1328" />
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/pubspec.yaml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="614" />
+    <option name="width" value="1313" />
     <option name="height" value="1047" />
   </component>
   <component name="ProjectView">
@@ -84,6 +88,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -95,18 +102,12 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="android.project.structure.last.selected" value="SDK Location" />
-    <property name="android.project.structure.proportion" value="0.15" />
-    <property name="android.sdk.path" value="D:/SDKs/AndroidSdk" />
     <property name="dart.analysis.tool.window.force.activate" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RunDashboard">
@@ -121,65 +122,62 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
-    <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter">
-      <option name="filePath" value="$PROJECT_DIR$/lib/main.dart" />
-      <method v="2" />
-    </configuration>
-  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="f748c47b-2229-4100-912d-0ea25026babf" name="Default Changelist" comment="" />
-      <created>1581525483912</created>
+      <changelist id="acf10fe4-b608-47a5-9fbb-f441cf333a58" name="Default Changelist" comment="" />
+      <created>1581859968435</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1581525483912</updated>
+      <updated>1581859968435</updated>
     </task>
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <frame x="614" y="0" width="1313" height="1047" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" visible="true" weight="0.16950959" />
-      <window_info id="Structure" side_tool="true" />
-      <window_info id="Image Layers" />
-      <window_info id="Designer" />
-      <window_info id="Build Variants" side_tool="true" />
-      <window_info id="Resources Explorer" />
-      <window_info id="Capture Tool" />
-      <window_info id="Favorites" side_tool="true" />
-      <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Dart Analysis" weight="0.20693392" />
-      <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="Android Profiler" show_stripe_button="false" />
-      <window_info anchor="bottom" id="TODO" />
-      <window_info anchor="bottom" id="Run" weight="0.32936078" />
-      <window_info anchor="bottom" id="Debug" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
-      <window_info anchor="bottom" id="Logcat" />
-      <window_info anchor="bottom" id="Messages" weight="0.32936078" />
-      <window_info anchor="right" id="Device File Explorer" side_tool="true" />
-      <window_info anchor="right" id="Capture Analysis" />
-      <window_info anchor="right" id="Theme Preview" />
-      <window_info anchor="right" id="Flutter Inspector" />
-      <window_info anchor="right" id="Flutter Outline" />
-      <window_info anchor="right" id="Palette&#9;" />
-      <window_info anchor="right" id="Flutter Performance" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18355946" />
+      <window_info id="Captures" order="1" side_tool="true" />
+      <window_info id="Structure" order="2" side_tool="true" />
+      <window_info id="Image Layers" order="3" />
+      <window_info id="Designer" order="4" />
+      <window_info id="Build Variants" order="5" side_tool="true" />
+      <window_info id="Resources Explorer" order="6" />
+      <window_info id="Capture Tool" order="7" />
+      <window_info id="Favorites" order="8" side_tool="true" />
+      <window_info anchor="bottom" id="Dart Analysis" order="0" weight="0.27899343" />
+      <window_info anchor="bottom" id="Run" order="1" weight="0.18161926" />
+      <window_info anchor="bottom" id="TODO" order="2" />
+      <window_info anchor="bottom" id="Android Profiler" order="3" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Logcat" order="4" />
+      <window_info anchor="bottom" id="Debug" order="5" />
+      <window_info anchor="bottom" id="Terminal" order="6" />
+      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Messages" order="9" weight="0.32932165" />
+      <window_info anchor="right" id="Device File Explorer" order="0" side_tool="true" />
+      <window_info anchor="right" id="Capture Analysis" order="1" />
+      <window_info anchor="right" id="Theme Preview" order="2" />
+      <window_info anchor="right" id="Flutter Inspector" order="3" weight="0.32960895" />
+      <window_info anchor="right" id="Flutter Outline" order="4" />
+      <window_info anchor="right" id="Palette&#9;" order="5" />
+      <window_info anchor="right" id="Flutter Performance" order="6" weight="0.32960895" />
     </layout>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/android/android.iml">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/pubspec.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="21" column="23" selection-start-line="21" selection-start-column="23" selection-end-line="21" selection-end-column="23" />
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="618">
-          <caret line="92" column="24" lean-forward="true" selection-start-line="92" selection-start-column="24" selection-end-line="92" selection-end-column="24" />
+        <state relative-caret-position="340">
+          <caret line="17" column="36" selection-start-line="17" selection-start-column="36" selection-end-line="17" selection-end-column="36" />
           <folding>
             <element signature="e#0#51#0" expanded="true" />
           </folding>

@@ -56,7 +56,7 @@ packages:
       name: cloud_firestore_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.0+2"
+    version: "0.1.0+3"
   collection:
     dependency: transitive
     description:
@@ -135,12 +135,12 @@ packages:
     source: hosted
     version: "0.1.2"
   firebase_core:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.3+3"
+    version: "0.4.4"
   firebase_core_platform_interface:
     dependency: transitive
     description:
