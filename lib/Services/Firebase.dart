@@ -29,6 +29,10 @@ class AutoIdGenerator {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class DatabaseWorks {
   final Firestore ref = Firestore.instance;
+  // String _server = "Release";
+  String _server = "Development";
+  //String _server = "OpenTest";
+  String getServer() => _server;
   DatabaseWorks() {
     print("DatabaseWorks locator running");
   }
@@ -40,12 +44,16 @@ class DatabaseWorks {
     eventData['eventID'] = generatedID;
     try {
       await ref
+          .collection("EventizerApp")
+          .document(_server)
           .collection("users")
           .document(userId)
           .collection("events")
           .document(generatedID)
           .setData(eventData);
       await ref
+          .collection("EventizerApp")
+          .document(_server)
           .collection("activeEvents")
           .document(generatedID)
           .setData(eventData);
@@ -59,7 +67,12 @@ class DatabaseWorks {
   Future<List<Map<String, dynamic>>> fetchActiveEventLists() async {
     try {
       List<Map<String, dynamic>> eventList = [];
-      return await ref.collection("activeEvents").getDocuments().then((docs) {
+      return await ref
+          .collection("EventizerApp")
+          .document(_server)
+          .collection("activeEvents")
+          .getDocuments()
+          .then((docs) {
         // print("gelen verinin uzunluğu:" + docs.documents.length.toString());
         docs.documents.forEach((event) {
           eventList.add(event.data);
@@ -93,14 +106,25 @@ class DatabaseWorks {
   }
 
   Future<Map<String, dynamic>> getUserInfoMap(String userId) async {
-    var data = await ref.collection("users").document(userId).get();
+    var data = await ref
+        .collection("EventizerApp")
+        .document(_server)
+        .collection("users")
+        .document(userId)
+        .get();
     return data.data;
   }
 
   Future<String> getUserProfilePhotoUrl(String userId) {
     Future<String> url;
     try {
-      url = ref.collection("users").document(userId).get().then((value) {
+      url = ref
+          .collection("EventizerApp")
+          .document(_server)
+          .collection("users")
+          .document(userId)
+          .get()
+          .then((value) {
         return value.data["ProfilePhotoUrl"].toString();
       });
     } catch (e) {
@@ -110,12 +134,19 @@ class DatabaseWorks {
   }
 
   void updateInfo(String userId, String maptext, String changedtext) {
-    ref.collection('users').document(userId).updateData({maptext: changedtext});
+    ref
+        .collection("EventizerApp")
+        .document(_server)
+        .collection('users')
+        .document(userId)
+        .updateData({maptext: changedtext});
   }
 
   Future<Map<String, dynamic>> findUserbyID(String userID) async {
     try {
       return await ref
+          .collection("EventizerApp")
+          .document(_server)
           .collection("users")
           .document(userID)
           .get()
@@ -130,6 +161,8 @@ class DatabaseWorks {
 
   Stream<QuerySnapshot> getSnapshot(String chatID) {
     return ref
+        .collection("EventizerApp")
+        .document(_server)
         .collection('messagePool')
         .document(chatID)
         .collection('messages')
@@ -144,6 +177,8 @@ class DatabaseWorks {
       await Firestore.instance.runTransaction((transaction) async {
         await transaction.set(
             Firestore.instance
+                .collection("EventizerApp")
+                .document(_server)
                 .collection('users')
                 .document(currentUser)
                 .collection('messages')
@@ -151,6 +186,8 @@ class DatabaseWorks {
             {"OtherUserID": otherUser});
         await transaction.set(
             Firestore.instance
+                .collection("EventizerApp")
+                .document(_server)
                 .collection('users')
                 .document(otherUser)
                 .collection('messages')
@@ -159,6 +196,8 @@ class DatabaseWorks {
       });
     }
     var messageRef = Firestore.instance
+        .collection("EventizerApp")
+        .document(_server)
         .collection('messagePool')
         .document(chatID)
         .collection('messages')
@@ -174,6 +213,8 @@ class DatabaseWorks {
   Future<String> checkConversation(String currentUser, String otherUser) async {
     try {
       return await Firestore.instance
+          .collection("EventizerApp")
+          .document(_server)
           .collection('users')
           .document(currentUser)
           .collection('messages')
@@ -192,6 +233,8 @@ class DatabaseWorks {
   Future sendImageMessage(
       ChatMessage message, String time, String chatID) async {
     var messageRef = ref
+        .collection("EventizerApp")
+        .document(_server)
         .collection('messagePool')
         .document(chatID)
         .collection('messages')
@@ -207,12 +250,15 @@ class DatabaseWorks {
 
   Stream<QuerySnapshot> getUserChatsSnapshots(String currentUser) {
     return ref
+        .collection("EventizerApp")
+        .document(_server)
         .collection('users')
         .document(currentUser)
         .collection('messages')
         .snapshots();
   }
 
+//NOTE Burası Settings
   Future<List<String>> getEventCategories() {
     List<String> categories;
     return ref
@@ -229,6 +275,8 @@ class DatabaseWorks {
   Future<bool> joinEvent(String userID, String eventID) async {
     try {
       ref
+          .collection("EventizerApp")
+          .document(_server)
           .collection('activeEvents')
           .document(eventID)
           .collection('Participants')
@@ -245,6 +293,8 @@ class DatabaseWorks {
   Future<bool> amIparticipant(String userId, String eventID) async {
     try {
       var doc = await ref
+          .collection("EventizerApp")
+          .document(_server)
           .collection('activeEvents')
           .document(eventID)
           .collection('Participants')
@@ -260,6 +310,8 @@ class DatabaseWorks {
   Future<bool> leaveEvent(String userID, String eventID) async {
     try {
       return await ref
+          .collection("EventizerApp")
+          .document(_server)
           .collection("activeEvents")
           .document(eventID)
           .collection("Participants")
@@ -278,6 +330,8 @@ class DatabaseWorks {
       String eventID, String userID, String comment) async {
     try {
       return await ref
+          .collection("EventizerApp")
+          .document(_server)
           .collection("activeEvents")
           .document(eventID)
           .collection("Comments")
@@ -295,6 +349,8 @@ class DatabaseWorks {
     List<Map<String, dynamic>> commmentList = [];
     try {
       return await ref
+          .collection("EventizerApp")
+          .document(_server)
           .collection("activeEvents")
           .document(eventID)
           .collection("Comments")
@@ -316,6 +372,8 @@ class DatabaseWorks {
     List<Map<String, dynamic>> participants = [];
     try {
       return await ref
+          .collection("EventizerApp")
+          .document(_server)
           .collection("activeEvents")
           .document(eventID)
           .collection("Participants")

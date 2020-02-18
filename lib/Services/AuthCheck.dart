@@ -30,6 +30,7 @@ class AuthCheck extends StatelessWidget {
                           ChangeNotifierProvider<UserService>(
                               create: (context) => UserService(
                                   snapshot.data,
+                                  //REVIEW Locatorların burada oluşturulması gereksiz bir durum
                                   locator<DatabaseWorks>(),
                                   locator<StorageWorks>())),
                           ChangeNotifierProvider<EventService>(
