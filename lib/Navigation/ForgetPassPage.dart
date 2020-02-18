@@ -1,59 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eventizer/Navigation/ForgetPassPage.dart';
-import 'package:eventizer/Services/AuthCheck.dart';
-import 'package:eventizer/Services/AuthService.dart';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'RegisterPage.dart';
 import 'package:eventizer/animations/FadeAnimation.dart';
+import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
+class ForgetPassword extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _LoginPageState();
+  _ForgetPasswordState createState() => _ForgetPasswordState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _ForgetPasswordState extends State<ForgetPassword> {
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
   String userId;
   String _email;
-  String _password;
-
-  bool validateAndSave() {
-    final form = formkey.currentState;
-    if (form.validate()) {
-      form.save();
-      return true;
-    } else
-      return false;
-  }
-
-  Future<void> validateAndSubmit() async {
-    if (validateAndSave()) {
-      var auth = AuthService.of(context).auth;
-      userId = await auth.signIn(_email, _password);
-      Firestore.instance.collection('users').document(userId).updateData(
-          {"LastLoggedIn": FieldValue.serverTimestamp()}).whenComplete(() {
-        print('Başarılı: lastlogin set edildi!');
-      }).catchError((e) {
-        print(e);
-      });
-
-      if (userId == null) {
-        Fluttertoast.showToast(
-            msg: "Şifre veya Eposta yanlış!",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 2,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 18.0);
-      } else {
-        print('Signed in: $userId');
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                     FadeAnimation(
                       1.5,
                       Text(
-                        "Giriş",
+                        "Şifre Sıfırla",
                         style: TextStyle(
                           color: Color.fromRGBO(49, 39, 79, 1),
                           fontWeight: FontWeight.bold,
@@ -184,23 +140,8 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 validator: (value) => value.isEmpty
                                     ? 'Email Adress Boş Olamaz'
-                                    : null,
+                                    : 'Şifrenizi sıfırlamak için Email Adresinizi kontrol ediniz',
                                 onSaved: (value) => _email = value,
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Şifre",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                ),
-                                validator: (value) => value.isEmpty
-                                    ? 'Şifre Adress Boş Olamaz'
-                                    : null,
-                                onSaved: (value) => _password = value,
-                                obscureText: true,
                               ),
                             ),
                           ],
@@ -211,30 +152,9 @@ class _LoginPageState extends State<LoginPage> {
                       height: 20,
                     ),
                     FadeAnimation(
-                      1.7,
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      ForgetPassword()));
-                        },
-                        child: Center(
-                            child: Text(
-                          "Şifremi Unuttum?",
-                          style: TextStyle(
-                              color: Color.fromRGBO(196, 135, 198, 1)),
-                        )),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 50,
-                    ),
-                    FadeAnimation(
                       1.9,
                       MaterialButton(
-                        onPressed: validateAndSubmit,
+                        onPressed: () {},
                         child: Container(
                           height: 50,
                           margin: EdgeInsets.symmetric(horizontal: 70),
@@ -244,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           child: Center(
                             child: Text(
-                              "Giriş",
+                              "Şifremı Yenile",
                               style: TextStyle(
                                 color: Colors.white,
                               ),
@@ -255,24 +175,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(
                       height: 30,
-                    ),
-                    FadeAnimation(
-                      2,
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      RegisterPage()));
-                        },
-                        child: Center(
-                            child: Text(
-                          "Hesabım Yok",
-                          style:
-                              TextStyle(color: Color.fromRGBO(49, 39, 79, .6)),
-                        )),
-                      ),
                     ),
                   ],
                 ),

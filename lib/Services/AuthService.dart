@@ -30,9 +30,6 @@ class LoginAndRegister {
       "Name": datalist[0],
       "Surname": datalist[1],
       "Email": datalist[2],
-      "Gender": datalist[3],
-      "Birthday": datalist[4],
-      "City": datalist[5],
       //"ProfilePhotoUrl": "null",
       "RegisteredAt": FieldValue.serverTimestamp()
     };
