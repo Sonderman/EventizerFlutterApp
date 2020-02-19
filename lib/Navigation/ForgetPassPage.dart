@@ -98,7 +98,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     FadeAnimation(
                       1.5,
                       Text(
-                        "Şifre Sıfırla",
+                        "Şifremi Sıfırla",
                         style: TextStyle(
                           color: Color.fromRGBO(49, 39, 79, 1),
                           fontWeight: FontWeight.bold,
@@ -135,7 +135,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                               child: TextFormField(
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
-                                  hintText: "Email Adress",
+                                  hintText: "Email Adresi",
                                   hintStyle: TextStyle(color: Colors.grey),
                                 ),
                                 validator: (value) => value.isEmpty
@@ -164,7 +164,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                           ),
                           child: Center(
                             child: Text(
-                              "Şifremı Yenile",
+                              "Şifremi Yenile",
                               style: TextStyle(
                                 color: Colors.white,
                               ),

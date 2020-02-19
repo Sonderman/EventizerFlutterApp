@@ -4,16 +4,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat/dash_chat.dart';
 import 'package:eventizer/Models/UserModel.dart';
 import 'package:eventizer/Services/Firebase.dart';
+
 import 'package:flutter/material.dart';
+
+import '../locator.dart';
 
 ///UserService*****************************************************************************************************
 class UserService with ChangeNotifier {
   User _usermodel;
-  final DatabaseWorks firebaseDatabaseWorks;
-  final StorageWorks firebaseStorageWorks;
+  final DatabaseWorks firebaseDatabaseWorks = locator<DatabaseWorks>();
+  final StorageWorks firebaseStorageWorks = locator<StorageWorks>();
 
-  UserService(
-      String userId, this.firebaseDatabaseWorks, this.firebaseStorageWorks) {
+  UserService(String userId) {
     userInitializer(userId);
   }
 
@@ -117,10 +119,8 @@ class UserService with ChangeNotifier {
 
 ///EventService*****************************************************************************************************
 class EventService with ChangeNotifier {
-  final DatabaseWorks firebaseDatabaseWorks;
-  final StorageWorks firebaseStorageWorks;
-
-  EventService(this.firebaseDatabaseWorks, this.firebaseStorageWorks);
+  final DatabaseWorks firebaseDatabaseWorks = locator<DatabaseWorks>();
+  final StorageWorks firebaseStorageWorks = locator<StorageWorks>();
 
   // ANCHOR Etkinlikten Ayrılmayı sağlar, firestore dan participant da userid yi siler
   Future<bool> leaveEvent(String userID, String eventID) async {
@@ -178,10 +178,8 @@ class EventService with ChangeNotifier {
 
 ///MessageService*****************************************************************************************************
 class MessagingService with ChangeNotifier {
-  final DatabaseWorks firebaseDatabaseWorks;
-  final StorageWorks firebaseStorageWorks;
-
-  MessagingService(this.firebaseDatabaseWorks, this.firebaseStorageWorks);
+  final DatabaseWorks firebaseDatabaseWorks = locator<DatabaseWorks>();
+  final StorageWorks firebaseStorageWorks = locator<StorageWorks>();
 
   Stream<QuerySnapshot> getSnapshot(String chatID) {
     return firebaseDatabaseWorks.getSnapshot(chatID);

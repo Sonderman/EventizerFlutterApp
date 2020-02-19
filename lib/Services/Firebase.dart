@@ -134,12 +134,21 @@ class DatabaseWorks {
   }
 
   void updateInfo(String userId, String maptext, String changedtext) {
-    ref
-        .collection("EventizerApp")
-        .document(_server)
-        .collection('users')
-        .document(userId)
-        .updateData({maptext: changedtext});
+    if (changedtext == "timeStamp") {
+      ref
+          .collection("EventizerApp")
+          .document(_server)
+          .collection('users')
+          .document(userId)
+          .updateData({maptext: FieldValue.serverTimestamp()});
+    } else {
+      ref
+          .collection("EventizerApp")
+          .document(_server)
+          .collection('users')
+          .document(userId)
+          .updateData({maptext: changedtext});
+    }
   }
 
   Future<Map<String, dynamic>> findUserbyID(String userID) async {
