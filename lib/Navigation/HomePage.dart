@@ -1,8 +1,9 @@
 import 'package:eventizer/Navigation/ChatsPage.dart';
+import 'package:eventizer/Navigation/CreateEvent.dart';
 import 'package:eventizer/Navigation/ExplorePage.dart';
 import 'package:eventizer/Navigation/SettingsPage.dart';
 import 'package:eventizer/Services/Repository.dart';
-import 'package:eventizer/Tools/CreateEvent.dart';
+import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -13,12 +14,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-
   @override
   Widget build(BuildContext context) {
-    return  BottomNavWidget();
-    
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: BottomNavWidget(),
+    );
   }
 }
 
@@ -31,8 +32,8 @@ class BottomNavWidget extends StatefulWidget {
 class _BottomNavWidgetState extends State<BottomNavWidget> {
   int _selectedIndex = 0;
 
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  //static const TextStyle optionStyle =
+  //   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   void _onItemTapped(int index) {
     setState(() {
@@ -47,7 +48,7 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
     List<Widget> _widgetOptions = <Widget>[
       ChatsPage(),
       ExplorePage(),
-      ProfilePage(userWorker.getUserId()),
+      ProfilePage(userWorker.getUserId(), false),
       SettingsPage()
     ];
 
@@ -63,15 +64,15 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           elevation: 8.0,
-          backgroundColor: Color(0XFF001970),
+          backgroundColor: MyColors().blueThemeColor,
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.yellowAccent,
           unselectedItemColor: Colors.white,
           onTap: _onItemTapped,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.comments),
-              title: Text('Mesajlar'),
+              icon: Icon(FontAwesomeIcons.inbox),
+              title: Text('Gelen Kutusu'),
             ),
             BottomNavigationBarItem(
               icon: Icon(FontAwesomeIcons.search),
@@ -90,7 +91,7 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
       ),
       floatingActionButton: FloatingActionButton(
         mini: true,
-        backgroundColor: Color(0XFF001970),
+        backgroundColor: MyColors().blueThemeColor,
         foregroundColor: Colors.white,
         onPressed: () {
           Navigator.push(

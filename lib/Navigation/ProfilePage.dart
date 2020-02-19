@@ -3,14 +3,19 @@ import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/ImageViewer.dart';
+import 'package:eventizer/Tools/Message.dart';
+import 'package:eventizer/assets/Colors.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
   final userID;
-  ProfilePage(this.userID);
+  final isFromEvent;
+  ProfilePage(this.userID, this.isFromEvent);
 
   @override
   _ProfilePageState createState() => _ProfilePageState(userID);
@@ -22,7 +27,6 @@ class _ProfilePageState extends State<ProfilePage> {
   int imageCounter = 0;
   List<File> _imagefile = [];
   int imageFileCounter = 0;
-  Color myBlueColor = Color(0XFF001970);
 
   _ProfilePageState(this.userID);
 
@@ -65,7 +69,7 @@ class _ProfilePageState extends State<ProfilePage> {
       images.insert(
           images.length - 1,
           Card(
-            color: myBlueColor,
+            color: MyColors().blueThemeColor,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
               child: GestureDetector(
@@ -89,7 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void initImages() {
     print('Girdi initImages');
     images.add(Card(
-      color: myBlueColor,
+      color: MyColors().blueThemeColor,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
         child: GestureDetector(
@@ -128,7 +132,7 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Icon(
               Icons.add,
               size: 64,
-              color: myBlueColor,
+              color: MyColors().blueThemeColor,
             )),
       ),
     ));
@@ -143,8 +147,11 @@ class _ProfilePageState extends State<ProfilePage> {
     }
 
     TextStyle baslikTextStyle = TextStyle(
-        color: myBlueColor, fontSize: 16.0, fontWeight: FontWeight.bold);
-    TextStyle normalTextStyle = TextStyle(color: myBlueColor, fontSize: 14.0);
+        color: MyColors().blueThemeColor,
+        fontSize: 16.0,
+        fontWeight: FontWeight.bold);
+    TextStyle normalTextStyle =
+        TextStyle(color: MyColors().blueThemeColor, fontSize: 14.0);
 
     //String userName = userWorker.getName();
 
@@ -163,9 +170,9 @@ class _ProfilePageState extends State<ProfilePage> {
           //leading: Icon(Icons.chevron_left),
           elevation: 0.0,
           title: Text('Profil'),
-          backgroundColor: myBlueColor,
+          backgroundColor: MyColors().blueThemeColor,
           centerTitle: true,
-          expandedHeight: 280.0,
+          expandedHeight: MediaQuery.of(context).size.height * 0.45,
           floating: false,
           pinned: true,
           flexibleSpace: FlexibleSpaceBar(
@@ -175,7 +182,7 @@ class _ProfilePageState extends State<ProfilePage> {
           )),
           actions: <Widget>[
             Card(
-              color: myBlueColor,
+              color: MyColors().blueThemeColor,
               child: IconButton(
                 onPressed: _signedOut,
                 icon: Icon(FontAwesomeIcons.signOutAlt),
@@ -187,22 +194,29 @@ class _ProfilePageState extends State<ProfilePage> {
           hasScrollBody: false,
           child: SingleChildScrollView(
             child: Container(
-              color: myBlueColor,
+              color: MyColors().blueThemeColor,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.fromLTRB(8, 16, 8, 0),
-                    child: profilPhotoCard(myBlueColor, userID),
+                    child: profilPhotoCard(MyColors().blueThemeColor, userID),
+                  ),
+                  widget.isFromEvent
+                      ? Padding(
+                          padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
+                          child: messageButtonCard(),
+                        )
+                      : Container(),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
+                    child: aboutCard(baslikTextStyle, normalTextStyle,
+                        MyColors().blueThemeColor, userID),
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
-                    child: aboutCard(
-                        baslikTextStyle, normalTextStyle, myBlueColor, userID),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
-                    child: slidePicturesCard(myBlueColor, images, userID),
+                    child: slidePicturesCard(
+                        MyColors().blueThemeColor, images, userID),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
@@ -223,7 +237,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget infoCard(userID) {
     UserService userWorker = Provider.of<UserService>(context);
 
-    List<Widget> mapList(UserService userWorker) {
+    List<Widget> mapList() {
       List<Widget> wlist = [];
 
       var userMap = userWorker.getUserMap();
@@ -241,16 +255,17 @@ class _ProfilePageState extends State<ProfilePage> {
       return wlist;
     }
 
+    //ANCHOR bu sayfaya gelen kişinin cihaza kayıtlı olan kişimi yoksa başkasımı anlıyoruz
     if (userID == userWorker.getUserId()) {
       return Card(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: mapList(userWorker),
+          children: mapList(),
         ),
       );
     } else {
       return FutureBuilder(
-        future: userWorker.getTempUserMap(userID),
+        future: userWorker.findUserbyID(userID),
         builder: (BuildContext context, AsyncSnapshot<dynamic> infoData) {
           if (infoData.connectionState == ConnectionState.done) {
             return Card(
@@ -282,9 +297,9 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               style: normalTextStyle,
-
               cursorColor: myBlueColor,
-              //expands: true,
+              maxLines: null,
+              minLines: null,
               enableInteractiveSelection: true,
               maxLength: 256,
               textCapitalization: TextCapitalization.sentences,
@@ -332,7 +347,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 150.0,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: NetworkImage(snapshot.data), fit: BoxFit.fill),
+                          image: ExtendedNetworkImageProvider(snapshot.data,
+                              cache: true),
+                          fit: BoxFit.fill),
                       borderRadius: BorderRadius.circular(120.0),
                     ),
                     child: ClipRRect(
@@ -401,6 +418,41 @@ class _ProfilePageState extends State<ProfilePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: images)),
         ],
+      ),
+    );
+  }
+
+  Card messageButtonCard() {
+    UserService userService = Provider.of<UserService>(context);
+    return Card(
+      child: Center(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width *
+              0.3, // ANCHOR ekran genişliğinin 3de1 uzunluğunu veriyor
+          child: FlatButton.icon(
+            icon: Icon(LineAwesomeIcons.envelope),
+            color: Colors.green,
+            label: Text(
+              "Mesaj\nGönder",
+              style: TextStyle(fontSize: 10.0),
+            ),
+            textColor: Colors.black,
+            onPressed: () async {
+              // ANCHOR  Mesaj sayfasına gitmek için
+              if (userService.getUserId() != widget.userID) {
+                //ANCHOR mesajlaşma sayfasında karşıdaki kişinin ismini getirip parametre olarak veriyoruz,
+                //Bu sayede appbarda ismi görünüyor
+                await userService.findUserbyID(widget.userID).then((data) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              Message(widget.userID, data['Name'])));
+                });
+              }
+            },
+          ),
+        ),
       ),
     );
   }

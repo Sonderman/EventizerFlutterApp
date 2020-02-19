@@ -4,16 +4,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat/dash_chat.dart';
 import 'package:eventizer/Models/UserModel.dart';
 import 'package:eventizer/Services/Firebase.dart';
+
 import 'package:flutter/material.dart';
+
+import '../locator.dart';
 
 ///UserService*****************************************************************************************************
 class UserService with ChangeNotifier {
   User _usermodel;
-  final DatabaseWorks firebaseDatabaseWorks;
-  final StorageWorks firebaseStorageWorks;
+  final DatabaseWorks firebaseDatabaseWorks = locator<DatabaseWorks>();
+  final StorageWorks firebaseStorageWorks = locator<StorageWorks>();
 
-  UserService(
-      String userId, this.firebaseDatabaseWorks, this.firebaseStorageWorks) {
+  UserService(String userId) {
     userInitializer(userId);
   }
 
@@ -30,13 +32,6 @@ class UserService with ChangeNotifier {
       });
       userModelUpdater(userId);
     }
-  }
-
-  Future<Map<String, dynamic>> getTempUserMap(String userID) async {
-    return await firebaseDatabaseWorks.getUserInfoMap(userID).then((map) {
-      print("Temp user name:" + map["Name"]);
-      return map;
-    });
   }
 
   Future<Map<String, dynamic>> findUserbyID(String userID) {
@@ -81,13 +76,9 @@ class UserService with ChangeNotifier {
       return _usermodel.profilePhotoUrl;
   }
 
-  String getUserId() {
-    return _usermodel.userID;
-  }
+  String getUserId() => _usermodel.userID;
 
-  String getUserName() {
-    return _usermodel.name;
-  }
+  String getUserName() => _usermodel.name;
 
   String getUserEmail() => _usermodel.email;
 
@@ -128,12 +119,26 @@ class UserService with ChangeNotifier {
 
 ///EventService*****************************************************************************************************
 class EventService with ChangeNotifier {
-  //Event _event;
-  final DatabaseWorks firebaseDatabaseWorks;
-  final StorageWorks firebaseStorageWorks;
+  final DatabaseWorks firebaseDatabaseWorks = locator<DatabaseWorks>();
+  final StorageWorks firebaseStorageWorks = locator<StorageWorks>();
 
-  EventService(this.firebaseDatabaseWorks, this.firebaseStorageWorks);
+  // ANCHOR Etkinlikten Ayrılmayı sağlar, firestore dan participant da userid yi siler
+  Future<bool> leaveEvent(String userID, String eventID) async {
+    return await firebaseDatabaseWorks.leaveEvent(userID, eventID);
+  }
 
+  //ANCHOR etkinliğe tıklandığıda zaten katılımcımıyız kontrol etmek için
+  Future<bool> amIparticipant(String userId, String eventID) async {
+    return await firebaseDatabaseWorks.amIparticipant(userId, eventID);
+  }
+
+  //ANCHOR Etkinliğe katılmak butonuna basılında veritabanına yazmak için
+  Future<bool> joinEvent(String userID, String eventID) async {
+    return await firebaseDatabaseWorks.joinEvent(userID, eventID);
+  }
+
+  //ANCHOR Etkinlik oluşturur
+  //TODO kullanıcı etkinlik oluşturduğunda otomatikman kendiside participant olmalı
   Future<bool> createEvent(
       String userId, Map<String, dynamic> eventData, Uint8List image) async {
     if (image != null) {
@@ -155,14 +160,26 @@ class EventService with ChangeNotifier {
       String category) {
     return firebaseDatabaseWorks.fetchActiveEventListsByCategory(category);
   }
+
+  //ANCHOR Yapılan yorumu firestore da event içerisine kaydeder
+  Future<bool> sendComment(
+      String eventID, String userID, String comment) async {
+    return await firebaseDatabaseWorks.sendComment(eventID, userID, comment);
+  }
+
+  Future<List<Map<String, dynamic>>> getComments(String eventID) async {
+    return await firebaseDatabaseWorks.getComments(eventID);
+  }
+
+  Future<List<Map<String, dynamic>>> getParticipants(String eventID) {
+    return firebaseDatabaseWorks.getParticipants(eventID);
+  }
 }
 
 ///MessageService*****************************************************************************************************
 class MessagingService with ChangeNotifier {
-  final DatabaseWorks firebaseDatabaseWorks;
-  final StorageWorks firebaseStorageWorks;
-
-  MessagingService(this.firebaseDatabaseWorks, this.firebaseStorageWorks);
+  final DatabaseWorks firebaseDatabaseWorks = locator<DatabaseWorks>();
+  final StorageWorks firebaseStorageWorks = locator<StorageWorks>();
 
   Stream<QuerySnapshot> getSnapshot(String chatID) {
     return firebaseDatabaseWorks.getSnapshot(chatID);

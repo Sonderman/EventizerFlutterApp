@@ -1,12 +1,10 @@
 import 'package:eventizer/Navigation/HomePage.dart';
 import 'package:eventizer/Navigation/LoginPage.dart';
 import 'package:eventizer/Services/AuthService.dart';
-import 'package:eventizer/Services/Firebase.dart';
+import 'package:eventizer/Services/BaseAuth.dart';
 import 'package:eventizer/Services/Repository.dart';
-import 'package:eventizer/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'BaseAuth.dart';
 
 class AuthCheck extends StatelessWidget {
   @override
@@ -29,17 +27,12 @@ class AuthCheck extends StatelessWidget {
                         providers: [
                           ChangeNotifierProvider<UserService>(
                               create: (context) => UserService(
-                                  snapshot.data,
-                                  locator<DatabaseWorks>(),
-                                  locator<StorageWorks>())),
+                                    snapshot.data,
+                                  )),
                           ChangeNotifierProvider<EventService>(
-                              create: (context) => EventService(
-                                  locator<DatabaseWorks>(),
-                                  locator<StorageWorks>())),
+                              create: (context) => EventService()),
                           ChangeNotifierProvider<MessagingService>(
-                              create: (context) => MessagingService(
-                                  locator<DatabaseWorks>(),
-                                  locator<StorageWorks>())),
+                              create: (context) => MessagingService()),
                         ],
                         child: HomePage(),
                       );

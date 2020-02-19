@@ -1,18 +1,16 @@
 import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/BaseAuth.dart';
-//import 'package:eventizer/assets/Colors.dart';
 import 'package:eventizer/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-//import 'package:splashscreen/splashscreen.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(MaterialApp(home: MyApp()));
+  return runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -21,11 +19,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Future redirectAuth() {
     return Future.delayed(Duration(seconds: 2));
   }
@@ -48,8 +41,8 @@ class _MyAppState extends State<MyApp> {
                   return AuthCheck();
                 } else {
                   return Container(
-                    // NOTE background image icin renk karisimini saglayan bir ozellik
-                    // NOTE 2 den fazla renk eklenebilir https://alligator.io/flutter/flutter-gradient/
+                    // ANCHOR  background image icin renk karisimini saglayan bir ozellik
+                    // ANCHOR  2 den fazla renk eklenebilir https://alligator.io/flutter/flutter-gradient/
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                           begin: Alignment.topRight,
@@ -68,11 +61,11 @@ class _MyAppState extends State<MyApp> {
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             )),
-                        // NOTE text ile loading isareti arasina 200 height birakir
+                        // ANCHOR  text ile loading isareti arasina 200 height birakir
                         SizedBox(
                           height: 200.0,
                         ),
-                        // NOTE spinkit package kullanildi https://pub.dev/packages/flutter_spinkit
+                        // ANCHOR  spinkit package kullanildi https://pub.dev/packages/flutter_spinkit
                         SpinKitFoldingCube(
                           color: Colors.white,
                           size: 100.0,
