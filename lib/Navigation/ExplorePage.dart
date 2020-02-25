@@ -3,7 +3,6 @@ import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Settings/EventSettings.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:eventizer/locator.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -172,7 +171,7 @@ class _ExplorePageState extends State<ExplorePage> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 Text(
-                  title,
+                  title ?? "",
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
@@ -182,7 +181,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        category,
+                        category ?? "",
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -192,7 +191,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        startDate,
+                        startDate ?? "",
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,

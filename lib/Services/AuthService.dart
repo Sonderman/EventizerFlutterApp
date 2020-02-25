@@ -40,6 +40,7 @@ class LoginAndRegister {
 
     await auth.signUp(eposta, sifre).then((userId) {
       if (userId != null) {
+        data['UserID'] = userId;
         Firestore.instance
             .collection("EventizerApp")
             .document(_server)
