@@ -271,6 +271,8 @@ class DatabaseWorks {
   Future<List<String>> getEventCategories() {
     List<String> categories;
     return ref
+        .collection("EventizerApp")
+        .document(_server)
         .collection('Settings')
         .document('Event')
         .get()
