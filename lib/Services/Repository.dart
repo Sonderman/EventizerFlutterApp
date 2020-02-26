@@ -138,17 +138,24 @@ class EventService with ChangeNotifier {
   }
 
   //ANCHOR Etkinlik oluşturur
-  //TODO kullanıcı etkinlik oluşturduğunda otomatikman kendiside participant olmalı
   Future<bool> createEvent(
       String userId, Map<String, dynamic> eventData, Uint8List image) async {
+    String eventID;
     if (image != null) {
       eventData['EventImageUrl'] =
           await firebaseStorageWorks.sendEventImage(image);
       //print("1.url:" + eventData['EventImageUrl'].toString());
-      return await firebaseDatabaseWorks.createEvent(userId, eventData);
+      eventID = await firebaseDatabaseWorks.createEvent(userId, eventData);
+      //ANCHOR etkinlik oluştuğunda kullanıcıyı direk katılımcı yapar
+      return (eventID != null && await joinEvent(userId, eventID))
+          ? true
+          : false;
     } else {
       eventData['EventImageUrl'] = 'none';
-      return await firebaseDatabaseWorks.createEvent(userId, eventData);
+      eventID = await firebaseDatabaseWorks.createEvent(userId, eventData);
+      return (eventID != null && await joinEvent(userId, eventID))
+          ? true
+          : false;
     }
   }
 

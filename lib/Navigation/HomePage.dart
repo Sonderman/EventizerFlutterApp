@@ -30,7 +30,7 @@ class BottomNavWidget extends StatefulWidget {
 }
 
 class _BottomNavWidgetState extends State<BottomNavWidget> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   //static const TextStyle optionStyle =
   //   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -95,9 +95,15 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
         foregroundColor: Colors.white,
         onPressed: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => CreateEvent()));
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => CreateEvent()))
+              .then((value) {
+            //ANCHOR Yeni etkinlik oluşturulduğunda sayfayı güncelliyor
+            if (value == "success") {
+              setState(() {});
+            }
+          });
         },
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),

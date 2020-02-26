@@ -12,24 +12,23 @@ class EventPage extends StatefulWidget {
   final bool amIparticipant;
   const EventPage({Key key, this.eventData, this.userData, this.amIparticipant})
       : super(key: key);
-//ANCHOR User ve Event verileri parametre ile geliyor ve statefull class a gönderiliyor
   @override
-  _EventPageState createState() =>
-      _EventPageState(eventData, userData, amIparticipant);
+  _EventPageState createState() => _EventPageState();
 }
 
 class _EventPageState extends State<EventPage> {
-  final Map<String, dynamic> eventData;
-  final Map<String, dynamic> organizerData;
   bool katilbutton;
   var commentController = TextEditingController();
   var nestedScrollController = ScrollController();
-
-  _EventPageState(this.eventData, this.organizerData, this.katilbutton);
-
   //ANCHOR katıl butonunun değişmesi için
   void toggleJoinButton() {
     katilbutton ? katilbutton = false : katilbutton = true;
+  }
+
+  @override
+  void initState() {
+    katilbutton = widget.amIparticipant;
+    super.initState();
   }
 
   @override
@@ -46,7 +45,7 @@ class _EventPageState extends State<EventPage> {
                 SliverAppBar(
                     // leading: Icon(Icons.chevron_left),
                     elevation: 0.0,
-                    title: Text(eventData['Title']),
+                    title: Text(widget.eventData['Title']),
                     backgroundColor: MyColors().blueThemeColor,
                     centerTitle: true,
                     // REVIEW  Resim yüksekliğine göre uzunluk veren bir metod kullan
@@ -61,9 +60,10 @@ class _EventPageState extends State<EventPage> {
                             child: Stack(
                               children: <Widget>[
                                 Positioned.fill(
-                                    child: eventData['EventImageUrl'] != 'none'
+                                    child: widget.eventData['EventImageUrl'] !=
+                                            'none'
                                         ? ExtendedImage.network(
-                                            eventData['EventImageUrl'],
+                                            widget.eventData['EventImageUrl'],
                                             cache: true,
                                             fit: BoxFit.fill)
                                         : Image.asset(
@@ -119,7 +119,7 @@ class _EventPageState extends State<EventPage> {
             },
             body: TabBarView(
               children: <Widget>[
-                aboutPage(eventData, katilbutton),
+                aboutPage(widget.eventData, katilbutton),
                 commentsPage(),
                 participantsPage(),
               ],
@@ -140,87 +140,92 @@ class _EventPageState extends State<EventPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            katilbutton
-                ? SizedBox(
-                    width: MediaQuery.of(context).size.width *
-                        0.3, // ANCHOR ekran genişliğinin 3de1 uzunluğunu veriyor
-                    child: FlatButton.icon(
-                      icon: Icon(LineAwesomeIcons.user_times),
-                      color: Colors.green,
-                      label: Text(
-                        "Katılma",
-                        style: TextStyle(fontSize: 12.0),
+            widget.userData['UserID'] != userService.getUserId()
+                ? katilbutton
+                    ? SizedBox(
+                        width: MediaQuery.of(context).size.width *
+                            0.3, // ANCHOR ekran genişliğinin 3de1 uzunluğunu veriyor
+                        child: FlatButton.icon(
+                          icon: Icon(LineAwesomeIcons.user_times),
+                          color: Colors.green,
+                          label: Text(
+                            "Katılma",
+                            style: TextStyle(fontSize: 12.0),
+                          ),
+                          textColor: Colors.black,
+                          onPressed: () async {
+                            if (await eventService.leaveEvent(
+                                userService.getUserId(),
+                                eventData['eventID'])) {
+                              setState(() {
+                                toggleJoinButton();
+                                print("Ayrıldın");
+                              });
+                            } else {
+                              print("Hata");
+                            }
+                          },
+                        ),
+                      )
+                    : SizedBox(
+                        width: MediaQuery.of(context).size.width *
+                            0.3, // ANCHOR ekran genişliğinin 3de1 uzunluğunu veriyor
+                        child: FlatButton.icon(
+                          icon: Icon(LineAwesomeIcons.user_plus),
+                          color: Colors.green,
+                          label: Text(
+                            "Katıl",
+                            style: TextStyle(fontSize: 15.0),
+                          ),
+                          textColor: Colors.black,
+                          onPressed: () async {
+                            if (await eventService.joinEvent(
+                                userService.getUserId(),
+                                eventData['eventID'])) {
+                              setState(() {
+                                toggleJoinButton();
+                                print("Katıldı");
+                              });
+                            } else {
+                              print("Hata");
+                            }
+                          },
+                        ),
+                      )
+                : widget.userData['UserID'] != userService.getUserId()
+                    ? SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        child: FlatButton.icon(
+                          icon: Icon(LineAwesomeIcons.black_tie),
+                          color: Colors.green,
+                          label: Text(
+                            "İletişim\nKur",
+                            style: TextStyle(fontSize: 10.0),
+                          ),
+                          textColor: Colors.black,
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        ProfilePage(
+                                            eventData["OrganizerID"], true)));
+                          },
+                        ),
+                      )
+                    : SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        child: FlatButton.icon(
+                          icon: Icon(Icons.share),
+                          color: Colors.green,
+                          label: Text(
+                            "Paylaş",
+                            style: TextStyle(fontSize: 15.0),
+                          ),
+                          textColor: Colors.black,
+                          onPressed: () {},
+                        ),
                       ),
-                      textColor: Colors.black,
-                      onPressed: () async {
-                        if (await eventService.leaveEvent(
-                            userService.getUserId(), eventData['eventID'])) {
-                          setState(() {
-                            toggleJoinButton();
-                            print("Ayrıldın");
-                          });
-                        } else {
-                          print("Hata");
-                        }
-                      },
-                    ),
-                  )
-                : SizedBox(
-                    width: MediaQuery.of(context).size.width *
-                        0.3, // ANCHOR ekran genişliğinin 3de1 uzunluğunu veriyor
-                    child: FlatButton.icon(
-                      icon: Icon(LineAwesomeIcons.user_plus),
-                      color: Colors.green,
-                      label: Text(
-                        "Katıl",
-                        style: TextStyle(fontSize: 15.0),
-                      ),
-                      textColor: Colors.black,
-                      onPressed: () async {
-                        if (await eventService.joinEvent(
-                            userService.getUserId(), eventData['eventID'])) {
-                          setState(() {
-                            toggleJoinButton();
-                            print("Katıldı");
-                          });
-                        } else {
-                          print("Hata");
-                        }
-                      },
-                    ),
-                  ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.3,
-              child: FlatButton.icon(
-                icon: Icon(LineAwesomeIcons.black_tie),
-                color: Colors.green,
-                label: Text(
-                  "İletişim\nKur",
-                  style: TextStyle(fontSize: 10.0),
-                ),
-                textColor: Colors.black,
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              ProfilePage(eventData["OrganizerID"], true)));
-                },
-              ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.3,
-              child: FlatButton.icon(
-                icon: Icon(Icons.share),
-                color: Colors.green,
-                label: Text(
-                  "Paylaş",
-                  style: TextStyle(fontSize: 15.0),
-                ),
-                textColor: Colors.black,
-                onPressed: () {},
-              ),
-            ),
           ],
         ),
       ),
@@ -230,7 +235,7 @@ class _EventPageState extends State<EventPage> {
         children: <Widget>[
           Expanded(
             child: Text("Organizator : " +
-                organizerData['Name'] +
+                widget.userData['Name'] +
                 "\n Detay:" +
                 eventData['Detail']),
           ),
@@ -276,7 +281,7 @@ class _EventPageState extends State<EventPage> {
         Expanded(
           //ANCHOR Yorumlar burada listelenmekte
           child: FutureBuilder(
-            future: eventService.getComments(eventData['eventID']),
+            future: eventService.getComments(widget.eventData['eventID']),
             builder: (BuildContext context,
                 AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
@@ -409,7 +414,7 @@ class _EventPageState extends State<EventPage> {
                               onPressed: () async {
                                 //ANCHOR  Yorum gönderme backend işlemleri
                                 if (await eventService.sendComment(
-                                    eventData['eventID'],
+                                    widget.eventData['eventID'],
                                     userService.getUserId(),
                                     commentController.text)) {
                                   /* nestedScrollController.jumpTo(
@@ -440,7 +445,7 @@ class _EventPageState extends State<EventPage> {
     var eventService = Provider.of<EventService>(context);
     var userService = Provider.of<UserService>(context);
     return FutureBuilder(
-      future: eventService.getParticipants(eventData['eventID']),
+      future: eventService.getParticipants(widget.eventData['eventID']),
       builder: (BuildContext context,
           AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {

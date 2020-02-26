@@ -278,7 +278,7 @@ class _CreateEventState extends State<CreateEvent> {
                                       await eventManager.createEvent(
                                           userID, eventData, _image)) {
                                     print("Event oluşturma başarılı");
-                                    Navigator.pop(context);
+                                    Navigator.pop(context, "success");
                                   } else {
                                     setState(() {
                                       loadingOverLay = false;

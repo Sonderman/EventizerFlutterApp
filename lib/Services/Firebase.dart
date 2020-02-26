@@ -37,7 +37,7 @@ class DatabaseWorks {
     print("DatabaseWorks locator running");
   }
 
-  Future<bool> createEvent(
+  Future<String> createEvent(
       String userId, Map<String, dynamic> eventData) async {
     String generatedID = AutoIdGenerator.autoId();
     //print("2.url:" + eventData['EventImageUrl'].toString());
@@ -57,10 +57,10 @@ class DatabaseWorks {
           .collection("activeEvents")
           .document(generatedID)
           .setData(eventData);
-      return true;
+      return generatedID;
     } catch (e) {
       print(e);
-      return false;
+      return null;
     }
   }
 
