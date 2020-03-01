@@ -71,6 +71,7 @@ class DatabaseWorks {
           .collection("EventizerApp")
           .document(_server)
           .collection("activeEvents")
+          .where("Status", isEqualTo: "Accepted")
           .getDocuments()
           .then((docs) {
         // print("gelen verinin uzunluğu:" + docs.documents.length.toString());
@@ -90,8 +91,11 @@ class DatabaseWorks {
     try {
       List<Map<String, dynamic>> eventList = [];
       return await ref
+          .collection("EventizerApp")
+          .document(_server)
           .collection("activeEvents")
           .where("Category", isEqualTo: category)
+          .where("Status", isEqualTo: "Accepted")
           .getDocuments()
           .then((docs) {
         docs.documents.forEach((event) {

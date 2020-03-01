@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ExplorePage extends StatefulWidget {
+  final List<String> categoryItems =
+      locator<EventSettings>().categoryItems ?? [];
   ExplorePage({Key key}) : super(key: key);
 
   @override
@@ -14,7 +16,6 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> {
-  List<String> categoryItems = locator<EventSettings>().categoryItems ?? [];
   String category;
   @override
   Widget build(BuildContext context) {
@@ -29,13 +30,19 @@ class _ExplorePageState extends State<ExplorePage> {
           DropdownButton<String>(
               hint: Text("Kategori Seçiniz"),
               value: category != null ? category : null,
-              items:
-                  categoryItems.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
+              items: [
+                    DropdownMenuItem<String>(
+                      value: "Hepsi",
+                      child: Text("Hepsi"),
+                    )
+                  ] +
+                  widget.categoryItems
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
               onChanged: (chosen) {
                 setState(() {
                   category = chosen;
@@ -44,7 +51,7 @@ class _ExplorePageState extends State<ExplorePage> {
           Expanded(
             child: Center(
               child: FutureBuilder(
-                future: category == null
+                future: (category == null || category == "Hepsi")
                     ? _eventManager.fetchActiveEventLists()
                     : _eventManager.fetchActiveEventListsByCategory(category),
                 builder: (BuildContext context, AsyncSnapshot fetchedlist) {

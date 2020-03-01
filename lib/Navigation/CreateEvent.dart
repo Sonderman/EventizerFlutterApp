@@ -270,7 +270,8 @@ class _CreateEventState extends State<CreateEvent> {
                                     "Category": category,
                                     "StartDate": eventStartDate,
                                     "FinishDate": eventFinishDate,
-                                    "Detail": controllerDetay.text
+                                    "Detail": controllerDetay.text,
+                                    "Status": "New"
                                   };
                                   if (controllerAd.text != "" &&
                                       category != null &&
