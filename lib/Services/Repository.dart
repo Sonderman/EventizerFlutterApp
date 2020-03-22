@@ -15,6 +15,7 @@ class UserService with ChangeNotifier {
   final DatabaseWorks firebaseDatabaseWorks = locator<DatabaseWorks>();
   final StorageWorks firebaseStorageWorks = locator<StorageWorks>();
 
+  //ANCHOR buradaki userId login işleminden sonraki authcheck de provider olusturulurken geliyor
   UserService(String userId) {
     userInitializer(userId);
   }

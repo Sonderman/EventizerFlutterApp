@@ -250,45 +250,46 @@ class _CreateEventState extends State<CreateEvent> {
                             //elevation: 5.0,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: MaterialButton(
+                              child: RaisedButton(
                                 onPressed: () async {
-                                  setState(() {
-                                    loadingOverLay = true;
-                                  });
-                                  formkey.currentState.validate();
-                                  final eventManager =
-                                      Provider.of<EventService>(context,
-                                          listen: false);
-                                  final userID = Provider.of<UserService>(
-                                          context,
-                                          listen: false)
-                                      .getUserId();
-                                  Map<String, dynamic> eventData = {
-                                    // REVIEW Veri tabanında yazılan yer burası , burası için bir çözüm bul
-                                    "OrganizerID": userID,
-                                    "Title": controllerAd.text,
-                                    "Category": category,
-                                    "StartDate": eventStartDate,
-                                    "FinishDate": eventFinishDate,
-                                    "Detail": controllerDetay.text,
-                                    "Status": "New"
-                                  };
                                   if (controllerAd.text != "" &&
                                       category != null &&
                                       eventStartDate != null &&
-                                      await eventManager.createEvent(
-                                          userID, eventData, _image)) {
-                                    print("Event oluşturma başarılı");
-                                    Navigator.pop(context, "success");
-                                  } else {
+                                      eventFinishDate != null &&
+                                      formkey.currentState.validate()) {
                                     setState(() {
-                                      loadingOverLay = false;
+                                      loadingOverLay = true;
                                     });
-                                    print("Event oluşturulamadı");
+
+                                    final eventManager =
+                                        Provider.of<EventService>(context,
+                                            listen: false);
+                                    final userID = Provider.of<UserService>(
+                                            context,
+                                            listen: false)
+                                        .getUserId();
+                                    Map<String, dynamic> eventData = {
+                                      // REVIEW Veri tabanında yazılan yer burası , burası için bir çözüm bul
+                                      "OrganizerID": userID,
+                                      "Title": controllerAd.text,
+                                      "Category": category,
+                                      "StartDate": eventStartDate,
+                                      "FinishDate": eventFinishDate,
+                                      "Detail": controllerDetay.text,
+                                      "Status": "New"
+                                    };
+                                    if (await eventManager.createEvent(
+                                        userID, eventData, _image)) {
+                                      print("Event oluşturma başarılı");
+                                      Navigator.pop(context, "success");
+                                    } else {
+                                      setState(() {
+                                        loadingOverLay = false;
+                                      });
+                                      print("Event oluşturulamadı");
+                                    }
                                   }
                                 },
-                                minWidth: 50.0,
-                                height: 30.0,
                                 color: myBlueColor,
                                 child: Text(
                                   "Oluştur",

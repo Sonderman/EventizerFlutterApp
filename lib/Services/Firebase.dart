@@ -119,10 +119,9 @@ class DatabaseWorks {
     return data.data;
   }
 
-  Future<String> getUserProfilePhotoUrl(String userId) {
-    Future<String> url;
+  Future<String> getUserProfilePhotoUrl(String userId) async {
     try {
-      url = ref
+      return await ref
           .collection("EventizerApp")
           .document(_server)
           .collection("users")
@@ -133,8 +132,8 @@ class DatabaseWorks {
       });
     } catch (e) {
       print(e);
+      return "null";
     }
-    return url;
   }
 
   void updateInfo(String userId, String maptext, String changedtext) {
