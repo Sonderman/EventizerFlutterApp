@@ -371,6 +371,7 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
 
   Container profilImage(userId, BuildContext context) {
     var userWorker = Provider.of<UserService>(context);
+    
     return Container(
       child: FutureBuilder(
         future: userWorker.firebaseDatabaseWorks.getUserProfilePhotoUrl(userId),

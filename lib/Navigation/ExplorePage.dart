@@ -1,5 +1,4 @@
 import 'package:eventizer/Navigation/EventPage.dart';
-import 'package:eventizer/Navigation/EventPage2.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Settings/EventSettings.dart';
 import 'package:eventizer/assets/Colors.dart';

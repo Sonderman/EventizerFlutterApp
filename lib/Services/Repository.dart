@@ -4,9 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat/dash_chat.dart';
 import 'package:eventizer/Models/UserModel.dart';
 import 'package:eventizer/Services/Firebase.dart';
-
 import 'package:flutter/material.dart';
-
 import '../locator.dart';
 
 ///UserService*****************************************************************************************************
@@ -19,7 +17,7 @@ class UserService with ChangeNotifier {
   UserService(String userId) {
     userInitializer(userId);
   }
-
+  
   void userInitializer(String userId) {
     if (userId == null || userId == "") {
       userId = "0000000000000000";
