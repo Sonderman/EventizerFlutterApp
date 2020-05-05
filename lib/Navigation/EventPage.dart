@@ -101,6 +101,9 @@ class _EventPageState extends State<EventPage> {
                               ],
                             ))),
                     bottom: TabBar(
+                      indicator: BoxDecoration(
+                        color: Colors.white,
+                      ),
                       indicatorWeight: 4,
                       indicatorColor: Colors.green,
                       tabs: <Tab>[

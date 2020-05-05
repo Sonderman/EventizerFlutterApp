@@ -10,6 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
+import 'NewEventPage.dart';
+import 'NewProfilePage.dart';
+
 class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
@@ -31,7 +34,7 @@ class BottomNavWidget extends StatefulWidget {
 }
 
 class _BottomNavWidgetState extends State<BottomNavWidget> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 2;
 
   //static const TextStyle optionStyle =
   //   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -49,14 +52,16 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
     List<Widget> _widgetOptions = <Widget>[
       ChatsPage(),
       ExplorePage(),
-      ProfilePage(userWorker.getUserId(), false),
+      NewEventPage(),
+      //NewProfilePage(),
+      //ProfilePage(userWorker.getUserId(), false),
       SettingsPage()
     ];
 
     return WillPopScope(
       onWillPop: askForQuit,
       child: Scaffold(
-        backgroundColor: Colors.yellow,
+        //backgroundColor: Colors.yellow,
         body: Center(
           child: _widgetOptions.elementAt(_selectedIndex),
         ),
