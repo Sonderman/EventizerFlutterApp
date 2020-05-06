@@ -9,12 +9,7 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="acf10fe4-b608-47a5-9fbb-f441cf333a58" name="Default Changelist" comment="&quot;profile page kullanıcı&quot; yarım&#10;&quot;profile page ziyaretçi&quot; eklendi&#10;&quot;event page&quot; yeni başlandı">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/NewEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/NewEventPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/assets/Colors.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/assets/Colors.dart" afterDir="false" />
-    </list>
+    <list default="true" id="acf10fe4-b608-47a5-9fbb-f441cf333a58" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,7 +101,14 @@
       <option name="project" value="LOCAL" />
       <updated>1588692689362</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="&quot;event page&quot; ver 1.1">
+      <created>1588784334269</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1588784334269</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -125,6 +127,7 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="&quot;profile page kullanıcı&quot; yarım&#10;&quot;profile page ziyaretçi&quot; eklendi&#10;&quot;event page&quot; yeni başlandı" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;profile page kullanıcı&quot; yarım&#10;&quot;profile page ziyaretçi&quot; eklendi&#10;&quot;event page&quot; yeni başlandı" />
+    <MESSAGE value="&quot;event page&quot; ver 1.1" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;event page&quot; ver 1.1" />
   </component>
 </project>
