@@ -542,80 +542,71 @@ class _NewProfilePageState extends State<NewProfilePage>
               usermodel.parseMap(data.data);
               textUpdaterByUserModel(usermodel);
               return Scaffold(
-                body: CustomScrollView(shrinkWrap: true, slivers: <Widget>[
-                  SliverAppBar(
-                    floating: true,
-                    pinned: false,
-                    backgroundColor: MyColors().blueThemeColor,
-                    centerTitle: true,
-                    title: Text(usermodel.getUserName() +
-                        " " +
-                        usermodel.getUserSurname()),
-                  ),
-                  SliverFillRemaining(
-                    hasScrollBody: true,
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 25,
-                        ),
-                        Container(
-                          child: TabBar(
-                              indicatorColor: Colors.teal,
-                              labelColor: Colors.teal,
-                              unselectedLabelColor: Colors.black54,
-                              controller: _tabController,
-                              isScrollable: true,
-                              tabs: [
-                                Tab(
-                                  text: "My Profile",
+                appBar: AppBar(
+                  backgroundColor: MyColors().blueThemeColor,
+                  centerTitle: true,
+                  title: Text(usermodel.getUserName() +
+                      " " +
+                      usermodel.getUserSurname()),
+                ),
+                body: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 25,
+                    ),
+                    Container(
+                      child: TabBar(
+                          indicatorColor: Colors.teal,
+                          labelColor: Colors.teal,
+                          unselectedLabelColor: Colors.black54,
+                          controller: _tabController,
+                          isScrollable: true,
+                          tabs: [
+                            Tab(
+                              text: "My Profile",
+                            ),
+                            Tab(
+                              text: "Next Events",
+                            ),
+                            Tab(
+                              text: "Old Events",
+                            )
+                          ]),
+                    ),
+                    Expanded(
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: <Widget>[
+                          CustomScrollView(
+                            slivers: <Widget>[
+                              SliverToBoxAdapter(
+                                child: Column(
+                                  children: <Widget>[
+                                    avatarAndname(),
+                                    threeBoxes(usermodel.getUserName()),
+                                    numberDatas(),
+                                    //eventList,
+                                  ],
                                 ),
-                                Tab(
-                                  text: "Next Events",
-                                ),
-                                Tab(
-                                  text: "Old Events",
-                                )
-                              ]),
-                        ),
-                        Expanded(
-                          child: TabBarView(
-                            controller: _tabController,
-                            children: <Widget>[
-                              CustomScrollView(
-                                slivers: <Widget>[
-                                  SliverToBoxAdapter(
-                                    child: Column(
-                                      children: <Widget>[
-                                        avatarAndname(),
-                                        threeBoxes(usermodel.getUserName()),
-                                        numberDatas(),
-                                        //eventList,
-                                      ],
-                                    ),
-                                  ),
-                                  SliverPadding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 25),
-                                    sliver: eventList(),
-                                  )
-                                ],
                               ),
-                              Center(
-                                child:
-                                    PageComponents().underConstruction(context),
-                              ),
-                              Center(
-                                child:
-                                    PageComponents().underConstruction(context),
+                              SliverPadding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 25),
+                                sliver: eventList(),
                               )
                             ],
                           ),
-                        ),
-                      ],
+                          Center(
+                            child: PageComponents().underConstruction(context),
+                          ),
+                          Center(
+                            child: PageComponents().underConstruction(context),
+                          )
+                        ],
+                      ),
                     ),
-                  )
-                ]),
+                  ],
+                ),
               );
             } else
               return Center(
