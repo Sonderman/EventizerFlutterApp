@@ -6,6 +6,7 @@ class MyColors {
   Color blueContainer = Colors.blue;
   Color orangeContainer= Colors.orange;
   Color purpleContainer= Colors.black.withOpacity(0.15);
+  Color lightBlueContainer = Colors.lightBlueAccent;
   Color blueTextColor = Colors.blueAccent;
   Color whiteTextColor = Colors.white;
   Color greyTextColor = Colors.grey;
