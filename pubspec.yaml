@@ -25,7 +25,7 @@ dependencies:
   flutter_search_panel: ^1.0.1
   #find_dropdown: ^0.1.7+1
   fluttertoast: ^4.0.1
-  #loading screen package
+  #loading screen packages
   flutter_spinkit: ^4.1.2+1
   simple_animations: ^2.1.0
   flutter:
@@ -47,10 +47,10 @@ flutter:
   fonts:
     - family: IndieFlower
       fonts:
-        - asset: fonts/IndieFlower-Regular.ttf
+        - asset: assets/fonts/IndieFlower-Regular.ttf
     - family: Zona
       fonts:
-        - asset: fonts/ZonaPro-Bold.otf
+        - asset: assets/fonts/ZonaPro-Bold.otf
     - family: ZonaLight
       fonts:
-        - asset: fonts/ZonaPro-ExtraLight.otf
+        - asset: assets/fonts/ZonaPro-ExtraLight.otf
