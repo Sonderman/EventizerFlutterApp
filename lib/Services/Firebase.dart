@@ -64,6 +64,29 @@ class DatabaseWorks {
     }
   }
 
+  Future<List<Map<String, dynamic>>> fetchListOfUserEvents(
+      String userID) async {
+    try {
+      List<Map<String, dynamic>> eventList = [];
+      return await ref
+          .collection("EventizerApp")
+          .document(_server)
+          .collection("activeEvents")
+          .where("OrganizerID", isEqualTo: userID)
+          .where("Status", isEqualTo: "Accepted")
+          .getDocuments()
+          .then((docs) {
+        docs.documents.forEach((event) {
+          eventList.add(event.data);
+        });
+        return eventList;
+      });
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   Future<List<Map<String, dynamic>>> fetchActiveEventLists() async {
     try {
       List<Map<String, dynamic>> eventList = [];
@@ -109,16 +132,6 @@ class DatabaseWorks {
     }
   }
 
-  Future<Map<String, dynamic>> getUserInfoMap(String userId) async {
-    var data = await ref
-        .collection("EventizerApp")
-        .document(_server)
-        .collection("users")
-        .document(userId)
-        .get();
-    return data.data;
-  }
-
   Future<String> getUserProfilePhotoUrl(String userId) async {
     try {
       return await ref
@@ -136,6 +149,7 @@ class DatabaseWorks {
     }
   }
 
+  //ANCHOR burada sadece 1 veride değişiklik yapar
   void updateInfo(String userId, String maptext, String changedtext) {
     if (changedtext == "timeStamp") {
       ref
@@ -167,7 +181,7 @@ class DatabaseWorks {
       });
     } catch (e) {
       print(e);
-      return {};
+      return null;
     }
   }
 

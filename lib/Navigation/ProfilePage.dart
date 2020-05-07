@@ -7,7 +7,6 @@ import 'package:eventizer/Tools/Message.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +33,8 @@ class _ProfilePageState extends State<ProfilePage> {
   void _signedOut() {
     var auth = AuthService.of(context).auth;
     auth.signOut();
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
   }
 
   Future<String> getUserEmail(BuildContext context) async {
@@ -80,7 +80,9 @@ class _ProfilePageState extends State<ProfilePage> {
                               tag: 'image' + imageCounter.toString(),
                               image: image,
                             ))),
-                child: Hero(tag: 'image' + imageCounter.toString(), child: Image.file(image, width: 100, height: 100)),
+                child: Hero(
+                    tag: 'image' + imageCounter.toString(),
+                    child: Image.file(image, width: 100, height: 100)),
               ),
             ),
           ));
@@ -144,8 +146,12 @@ class _ProfilePageState extends State<ProfilePage> {
       initImages();
     }
 
-    TextStyle baslikTextStyle = TextStyle(color: MyColors().blueThemeColor, fontSize: 16.0, fontWeight: FontWeight.bold);
-    TextStyle normalTextStyle = TextStyle(color: MyColors().blueThemeColor, fontSize: 14.0);
+    TextStyle baslikTextStyle = TextStyle(
+        color: MyColors().blueThemeColor,
+        fontSize: 16.0,
+        fontWeight: FontWeight.bold);
+    TextStyle normalTextStyle =
+        TextStyle(color: MyColors().blueThemeColor, fontSize: 14.0);
 
     //String userName = userWorker.getName();
 
@@ -169,7 +175,8 @@ class _ProfilePageState extends State<ProfilePage> {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.fromLTRB(8, 16, 8, 0),
-                  child: profilPhotoCard(MyColors().blueThemeColor, MyColors().blueTextColor, userID),
+                  child: profilPhotoCard(MyColors().blueThemeColor,
+                      MyColors().blueTextColor, userID),
                 ),
                 widget.isFromEvent
                     ? Padding(
@@ -179,14 +186,24 @@ class _ProfilePageState extends State<ProfilePage> {
                     : Container(),
                 Padding(
                   padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-                  child: aboutCard(baslikTextStyle, normalTextStyle, MyColors().yellowContainer, MyColors().blueThemeColor, userID),
+                  child: aboutCard(
+                      baslikTextStyle,
+                      normalTextStyle,
+                      MyColors().yellowContainer,
+                      MyColors().blueThemeColor,
+                      userID),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-                  child: aboutMySelf(MyColors().blueThemeColor, MyColors().yellowContainer, MyColors().blueTextColor, images, userID),
+                  child: aboutMySelf(
+                      MyColors().blueThemeColor,
+                      MyColors().yellowContainer,
+                      MyColors().blueTextColor,
+                      images,
+                      userID),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
@@ -224,7 +241,7 @@ class _ProfilePageState extends State<ProfilePage> {
     List<Widget> mapList() {
       List<Widget> wlist = [];
 
-      var userMap = userWorker.getUserMap();
+      var userMap = userWorker.usermodel.toMap();
       userMap.forEach((k, v) {
         wlist.add(Text("$k: $v"));
       });
@@ -240,7 +257,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
 
     //ANCHOR bu sayfaya gelen kişinin cihaza kayıtlı olan kişimi yoksa başkasımı anlıyoruz
-    if (userID == userWorker.getUserId()) {
+    if (userID == userWorker.usermodel.getUserId()) {
       return Card(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -265,7 +282,8 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  Column aboutCard(TextStyle baslikTextStyle, TextStyle normalTextStyle, Color myBlueColor, Color yellowContainer, userID) {
+  Column aboutCard(TextStyle baslikTextStyle, TextStyle normalTextStyle,
+      Color myBlueColor, Color yellowContainer, userID) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -302,7 +320,8 @@ class _ProfilePageState extends State<ProfilePage> {
         Padding(
           padding: EdgeInsets.all(8.0),
           child: FutureBuilder(
-            future: userWorker.firebaseDatabaseWorks.getUserProfilePhotoUrl(userID),
+            future:
+                userWorker.firebaseDatabaseWorks.getUserProfilePhotoUrl(userID),
             builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 return Column(
@@ -311,7 +330,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       width: 150,
                       height: 150,
                       decoration: BoxDecoration(
-                        image: DecorationImage(image: ExtendedNetworkImageProvider(snapshot.data, cache: true), fit: BoxFit.fill),
+                        image: DecorationImage(
+                            image: ExtendedNetworkImageProvider(snapshot.data,
+                                cache: true),
+                            fit: BoxFit.fill),
                         borderRadius: BorderRadius.circular(120.0),
                       ),
                       child: ClipRRect(
@@ -357,7 +379,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Column aboutMySelf(Color myBlueColor, Color yellowContainer, Color blueTextColor, List<Widget> images, userID) {
+  Column aboutMySelf(Color myBlueColor, Color yellowContainer,
+      Color blueTextColor, List<Widget> images, userID) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -445,7 +468,8 @@ class _ProfilePageState extends State<ProfilePage> {
       children: <Widget>[
         Center(
           child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.3, // ANCHOR ekran genişliğinin 3de1 uzunluğunu veriyor
+            width: MediaQuery.of(context).size.width *
+                0.3, // ANCHOR ekran genişliğinin 3de1 uzunluğunu veriyor
             child: FlatButton.icon(
               icon: Icon(LineAwesomeIcons.envelope),
               color: Colors.green,
@@ -456,11 +480,15 @@ class _ProfilePageState extends State<ProfilePage> {
               textColor: Colors.black,
               onPressed: () async {
                 // ANCHOR  Mesaj sayfasına gitmek için
-                if (userService.getUserId() != widget.userID) {
+                if (userService.usermodel.getUserId() != widget.userID) {
                   //ANCHOR mesajlaşma sayfasında karşıdaki kişinin ismini getirip parametre olarak veriyoruz,
                   //Bu sayede appbarda ismi görünüyor
                   await userService.findUserbyID(widget.userID).then((data) {
-                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Message(widget.userID, data['Name'])));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                Message(widget.userID, data['Name'])));
                   });
                 }
               },

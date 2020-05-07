@@ -25,7 +25,8 @@ class _ChatsPageState extends State<ChatsPage> {
         title: Text("Gelen Kutusu"),
       ),
       body: StreamBuilder(
-        stream: messageService.getUserChatsSnapshot(userService.getUserId()),
+        stream: messageService
+            .getUserChatsSnapshot(userService.usermodel.getUserId()),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             //FIXME Buraya bir çözüm bul çember şekilsiz oluyor

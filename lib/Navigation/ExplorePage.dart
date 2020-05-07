@@ -100,7 +100,8 @@ class _ExplorePageState extends State<ExplorePage> {
               return GestureDetector(
                   onTap: () async {
                     eventService
-                        .amIparticipant(userWorker.getUserId(), eventID)
+                        .amIparticipant(
+                            userWorker.usermodel.getUserId(), eventID)
                         .then((amIparticipant) {
                       print("Kullanıcı bu etkinliğe katılmış:" +
                           amIparticipant.toString());
