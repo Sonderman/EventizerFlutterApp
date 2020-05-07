@@ -1,6 +1,6 @@
 import 'package:eventizer/Models/UserModel.dart';
-import 'package:eventizer/Navigation/EditProfilePage.dart';
 import 'package:eventizer/Navigation/EventPage.dart';
+import 'package:eventizer/Navigation/NewEventPage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/Message.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
@@ -301,7 +301,7 @@ class _NewProfilePageState extends State<NewProfilePage>
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => EditProfilePage()));
+                        builder: (BuildContext context) => NewEventPage()));
               },
               child: Container(
                 height: heightSize(8),

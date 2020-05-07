@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/ImageViewer.dart';
@@ -30,12 +29,14 @@ class _ProfilePageState extends State<ProfilePage> {
 
   _ProfilePageState(this.userID);
 
+/*
   void _signedOut() {
     var auth = AuthService.of(context).auth;
     auth.signOut();
     Navigator.pushReplacement(context,
         MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
   }
+  */
 
   Future<String> getUserEmail(BuildContext context) async {
     var auth = AuthService.of(context).auth;
@@ -155,6 +156,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     //String userName = userWorker.getName();
 
+    /*
     double heightSize(double value) {
       value /= 100;
       return MediaQuery.of(context).size.height * value;
@@ -164,6 +166,7 @@ class _ProfilePageState extends State<ProfilePage> {
       value /= 100;
       return MediaQuery.of(context).size.width * value;
     }
+    */
 
     List<Widget> firstPage = [
       Column(
