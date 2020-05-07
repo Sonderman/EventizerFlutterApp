@@ -246,7 +246,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           user.updateEmail(controllerYeni.text);
                           triggerToast = true;
                           userWorker.usermodel.setEmail(controllerYeni.text);
-                          userWorker.updateInfo(
+                          userWorker.updateSingleInfo(
                               "Email", userWorker.usermodel.getUserEmail());
                           Navigator.pop(context);
                         } else {
@@ -697,28 +697,29 @@ class _SettingsPageState extends State<SettingsPage> {
                             }
                             if (controllerAd.text !=
                                 userWorker.usermodel.getUserName()) {
-                              userWorker.updateInfo("Name", controllerAd.text);
+                              userWorker.updateSingleInfo(
+                                  "Name", controllerAd.text);
                               triggerToast = true;
                             }
                             if (controllerSoyad.text !=
                                 userWorker.usermodel.getUserSurname()) {
-                              userWorker.updateInfo(
+                              userWorker.updateSingleInfo(
                                   "Surname", controllerSoyad.text);
                               triggerToast = true;
                             }
                             if (controllerTelNo.text !=
                                 userWorker.usermodel.getUserTelno()) {
-                              userWorker.updateInfo(
+                              userWorker.updateSingleInfo(
                                   "Telno", controllerTelNo.text);
                               triggerToast = true;
                             }
                             if (birthday !=
                                 userWorker.usermodel.getUserBirthday()) {
-                              userWorker.updateInfo("Birthday", birthday);
+                              userWorker.updateSingleInfo("Birthday", birthday);
                               triggerToast = true;
                             }
                             if (city != null) {
-                              userWorker.updateInfo("City", city);
+                              userWorker.updateSingleInfo("City", city);
                               triggerToast = true;
                             }
                             Navigator.pop(context);

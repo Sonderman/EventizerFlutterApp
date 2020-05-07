@@ -32,8 +32,9 @@ class _NewProfilePageState extends State<NewProfilePage>
     return MediaQuery.of(context).size.width * value;
   }
 
+  UserService userWorker;
   User usermodel;
-
+  bool amIFollowing = false;
   String nameText;
   String surnameText;
   String aboutText;
@@ -48,6 +49,22 @@ class _NewProfilePageState extends State<NewProfilePage>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     usermodel = User(userID: widget.userID);
+  }
+
+  @override
+  Future<void> didChangeDependencies() async {
+    super.didChangeDependencies();
+    userWorker = Provider.of<UserService>(context);
+    if (widget.userID != userWorker.usermodel.userID) if (await userWorker
+        .amIFollowing(usermodel.userID)) {
+      setState(() {
+        amIFollowing = true;
+      });
+    } else {
+      setState(() {
+        amIFollowing = false;
+      });
+    }
   }
 
   @override
@@ -68,8 +85,6 @@ class _NewProfilePageState extends State<NewProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    UserService userWorker = Provider.of<UserService>(context);
-
     Widget avatarAndname() => Container(
           alignment: Alignment.center,
           height: heightSize(30),
@@ -108,7 +123,8 @@ class _NewProfilePageState extends State<NewProfilePage>
           ),
         );
 
-    Widget threeBoxes(String userName) => Column(
+    //ANCHOR yabancı tarafından görülen kısım
+    Widget threeBoxes() => Column(
           children: <Widget>[
             SizedBox(
               height: heightSize(5),
@@ -152,8 +168,8 @@ class _NewProfilePageState extends State<NewProfilePage>
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                Message(widget.userID, userName)));
+                            builder: (BuildContext context) => Message(
+                                widget.userID, usermodel.getUserName())));
                   },
                   child: Container(
                     height: heightSize(8),
@@ -186,36 +202,89 @@ class _NewProfilePageState extends State<NewProfilePage>
                     ),
                   ),
                 ),
-                Container(
-                  height: heightSize(8),
-                  width: widthSize(35),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        child: Image.asset("assets/icons/follow.png"),
-                        height: heightSize(4),
-                      ),
-                      SizedBox(
-                        width: widthSize(2),
-                      ),
-                      Text(
-                        "Takip Et",
-                        style: TextStyle(
-                          fontFamily: "Zona",
-                          fontSize: heightSize(2),
-                          color: MyColors().whiteTextColor,
+                amIFollowing
+                    ? InkWell(
+                        onTap: () async {
+                          userWorker
+                              .followToggle(usermodel.userID)
+                              .whenComplete(() {
+                            setState(() {
+                              amIFollowing = !amIFollowing;
+                            });
+                          });
+                        },
+                        child: Container(
+                          height: heightSize(8),
+                          width: widthSize(35),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                child: Image.asset("assets/icons/unfollow.png"),
+                                height: heightSize(4),
+                              ),
+                              SizedBox(
+                                width: widthSize(2),
+                              ),
+                              Text(
+                                "Takipten Çık",
+                                style: TextStyle(
+                                  fontFamily: "Zona",
+                                  fontSize: heightSize(2),
+                                  color: MyColors().whiteTextColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          decoration: new BoxDecoration(
+                            color: MyColors().orangeContainer,
+                            borderRadius: new BorderRadius.all(
+                              Radius.circular(20),
+                            ),
+                          ),
+                        ),
+                      )
+                    : InkWell(
+                        onTap: () async {
+                          userWorker
+                              .followToggle(usermodel.userID)
+                              .whenComplete(() {
+                            setState(() {
+                              amIFollowing = !amIFollowing;
+                            });
+                          });
+                        },
+                        child: Container(
+                          height: heightSize(8),
+                          width: widthSize(35),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                child: Image.asset("assets/icons/follow.png"),
+                                height: heightSize(4),
+                              ),
+                              SizedBox(
+                                width: widthSize(2),
+                              ),
+                              Text(
+                                "Takip Et",
+                                style: TextStyle(
+                                  fontFamily: "Zona",
+                                  fontSize: heightSize(2),
+                                  color: MyColors().whiteTextColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          decoration: new BoxDecoration(
+                            color: MyColors().orangeContainer,
+                            borderRadius: new BorderRadius.all(
+                              Radius.circular(20),
+                            ),
+                          ),
                         ),
                       ),
-                    ],
-                  ),
-                  decoration: new BoxDecoration(
-                    color: MyColors().orangeContainer,
-                    borderRadius: new BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                ),
               ],
             ),
           ],
@@ -503,7 +572,7 @@ class _NewProfilePageState extends State<NewProfilePage>
                     child:
                         itemCard(title, category, name, imageUrl, startDate));
               } else
-                return CircularProgressIndicator();
+                return PageComponents().loadingOverlay(context);
             },
           ));
     }
@@ -527,7 +596,8 @@ class _NewProfilePageState extends State<NewProfilePage>
                       crossAxisCount: 1));
             }
           } else
-            return SliverToBoxAdapter(child: CircularProgressIndicator());
+            return SliverToBoxAdapter(
+                child: PageComponents().loadingOverlay(context));
         },
       );
     }
@@ -583,7 +653,7 @@ class _NewProfilePageState extends State<NewProfilePage>
                                 child: Column(
                                   children: <Widget>[
                                     avatarAndname(),
-                                    threeBoxes(usermodel.getUserName()),
+                                    threeBoxes(),
                                     numberDatas(),
                                     //eventList,
                                   ],

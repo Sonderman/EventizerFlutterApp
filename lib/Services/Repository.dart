@@ -48,8 +48,19 @@ class UserService with ChangeNotifier {
         false;
   }
 
-  void updateInfo(String maptext, String changedtext) {
-    firebaseDatabaseWorks.updateInfo(usermodel.userID, maptext, changedtext);
+  void updateSingleInfo(String maptext, String changedtext) {
+    firebaseDatabaseWorks.updateSingleInfo(
+        usermodel.userID, maptext, changedtext);
+  }
+
+  Future<bool> followToggle(String otherUserID) async {
+    return await firebaseDatabaseWorks.followToggle(
+        usermodel.userID, otherUserID);
+  }
+
+  Future<bool> amIFollowing(String otherUserID) async {
+    return await firebaseDatabaseWorks.amIFollowing(
+        usermodel.userID, otherUserID);
   }
 
   void refresh() {
