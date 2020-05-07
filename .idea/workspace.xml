@@ -11,14 +11,6 @@
   <component name="ChangeListManager">
     <list default="true" id="acf10fe4-b608-47a5-9fbb-f441cf333a58" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/event_animal_photo.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/event_animal_photo.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/event_birthday.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/event_birthday.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/event_camp.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/event_camp.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/event_conferance.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/event_conferance.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/event_travel.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/event_travel.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/event_world_travel.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/event_world_travel.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/NewEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/NewEventPage.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -125,7 +117,14 @@
       <option name="project" value="LOCAL" />
       <updated>1588784351523</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="&quot;event page&quot; Tamamlandı">
+      <created>1588809813874</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1588809813874</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -145,6 +144,7 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="&quot;profile page kullanıcı&quot; yarım&#10;&quot;profile page ziyaretçi&quot; eklendi&#10;&quot;event page&quot; yeni başlandı" />
     <MESSAGE value="&quot;event page&quot; ver 1.1" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;event page&quot; ver 1.1" />
+    <MESSAGE value="&quot;event page&quot; Tamamlandı" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;event page&quot; Tamamlandı" />
   </component>
 </project>
