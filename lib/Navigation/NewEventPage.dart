@@ -19,8 +19,9 @@ class _NewEventPageState extends State<NewEventPage> {
 
   @override
   Widget build(BuildContext context) {
-    var textField = Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15),
+    Widget textField() {
+        return Padding(
+     padding: EdgeInsets.symmetric(horizontal: 15),
       child: Container(
         height: heightSize(8),
         width: widthSize(90),
@@ -48,257 +49,261 @@ class _NewEventPageState extends State<NewEventPage> {
           ),
         ),
         decoration: new BoxDecoration(
-          color: MyColors().purpleContainer,
+          color: Colors.deepPurple,
           borderRadius: new BorderRadius.all(
             Radius.circular(20),
           ),
         ),
       ),
     );
+  }
 
-    var categoryList = Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(
-            height: heightSize(5),
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: <Widget>[
-                Container(
-                  width: widthSize(20),
-                  height: heightSize(8),
-                  decoration: new BoxDecoration(
-                    color: MyColors().lightBlueContainer,
-                    borderRadius: new BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Hepsi",
-                      style: TextStyle(
-                        fontFamily: "Zona",
-                        color: MyColors().whiteTextColor,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: widthSize(2),
-                ),
-                Container(
-                  width: widthSize(40),
-                  height: heightSize(8),
-                  decoration: new BoxDecoration(
-                    color: MyColors().purpleContainer,
-                    borderRadius: new BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Container(
-                            height: heightSize(4),
-                            child: Image.asset("assets/icons/birthdayCategory.png"),
-                          ),
-                          Text(
-                            "Doğum Günü",
-                            style: TextStyle(
-                              fontFamily: "Zona",
-                              color: MyColors().whiteTextColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: widthSize(2),
-                ),
-                Container(
-                  width: widthSize(40),
-                  height: heightSize(8),
-                  decoration: new BoxDecoration(
-                    color: MyColors().purpleContainer,
-                    borderRadius: new BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Container(
-                            height: heightSize(4),
-                            child: Image.asset("assets/icons/travelCategory.png"),
-                          ),
-                          Text(
-                            "Gezi Turu",
-                            style: TextStyle(
-                              fontFamily: "Zona",
-                              color: MyColors().whiteTextColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: widthSize(2),
-                ),
-                Container(
-                  width: widthSize(40),
-                  height: heightSize(8),
-                  decoration: new BoxDecoration(
-                    color: MyColors().purpleContainer,
-                    borderRadius: new BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Container(
-                            height: heightSize(4),
-                            child: Image.asset("assets/icons/worldtravelCategory.png"),
-                          ),
-                          Text(
-                            "Dünya Turu",
-                            style: TextStyle(
-                              fontFamily: "Zona",
-                              color: MyColors().whiteTextColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: widthSize(2),
-                ),
-                Container(
-                  width: widthSize(40),
-                  height: heightSize(8),
-                  decoration: new BoxDecoration(
-                    color: MyColors().purpleContainer,
-                    borderRadius: new BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Container(
-                          height: heightSize(4),
-                          child: Image.asset("assets/icons/cameraCategory.png"),
-                        ),
-                        Text(
-                          "Fotoğrafçılık",
-                          style: TextStyle(
-                            fontFamily: "Zona",
-                            color: MyColors().whiteTextColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: widthSize(2),
-                ),
-                Container(
-                  width: widthSize(40),
-                  height: heightSize(8),
-                  decoration: new BoxDecoration(
-                    color: MyColors().purpleContainer,
-                    borderRadius: new BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Container(
-                            height: heightSize(4),
-                            child: Image.asset("assets/icons/conferenceCategory.png"),
-                          ),
-                          Text(
-                            "Konferans",
-                            style: TextStyle(
-                              fontFamily: "Zona",
-                              color: MyColors().whiteTextColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: widthSize(2),
-                ),
-                Container(
-                  width: widthSize(30),
-                  height: heightSize(8),
-                  decoration: new BoxDecoration(
-                    color: MyColors().purpleContainer,
-                    borderRadius: new BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Container(
-                            height: heightSize(4),
-                            child: Image.asset("assets/icons/campCategory.png"),
-                          ),
-                          Text(
-                            "Kamp",
-                            style: TextStyle(
-                              fontFamily: "Zona",
-                              color: MyColors().whiteTextColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: widthSize(2),
-                ),
-              ],
+    Widget categoryList()  {
+      return Padding
+        (
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(
+              height: heightSize(5),
             ),
-          ),
-        ],
-      ),
-    );
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    width: widthSize(20),
+                    height: heightSize(8),
+                    decoration: new BoxDecoration(
+                      color: MyColors().lightBlueContainer,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Hepsi",
+                        style: TextStyle(
+                          fontFamily: "Zona",
+                          color: MyColors().whiteTextColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: widthSize(2),
+                  ),
+                  Container(
+                    width: widthSize(40),
+                    height: heightSize(8),
+                    decoration: new BoxDecoration(
+                      color: Colors.deepPurple,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Container(
+                              height: heightSize(4),
+                              child: Image.asset("assets/icons/birthdayCategory.png"),
+                            ),
+                            Text(
+                              "Doğum Günü",
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                color: MyColors().whiteTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: widthSize(2),
+                  ),
+                  Container(
+                    width: widthSize(40),
+                    height: heightSize(8),
+                    decoration: new BoxDecoration(
+                      color: Colors.deepPurple,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Container(
+                              height: heightSize(4),
+                              child: Image.asset("assets/icons/travelCategory.png"),
+                            ),
+                            Text(
+                              "Gezi Turu",
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                color: MyColors().whiteTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: widthSize(2),
+                  ),
+                  Container(
+                    width: widthSize(40),
+                    height: heightSize(8),
+                    decoration: new BoxDecoration(
+                      color: Colors.deepPurple,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Container(
+                              height: heightSize(4),
+                              child: Image.asset("assets/icons/worldtravelCategory.png"),
+                            ),
+                            Text(
+                              "Dünya Turu",
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                color: MyColors().whiteTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: widthSize(2),
+                  ),
+                  Container(
+                    width: widthSize(50),
+                    height: heightSize(8),
+                    decoration: new BoxDecoration(
+                      color: Colors.deepPurple,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Container(
+                            height: heightSize(4),
+                            child: Image.asset("assets/icons/cameraCategory.png"),
+                          ),
+                          Text(
+                            "Doğa Fotoğrafçılığı",
+                            style: TextStyle(
+                              fontFamily: "Zona",
+                              color: MyColors().whiteTextColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: widthSize(2),
+                  ),
+                  Container(
+                    width: widthSize(40),
+                    height: heightSize(8),
+                    decoration: new BoxDecoration(
+                      color: Colors.deepPurple,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Container(
+                              height: heightSize(4),
+                              child: Image.asset("assets/icons/conferenceCategory.png"),
+                            ),
+                            Text(
+                              "Konferans",
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                color: MyColors().whiteTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: widthSize(2),
+                  ),
+                  Container(
+                    width: widthSize(30),
+                    height: heightSize(8),
+                    decoration: new BoxDecoration(
+                      color: Colors.deepPurple,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Container(
+                              height: heightSize(4),
+                              child: Image.asset("assets/icons/campCategory.png"),
+                            ),
+                            Text(
+                              "Kamp",
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                color: MyColors().whiteTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: widthSize(2),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
 
-    var populerEventsText = RichText(
+    Widget popularEventsText() {return RichText(
       text: TextSpan(
         children: <TextSpan>[
           TextSpan(
@@ -311,47 +316,288 @@ class _NewEventPageState extends State<NewEventPage> {
           ),
         ],
       ),
-    );
-    return Scaffold(
-      backgroundColor: Colors.deepPurpleAccent,
-      body: Column(
+    );}
+
+    Widget eventList() {return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(
             height: heightSize(5),
           ),
-          textField,
-          categoryList,
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          popularEventsText(),
+          SizedBox(
+            height: heightSize(2),
+          ),
+          //ANCHOR event list start are here---------------------------------------------
+          Container(
+            height: heightSize(55),
+            child: ListView(
               children: <Widget>[
-                SizedBox(
-                  height: heightSize(5),
-                ),
-                populerEventsText,
-                SizedBox(
-                  height: heightSize(2),
-                ),
-                Container(
-                  width: widthSize(100),
-                  height: heightSize(25),
-                  child: Image.asset(
-                    "assets/images/event_birthday.jpg",
-                    //fit: BoxFit.cover,
-                  ),
-                  decoration: new BoxDecoration(
-                    color: MyColors().purpleContainer,
-                    borderRadius: new BorderRadius.all(
-                      Radius.circular(20),
+                Column(
+                  children: <Widget>[
+                    ClipRRect(
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                      child: Container(
+                        width: widthSize(100),
+                        height: heightSize(25),
+                        child: Stack(
+                          children: <Widget>[
+                            Image.asset(
+                              "assets/images/event_birthday.jpg",
+                              //fit: BoxFit.cover,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: RichText(
+                                  text: TextSpan(
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                        text: "21 Tem. Perş.\n",
+                                        style: TextStyle(
+                                          fontFamily: "Zona",
+                                          fontSize: heightSize(2),
+                                          color: Colors.deepPurple,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: "Taksim Energy Cafe - İst.",
+                                        style: TextStyle(
+                                          fontFamily: "ZonaLight",
+                                          fontSize: heightSize(2),
+                                          color: Colors.deepPurple,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
+                    SizedBox(
+                      height: heightSize(4),
+                    ),
+                    //ANCHOR other event start are here----------------------------------------------------
+                    ClipRRect(
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                      child: Container(
+                        width: widthSize(100),
+                        height: heightSize(25),
+                        child: Stack(
+                          children: <Widget>[
+                            Image.asset(
+                              "assets/images/event_camp.jpg",
+                              //fit: BoxFit.cover,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: RichText(
+                                  text: TextSpan(
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                        text: "14 Ağu. Cmt.\n",
+                                        style: TextStyle(
+                                          fontFamily: "Zona",
+                                          fontSize: heightSize(2),
+                                          color: Colors.deepPurple,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: "Yıldız Parkı - İst.",
+                                        style: TextStyle(
+                                          fontFamily: "ZonaLight",
+                                          fontSize: heightSize(2),
+                                          color: Colors.deepPurple,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: heightSize(4),
+                    ),
+                    //ANCHOR other event start are here----------------------------------------------------
+                    ClipRRect(
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                      child: Container(
+                        width: widthSize(100),
+                        height: heightSize(25),
+                        child: Stack(
+                          children: <Widget>[
+                            Image.asset(
+                              "assets/images/event_world_travel.jpg",
+                              //fit: BoxFit.cover,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: RichText(
+                                  text: TextSpan(
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                        text: "21 Eyl. Cmt.\n",
+                                        style: TextStyle(
+                                          fontFamily: "Zona",
+                                          fontSize: heightSize(2),
+                                          color: Colors.deepPurple,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: "Balkanlar Turu",
+                                        style: TextStyle(
+                                          fontFamily: "ZonaLight",
+                                          fontSize: heightSize(2),
+                                          color: Colors.deepPurple,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: heightSize(4),
+                    ),
+                    //ANCHOR other event start are here----------------------------------------------------
+                    ClipRRect(
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                      child: Container(
+                        width: widthSize(100),
+                        height: heightSize(25),
+                        child: Stack(
+                          children: <Widget>[
+                            Image.asset(
+                              "assets/images/event_travel.jpg",
+                              //fit: BoxFit.cover,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: RichText(
+                                  text: TextSpan(
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                        text: "2 Eki. Pz.\n",
+                                        style: TextStyle(
+                                          fontFamily: "Zona",
+                                          fontSize: heightSize(2),
+                                          color: Colors.deepPurple,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: "İç Anadolu Turu",
+                                        style: TextStyle(
+                                          fontFamily: "ZonaLight",
+                                          fontSize: heightSize(2),
+                                          color: Colors.deepPurple,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: heightSize(4),
+                    ),
+                    //ANCHOR other event start are here----------------------------------------------------
+                    ClipRRect(
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                      child: Container(
+                        width: widthSize(100),
+                        height: heightSize(25),
+                        child: Stack(
+                          children: <Widget>[
+                            Image.asset(
+                              "assets/images/event_conferance.jpg",
+                              //fit: BoxFit.cover,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: RichText(
+                                  text: TextSpan(
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                        text: "18 Kas. Pz.\n",
+                                        style: TextStyle(
+                                          fontFamily: "Zona",
+                                          fontSize: heightSize(2),
+                                          color: Colors.deepPurple,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: "Flutter'a Giriş ~ 100. Yıl Kültür Merkezi - Çankırı",
+                                        style: TextStyle(
+                                          fontFamily: "ZonaLight",
+                                          fontSize: heightSize(2),
+                                          color: Colors.deepPurple,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
         ],
+      ),
+    );}
+
+    return Scaffold(
+      backgroundColor: Colors.deepPurpleAccent,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            textField(),
+            categoryList(),
+            eventList(),
+          ],
+        ),
       ),
     );
   }

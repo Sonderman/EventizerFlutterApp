@@ -8,6 +8,7 @@ import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'NewEventPage.dart';
 import 'NewProfilePage.dart';
 
 class HomePage extends StatefulWidget {
@@ -49,9 +50,9 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
     List<Widget> _widgetOptions = <Widget>[
       ChatsPage(),
       ExplorePage(),
-      //NewEventPage(),
-      NewProfilePage(
-          userID: userWorker.usermodel.getUserId(), isFromEvent: false),
+      NewEventPage(),
+      //NewProfilePage(
+          //userID: userWorker.usermodel.getUserId(), isFromEvent: false),
       //ProfilePage(userWorker.getUserId(), false),
       SettingsPage()
     ];
