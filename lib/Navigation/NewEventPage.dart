@@ -197,7 +197,7 @@ class _NewEventPageState extends State<NewEventPage> {
                     width: widthSize(2),
                   ),
                   Container(
-                    width: widthSize(40),
+                    width: widthSize(50),
                     height: heightSize(8),
                     decoration: new BoxDecoration(
                       color: Colors.deepPurple,
