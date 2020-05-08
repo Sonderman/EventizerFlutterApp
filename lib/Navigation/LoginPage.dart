@@ -29,6 +29,7 @@ class _LoginPageState extends State<LoginPage> {
       return false;
   }
 
+  //FIXME - dispose problemi var
   Future<void> validateAndSubmit(BuildContext context) async {
     if (validateAndSave()) {
       setState(() => _loading = true);
@@ -45,8 +46,9 @@ class _LoginPageState extends State<LoginPage> {
             textColor: Colors.white,
             fontSize: 18.0);
       } else {
-        UserService(userId).updateInfo("LastLoggedIn", "timeStamp");
+        UserService(userId).updateSingleInfo("LastLoggedIn", "timeStamp");
         print('Signed in: $userId');
+
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
       }

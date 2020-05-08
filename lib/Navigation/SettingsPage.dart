@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/BaseAuth.dart';
 import 'package:eventizer/Services/Repository.dart';
@@ -28,6 +29,13 @@ class _SettingsPageState extends State<SettingsPage> {
 
   bool triggerToast = false;
 
+  void _signedOut() {
+    var auth = AuthService.of(context).auth;
+    auth.signOut();
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
+  }
+
   @override
   Widget build(BuildContext context) {
     var userWorker = Provider.of<UserService>(context);
@@ -37,6 +45,13 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text("Ayarlar"),
         backgroundColor: MyColors().blueThemeColor,
         centerTitle: true,
+        actions: <Widget>[
+          Card(
+            color: Colors.red,
+            child: IconButton(
+                icon: Icon(FontAwesomeIcons.signOutAlt), onPressed: _signedOut),
+          )
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -63,7 +78,8 @@ class _SettingsPageState extends State<SettingsPage> {
                             return updateMyPersonalInfoDialog(userWorker);
                           }).whenComplete(() {
                         if (triggerToast) {
-                          userWorker.userModelUpdater(userWorker.getUserId());
+                          userWorker.userModelUpdater(
+                              userWorker.usermodel.getUserId());
                           Fluttertoast.showToast(
                               msg: "Kişisel bilgileriniz Güncellendi",
                               toastLength: Toast.LENGTH_SHORT,
@@ -92,7 +108,8 @@ class _SettingsPageState extends State<SettingsPage> {
                             return myChangeEmailDialog(userWorker);
                           }).whenComplete(() {
                         if (triggerToast) {
-                          userWorker.userModelUpdater(userWorker.getUserId());
+                          userWorker.userModelUpdater(
+                              userWorker.usermodel.getUserId());
                           Fluttertoast.showToast(
                               msg: "Email adresiniz Güncellendi",
                               toastLength: Toast.LENGTH_SHORT,
@@ -121,7 +138,8 @@ class _SettingsPageState extends State<SettingsPage> {
                             return myUpdatePasswordDialog(userWorker);
                           }).whenComplete(() {
                         if (triggerToast) {
-                          userWorker.userModelUpdater(userWorker.getUserId());
+                          userWorker.userModelUpdater(
+                              userWorker.usermodel.getUserId());
                           Fluttertoast.showToast(
                               msg: "Şifreniz Güncellendi",
                               toastLength: Toast.LENGTH_SHORT,
@@ -221,15 +239,15 @@ class _SettingsPageState extends State<SettingsPage> {
                     child: MaterialButton(
                       onPressed: () async {
                         if (controllerMevcut.text ==
-                                userWorker.getUserEmail() &&
+                                userWorker.usermodel.getUserEmail() &&
                             controllerYeni.text != null &&
                             await auth.checkPassword(controllerMevcut.text,
                                 controllerMevcutPassword.text)) {
                           user.updateEmail(controllerYeni.text);
                           triggerToast = true;
-                          userWorker.setEmail(controllerYeni.text);
-                          userWorker.updateInfo(
-                              "Email", userWorker.getUserEmail());
+                          userWorker.usermodel.setEmail(controllerYeni.text);
+                          userWorker.updateSingleInfo(
+                              "Email", userWorker.usermodel.getUserEmail());
                           Navigator.pop(context);
                         } else {
                           Fluttertoast.showToast(
@@ -321,7 +339,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              Text(userWorker.getUserEmail() +
+                              Text(userWorker.usermodel.getUserEmail() +
                                   "\nBu email adresine bir şifre sıfırlama epostası gönderilecektir.\nOnaylıyormusunuz?")
                             ],
                           ),
@@ -355,7 +373,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 child: MaterialButton(
                                   onPressed: () {
                                     auth.sendPasswordResetEmail(
-                                        userWorker.getUserEmail());
+                                        userWorker.usermodel.getUserEmail());
                                     Navigator.pop(context);
                                   },
                                   minWidth: 50.0,
@@ -415,7 +433,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       onPressed: () async {
                         if (controllerYeniPassword.text ==
                                 controllerYeni2Password.text &&
-                            await auth.checkPassword(userWorker.getUserEmail(),
+                            await auth.checkPassword(
+                                userWorker.usermodel.getUserEmail(),
                                 controllerYeniPassword.text)) {
                           user.updatePassword(controllerYeniPassword.text);
                           triggerToast = true;
@@ -458,17 +477,18 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget updateMyPersonalInfoDialog(UserService userWorker) {
     File _image;
 
-    String birthday = "${userWorker.getUserBirthday()}";
+    String birthday = "${userWorker.usermodel.getUserBirthday()}";
     String displayedBirthday = "Şuanki doğum tarihiniz:" + birthday;
     String city;
     if (controllerAd == null) {
-      controllerAd = TextEditingController(text: userWorker.getUserName());
+      controllerAd =
+          TextEditingController(text: userWorker.usermodel.getUserName());
       controllerSoyad =
-          TextEditingController(text: userWorker.getUserSurname());
+          TextEditingController(text: userWorker.usermodel.getUserSurname());
       controllerTelNo = TextEditingController(
-          text: userWorker.getUserTelno() == "null"
+          text: userWorker.usermodel.getUserTelno() == "null"
               ? ""
-              : userWorker.getUserTelno());
+              : userWorker.usermodel.getUserTelno());
     }
 
     //REVIEW Alertdialog default ayarları sebebiyle yanlardan ayarlama yapılamıyor gerekirse custom birşeyler yap
@@ -506,7 +526,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                         image: ExtendedNetworkImageProvider(
-                            userWorker.getUserProfilePhotoUrl(),
+                            userWorker.usermodel.getUserProfilePhotoUrl(),
                             cache: true),
                         fit: BoxFit.fill),
                     borderRadius: BorderRadius.circular(120.0),
@@ -675,28 +695,31 @@ class _SettingsPageState extends State<SettingsPage> {
                               print("foto güncellendi");
                               triggerToast = true;
                             }
-                            if (controllerAd.text != userWorker.getUserName()) {
-                              userWorker.updateInfo("Name", controllerAd.text);
+                            if (controllerAd.text !=
+                                userWorker.usermodel.getUserName()) {
+                              userWorker.updateSingleInfo(
+                                  "Name", controllerAd.text);
                               triggerToast = true;
                             }
                             if (controllerSoyad.text !=
-                                userWorker.getUserSurname()) {
-                              userWorker.updateInfo(
+                                userWorker.usermodel.getUserSurname()) {
+                              userWorker.updateSingleInfo(
                                   "Surname", controllerSoyad.text);
                               triggerToast = true;
                             }
                             if (controllerTelNo.text !=
-                                userWorker.getUserTelno()) {
-                              userWorker.updateInfo(
+                                userWorker.usermodel.getUserTelno()) {
+                              userWorker.updateSingleInfo(
                                   "Telno", controllerTelNo.text);
                               triggerToast = true;
                             }
-                            if (birthday != userWorker.getUserBirthday()) {
-                              userWorker.updateInfo("Birthday", birthday);
+                            if (birthday !=
+                                userWorker.usermodel.getUserBirthday()) {
+                              userWorker.updateSingleInfo("Birthday", birthday);
                               triggerToast = true;
                             }
                             if (city != null) {
-                              userWorker.updateInfo("City", city);
+                              userWorker.updateSingleInfo("City", city);
                               triggerToast = true;
                             }
                             Navigator.pop(context);

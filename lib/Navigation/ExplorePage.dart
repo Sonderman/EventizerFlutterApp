@@ -1,5 +1,4 @@
 import 'package:eventizer/Navigation/EventPage.dart';
-import 'package:eventizer/Navigation/EventPage2.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Settings/EventSettings.dart';
 import 'package:eventizer/assets/Colors.dart';
@@ -101,7 +100,8 @@ class _ExplorePageState extends State<ExplorePage> {
               return GestureDetector(
                   onTap: () async {
                     eventService
-                        .amIparticipant(userWorker.getUserId(), eventID)
+                        .amIparticipant(
+                            userWorker.usermodel.getUserId(), eventID)
                         .then((amIparticipant) {
                       print("Kullanıcı bu etkinliğe katılmış:" +
                           amIparticipant.toString());

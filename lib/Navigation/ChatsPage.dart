@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/Message.dart';
+import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,11 +25,12 @@ class _ChatsPageState extends State<ChatsPage> {
         title: Text("Gelen Kutusu"),
       ),
       body: StreamBuilder(
-        stream: messageService.getUserChatsSnapshot(userService.getUserId()),
+        stream: messageService
+            .getUserChatsSnapshot(userService.usermodel.getUserId()),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             //FIXME Buraya bir çözüm bul çember şekilsiz oluyor
-            return CircularProgressIndicator();
+            return PageComponents().loadingOverlay(context);
           } else {
             List<DocumentSnapshot> items = snapshot.data.documents;
             int itemLenght = items.length;
@@ -58,13 +59,14 @@ class _ChatsPageState extends State<ChatsPage> {
                             child: Card(
                               child: Row(
                                 children: <Widget>[
-                                  CircleAvatar(
-                                      child: ExtendedImage.network(
-                                    url,
-                                    cache: true,
-                                  )
-                                      //Image.network(url),
-                                      ),
+                                  Container(
+                                      width: 50.0,
+                                      height: 50.0,
+                                      decoration: new BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: new DecorationImage(
+                                              fit: BoxFit.fill,
+                                              image: new NetworkImage(url)))),
                                   SizedBox(
                                     width: 20,
                                   ),
@@ -78,7 +80,7 @@ class _ChatsPageState extends State<ChatsPage> {
                       case ConnectionState.none:
                         return Text("Hata");
                       case ConnectionState.waiting:
-                        return CircularProgressIndicator();
+                        return PageComponents().loadingOverlay(context);
                       default:
                         return Text("Beklenmedik durum");
                     }

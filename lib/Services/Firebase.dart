@@ -37,6 +37,121 @@ class DatabaseWorks {
     print("DatabaseWorks locator running");
   }
 
+  Future<bool> amIFollowing(String userID, String otherUserID) async {
+    try {
+      return await ref
+          .collection("EventizerApp")
+          .document(_server)
+          .collection("users")
+          .document(userID)
+          .collection("following")
+          .getDocuments()
+          .then((onValue) {
+        if (onValue.documents.isNotEmpty)
+          return true;
+        else
+          return false;
+      });
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> followToggle(String userID, String otherUserID) async {
+    bool issuccesfull = false;
+    int followerCounter = 0;
+    try {
+      await ref
+          .collection("EventizerApp")
+          .document(_server)
+          .collection("users")
+          .document(otherUserID)
+          .get()
+          .then((value) {
+        followerCounter = value.data["Nof_follower"] ?? 0;
+      });
+
+      return await ref
+          .collection("EventizerApp")
+          .document(_server)
+          .collection("users")
+          .document(userID)
+          .collection("following")
+          .getDocuments()
+          .then((onValue) async {
+        if (onValue.documents.isNotEmpty) {
+          await ref.runTransaction((transaction) async {
+            await transaction.delete(ref
+                .collection("EventizerApp")
+                .document(_server)
+                .collection('users')
+                .document(userID)
+                .collection('following')
+                .document(otherUserID));
+
+            await transaction.delete(ref
+                .collection("EventizerApp")
+                .document(_server)
+                .collection('users')
+                .document(otherUserID)
+                .collection('followers')
+                .document(userID));
+
+            if (followerCounter > 0)
+              await transaction.update(
+                  ref
+                      .collection("EventizerApp")
+                      .document(_server)
+                      .collection('users')
+                      .document(otherUserID),
+                  {"Nof_follower": followerCounter - 1});
+          }).whenComplete(() {
+            print("Takipten çıkıldı");
+            issuccesfull = true;
+          });
+        } else {
+          await ref.runTransaction((transaction) async {
+            await transaction.set(
+                ref
+                    .collection("EventizerApp")
+                    .document(_server)
+                    .collection('users')
+                    .document(userID)
+                    .collection('following')
+                    .document(otherUserID),
+                {"OtherUserID": otherUserID});
+
+            await transaction.set(
+                ref
+                    .collection("EventizerApp")
+                    .document(_server)
+                    .collection('users')
+                    .document(otherUserID)
+                    .collection('followers')
+                    .document(userID),
+                {"OtherUserID": userID});
+
+            await transaction.update(
+                ref
+                    .collection("EventizerApp")
+                    .document(_server)
+                    .collection('users')
+                    .document(otherUserID),
+                {"Nof_follower": followerCounter + 1});
+          }).whenComplete(() {
+            print("Takip Ediliyor");
+            issuccesfull = true;
+          });
+        }
+        return issuccesfull;
+      });
+    } catch (e) {
+      print("Error at followToggle : " + e);
+      return null;
+    }
+  }
+
   Future<String> createEvent(
       String userId, Map<String, dynamic> eventData) async {
     String generatedID = AutoIdGenerator.autoId();
@@ -58,6 +173,29 @@ class DatabaseWorks {
           .document(generatedID)
           .setData(eventData);
       return generatedID;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchListOfUserEvents(
+      String userID) async {
+    try {
+      List<Map<String, dynamic>> eventList = [];
+      return await ref
+          .collection("EventizerApp")
+          .document(_server)
+          .collection("activeEvents")
+          .where("OrganizerID", isEqualTo: userID)
+          .where("Status", isEqualTo: "Accepted")
+          .getDocuments()
+          .then((docs) {
+        docs.documents.forEach((event) {
+          eventList.add(event.data);
+        });
+        return eventList;
+      });
     } catch (e) {
       print(e);
       return null;
@@ -109,16 +247,6 @@ class DatabaseWorks {
     }
   }
 
-  Future<Map<String, dynamic>> getUserInfoMap(String userId) async {
-    var data = await ref
-        .collection("EventizerApp")
-        .document(_server)
-        .collection("users")
-        .document(userId)
-        .get();
-    return data.data;
-  }
-
   Future<String> getUserProfilePhotoUrl(String userId) async {
     try {
       return await ref
@@ -136,7 +264,8 @@ class DatabaseWorks {
     }
   }
 
-  void updateInfo(String userId, String maptext, String changedtext) {
+  //ANCHOR burada sadece 1 veride değişiklik yapar
+  void updateSingleInfo(String userId, String maptext, String changedtext) {
     if (changedtext == "timeStamp") {
       ref
           .collection("EventizerApp")
@@ -167,7 +296,7 @@ class DatabaseWorks {
       });
     } catch (e) {
       print(e);
-      return {};
+      return null;
     }
   }
 
