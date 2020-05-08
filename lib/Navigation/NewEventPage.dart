@@ -80,7 +80,7 @@ class _NewEventPageState extends State<NewEventPage> {
                                         style: TextStyle(
                                           fontFamily: "Zona",
                                           fontSize: heightSize(2),
-                                          color: Colors.deepPurple,
+                                          color: MyColors().purpleContainer,
                                         ),
                                       ),
                                       TextSpan(
@@ -88,7 +88,7 @@ class _NewEventPageState extends State<NewEventPage> {
                                         style: TextStyle(
                                           fontFamily: "ZonaLight",
                                           fontSize: heightSize(2),
-                                          color: Colors.deepPurple,
+                                          color: MyColors().purpleContainer,
                                         ),
                                       ),
                                     ],
@@ -130,7 +130,7 @@ class _NewEventPageState extends State<NewEventPage> {
                                         style: TextStyle(
                                           fontFamily: "Zona",
                                           fontSize: heightSize(2),
-                                          color: Colors.deepPurple,
+                                          color: MyColors().purpleContainer,
                                         ),
                                       ),
                                       TextSpan(
@@ -138,7 +138,7 @@ class _NewEventPageState extends State<NewEventPage> {
                                         style: TextStyle(
                                           fontFamily: "ZonaLight",
                                           fontSize: heightSize(2),
-                                          color: Colors.deepPurple,
+                                          color: MyColors().purpleContainer,
                                         ),
                                       ),
                                     ],
@@ -180,7 +180,7 @@ class _NewEventPageState extends State<NewEventPage> {
                                         style: TextStyle(
                                           fontFamily: "Zona",
                                           fontSize: heightSize(2),
-                                          color: Colors.deepPurple,
+                                          color: MyColors().purpleContainer,
                                         ),
                                       ),
                                       TextSpan(
@@ -188,7 +188,7 @@ class _NewEventPageState extends State<NewEventPage> {
                                         style: TextStyle(
                                           fontFamily: "ZonaLight",
                                           fontSize: heightSize(2),
-                                          color: Colors.deepPurple,
+                                          color: MyColors().purpleContainer,
                                         ),
                                       ),
                                     ],
@@ -230,7 +230,7 @@ class _NewEventPageState extends State<NewEventPage> {
                                         style: TextStyle(
                                           fontFamily: "Zona",
                                           fontSize: heightSize(2),
-                                          color: Colors.deepPurple,
+                                          color: MyColors().purpleContainer,
                                         ),
                                       ),
                                       TextSpan(
@@ -238,7 +238,7 @@ class _NewEventPageState extends State<NewEventPage> {
                                         style: TextStyle(
                                           fontFamily: "ZonaLight",
                                           fontSize: heightSize(2),
-                                          color: Colors.deepPurple,
+                                          color: MyColors().purpleContainer,
                                         ),
                                       ),
                                     ],
@@ -280,7 +280,7 @@ class _NewEventPageState extends State<NewEventPage> {
                                         style: TextStyle(
                                           fontFamily: "Zona",
                                           fontSize: heightSize(2),
-                                          color: Colors.deepPurple,
+                                          color: MyColors().purpleContainer,
                                         ),
                                       ),
                                       TextSpan(
@@ -289,7 +289,7 @@ class _NewEventPageState extends State<NewEventPage> {
                                         style: TextStyle(
                                           fontFamily: "ZonaLight",
                                           fontSize: heightSize(2),
-                                          color: Colors.deepPurple,
+                                          color: MyColors().purpleContainer,
                                         ),
                                       ),
                                     ],
@@ -367,7 +367,7 @@ class _NewEventPageState extends State<NewEventPage> {
                   width: widthSize(40),
                   height: heightSize(8),
                   decoration: new BoxDecoration(
-                    color: Colors.deepPurple,
+                    color: MyColors().purpleContainer,
                     borderRadius: new BorderRadius.all(
                       Radius.circular(20),
                     ),
@@ -402,7 +402,7 @@ class _NewEventPageState extends State<NewEventPage> {
                   width: widthSize(40),
                   height: heightSize(8),
                   decoration: new BoxDecoration(
-                    color: Colors.deepPurple,
+                    color: MyColors().purpleContainer,
                     borderRadius: new BorderRadius.all(
                       Radius.circular(20),
                     ),
@@ -437,7 +437,7 @@ class _NewEventPageState extends State<NewEventPage> {
                   width: widthSize(40),
                   height: heightSize(8),
                   decoration: new BoxDecoration(
-                    color: Colors.deepPurple,
+                    color: MyColors().purpleContainer,
                     borderRadius: new BorderRadius.all(
                       Radius.circular(20),
                     ),
@@ -472,7 +472,7 @@ class _NewEventPageState extends State<NewEventPage> {
                   width: widthSize(50),
                   height: heightSize(8),
                   decoration: new BoxDecoration(
-                    color: Colors.deepPurple,
+                    color: MyColors().purpleContainer,
                     borderRadius: new BorderRadius.all(
                       Radius.circular(20),
                     ),
@@ -503,7 +503,7 @@ class _NewEventPageState extends State<NewEventPage> {
                   width: widthSize(40),
                   height: heightSize(8),
                   decoration: new BoxDecoration(
-                    color: Colors.deepPurple,
+                    color: MyColors().purpleContainer,
                     borderRadius: new BorderRadius.all(
                       Radius.circular(20),
                     ),
@@ -538,7 +538,7 @@ class _NewEventPageState extends State<NewEventPage> {
                   width: widthSize(30),
                   height: heightSize(8),
                   decoration: new BoxDecoration(
-                    color: Colors.deepPurple,
+                    color: MyColors().purpleContainer,
                     borderRadius: new BorderRadius.all(
                       Radius.circular(20),
                     ),
@@ -606,7 +606,7 @@ class _NewEventPageState extends State<NewEventPage> {
           ),
         ),
         decoration: new BoxDecoration(
-          color: Colors.deepPurple,
+          color: MyColors().purpleContainer,
           borderRadius: new BorderRadius.all(
             Radius.circular(20),
           ),

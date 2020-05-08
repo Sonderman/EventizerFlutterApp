@@ -1,6 +1,7 @@
 import 'package:eventizer/Navigation/ChatsPage.dart';
 import 'package:eventizer/Navigation/CreateEvent.dart';
 import 'package:eventizer/Navigation/ExplorePage.dart';
+import 'package:eventizer/Navigation/NewAddEventPage.dart';
 import 'package:eventizer/Navigation/SettingsPage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/assets/Colors.dart';
@@ -48,9 +49,11 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
     List<Widget> _widgetOptions = <Widget>[
       ChatsPage(),
       ExplorePage(),
-      //NewEventPage(),
+      NewAddEventPage(),
+      /*
       NewProfilePage(
           userID: userWorker.usermodel.getUserId(), isFromEvent: false),
+       */
       //ProfilePage(userWorker.getUserId(), false),
       SettingsPage()
     ];
