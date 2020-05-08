@@ -37,7 +37,7 @@ class DatabaseWorks {
     print("DatabaseWorks locator running");
   }
 
-  Future<bool> createEvent(
+  Future<String> createEvent(
       String userId, Map<String, dynamic> eventData) async {
     String generatedID = AutoIdGenerator.autoId();
     //print("2.url:" + eventData['EventImageUrl'].toString());
@@ -57,10 +57,10 @@ class DatabaseWorks {
           .collection("activeEvents")
           .document(generatedID)
           .setData(eventData);
-      return true;
+      return generatedID;
     } catch (e) {
       print(e);
-      return false;
+      return null;
     }
   }
 
@@ -71,6 +71,7 @@ class DatabaseWorks {
           .collection("EventizerApp")
           .document(_server)
           .collection("activeEvents")
+          .where("Status", isEqualTo: "Accepted")
           .getDocuments()
           .then((docs) {
         // print("gelen verinin uzunluğu:" + docs.documents.length.toString());
@@ -90,8 +91,11 @@ class DatabaseWorks {
     try {
       List<Map<String, dynamic>> eventList = [];
       return await ref
+          .collection("EventizerApp")
+          .document(_server)
           .collection("activeEvents")
           .where("Category", isEqualTo: category)
+          .where("Status", isEqualTo: "Accepted")
           .getDocuments()
           .then((docs) {
         docs.documents.forEach((event) {
@@ -115,10 +119,9 @@ class DatabaseWorks {
     return data.data;
   }
 
-  Future<String> getUserProfilePhotoUrl(String userId) {
-    Future<String> url;
+  Future<String> getUserProfilePhotoUrl(String userId) async {
     try {
-      url = ref
+      return await ref
           .collection("EventizerApp")
           .document(_server)
           .collection("users")
@@ -129,8 +132,8 @@ class DatabaseWorks {
       });
     } catch (e) {
       print(e);
+      return "null";
     }
-    return url;
   }
 
   void updateInfo(String userId, String maptext, String changedtext) {
@@ -271,6 +274,8 @@ class DatabaseWorks {
   Future<List<String>> getEventCategories() {
     List<String> categories;
     return ref
+        .collection("EventizerApp")
+        .document(_server)
         .collection('Settings')
         .document('Event')
         .get()

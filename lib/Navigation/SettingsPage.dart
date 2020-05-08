@@ -68,7 +68,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               msg: "Kişisel bilgileriniz Güncellendi",
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.BOTTOM,
-                              timeInSecForIos: 2,
+                              timeInSecForIosWeb: 2,
                               backgroundColor: Colors.green,
                               textColor: Colors.white,
                               fontSize: 18.0);
@@ -97,7 +97,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               msg: "Email adresiniz Güncellendi",
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.BOTTOM,
-                              timeInSecForIos: 2,
+                              timeInSecForIosWeb: 2,
                               backgroundColor: Colors.green,
                               textColor: Colors.white,
                               fontSize: 18.0);
@@ -126,7 +126,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               msg: "Şifreniz Güncellendi",
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.BOTTOM,
-                              timeInSecForIos: 2,
+                              timeInSecForIosWeb: 2,
                               backgroundColor: Colors.green,
                               textColor: Colors.white,
                               fontSize: 18.0);
@@ -236,7 +236,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               msg: "Hata: Lütfen bilgileri kontrol ediniz!.",
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.BOTTOM,
-                              timeInSecForIos: 2,
+                              timeInSecForIosWeb: 2,
                               backgroundColor: Colors.red,
                               textColor: Colors.white,
                               fontSize: 18.0);
@@ -425,7 +425,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               msg: "Hata: Lütfen bilgileri kontrol ediniz!.",
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.BOTTOM,
-                              timeInSecForIos: 2,
+                              timeInSecForIosWeb: 2,
                               backgroundColor: Colors.red,
                               textColor: Colors.white,
                               fontSize: 18.0);

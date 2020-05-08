@@ -3,22 +3,23 @@ import 'dart:io';
 import 'package:eventizer/Navigation/LoginPage.dart';
 import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
+import 'package:eventizer/Tools/loading.dart';
 import 'package:eventizer/animations/FadeAnimation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
-class RegisterPage extends StatefulWidget {
-  RegisterPage({Key key}) : super(key: key);
+class RegisterPage2 extends StatefulWidget {
+  RegisterPage2({Key key}) : super(key: key);
 
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends State<RegisterPage2> {
   final _formKey = GlobalKey<FormState>();
   File _image;
-  bool progressIndicator = false;
+  bool loading = false;
   String _ad;
   String _soyad;
   String _eposta;
@@ -31,7 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
         msg: message,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 2,
+        timeInSecForIosWeb: 2,
         backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 18.0);
@@ -102,13 +103,17 @@ class _RegisterPageState extends State<RegisterPage> {
         msg: message,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 2,
+        timeInSecForIosWeb: 2,
         backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 18.0);
   }
 
   void signUp() async {
+    // ANCHOR Kullanici kayit olana kadar loading kismini gosterecek
+    setState(() {
+      loading = true;
+    });
     //ANCHOR Veritabanına kaydetmek için
     List<String> datalist = [
       _ad,
@@ -130,12 +135,12 @@ class _RegisterPageState extends State<RegisterPage> {
           msg: "Girdileri gözden geçiriniz!",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 2,
+          timeInSecForIosWeb: 2,
           backgroundColor: Colors.red,
           textColor: Colors.white,
           fontSize: 18.0);
       setState(() {
-        progressIndicator = false;
+        loading = false;
       });
     });
   }
@@ -145,7 +150,7 @@ class _RegisterPageState extends State<RegisterPage> {
         msg: "Doğrulama maili gönderildi.Lütfen mailinizi doğrulayınız!",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 2,
+        timeInSecForIosWeb: 2,
         backgroundColor: Colors.cyan,
         textColor: Colors.white,
         fontSize: 18.0);
@@ -154,14 +159,8 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    return progressIndicator == true
-        ? Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 7.0,
-              ),
-            ),
-          )
+    return loading
+        ? Loading()
         : Scaffold(
             backgroundColor: Colors.white,
             body: SingleChildScrollView(
@@ -202,10 +201,10 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ),
                         Positioned(
-                            left: width / 2 - 20,
-                            top: 80,
-                            height: 90,
-                            width: 90,
+                            left: 30,
+                            top: 90,
+                            height: 100,
+                            width: 100,
                             child: GestureDetector(
                               onTap: () {
                                 _showChoiceDialog(context);
@@ -370,9 +369,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                       _formKey.currentState.validate()) {
                                     _formKey.currentState.save();
                                     signUp();
-                                    setState(() {
-                                      progressIndicator = true;
-                                    });
                                   }
                                 },
                                 child: Container(
