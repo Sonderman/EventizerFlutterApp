@@ -1,12 +1,12 @@
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
 
-class NewEventPage extends StatefulWidget {
+class ExploreEventPage extends StatefulWidget {
   @override
-  _NewEventPageState createState() => _NewEventPageState();
+  _ExploreEventPageState createState() => _ExploreEventPageState();
 }
 
-class _NewEventPageState extends State<NewEventPage> {
+class _ExploreEventPageState extends State<ExploreEventPage> {
   double heightSize(double value) {
     value /= 100;
     return MediaQuery.of(context).size.height * value;

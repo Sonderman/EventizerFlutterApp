@@ -6,16 +6,16 @@ import 'package:eventizer/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ExplorePage extends StatefulWidget {
+class OldExplorePage extends StatefulWidget {
   final List<String> categoryItems =
       locator<EventSettings>().categoryItems ?? [];
-  ExplorePage({Key key}) : super(key: key);
+  OldExplorePage({Key key}) : super(key: key);
 
   @override
   _ExplorePageState createState() => _ExplorePageState();
 }
 
-class _ExplorePageState extends State<ExplorePage> {
+class _ExplorePageState extends State<OldExplorePage> {
   String category;
   @override
   Widget build(BuildContext context) {
@@ -109,9 +109,9 @@ class _ExplorePageState extends State<ExplorePage> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) => EventPage(
-                                    eventData: eventDatas,
-                                    userData: userData.data,
-                                    amIparticipant: amIparticipant,
+                                  //eventData: eventDatas,
+                                  //userData: userData.data,
+                                  //amIparticipant: amIparticipant,
                                   )));
                     });
                   },

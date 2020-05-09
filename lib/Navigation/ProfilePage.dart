@@ -1,504 +1,795 @@
-import 'dart:io';
-import 'package:eventizer/Services/AuthService.dart';
+import 'package:eventizer/Models/UserModel.dart';
+import 'package:eventizer/Navigation/EventPage.dart';
 import 'package:eventizer/Services/Repository.dart';
-import 'package:eventizer/Tools/ImageViewer.dart';
 import 'package:eventizer/Tools/Message.dart';
+import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:line_awesome_icons/line_awesome_icons.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
   final userID;
   final isFromEvent;
 
-  ProfilePage(this.userID, this.isFromEvent);
+  const ProfilePage({Key key, this.userID, this.isFromEvent}) : super(key: key);
 
   @override
-  _ProfilePageState createState() => _ProfilePageState(userID);
+  _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
-  final userID;
-  List<Widget> images = [];
-  int imageCounter = 0;
-  List<File> _imagefile = [];
-  int imageFileCounter = 0;
-
-  _ProfilePageState(this.userID);
-
-/*
-  void _signedOut() {
-    var auth = AuthService.of(context).auth;
-    auth.signOut();
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
-  }
-  */
-
-  Future<String> getUserEmail(BuildContext context) async {
-    var auth = AuthService.of(context).auth;
-    String userEmail = await auth.getUserEmail();
-    return userEmail;
-    //setState(() {});
+class _ProfilePageState extends State<ProfilePage>
+    with TickerProviderStateMixin {
+  double heightSize(double value) {
+    value /= 100;
+    return MediaQuery.of(context).size.height * value;
   }
 
-  /*@override
-  void didChangeDependencies() {
-    //getUserEmail(context);
+  double widthSize(double value) {
+    value /= 100;
+    return MediaQuery.of(context).size.width * value;
+  }
+
+  UserService userWorker;
+  User usermodel;
+  bool amIFollowing = false;
+  String nameText;
+  String surnameText;
+  String aboutText;
+  String followersText;
+  String eventsText;
+  String trustText;
+  String profilePhotoUrl;
+
+  TabController _tabController;
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    usermodel = User(userID: widget.userID);
+  }
+
+  @override
+  Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
-  }*/
-
-  Future<bool> getImageFromGalery() async {
-    bool temp;
-    await ImagePicker.pickImage(source: ImageSource.gallery).then((onValue) {
-      if (onValue != null) {
-        _imagefile.add(onValue);
-        imageFileCounter++;
-        temp = true;
-      } else
-        temp = false;
-    });
-    return temp;
+    userWorker = Provider.of<UserService>(context);
+    if (widget.userID != userWorker.usermodel.userID) if (await userWorker
+        .amIFollowing(usermodel.userID)) {
+      setState(() {
+        amIFollowing = true;
+      });
+    } else {
+      setState(() {
+        amIFollowing = false;
+      });
+    }
   }
 
-  void addImage(File image) {
-    setState(() {
-      print('Girdi addImage');
-      images.insert(
-          images.length - 1,
-          Card(
-            color: MyColors().blueThemeColor,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
-              child: GestureDetector(
-                onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ImageViewer(
-                              tag: 'image' + imageCounter.toString(),
-                              image: image,
-                            ))),
-                child: Hero(
-                    tag: 'image' + imageCounter.toString(),
-                    child: Image.file(image, width: 100, height: 100)),
-              ),
-            ),
-          ));
-      imageCounter++;
-    });
+  @override
+  void dispose() {
+    super.dispose();
+    _tabController.dispose();
   }
 
-  void initImages() {
-    print('Girdi initImages');
-    images.add(Card(
-      color: MyColors().blueThemeColor,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
-        child: GestureDetector(
-          onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ImageViewer(
-                        tag: 'image' + imageCounter.toString(),
-                        image: null,
-                      ))),
-          child: Hero(
-            tag: 'image' + imageCounter.toString(),
-            child: Image(
-              image: AssetImage('assets/images/etkinlik.jpg'),
-              height: 100,
-              width: 100,
-            ),
-          ),
-        ),
-      ),
-    ));
-    imageCounter++;
-    images.add(Card(
-      color: Colors.amber,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
-        child: GestureDetector(
-            onTap: () {
-              getImageFromGalery().then((value) {
-                if (value) {
-                  addImage(_imagefile[imageFileCounter - 1]);
-                } else
-                  print("image: null");
-              });
-            },
-            child: Icon(
-              Icons.add,
-              size: 64,
-              color: MyColors().blueThemeColor,
-            )),
-      ),
-    ));
-    imageCounter++;
+  void textUpdaterByUserModel(User model) {
+    nameText = model.getUserName() ?? "Loading";
+    surnameText = model.getUserSurname() ?? "Loading";
+    aboutText = model.getUserAbout() ?? "Loading";
+    followersText = model.getUserFollowNumber().toString();
+    eventsText = model.getUserEventsNumber().toString();
+    trustText = model.getUserTrustPointNumber().toString();
+    profilePhotoUrl = model.getUserProfilePhotoUrl();
   }
 
   @override
   Widget build(BuildContext context) {
-    //final userWorker = Provider.of<UserService>(context);
-    if (images.length == 0) {
-      initImages();
-    }
-
-    TextStyle baslikTextStyle = TextStyle(
-        color: MyColors().blueThemeColor,
-        fontSize: 16.0,
-        fontWeight: FontWeight.bold);
-    TextStyle normalTextStyle =
-        TextStyle(color: MyColors().blueThemeColor, fontSize: 14.0);
-
-    //String userName = userWorker.getName();
-
-    /*
-    double heightSize(double value) {
-      value /= 100;
-      return MediaQuery.of(context).size.height * value;
-    }
-
-    double widthSize(double value) {
-      value /= 100;
-      return MediaQuery.of(context).size.width * value;
-    }
-    */
-
-    List<Widget> firstPage = [
-      Column(
-        children: <Widget>[
-          Container(
-            color: MyColors().blueThemeColor,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.fromLTRB(8, 16, 8, 0),
-                  child: profilPhotoCard(MyColors().blueThemeColor,
-                      MyColors().blueTextColor, userID),
-                ),
-                widget.isFromEvent
-                    ? Padding(
-                        padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-                        child: messageButtonCard(),
-                      )
-                    : Container(),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-                  child: aboutCard(
-                      baslikTextStyle,
-                      normalTextStyle,
-                      MyColors().yellowContainer,
-                      MyColors().blueThemeColor,
-                      userID),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-                  child: aboutMySelf(
-                      MyColors().blueThemeColor,
-                      MyColors().yellowContainer,
-                      MyColors().blueTextColor,
-                      images,
-                      userID),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                  child: infoCard(userID),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    ];
-    return DefaultTabController(
-      length: 1,
-      child: Scaffold(
-        appBar: AppBar(
-          bottom: TabBar(
-            tabs: <Widget>[
-              Tab(
-                text: "Profilim",
-              )
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: firstPage,
-        ),
-      ),
-    );
-  }
-
-//NOTE - InfoCard is here
-  Widget infoCard(userID) {
-    UserService userWorker = Provider.of<UserService>(context);
-
-    List<Widget> mapList() {
-      List<Widget> wlist = [];
-
-      var userMap = userWorker.usermodel.toMap();
-      userMap.forEach((k, v) {
-        wlist.add(Text("$k: $v"));
-      });
-      return wlist;
-    }
-
-    List<Widget> mapListTemp(Map<String, dynamic> data) {
-      List<Widget> wlist = [];
-      data.forEach((k, v) {
-        wlist.add(Text("$k: $v"));
-      });
-      return wlist;
-    }
-
-    //ANCHOR bu sayfaya gelen kişinin cihaza kayıtlı olan kişimi yoksa başkasımı anlıyoruz
-    if (userID == userWorker.usermodel.getUserId()) {
-      return Card(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: mapList(),
-        ),
-      );
-    } else {
-      return FutureBuilder(
-        future: userWorker.findUserbyID(userID),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> infoData) {
-          if (infoData.connectionState == ConnectionState.done) {
-            return Card(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: mapListTemp(infoData.data),
-              ),
-            );
-          } else
-            return Card(child: CircularProgressIndicator());
-        },
-      );
-    }
-  }
-
-  Column aboutCard(TextStyle baslikTextStyle, TextStyle normalTextStyle,
-      Color myBlueColor, Color yellowContainer, userID) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Container(
-          height: 60,
-          child: Row(
+    Widget avatarAndname() => Container(
+          alignment: Alignment.center,
+          height: heightSize(30),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Container(
+              SizedBox(
                 height: 20,
-                //child: Image.asset("assets/icons/options.png"),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 30),
-                child: Text("Profil Ayarlarım"),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20),
+                  ),
+                ),
+                height: heightSize(20),
+                child: FadeInImage.assetNetwork(
+                    placeholder: "assets/images/avatar_man.png",
+                    image: profilePhotoUrl),
+              ),
+              Text(
+                nameText + ' ' + surnameText,
+                style: TextStyle(
+                  fontFamily: "Zona",
+                  fontSize: heightSize(3),
+                ),
+              ),
+              Text(
+                "@nickname",
+                style: TextStyle(
+                  fontFamily: "ZonaLight",
+                  fontSize: heightSize(2),
+                ),
               ),
             ],
           ),
-          decoration: new BoxDecoration(
-            color: Colors.orange.shade200,
-            borderRadius: new BorderRadius.all(
-              Radius.circular(10),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+        );
 
-  //NOTE - Profil photo card is here
-  Column profilPhotoCard(Color myBlueColor, blueTextColor, userID) {
-    var userWorker = Provider.of<UserService>(context);
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.all(8.0),
-          child: FutureBuilder(
-            future:
-                userWorker.firebaseDatabaseWorks.getUserProfilePhotoUrl(userID),
-            builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return Column(
-                  children: <Widget>[
-                    Container(
-                      width: 150,
-                      height: 150,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: ExtendedNetworkImageProvider(snapshot.data,
-                                cache: true),
-                            fit: BoxFit.fill),
-                        borderRadius: BorderRadius.circular(120.0),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(120.0),
-                      ),
+    //ANCHOR yabancı tarafından görülen kısım
+    Widget threeBoxes() => Column(
+          children: <Widget>[
+            SizedBox(
+              height: heightSize(5),
+            ),
+            //ANCHOR About myself box is here
+            Container(
+              height: heightSize(8),
+              width: widthSize(85),
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Center(
+                  child: Text(
+                    aboutText,
+                    style: TextStyle(
+                      fontFamily: "Zona",
+                      fontSize: heightSize(2),
+                      color: MyColors().whiteTextColor,
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Column(
+                  ),
+                ),
+              ),
+              decoration: new BoxDecoration(
+                color: MyColors().yellowContainer,
+                borderRadius: new BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: heightSize(3),
+            ),
+            //ANCHOR Chat and Follow boxes are here
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                // ANCHOR  Mesaj sayfasına gitmek için
+                InkWell(
+                  onTap: () {
+                    //ANCHOR mesajlaşma sayfasında karşıdaki kişinin ismini getirip parametre olarak veriyoruz,
+                    //Bu sayede appbarda ismi görünüyor
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => Message(
+                                widget.userID, usermodel.getUserName())));
+                  },
+                  child: Container(
+                    height: heightSize(8),
+                    width: widthSize(35),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text(
-                          "Murat Altıntaş",
-                          style: TextStyle(
-                            fontFamily: "Zona",
-                            fontSize: 25,
-                          ),
+                        Container(
+                          child: Image.asset("assets/icons/chat.png"),
+                          height: heightSize(4),
                         ),
                         SizedBox(
-                          height: 5,
+                          width: widthSize(2),
                         ),
                         Text(
-                          "@altintas",
+                          "Chat",
                           style: TextStyle(
-                            fontFamily: "ZonaLight",
-                            fontSize: 15,
+                            fontFamily: "Zona",
+                            fontSize: heightSize(2),
+                            color: MyColors().whiteTextColor,
                           ),
                         ),
                       ],
                     ),
-                  ],
-                );
-              } else
-                return Container(
-                  height: 150,
-                  width: 150,
-                  child: CircularProgressIndicator(),
-                );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Column aboutMySelf(Color myBlueColor, Color yellowContainer,
-      Color blueTextColor, List<Widget> images, userID) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Container(
-          height: 60,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30, top: 20),
-            child: Text("Hakkımda..."),
-          ),
-          decoration: new BoxDecoration(
-            color: Colors.orange.shade200,
-            borderRadius: new BorderRadius.all(
-              Radius.circular(10),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Text(
-                    "TAKİPÇİ",
-                    style: TextStyle(
-                      color: blueTextColor,
-                      fontFamily: "Zona",
-                      fontSize: 20,
+                    decoration: new BoxDecoration(
+                      color: MyColors().blueContainer,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
                     ),
                   ),
-                  Text("56",
-                      style: TextStyle(
-                        color: blueTextColor,
-                        fontFamily: "ZonaLight",
-                        fontSize: 25,
-                      )),
-                ],
+                ),
+                amIFollowing
+                    ? InkWell(
+                        onTap: () async {
+                          userWorker
+                              .followToggle(usermodel.userID)
+                              .whenComplete(() {
+                            setState(() {
+                              amIFollowing = !amIFollowing;
+                            });
+                          });
+                        },
+                        child: Container(
+                          height: heightSize(8),
+                          width: widthSize(35),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                child: Image.asset("assets/icons/unfollow.png"),
+                                height: heightSize(4),
+                              ),
+                              SizedBox(
+                                width: widthSize(2),
+                              ),
+                              Text(
+                                "Takipten Çık",
+                                style: TextStyle(
+                                  fontFamily: "Zona",
+                                  fontSize: heightSize(2),
+                                  color: MyColors().whiteTextColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          decoration: new BoxDecoration(
+                            color: MyColors().orangeContainer,
+                            borderRadius: new BorderRadius.all(
+                              Radius.circular(20),
+                            ),
+                          ),
+                        ),
+                      )
+                    : InkWell(
+                        onTap: () async {
+                          userWorker
+                              .followToggle(usermodel.userID)
+                              .whenComplete(() {
+                            setState(() {
+                              amIFollowing = !amIFollowing;
+                            });
+                          });
+                        },
+                        child: Container(
+                          height: heightSize(8),
+                          width: widthSize(35),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                child: Image.asset("assets/icons/follow.png"),
+                                height: heightSize(4),
+                              ),
+                              SizedBox(
+                                width: widthSize(2),
+                              ),
+                              Text(
+                                "Takip Et",
+                                style: TextStyle(
+                                  fontFamily: "Zona",
+                                  fontSize: heightSize(2),
+                                  color: MyColors().whiteTextColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          decoration: new BoxDecoration(
+                            color: MyColors().orangeContainer,
+                            borderRadius: new BorderRadius.all(
+                              Radius.circular(20),
+                            ),
+                          ),
+                        ),
+                      ),
+              ],
+            ),
+          ],
+        );
+
+    Widget threeBoxesOwnProfile() => Column(
+          children: <Widget>[
+            SizedBox(
+              height: heightSize(5),
+            ),
+            //ANCHOR About myself box are here
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => EventPage()));
+              },
+              child: Container(
+                height: heightSize(8),
+                width: widthSize(85),
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.settings,
+                        size: 30,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Center(
+                        child: Text(
+                          "Düzenle",
+                          style: TextStyle(
+                            fontFamily: "Zona",
+                            fontSize: heightSize(2),
+                            color: MyColors().whiteTextColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                decoration: new BoxDecoration(
+                  color: MyColors().yellowContainer,
+                  borderRadius: new BorderRadius.all(
+                    Radius.circular(20),
+                  ),
+                ),
               ),
-              Column(
-                children: <Widget>[
-                  Text("ETKİNLİK",
+            ),
+            SizedBox(
+              height: heightSize(3),
+            ),
+            Container(
+              height: heightSize(8),
+              width: widthSize(85),
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Center(
+                  child: Text(
+                    aboutText,
+                    style: TextStyle(
+                      fontFamily: "Zona",
+                      fontSize: heightSize(2),
+                      color: MyColors().whiteTextColor,
+                    ),
+                  ),
+                ),
+              ),
+              decoration: new BoxDecoration(
+                color: MyColors().yellowContainer,
+                borderRadius: new BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
+            ),
+          ],
+        );
+
+    Widget numberDatas() => Column(
+          children: <Widget>[
+            SizedBox(
+              height: heightSize(5),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Text(
+                      "TAKİPÇİ",
                       style: TextStyle(
-                        color: blueTextColor,
+                        color: MyColors().blueTextColor,
                         fontFamily: "Zona",
                         fontSize: 20,
-                      )),
-                  Text("56",
-                      style: TextStyle(
-                        color: blueTextColor,
-                        fontFamily: "ZonaLight",
-                        fontSize: 25,
-                      )),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Text("GÜVEN PUANI",
-                      style: TextStyle(
-                        color: blueTextColor,
-                        fontFamily: "Zona",
-                        fontSize: 20,
-                      )),
-                  Text("105",
-                      style: TextStyle(
-                        color: blueTextColor,
-                        fontFamily: "ZonaLight",
-                        fontSize: 25,
-                      )),
-                ],
-              )
-            ],
+                      ),
+                    ),
+                    Text(followersText,
+                        style: TextStyle(
+                          color: MyColors().blueTextColor,
+                          fontFamily: "ZonaLight",
+                          fontSize: 25,
+                        )),
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    Text("ETKİNLİK",
+                        style: TextStyle(
+                          color: MyColors().blueTextColor,
+                          fontFamily: "Zona",
+                          fontSize: 20,
+                        )),
+                    Text(eventsText,
+                        style: TextStyle(
+                          color: MyColors().blueTextColor,
+                          fontFamily: "ZonaLight",
+                          fontSize: 25,
+                        )),
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    Text("GÜVEN",
+                        style: TextStyle(
+                          color: MyColors().blueTextColor,
+                          fontFamily: "Zona",
+                          fontSize: 20,
+                        )),
+                    Text(trustText,
+                        style: TextStyle(
+                          color: MyColors().blueTextColor,
+                          fontFamily: "ZonaLight",
+                          fontSize: 25,
+                        )),
+                  ],
+                )
+              ],
+            ),
+            SizedBox(
+              height: heightSize(5),
+            ),
+          ],
+        );
+/*
+    var eventList = Column(
+      children: <Widget>[
+        SizedBox(
+          height: heightSize(5),
+        ),
+        ClipRRect(
+          borderRadius: BorderRadius.all(
+            Radius.circular(20),
+          ),
+          child: Container(
+            height: heightSize(30),
+            child: Image.asset("assets/images/event_camp.jpg"),
           ),
         ),
       ],
     );
-  }
-
-  Column messageButtonCard() {
-    UserService userService = Provider.of<UserService>(context);
-    return Column(
-      children: <Widget>[
-        Center(
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width *
-                0.3, // ANCHOR ekran genişliğinin 3de1 uzunluğunu veriyor
-            child: FlatButton.icon(
-              icon: Icon(LineAwesomeIcons.envelope),
-              color: Colors.green,
-              label: Text(
-                "Mesaj\nGönder",
-                style: TextStyle(fontSize: 10.0),
+*/
+    Widget itemCard(String title, String category, String name, String imageUrl,
+        String startDate) {
+      return Stack(
+        children: <Widget>[
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10.0),
+              //ANCHOR resimlerin cache de saklanması sağlandı
+              child: FadeInImage.assetNetwork(
+                placeholder: 'assets/images/etkinlik.jpg',
+                image: imageUrl,
+                fit: BoxFit.fill,
               ),
-              textColor: Colors.black,
-              onPressed: () async {
-                // ANCHOR  Mesaj sayfasına gitmek için
-                if (userService.usermodel.getUserId() != widget.userID) {
-                  //ANCHOR mesajlaşma sayfasında karşıdaki kişinin ismini getirip parametre olarak veriyoruz,
-                  //Bu sayede appbarda ismi görünüyor
-                  await userService.findUserbyID(widget.userID).then((data) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                Message(widget.userID, data['Name'])));
-                  });
-                }
-              },
             ),
           ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: 200.0,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    Colors.black.withOpacity(1),
+                    Colors.black.withOpacity(0.9),
+                    Colors.black.withOpacity(0.8),
+                    Colors.black.withOpacity(0.7),
+                    Colors.black.withOpacity(0.6),
+                    Colors.black.withOpacity(0.5),
+                    Colors.black.withOpacity(0.4),
+                    Colors.black.withOpacity(0.1),
+                    Colors.black.withOpacity(0.05),
+                    Colors.black.withOpacity(0.025),
+                    Colors.black.withOpacity(0),
+                  ],
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Text(
+                    title ?? "",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          category ?? "",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          startDate ?? "",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    Widget eventItem(Map<String, dynamic> eventDatas) {
+      UserService userWorker = Provider.of<UserService>(context);
+      var eventService = Provider.of<EventService>(context);
+      String eventID = eventDatas['eventID'];
+      String title = eventDatas['Title'];
+      String ownerID = eventDatas['OrganizerID'];
+      String category = eventDatas['Category'];
+      String imageUrl = eventDatas['EventImageUrl'];
+      String startDate = eventDatas['StartDate'];
+      //String detail = eventDatas['Detail'];
+      return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: FutureBuilder(
+            future: userWorker.findUserbyID(ownerID),
+            builder: (BuildContext context,
+                AsyncSnapshot<Map<String, dynamic>> userData) {
+              if (userData.connectionState == ConnectionState.done) {
+                String name = userData.data['Name'];
+                return GestureDetector(
+                    onTap: () async {
+                      eventService
+                          .amIparticipant(
+                              userWorker.usermodel.getUserId(), eventID)
+                          .then((amIparticipant) {
+                        print("Kullanıcı bu etkinliğe katılmış:" +
+                            amIparticipant.toString());
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) => EventPage(
+                                    //eventData: eventDatas,
+                                    // userData: userData.data,
+                                    //amIparticipant: amIparticipant,
+                                    )));
+                      });
+                    },
+                    child:
+                        itemCard(title, category, name, imageUrl, startDate));
+              } else
+                return PageComponents().loadingOverlay(context);
+            },
+          ));
+    }
+
+    Widget eventList() {
+      var eventService = Provider.of<EventService>(context);
+      return FutureBuilder(
+        future: eventService
+            .fetchListOfUserEvents(userWorker.usermodel.getUserId()),
+        builder: (BuildContext context, AsyncSnapshot fetchedlist) {
+          if (fetchedlist.connectionState == ConnectionState.done) {
+            List<Map<String, dynamic>> listofMaps = fetchedlist.data;
+            if (listofMaps.length == 0) {
+              return SliverToBoxAdapter(child: Text("Etkinlik Yok"));
+            } else {
+              return SliverGrid(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    return eventItem(listofMaps[index]);
+                  }, childCount: listofMaps.length),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 1));
+            }
+          } else
+            return SliverToBoxAdapter(
+                child: PageComponents().loadingOverlay(context));
+        },
+      );
+    }
+
+    if (widget.userID != userWorker.usermodel.userID) {
+      print("Gelen userID:" + widget.userID);
+      return FutureBuilder(
+          future: userWorker.findUserbyID(widget.userID),
+          builder:
+              (BuildContext context, AsyncSnapshot<Map<String, dynamic>> data) {
+            if (data.connectionState == ConnectionState.done) {
+              usermodel.parseMap(data.data);
+              textUpdaterByUserModel(usermodel);
+              return Scaffold(
+                appBar: AppBar(
+                  backgroundColor: MyColors().blueThemeColor,
+                  centerTitle: true,
+                  title: Text(usermodel.getUserName() +
+                      " " +
+                      usermodel.getUserSurname()),
+                ),
+                body: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 25,
+                    ),
+                    Container(
+                      child: TabBar(
+                          indicatorColor: Colors.teal,
+                          labelColor: Colors.teal,
+                          unselectedLabelColor: Colors.black54,
+                          controller: _tabController,
+                          isScrollable: true,
+                          tabs: [
+                            Tab(
+                              text: "My Profile",
+                            ),
+                            Tab(
+                              text: "Next Events",
+                            ),
+                            Tab(
+                              text: "Old Events",
+                            )
+                          ]),
+                    ),
+                    Expanded(
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: <Widget>[
+                          CustomScrollView(
+                            slivers: <Widget>[
+                              SliverToBoxAdapter(
+                                child: Column(
+                                  children: <Widget>[
+                                    avatarAndname(),
+                                    threeBoxes(),
+                                    numberDatas(),
+                                    //eventList,
+                                  ],
+                                ),
+                              ),
+                              SliverPadding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 25),
+                                sliver: eventList(),
+                              )
+                            ],
+                          ),
+                          Center(
+                            child: PageComponents().underConstruction(context),
+                          ),
+                          Center(
+                            child: PageComponents().underConstruction(context),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            } else
+              return Center(
+                child: PageComponents().loadingOverlay(context),
+              );
+          });
+    } else {
+      textUpdaterByUserModel(userWorker.usermodel);
+      return Scaffold(
+        body: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 25,
+            ),
+            Container(
+              child: TabBar(
+                  indicatorColor: Colors.teal,
+                  labelColor: Colors.teal,
+                  unselectedLabelColor: Colors.black54,
+                  controller: _tabController,
+                  isScrollable: true,
+                  tabs: [
+                    Tab(
+                      text: "My Profile",
+                    ),
+                    Tab(
+                      text: "Next Events",
+                    ),
+                    Tab(
+                      text: "Old Events",
+                    )
+                  ]),
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: <Widget>[
+                  CustomScrollView(
+                    slivers: <Widget>[
+                      SliverToBoxAdapter(
+                        child: Column(
+                          children: <Widget>[
+                            avatarAndname(),
+                            threeBoxesOwnProfile(),
+                            numberDatas(),
+                            //eventList,
+                          ],
+                        ),
+                      ),
+                      SliverPadding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                        sliver: eventList(),
+                      )
+                    ],
+                  ),
+                  Center(
+                    child: PageComponents().underConstruction(context),
+                  ),
+                  Center(
+                    child: PageComponents().underConstruction(context),
+                  )
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
+      );
+    }
+    /*
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          bottom: TabBar(isScrollable: true, tabs: [
+            Tab(
+              text: "Tab1",
+            ),
+            Tab(
+              text: "Tab2",
+            ),
+            Tab(
+              text: "Tab3",
+            )
+          ]),
+        ),
+        body: TabBarView(
+          children: <Widget>[
+            CustomScrollView(
+              slivers: <Widget>[
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: <Widget>[
+                      avatarAndname,
+                      widget.userID == userWorker.getUserId()
+                          ? threeBoxesOwnProfile
+                          : threeBoxes,
+                      numberDatas,
+                      //eventList2(),
+                      //eventList,
+                    ],
+                  ),
+                ),
+                eventList2()
+              ],
+            ),
+            Center(
+              child: PageComponents().underConstruction(context),
+            ),
+            Center(
+              child: PageComponents().underConstruction(context),
+            )
+          ],
+        ),
+      ),
     );
+    */
   }
 }

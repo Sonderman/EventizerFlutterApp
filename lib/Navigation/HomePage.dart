@@ -1,14 +1,14 @@
 import 'package:eventizer/Navigation/ChatsPage.dart';
-import 'package:eventizer/Navigation/CreateEvent.dart';
-import 'package:eventizer/Navigation/ExplorePage.dart';
-import 'package:eventizer/Navigation/NewAddEventPage.dart';
+import 'package:eventizer/Navigation/CreateEventPage.dart';
+import 'package:eventizer/Navigation/EditProfilePage.dart';
+import 'package:eventizer/Navigation/ExploreEventPage.dart';
+import 'package:eventizer/Navigation/ProfilePage.dart';
 import 'package:eventizer/Navigation/SettingsPage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'NewProfilePage.dart';
 
 class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
@@ -48,13 +48,8 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
 
     List<Widget> _widgetOptions = <Widget>[
       ChatsPage(),
-      ExplorePage(),
-      NewAddEventPage(),
-      /*
-      NewProfilePage(
-          userID: userWorker.usermodel.getUserId(), isFromEvent: false),
-       */
-      //ProfilePage(userWorker.getUserId(), false),
+      ExploreEventPage(),
+      ProfilePage(userID: userWorker.usermodel.getUserId(), isFromEvent: false),
       SettingsPage()
     ];
 
@@ -105,7 +100,7 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
             Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => CreateEvent()))
+                        builder: (BuildContext context) => CreateEventPage()))
                 .then((value) {
               //ANCHOR Yeni etkinlik oluşturulduğunda sayfayı güncelliyor
               if (value == "success") {
