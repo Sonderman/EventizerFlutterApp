@@ -1,4 +1,4 @@
-import 'package:eventizer/Navigation/ChatsPage.dart';
+import 'package:eventizer/Navigation/Old/OldChatsPage.dart';
 import 'package:eventizer/Navigation/CreateEventPage.dart';
 import 'package:eventizer/Navigation/EditProfilePage.dart';
 import 'package:eventizer/Navigation/EventPage.dart';
@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
+import 'ChatPage.dart';
 import 'LoginPage.dart';
 
 class HomePage extends StatefulWidget {
@@ -52,10 +53,10 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
     UserService userWorker = Provider.of<UserService>(context);
 
     List<Widget> _widgetOptions = <Widget>[
-      ChatsPage(),
+      OldChatsPage(),
       ExploreEventPage(),
       ProfilePage(userID: userWorker.usermodel.getUserId(), isFromEvent: false),
-      SignupPage(),
+      ChatPage(),
       //SettingsPage()
     ];
 

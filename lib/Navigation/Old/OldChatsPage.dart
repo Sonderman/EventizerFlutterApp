@@ -6,14 +6,14 @@ import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ChatsPage extends StatefulWidget {
-  ChatsPage({Key key}) : super(key: key);
+class OldChatsPage extends StatefulWidget {
+  OldChatsPage({Key key}) : super(key: key);
 
   @override
-  _ChatsPageState createState() => _ChatsPageState();
+  _OldChatsPageState createState() => _OldChatsPageState();
 }
 
-class _ChatsPageState extends State<ChatsPage> {
+class _OldChatsPageState extends State<OldChatsPage> {
   @override
   Widget build(BuildContext context) {
     var messageService = Provider.of<MessagingService>(context);

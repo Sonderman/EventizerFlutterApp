@@ -10,20 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="acf10fe4-b608-47a5-9fbb-f441cf333a58" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/icons/addPhoto.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/Navigation/Old/OldLoginPage.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/Navigation/SignupPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/Navigation/ChatPage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/local.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/icons/joinEvent.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/icons/joinEvent.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/EventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/EventPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/ExploreEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ExploreEventPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/ChatsPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/Old/OldChatsPage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/RegisterPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/RegisterPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Services/AuthCheck.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Services/AuthCheck.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/assets/Colors.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/assets/Colors.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/SignupPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/SignupPage.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -131,7 +122,14 @@
       <option name="project" value="LOCAL" />
       <updated>1588784334269</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="&quot;event page&quot; rengi değiştirildi.&#10;&quot;sign in page&quot; tamamlandı.&#10;&quot;sign up page&quot; tamamlandı.">
+      <created>1589073060341</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1589073060341</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -151,6 +149,7 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="&quot;profile page kullanıcı&quot; yarım&#10;&quot;profile page ziyaretçi&quot; eklendi&#10;&quot;event page&quot; yeni başlandı" />
     <MESSAGE value="&quot;event page&quot; ver 1.1" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;event page&quot; ver 1.1" />
+    <MESSAGE value="&quot;event page&quot; rengi değiştirildi.&#10;&quot;sign in page&quot; tamamlandı.&#10;&quot;sign up page&quot; tamamlandı." />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;event page&quot; rengi değiştirildi.&#10;&quot;sign in page&quot; tamamlandı.&#10;&quot;sign up page&quot; tamamlandı." />
   </component>
 </project>

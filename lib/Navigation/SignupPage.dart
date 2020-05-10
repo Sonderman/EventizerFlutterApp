@@ -186,6 +186,7 @@ class _SignupPageState extends State<SignupPage> {
   Widget telephoneNumber() {
     return TextFormField(
       textAlign: TextAlign.left,
+      keyboardType: TextInputType.number,
       decoration: InputDecoration(
         border: InputBorder.none,
         hintText: "Telefon Numarası",
