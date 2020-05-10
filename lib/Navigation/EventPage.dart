@@ -42,7 +42,7 @@ class _EventPageState extends State<EventPage> {
                 style: TextStyle(
                   fontFamily: "Zona",
                   fontSize: heightSize(2.5),
-                  color: MyColors().purpleTextColor,
+                  color: MyColors().whiteTextColor,
                 ),
               ),
               TextSpan(
@@ -51,7 +51,7 @@ class _EventPageState extends State<EventPage> {
                   height: heightSize(0.2),
                   fontFamily: "ZonaLight",
                   fontSize: heightSize(2),
-                  color: Colors.deepPurple,
+                  color: MyColors().whiteTextColor,
                 ),
               ),
             ],
@@ -64,7 +64,7 @@ class _EventPageState extends State<EventPage> {
           width: widthSize(30),
           height: heightSize(8),
           decoration: new BoxDecoration(
-            color: MyColors().yellowOpacityContainer,
+            color: MyColors().darkOrangeContainer,
             borderRadius: new BorderRadius.all(
               Radius.circular(20),
             ),
@@ -106,7 +106,7 @@ class _EventPageState extends State<EventPage> {
           style: TextStyle(
             fontFamily: "Zona",
             fontSize: heightSize(3.5),
-            color: MyColors().purpleTextColor,
+            color: MyColors().whiteTextColor,
           ),
         ),
         SizedBox(
@@ -140,7 +140,7 @@ class _EventPageState extends State<EventPage> {
               width: widthSize(43),
               height: heightSize(6),
               decoration: new BoxDecoration(
-                color: MyColors().yellowOpacityContainer,
+                color: MyColors().darkOrangeContainer,
                 borderRadius: new BorderRadius.all(
                   Radius.circular(20),
                 ),
@@ -177,7 +177,7 @@ class _EventPageState extends State<EventPage> {
               width: widthSize(43),
               height: heightSize(6),
               decoration: new BoxDecoration(
-                color: MyColors().yellowOpacityContainer,
+                color: MyColors().darkOrangeContainer,
                 borderRadius: new BorderRadius.all(
                   Radius.circular(20),
                 ),
@@ -221,7 +221,7 @@ class _EventPageState extends State<EventPage> {
             Radius.circular(20),
           ),
           child: Container(
-            color: MyColors().yellowContainer,
+            color: MyColors().blackOpacityContainer,
             width: widthSize(100),
             height: heightSize(20),
             child: Padding(
@@ -230,7 +230,7 @@ class _EventPageState extends State<EventPage> {
                 "This is event's details container...",
                 style: TextStyle(
                   fontFamily: "ZonaLight",
-                  color: Colors.black,
+                  color: MyColors().whiteTextColor,
                   fontSize: heightSize(2),
                 ),
               ),
@@ -249,7 +249,7 @@ class _EventPageState extends State<EventPage> {
           width: widthSize(43),
           height: heightSize(8),
           decoration: new BoxDecoration(
-            color: MyColors().yellowOpacityContainer,
+            color: MyColors().darkOrangeContainer,
             borderRadius: new BorderRadius.all(
               Radius.circular(20),
             ),
@@ -281,7 +281,7 @@ class _EventPageState extends State<EventPage> {
           width: widthSize(43),
           height: heightSize(8),
           decoration: new BoxDecoration(
-            color: MyColors().yellowOpacityContainer,
+            color: MyColors().darkOrangeContainer,
             borderRadius: new BorderRadius.all(
               Radius.circular(20),
             ),
@@ -316,7 +316,7 @@ class _EventPageState extends State<EventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.amber,
+      backgroundColor: Colors.deepOrangeAccent,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),

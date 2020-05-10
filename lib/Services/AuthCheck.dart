@@ -1,5 +1,5 @@
 import 'package:eventizer/Navigation/HomePage.dart';
-import 'package:eventizer/Navigation/LoginPage.dart';
+import 'package:eventizer/Navigation/Old/OldLoginPage.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/BaseAuth.dart';
 import 'package:eventizer/Services/Repository.dart';
@@ -41,7 +41,7 @@ class AuthCheck extends StatelessWidget {
                     }
                   },
                 )
-              : LoginPage();
+              : OldLoginPage();
         }
         return buildWaitingScreen();
       },

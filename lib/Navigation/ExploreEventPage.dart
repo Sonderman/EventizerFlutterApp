@@ -17,6 +17,8 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
     return MediaQuery.of(context).size.width * value;
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
