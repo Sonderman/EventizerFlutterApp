@@ -10,11 +10,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="acf10fe4-b608-47a5-9fbb-f441cf333a58" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/Navigation/ChatPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/ChatsPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/Old/OldChatsPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/ExploreEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ExploreEventPage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/SignupPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/SignupPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -129,7 +131,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589073060341</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="&quot;chat page&quot; tamamlandı.&#10;&quot;signup page&quot; şifre girerken rakam klavyesi eklendi.">
+      <created>1589154259348</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1589154259348</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -150,6 +159,7 @@
     <MESSAGE value="&quot;profile page kullanıcı&quot; yarım&#10;&quot;profile page ziyaretçi&quot; eklendi&#10;&quot;event page&quot; yeni başlandı" />
     <MESSAGE value="&quot;event page&quot; ver 1.1" />
     <MESSAGE value="&quot;event page&quot; rengi değiştirildi.&#10;&quot;sign in page&quot; tamamlandı.&#10;&quot;sign up page&quot; tamamlandı." />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;event page&quot; rengi değiştirildi.&#10;&quot;sign in page&quot; tamamlandı.&#10;&quot;sign up page&quot; tamamlandı." />
+    <MESSAGE value="&quot;chat page&quot; tamamlandı.&#10;&quot;signup page&quot; şifre girerken rakam klavyesi eklendi." />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;chat page&quot; tamamlandı.&#10;&quot;signup page&quot; şifre girerken rakam klavyesi eklendi." />
   </component>
 </project>

@@ -104,7 +104,7 @@ class _ProfilePageState extends State<ProfilePage>
                     image: profilePhotoUrl),
               ),
               Text(
-                nameText + ' ' + surnameText,
+                nameText.toUpperCase() + ' ' + surnameText.toUpperCase(),
                 style: TextStyle(
                   fontFamily: "Zona",
                   fontSize: heightSize(3),
@@ -310,10 +310,7 @@ class _ProfilePageState extends State<ProfilePage>
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Icon(
-                        Icons.settings,
-                        size: 30,
-                      ),
+                      Image.asset("assets/icons/options.png"),
                       SizedBox(
                         width: 10,
                       ),

@@ -17,8 +17,6 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
     return MediaQuery.of(context).size.width * value;
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,40 +60,94 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                       ),
                       child: Container(
                         width: widthSize(100),
-                        height: heightSize(25),
+                        height: heightSize(33),
+                        color: Colors.white,
                         child: Stack(
                           children: <Widget>[
                             Image.asset(
                               "assets/images/event_birthday.jpg",
                               //fit: BoxFit.cover,
                             ),
+                            Positioned(
+                              top: heightSize(5),
+                              bottom: 0,
+                              left: 10,
+                              right: 10,
+                              child: Divider(
+                                thickness: 2,
+                                color: MyColors().loginGreyColor,
+                              ),
+                            ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
-                              child: Align(
-                                alignment: Alignment.bottomLeft,
-                                child: RichText(
-                                  text: TextSpan(
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: "21 Tem. Perş.\n",
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.date_range,
+                                        color: MyColors().greyTextColor,
+                                      ),
+                                      SizedBox(
+                                        width: widthSize(2),
+                                      ),
+                                      Text(
+                                        "21 Tem. Perş.",
                                         style: TextStyle(
                                           fontFamily: "Zona",
                                           fontSize: heightSize(2),
-                                          color: MyColors().purpleContainer,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: "Taksim Energy Cafe - İst.",
-                                        style: TextStyle(
-                                          fontFamily: "ZonaLight",
-                                          fontSize: heightSize(2),
-                                          color: MyColors().purpleContainer,
+                                          color: MyColors().greyTextColor,
                                         ),
                                       ),
                                     ],
                                   ),
-                                ),
+                                  SizedBox(
+                                    height: heightSize(1),
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.location_on,
+                                        color: MyColors().greyTextColor,
+                                      ),
+                                      SizedBox(
+                                        width: widthSize(2),
+                                      ),
+                                      Text(
+                                        "Istanbul, Taksim - Dream Cafe",
+                                        style: TextStyle(
+                                          fontFamily: "Zona",
+                                          fontSize: heightSize(2),
+                                          color: MyColors().greyTextColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                                  SizedBox(
+                                    height: heightSize(1),
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.people,
+                                        color: MyColors().greyTextColor,
+                                      ),
+                                      SizedBox(
+                                        width: widthSize(2),
+                                      ),
+                                      Text(
+                                        "34 Katılımcı",
+                                        style: TextStyle(
+                                          fontFamily: "Zona",
+                                          fontSize: heightSize(2),
+                                          color: MyColors().greyTextColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -120,8 +172,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                               //fit: BoxFit.cover,
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                               child: Align(
                                 alignment: Alignment.bottomLeft,
                                 child: RichText(
@@ -170,8 +221,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                               //fit: BoxFit.cover,
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                               child: Align(
                                 alignment: Alignment.bottomLeft,
                                 child: RichText(
@@ -220,8 +270,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                               //fit: BoxFit.cover,
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                               child: Align(
                                 alignment: Alignment.bottomLeft,
                                 child: RichText(
@@ -270,8 +319,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                               //fit: BoxFit.cover,
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                               child: Align(
                                 alignment: Alignment.bottomLeft,
                                 child: RichText(
@@ -286,8 +334,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                                         ),
                                       ),
                                       TextSpan(
-                                        text:
-                                            "Flutter'a Giriş ~ 100. Yıl Kültür Merkezi - Çankırı",
+                                        text: "Flutter'a Giriş ~ 100. Yıl Kültür Merkezi - Çankırı",
                                         style: TextStyle(
                                           fontFamily: "ZonaLight",
                                           fontSize: heightSize(2),
@@ -382,8 +429,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         children: <Widget>[
                           Container(
                             height: heightSize(4),
-                            child: Image.asset(
-                                "assets/icons/birthdayCategory.png"),
+                            child: Image.asset("assets/icons/birthdayCategory.png"),
                           ),
                           Text(
                             "Doğum Günü",
@@ -417,8 +463,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         children: <Widget>[
                           Container(
                             height: heightSize(4),
-                            child:
-                                Image.asset("assets/icons/travelCategory.png"),
+                            child: Image.asset("assets/icons/travelCategory.png"),
                           ),
                           Text(
                             "Gezi Turu",
@@ -452,8 +497,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         children: <Widget>[
                           Container(
                             height: heightSize(4),
-                            child: Image.asset(
-                                "assets/icons/worldtravelCategory.png"),
+                            child: Image.asset("assets/icons/worldtravelCategory.png"),
                           ),
                           Text(
                             "Dünya Turu",
@@ -518,8 +562,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         children: <Widget>[
                           Container(
                             height: heightSize(4),
-                            child: Image.asset(
-                                "assets/icons/conferenceCategory.png"),
+                            child: Image.asset("assets/icons/conferenceCategory.png"),
                           ),
                           Text(
                             "Konferans",

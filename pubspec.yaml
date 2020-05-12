@@ -10,6 +10,7 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  fancy_bottom_navigation: ^0.3.2
   image_editor: ^0.1.6
   extended_image: ^0.7.2
   splashscreen: ^1.2.0
