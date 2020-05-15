@@ -38,7 +38,7 @@ class BottomNavWidget extends StatefulWidget {
 }
 
 class _BottomNavWidgetState extends State<BottomNavWidget> {
-  int _selectedIndex = 3;
+  int _selectedIndex = 0;
 
   //static const TextStyle optionStyle =
   //   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -54,7 +54,7 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
     UserService userWorker = Provider.of<UserService>(context);
 
     List<Widget> _widgetOptions = <Widget>[
-      ChatPage(),
+      LoginPage(),
       CreateEventPage(),
       ProfilePage(userID: userWorker.usermodel.getUserId(), isFromEvent: false),
       ExploreEventPage(),
@@ -89,7 +89,7 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
            */
 
           bottomNavigationBar: FancyBottomNavigation(
-            initialSelection: 3,
+            initialSelection: 2,
             inactiveIconColor: MyColors().purpleContainer,
             circleColor: MyColors().purpleContainer,
             tabs: [
@@ -118,10 +118,10 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
                 },
               ),
               TabData(
-                iconData: Icons.assignment_ind,
-                title: "Profil",
+                iconData: Icons.search,
+                title: "Keşfet",
                 onclick: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ProfilePage(userID: userWorker.usermodel.getUserId(), isFromEvent: false))).then((value) {
+                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ExploreEventPage())).then((value) {
                     //ANCHOR Yeni etkinlik oluşturulduğunda sayfayı güncelliyor
                     if (value == "success") {
                       setState(() {});
@@ -130,10 +130,10 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
                 },
               ),
               TabData(
-                iconData: Icons.search,
-                title: "Keşfet",
+                iconData: Icons.assignment_ind,
+                title: "Profil",
                 onclick: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ExploreEventPage())).then((value) {
+                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ProfilePage(userID: userWorker.usermodel.getUserId(), isFromEvent: false))).then((value) {
                     //ANCHOR Yeni etkinlik oluşturulduğunda sayfayı güncelliyor
                     if (value == "success") {
                       setState(() {});

@@ -1,4 +1,5 @@
 import 'package:eventizer/assets/Colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignupPage extends StatefulWidget {
@@ -7,6 +8,10 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  TextEditingController mailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
   double heightSize(double value) {
     value /= 100;
     return MediaQuery.of(context).size.height * value;
@@ -110,6 +115,7 @@ class _SignupPageState extends State<SignupPage> {
     return Column(
       children: <Widget>[
         TextFormField(
+          controller: mailController,
           textAlign: TextAlign.left,
           decoration: InputDecoration(
             border: InputBorder.none,
@@ -136,6 +142,7 @@ class _SignupPageState extends State<SignupPage> {
           height: heightSize(3),
         ),
         TextFormField(
+          controller: passwordController,
           obscureText: true,
           textAlign: TextAlign.left,
           decoration: InputDecoration(
@@ -408,7 +415,27 @@ class _SignupPageState extends State<SignupPage> {
 
   void addPhotoVoid() {}
 
-  void signUpVoid() {}
+  Future<void> signUpVoid() async {
+    var mailSingUp = mailController.text;
+    var passwordSingUp = passwordController.text;
+    var firebaseUser = await auth.createUserWithEmailAndPassword(email: mailSingUp, password: passwordSingUp).catchError((e) {
+      debugPrint(
+        "Error:" + e.toString(),
+      );
+    });
+
+    //ANCHOR SingUp Mail Verified condition are start here
+    /*
+    if (firebaseUser != null) {
+      firebaseUser.user.sendEmailVerification().then((data) {
+        auth.signOut();
+      }).catchError((e) {
+        debugPrint("Confirmation mail sending ERROR");
+      });
+      debugPrint("userID: ${firebaseUser.user.uid} mail: ${firebaseUser.user.email} mailConfirmation: ${firebaseUser.user.isEmailVerified}");
+    }
+     */
+  }
 
   //ANCHOR cinsiyet seçildikten sonra container'lar siyah olsun mu?
   menColor() {

@@ -225,7 +225,7 @@ class _ProfilePageState extends State<ProfilePage>
                                 width: widthSize(2),
                               ),
                               Text(
-                                "Takipten Çık",
+                                "Takip Etme",
                                 style: TextStyle(
                                   fontFamily: "Zona",
                                   fontSize: heightSize(2),

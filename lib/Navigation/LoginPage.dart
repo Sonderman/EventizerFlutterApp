@@ -1,5 +1,7 @@
+import 'package:eventizer/Navigation/ExploreEventPage.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -7,24 +9,24 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  TextEditingController mailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  String errorText;
+
   double heightSize(double value) {
     value /= 100;
-    return MediaQuery
-        .of(context)
-        .size
-        .height * value;
+    return MediaQuery.of(context).size.height * value;
   }
 
   double widthSize(double value) {
     value /= 100;
-    return MediaQuery
-        .of(context)
-        .size
-        .width * value;
+    return MediaQuery.of(context).size.width * value;
   }
 
   Widget welcomeText() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
           "Tekrar Hoşgeldin",
@@ -51,6 +53,7 @@ class _LoginPageState extends State<LoginPage> {
     return Column(
       children: <Widget>[
         TextFormField(
+          controller: mailController,
           textAlign: TextAlign.left,
           decoration: InputDecoration(
             border: InputBorder.none,
@@ -77,10 +80,16 @@ class _LoginPageState extends State<LoginPage> {
           height: heightSize(5),
         ),
         TextFormField(
+          controller: passwordController,
           obscureText: true,
           textAlign: TextAlign.left,
           decoration: InputDecoration(
-
+            errorText: errorText,
+            errorStyle: TextStyle(
+              fontSize: heightSize(2),
+              fontFamily: "Zona",
+              color: Colors.red,
+            ),
             border: InputBorder.none,
             hintText: "Şifre",
             hintStyle: TextStyle(
@@ -129,7 +138,6 @@ class _LoginPageState extends State<LoginPage> {
     return GestureDetector(
       onTap: () {
         showPassword();
-
       },
       child: Icon(
         Icons.remove_red_eye,
@@ -139,32 +147,32 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget singInButton() {
-    return GestureDetector(
-      onTap: () {
-        loginButton();
-      },
-      child: Container(
-        height: heightSize(8),
-        width: widthSize(90),
-        alignment: Alignment.center,
-        decoration: new BoxDecoration(
-          color: MyColors().purpleContainer,
-          borderRadius: new BorderRadius.all(
-            Radius.circular(20),
-          ),
-        ),
-        child: Text(
-          "Giriş",
-          style: TextStyle(
-            fontFamily: "Zona",
-            fontSize: heightSize(3),
-            color: MyColors().whiteTextColor,
+    return ClipRRect(
+      borderRadius: BorderRadius.all(Radius.circular(20)),
+      child: FlatButton(
+        color: MyColors().purpleContainer,
+        highlightColor: MyColors().purpleContainerSplash,
+        splashColor: MyColors().purpleContainerSplash,
+        onPressed: () {
+          loginButton();
+        },
+        child: Container(
+          height: heightSize(8),
+          //width: widthSize(90),
+          alignment: Alignment.center,
+
+          child: Text(
+            "Giriş",
+            style: TextStyle(
+              fontFamily: "Zona",
+              fontSize: heightSize(3),
+              color: MyColors().whiteTextColor,
+            ),
           ),
         ),
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -193,10 +201,31 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
   //ANCHOR All Gestures are start here
-  void loginButton() {}
-  void showPassword() {}
-  void forgetPassword() {}
+  Future<void> loginButton() async {
+    var mailSingIn = mailController.text;
+    var passwordSingIn = passwordController.text;
+    await auth.signInWithEmailAndPassword(email: mailSingIn, password: passwordSingIn).then((loggedInUser) {
+      //ANCHOR Login Mail Verified condition are start here
+      /*
+      if (loggedInUser.user.isEmailVerified) {
+        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ExploreEventPage()));
+      } else {
+        errorText = "Lütfen onay mailinizdeki linke tıklayın.";
+      }
+       */
+    }).catchError((e) {
+      setState(() {
+        errorText = "Email ya da şifre hatalı.";
+      });
+    });
 
+    if (mailSingIn + passwordSingIn == null) {
+      return errorText = "Email ya da şifre hatalı.";
+    }
+  }
+
+  void showPassword() {}
+
+  void forgetPassword() {}
 }

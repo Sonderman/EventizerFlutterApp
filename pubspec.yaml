@@ -12,7 +12,7 @@ environment:
 dependencies:
   fancy_bottom_navigation: ^0.3.2
   image_editor: ^0.1.6
-  extended_image: ^0.7.2
+  extended_image: ^0.7.3+1
   splashscreen: ^1.2.0
   get_it: ^4.0.2
   line_awesome_icons: ^1.0.4+2

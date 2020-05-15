@@ -11,6 +11,7 @@ class MyColors {
   Color blackOpacityContainer = Colors.black.withOpacity(0.15);
   Color lightBlueContainer = Colors.lightBlueAccent;
   Color purpleContainer = Colors.deepPurple;
+  Color purpleContainerSplash = Colors.deepPurpleAccent;
   Color purpleTextColor = Colors.deepPurple;
   Color blueTextColor = Colors.blueAccent;
   Color whiteTextColor = Colors.white;
