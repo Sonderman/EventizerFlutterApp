@@ -16,6 +16,7 @@ List<Widget> bottomPages(BuildContext context) {
   UserService userWorker = Provider.of<UserService>(context);
   return <Widget>[
     ChatPage(),
+    //OldChatsPage(),
     //OldCreateEvent(),
     CreateEventPage(),
     ExploreEventPage(),

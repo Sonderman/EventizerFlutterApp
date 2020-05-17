@@ -29,13 +29,12 @@ class _OldChatsPageState extends State<OldChatsPage> {
             .getUserChatsSnapshot(userService.usermodel.getUserId()),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            //FIXME Buraya bir çözüm bul çember şekilsiz oluyor
             return PageComponents().loadingOverlay(context, Colors.white);
           } else {
             List<DocumentSnapshot> items = snapshot.data.documents;
-            int itemLenght = items.length;
+            int itemLength = items.length;
             return ListView.builder(
-              itemCount: itemLenght,
+              itemCount: itemLength,
               itemBuilder: (context, index) {
                 String userID = items[index].data['OtherUserID'];
                 return FutureBuilder(
