@@ -567,7 +567,7 @@ class _ProfilePageState extends State<ProfilePage>
                     child:
                         itemCard(title, category, name, imageUrl, startDate));
               } else
-                return PageComponents().loadingOverlay(context);
+                return PageComponents().loadingOverlay(context, Colors.white);
             },
           ));
     }
@@ -592,7 +592,7 @@ class _ProfilePageState extends State<ProfilePage>
             }
           } else
             return SliverToBoxAdapter(
-                child: PageComponents().loadingOverlay(context));
+                child: PageComponents().loadingOverlay(context, Colors.white));
         },
       );
     }
@@ -675,7 +675,7 @@ class _ProfilePageState extends State<ProfilePage>
               );
             } else
               return Center(
-                child: PageComponents().loadingOverlay(context),
+                child: PageComponents().loadingOverlay(context, Colors.white),
               );
           });
     } else {

@@ -30,7 +30,7 @@ class _OldChatsPageState extends State<OldChatsPage> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             //FIXME Buraya bir çözüm bul çember şekilsiz oluyor
-            return PageComponents().loadingOverlay(context);
+            return PageComponents().loadingOverlay(context, Colors.white);
           } else {
             List<DocumentSnapshot> items = snapshot.data.documents;
             int itemLenght = items.length;
@@ -80,7 +80,8 @@ class _OldChatsPageState extends State<OldChatsPage> {
                       case ConnectionState.none:
                         return Text("Hata");
                       case ConnectionState.waiting:
-                        return PageComponents().loadingOverlay(context);
+                        return PageComponents()
+                            .loadingOverlay(context, Colors.white);
                       default:
                         return Text("Beklenmedik durum");
                     }
