@@ -19,6 +19,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  // ANCHOR Burası Splash ekran olusturmak için
   Future redirectAuth() {
     return Future.delayed(Duration(seconds: 2));
   }

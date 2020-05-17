@@ -10,7 +10,6 @@ class AuthCheck extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BaseAuth auth = AuthService.of(context).auth;
-
     return StreamBuilder<String>(
       stream: auth.onAuthStateChanged,
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
