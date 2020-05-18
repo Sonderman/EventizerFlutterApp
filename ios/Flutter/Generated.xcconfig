@@ -1,10 +1,10 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=D:\SDKs\flutter
-FLUTTER_APPLICATION_PATH=C:\EventizerFlutter
-FLUTTER_TARGET=lib\main.dart
+FLUTTER_ROOT=/Users/eksen46/development/flutter
+FLUTTER_APPLICATION_PATH=/Users/eksen46/Desktop/test/EventizerFlutterApp
+FLUTTER_TARGET=lib/main.dart
 FLUTTER_BUILD_DIR=build
-SYMROOT=${SOURCE_ROOT}/../build\ios
+SYMROOT=${SOURCE_ROOT}/../build/ios
 OTHER_LDFLAGS=$(inherited) -framework Flutter
-FLUTTER_FRAMEWORK_DIR=D:\SDKs\flutter\bin\cache\artifacts\engine\ios
+FLUTTER_FRAMEWORK_DIR=/Users/eksen46/development/flutter/bin/cache/artifacts/engine/ios
 FLUTTER_BUILD_NAME=1.0.0
 FLUTTER_BUILD_NUMBER=1

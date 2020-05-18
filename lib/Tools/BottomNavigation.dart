@@ -4,6 +4,7 @@ import 'package:eventizer/Navigation/ExploreEventPage.dart';
 import 'package:eventizer/Navigation/LoginPage.dart';
 import 'package:eventizer/Navigation/Old/OldChatsPage.dart';
 import 'package:eventizer/Navigation/Old/OldCreateEvent.dart';
+import 'package:eventizer/Navigation/Old/OldLoginPage.dart';
 import 'package:eventizer/Navigation/ProfilePage.dart';
 import 'package:eventizer/Navigation/SettingsPage.dart';
 import 'package:eventizer/Navigation/SignupPage.dart';
@@ -17,7 +18,7 @@ List<Widget> bottomPages(BuildContext context) {
   UserService userWorker = Provider.of<UserService>(context);
   return <Widget>[
     LoginPage(),
-    ChatPage(),
+    OldLoginPage(),
     //OldCreateEvent(),
     //CreateEventPage(),
     ExploreEventPage(),

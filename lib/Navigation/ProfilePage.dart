@@ -97,6 +97,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                     Radius.circular(20),
                   ),
                 ),
+                //NOTE Currently avatar size is extreme big for default "avatar_man.png". But not for your "Mandolian" avatar. :)
                 width: widthSize(82),
                 child: FadeInImage.assetNetwork(placeholder: "assets/images/avatar_man.png", image: profilePhotoUrl),
               ),
@@ -107,10 +108,12 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    height: heightSize(8),
+                    height: heightSize(6),
                     child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Image.asset("assets/icons/options.png"),
+                      padding: const EdgeInsets.all(10),
+                      child: Image.asset(
+                        "assets/icons/options.png",
+                      ),
                     ),
                     decoration: new BoxDecoration(
                       color: MyColors().yellowContainer,
@@ -303,8 +306,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
           ],
         );
 
-    Widget threeBoxesOwnProfile() =>
-        Padding(
+    Widget threeBoxesOwnProfile() => Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: <Widget>[
@@ -355,11 +357,11 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             Container(
-                              //height: heightSize(4),
-                              //child: Image.asset("assets/icons/startDate.png"),
+                              height: heightSize(5),
+                              child: Image.asset("assets/icons/future.png"),
                             ),
                             Text(
-                              "Gelecek \n Etkinlikler",
+                              "Gelecek \nEtkinlikler",
                               style: TextStyle(
                                 fontFamily: "Zona",
                                 fontSize: heightSize(2),
@@ -386,11 +388,11 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             Container(
-                              height: heightSize(4),
-                             // child: Image.asset("assets/icons/end_date.png"),
+                              height: heightSize(5),
+                              child: Image.asset("assets/icons/past.png"),
                             ),
                             Text(
-                              "Geçmiş \n Etkinlikler",
+                              "Geçmiş \nEtkinlikler",
                               style: TextStyle(
                                 fontFamily: "Zona",
                                 fontSize: heightSize(2),

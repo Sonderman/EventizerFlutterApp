@@ -230,5 +230,8 @@ class _LoginPageState extends State<LoginPage> {
         );
   }
 
-  void forgetPassword() {}
+  void forgetPassword() {
+    var auth = AuthService.of(context).auth;
+
+  }
 }
