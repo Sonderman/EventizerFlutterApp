@@ -18,8 +18,7 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage>
-    with TickerProviderStateMixin {
+class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
   double heightSize(double value) {
     value /= 100;
     return MediaQuery.of(context).size.height * value;
@@ -42,6 +41,7 @@ class _ProfilePageState extends State<ProfilePage>
   String profilePhotoUrl;
 
   TabController _tabController;
+
   @override
   void initState() {
     super.initState();
@@ -53,8 +53,7 @@ class _ProfilePageState extends State<ProfilePage>
   Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
     userWorker = Provider.of<UserService>(context);
-    if (widget.userID != userWorker.usermodel.userID) if (await userWorker
-        .amIFollowing(usermodel.userID)) {
+    if (widget.userID != userWorker.usermodel.userID) if (await userWorker.amIFollowing(usermodel.userID)) {
       setState(() {
         amIFollowing = true;
       });
@@ -85,12 +84,12 @@ class _ProfilePageState extends State<ProfilePage>
   Widget build(BuildContext context) {
     Widget avatarAndname() => Container(
           alignment: Alignment.center,
-          height: heightSize(30),
+          height: heightSize(35),
+          width: widthSize(85),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               SizedBox(
-                height: 20,
+                height: heightSize(1),
               ),
               Container(
                 decoration: BoxDecoration(
@@ -98,24 +97,51 @@ class _ProfilePageState extends State<ProfilePage>
                     Radius.circular(20),
                   ),
                 ),
-                height: heightSize(20),
-                child: FadeInImage.assetNetwork(
-                    placeholder: "assets/images/avatar_man.png",
-                    image: profilePhotoUrl),
+                width: widthSize(82),
+                child: FadeInImage.assetNetwork(placeholder: "assets/images/avatar_man.png", image: profilePhotoUrl),
               ),
-              Text(
-                nameText.toUpperCase() + ' ' + surnameText.toUpperCase(),
-                style: TextStyle(
-                  fontFamily: "Zona",
-                  fontSize: heightSize(3),
-                ),
+              SizedBox(
+                height: heightSize(1),
               ),
-              Text(
-                "@nickname",
-                style: TextStyle(
-                  fontFamily: "ZonaLight",
-                  fontSize: heightSize(2),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    height: heightSize(8),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Image.asset("assets/icons/options.png"),
+                    ),
+                    decoration: new BoxDecoration(
+                      color: MyColors().yellowContainer,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: widthSize(2),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        nameText.toUpperCase() + ' ' + surnameText.toUpperCase(),
+                        style: TextStyle(
+                          fontFamily: "Zona",
+                          fontSize: heightSize(3),
+                        ),
+                      ),
+                      Text(
+                        "@nickname",
+                        style: TextStyle(
+                          fontFamily: "ZonaLight",
+                          fontSize: heightSize(2),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),
@@ -124,9 +150,6 @@ class _ProfilePageState extends State<ProfilePage>
     //ANCHOR yabancı tarafından görülen kısım
     Widget threeBoxes() => Column(
           children: <Widget>[
-            SizedBox(
-              height: heightSize(5),
-            ),
             //ANCHOR About myself box is here
             Container(
               height: heightSize(8),
@@ -163,11 +186,7 @@ class _ProfilePageState extends State<ProfilePage>
                   onTap: () {
                     //ANCHOR mesajlaşma sayfasında karşıdaki kişinin ismini getirip parametre olarak veriyoruz,
                     //Bu sayede appbarda ismi görünüyor
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => Message(
-                                widget.userID, usermodel.getUserName())));
+                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Message(widget.userID, usermodel.getUserName())));
                   },
                   child: Container(
                     height: heightSize(8),
@@ -203,9 +222,7 @@ class _ProfilePageState extends State<ProfilePage>
                 amIFollowing
                     ? InkWell(
                         onTap: () async {
-                          userWorker
-                              .followToggle(usermodel.userID)
-                              .whenComplete(() {
+                          userWorker.followToggle(usermodel.userID).whenComplete(() {
                             setState(() {
                               amIFollowing = !amIFollowing;
                             });
@@ -244,9 +261,7 @@ class _ProfilePageState extends State<ProfilePage>
                       )
                     : InkWell(
                         onTap: () async {
-                          userWorker
-                              .followToggle(usermodel.userID)
-                              .whenComplete(() {
+                          userWorker.followToggle(usermodel.userID).whenComplete(() {
                             setState(() {
                               amIFollowing = !amIFollowing;
                             });
@@ -288,43 +303,28 @@ class _ProfilePageState extends State<ProfilePage>
           ],
         );
 
-    Widget threeBoxesOwnProfile() => Column(
-          children: <Widget>[
-            SizedBox(
-              height: heightSize(5),
-            ),
-            //ANCHOR About myself box are here
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => EventPage()));
-              },
-              child: Container(
-                height: heightSize(8),
-                width: widthSize(85),
+    Widget threeBoxesOwnProfile() =>
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            children: <Widget>[
+              //ANCHOR About myself box are here
+              SizedBox(
+                height: heightSize(3),
+              ),
+              Container(
+                height: heightSize(20),
                 child: Padding(
                   padding: const EdgeInsets.all(15),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Image.asset("assets/icons/options.png"),
-                      SizedBox(
-                        width: 10,
+                  child: Center(
+                    child: Text(
+                      aboutText,
+                      style: TextStyle(
+                        fontFamily: "Zona",
+                        fontSize: heightSize(2),
+                        color: MyColors().whiteTextColor,
                       ),
-                      Center(
-                        child: Text(
-                          "Düzenle",
-                          style: TextStyle(
-                            fontFamily: "Zona",
-                            fontSize: heightSize(2),
-                            color: MyColors().whiteTextColor,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
                 decoration: new BoxDecoration(
@@ -334,34 +334,78 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: heightSize(3),
-            ),
-            Container(
-              height: heightSize(8),
-              width: widthSize(85),
-              child: Padding(
-                padding: const EdgeInsets.all(15),
-                child: Center(
-                  child: Text(
-                    aboutText,
-                    style: TextStyle(
-                      fontFamily: "Zona",
-                      fontSize: heightSize(2),
-                      color: MyColors().whiteTextColor,
+              SizedBox(
+                height: heightSize(3),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    width: widthSize(43),
+                    height: heightSize(8),
+                    decoration: new BoxDecoration(
+                      color: MyColors().purpleContainer,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                    child: InkWell(
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Container(
+                              //height: heightSize(4),
+                              //child: Image.asset("assets/icons/startDate.png"),
+                            ),
+                            Text(
+                              "Gelecek \n Etkinlikler",
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                fontSize: heightSize(2),
+                                color: MyColors().whiteTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  Container(
+                    width: widthSize(43),
+                    height: heightSize(8),
+                    decoration: new BoxDecoration(
+                      color: MyColors().purpleContainer,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                    child: InkWell(
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Container(
+                              height: heightSize(4),
+                             // child: Image.asset("assets/icons/end_date.png"),
+                            ),
+                            Text(
+                              "Geçmiş \n Etkinlikler",
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                fontSize: heightSize(2),
+                                color: MyColors().whiteTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              decoration: new BoxDecoration(
-                color: MyColors().yellowContainer,
-                borderRadius: new BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         );
 
     Widget numberDatas() => Column(
@@ -375,11 +419,31 @@ class _ProfilePageState extends State<ProfilePage>
                 Column(
                   children: <Widget>[
                     Text(
-                      "TAKİPÇİ",
+                      "ETKİNLİK",
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         color: MyColors().blueTextColor,
                         fontFamily: "Zona",
-                        fontSize: 20,
+                        fontSize: 17,
+                      ),
+                    ),
+                    Text(eventsText,
+                        style: TextStyle(
+                          color: MyColors().blueTextColor,
+                          fontFamily: "ZonaLight",
+                          fontSize: 25,
+                        )),
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    Text(
+                      "TAKİP \n EDEN",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: MyColors().blueTextColor,
+                        fontFamily: "Zona",
+                        fontSize: 17,
                       ),
                     ),
                     Text(followersText,
@@ -392,13 +456,16 @@ class _ProfilePageState extends State<ProfilePage>
                 ),
                 Column(
                   children: <Widget>[
-                    Text("ETKİNLİK",
+                    Text("TAKİP \n EDİLEN",
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           color: MyColors().blueTextColor,
                           fontFamily: "Zona",
-                          fontSize: 20,
+                          fontSize: 17,
                         )),
-                    Text(eventsText,
+                    Text(
+                        //REVIEW myFollowers text should be here
+                        followersText,
                         style: TextStyle(
                           color: MyColors().blueTextColor,
                           fontFamily: "ZonaLight",
@@ -412,7 +479,7 @@ class _ProfilePageState extends State<ProfilePage>
                         style: TextStyle(
                           color: MyColors().blueTextColor,
                           fontFamily: "Zona",
-                          fontSize: 20,
+                          fontSize: 17,
                         )),
                     Text(trustText,
                         style: TextStyle(
@@ -447,8 +514,7 @@ class _ProfilePageState extends State<ProfilePage>
       ],
     );
 */
-    Widget itemCard(String title, String category, String name, String imageUrl,
-        String startDate) {
+    Widget itemCard(String title, String category, String name, String imageUrl, String startDate) {
       return Stack(
         children: <Widget>[
           Positioned.fill(
@@ -492,8 +558,7 @@ class _ProfilePageState extends State<ProfilePage>
                 children: <Widget>[
                   Text(
                     title ?? "",
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -502,20 +567,14 @@ class _ProfilePageState extends State<ProfilePage>
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           category ?? "",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12),
+                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           startDate ?? "",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 10),
+                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
                         ),
                       ),
                     ],
@@ -542,18 +601,13 @@ class _ProfilePageState extends State<ProfilePage>
           padding: const EdgeInsets.all(8.0),
           child: FutureBuilder(
             future: userWorker.findUserbyID(ownerID),
-            builder: (BuildContext context,
-                AsyncSnapshot<Map<String, dynamic>> userData) {
+            builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> userData) {
               if (userData.connectionState == ConnectionState.done) {
                 String name = userData.data['Name'];
                 return GestureDetector(
                     onTap: () async {
-                      eventService
-                          .amIparticipant(
-                              userWorker.usermodel.getUserId(), eventID)
-                          .then((amIparticipant) {
-                        print("Kullanıcı bu etkinliğe katılmış:" +
-                            amIparticipant.toString());
+                      eventService.amIparticipant(userWorker.usermodel.getUserId(), eventID).then((amIparticipant) {
+                        print("Kullanıcı bu etkinliğe katılmış:" + amIparticipant.toString());
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -564,8 +618,7 @@ class _ProfilePageState extends State<ProfilePage>
                                     )));
                       });
                     },
-                    child:
-                        itemCard(title, category, name, imageUrl, startDate));
+                    child: itemCard(title, category, name, imageUrl, startDate));
               } else
                 return PageComponents().loadingOverlay(context, Colors.white);
             },
@@ -575,8 +628,7 @@ class _ProfilePageState extends State<ProfilePage>
     Widget eventList() {
       var eventService = Provider.of<EventService>(context);
       return FutureBuilder(
-        future: eventService
-            .fetchListOfUserEvents(userWorker.usermodel.getUserId()),
+        future: eventService.fetchListOfUserEvents(userWorker.usermodel.getUserId()),
         builder: (BuildContext context, AsyncSnapshot fetchedlist) {
           if (fetchedlist.connectionState == ConnectionState.done) {
             List<Map<String, dynamic>> listofMaps = fetchedlist.data;
@@ -587,12 +639,10 @@ class _ProfilePageState extends State<ProfilePage>
                   delegate: SliverChildBuilderDelegate((context, index) {
                     return eventItem(listofMaps[index]);
                   }, childCount: listofMaps.length),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 1));
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1));
             }
           } else
-            return SliverToBoxAdapter(
-                child: PageComponents().loadingOverlay(context, Colors.white));
+            return SliverToBoxAdapter(child: PageComponents().loadingOverlay(context, Colors.white));
         },
       );
     }
@@ -601,8 +651,7 @@ class _ProfilePageState extends State<ProfilePage>
       print("Gelen userID:" + widget.userID);
       return FutureBuilder(
           future: userWorker.findUserbyID(widget.userID),
-          builder:
-              (BuildContext context, AsyncSnapshot<Map<String, dynamic>> data) {
+          builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> data) {
             if (data.connectionState == ConnectionState.done) {
               usermodel.parseMap(data.data);
               textUpdaterByUserModel(usermodel);
@@ -610,9 +659,7 @@ class _ProfilePageState extends State<ProfilePage>
                 appBar: AppBar(
                   backgroundColor: MyColors().blueThemeColor,
                   centerTitle: true,
-                  title: Text(usermodel.getUserName() +
-                      " " +
-                      usermodel.getUserSurname()),
+                  title: Text(usermodel.getUserName() + " " + usermodel.getUserSurname()),
                 ),
                 body: Column(
                   children: <Widget>[
@@ -620,23 +667,17 @@ class _ProfilePageState extends State<ProfilePage>
                       height: 25,
                     ),
                     Container(
-                      child: TabBar(
-                          indicatorColor: Colors.teal,
-                          labelColor: Colors.teal,
-                          unselectedLabelColor: Colors.black54,
-                          controller: _tabController,
-                          isScrollable: true,
-                          tabs: [
-                            Tab(
-                              text: "My Profile",
-                            ),
-                            Tab(
-                              text: "Next Events",
-                            ),
-                            Tab(
-                              text: "Old Events",
-                            )
-                          ]),
+                      child: TabBar(indicatorColor: Colors.teal, labelColor: Colors.teal, unselectedLabelColor: Colors.black54, controller: _tabController, isScrollable: true, tabs: [
+                        Tab(
+                          text: "My Profile",
+                        ),
+                        Tab(
+                          text: "Next Events",
+                        ),
+                        Tab(
+                          text: "Old Events",
+                        )
+                      ]),
                     ),
                     Expanded(
                       child: TabBarView(
@@ -655,8 +696,7 @@ class _ProfilePageState extends State<ProfilePage>
                                 ),
                               ),
                               SliverPadding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 25),
+                                padding: const EdgeInsets.symmetric(horizontal: 25),
                                 sliver: eventList(),
                               )
                             ],
@@ -687,23 +727,17 @@ class _ProfilePageState extends State<ProfilePage>
               height: 25,
             ),
             Container(
-              child: TabBar(
-                  indicatorColor: Colors.teal,
-                  labelColor: Colors.teal,
-                  unselectedLabelColor: Colors.black54,
-                  controller: _tabController,
-                  isScrollable: true,
-                  tabs: [
-                    Tab(
-                      text: "My Profile",
-                    ),
-                    Tab(
-                      text: "Next Events",
-                    ),
-                    Tab(
-                      text: "Old Events",
-                    )
-                  ]),
+              child: TabBar(indicatorColor: Colors.teal, labelColor: Colors.teal, unselectedLabelColor: Colors.black54, controller: _tabController, isScrollable: true, tabs: [
+                Tab(
+                  text: "My Profile",
+                ),
+                Tab(
+                  text: "Next Events",
+                ),
+                Tab(
+                  text: "Old Events",
+                )
+              ]),
             ),
             Expanded(
               child: TabBarView(

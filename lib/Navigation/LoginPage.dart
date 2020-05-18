@@ -1,7 +1,9 @@
 import 'package:eventizer/Navigation/ExploreEventPage.dart';
+import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,9 +11,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  TextEditingController mailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  String userId;
+  String email;
+  String password;
   String errorText;
 
   double heightSize(double value) {
@@ -53,7 +55,8 @@ class _LoginPageState extends State<LoginPage> {
     return Column(
       children: <Widget>[
         TextFormField(
-          controller: mailController,
+          onSaved: (value) => email = value,
+          //controller: mail,
           textAlign: TextAlign.left,
           decoration: InputDecoration(
             border: InputBorder.none,
@@ -79,38 +82,7 @@ class _LoginPageState extends State<LoginPage> {
         SizedBox(
           height: heightSize(5),
         ),
-        TextFormField(
-          controller: passwordController,
-          obscureText: true,
-          textAlign: TextAlign.left,
-          decoration: InputDecoration(
-            errorText: errorText,
-            errorStyle: TextStyle(
-              fontSize: heightSize(2),
-              fontFamily: "Zona",
-              color: Colors.red,
-            ),
-            border: InputBorder.none,
-            hintText: "Şifre",
-            hintStyle: TextStyle(
-              fontFamily: "Zona",
-              color: MyColors().loginGreyColor,
-            ),
-            alignLabelWithHint: true,
-            suffixIcon: showPasswordIcon(),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: MyColors().loginGreyColor),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: MyColors().loginGreyColor),
-            ),
-          ),
-          style: TextStyle(
-            fontSize: heightSize(2.5),
-            fontFamily: "ZonaLight",
-            color: MyColors().loginGreyColor,
-          ),
-        ),
+        buildPasswordField(password),
         SizedBox(
           height: heightSize(2),
         ),
@@ -134,15 +106,64 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget showPasswordIcon() {
-    return GestureDetector(
-      onTap: () {
-        showPassword();
+  Widget buildPasswordField(password) {
+    bool showPassword = false;
+    print("building custom stateful textfield password");
+    return StatefulBuilder(
+      builder: (context, fn) {
+        print("building internal state");
+        return Row(
+          children: <Widget>[
+            Expanded(
+              child: TextFormField(
+                onSaved: (value) => password = value,
+                //controller: password,
+                obscureText: !showPassword,
+                textAlign: TextAlign.left,
+                decoration: InputDecoration(
+                  errorText: errorText,
+                  errorStyle: TextStyle(
+                    fontSize: heightSize(2),
+                    fontFamily: "Zona",
+                    color: Colors.red,
+                  ),
+                  border: InputBorder.none,
+                  hintText: "Şifre",
+                  hintStyle: TextStyle(
+                    fontFamily: "Zona",
+                    color: MyColors().loginGreyColor,
+                  ),
+                  alignLabelWithHint: true,
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: MyColors().loginGreyColor),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: MyColors().loginGreyColor),
+                  ),
+                ),
+                style: TextStyle(
+                  fontSize: heightSize(2.5),
+                  fontFamily: "ZonaLight",
+                  color: MyColors().loginGreyColor,
+                ),
+              ),
+            ),
+            Center(
+              child: SizedBox(
+                width: widthSize(12),
+                height: heightSize(6),
+                child: FlatButton(
+                  child: Icon(showPassword ? Icons.visibility : Icons.visibility_off),
+                  onPressed: () {
+                    showPassword = !showPassword;
+                    fn(() {});
+                  },
+                ),
+              ),
+            ),
+          ],
+        );
       },
-      child: Icon(
-        Icons.remove_red_eye,
-        color: MyColors().greyTextColor,
-      ),
     );
   }
 
@@ -154,7 +175,7 @@ class _LoginPageState extends State<LoginPage> {
         highlightColor: MyColors().purpleContainerSplash,
         splashColor: MyColors().purpleContainerSplash,
         onPressed: () {
-          loginButton();
+          loginButton(context, email, password);
         },
         child: Container(
           height: heightSize(8),
@@ -202,30 +223,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   //ANCHOR All Gestures are start here
-  Future<void> loginButton() async {
-    var mailSingIn = mailController.text;
-    var passwordSingIn = passwordController.text;
-    await auth.signInWithEmailAndPassword(email: mailSingIn, password: passwordSingIn).then((loggedInUser) {
-      //ANCHOR Login Mail Verified condition are start here
-      /*
-      if (loggedInUser.user.isEmailVerified) {
-        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ExploreEventPage()));
-      } else {
-        errorText = "Lütfen onay mailinizdeki linke tıklayın.";
-      }
-       */
-    }).catchError((e) {
-      setState(() {
-        errorText = "Email ya da şifre hatalı.";
-      });
-    });
-
-    if (mailSingIn + passwordSingIn == null) {
-      return errorText = "Email ya da şifre hatalı.";
-    }
+  Future<void> loginButton(BuildContext context, email, password) async {
+    var auth = AuthService.of(context).auth;
+    userId = await auth.signIn(email, password).whenComplete(
+          () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ExploreEventPage())),
+        );
   }
-
-  void showPassword() {}
 
   void forgetPassword() {}
 }

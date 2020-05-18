@@ -62,92 +62,51 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         width: widthSize(100),
                         height: heightSize(33),
                         color: Colors.white,
-                        child: Stack(
+                        child: Column(
                           children: <Widget>[
-                            Image.asset(
-                              "assets/images/event_birthday.jpg",
-                              //fit: BoxFit.cover,
+                            SizedBox(
+                              height: heightSize(2),
                             ),
-                            Positioned(
-                              top: heightSize(5),
-                              bottom: 0,
-                              left: 10,
-                              right: 10,
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                                    height: heightSize(5),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(20),
+                                      ),
+                                    ),
+                                    child: Image.asset(
+                                      "assets/images/avatar_man.png",
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: widthSize(2),
+                                  ),
+                                  Text(
+                                    "Doğum günü partisi",
+                                    style: TextStyle(
+                                      fontFamily: "Zona",
+                                      fontSize: heightSize(2),
+                                      color: MyColors().greyTextColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
                               child: Divider(
                                 thickness: 2,
                                 color: MyColors().loginGreyColor,
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.date_range,
-                                        color: MyColors().greyTextColor,
-                                      ),
-                                      SizedBox(
-                                        width: widthSize(2),
-                                      ),
-                                      Text(
-                                        "21 Tem. Perş.",
-                                        style: TextStyle(
-                                          fontFamily: "Zona",
-                                          fontSize: heightSize(2),
-                                          color: MyColors().greyTextColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: heightSize(1),
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.location_on,
-                                        color: MyColors().greyTextColor,
-                                      ),
-                                      SizedBox(
-                                        width: widthSize(2),
-                                      ),
-                                      Text(
-                                        "Istanbul, Taksim - Dream Cafe",
-                                        style: TextStyle(
-                                          fontFamily: "Zona",
-                                          fontSize: heightSize(2),
-                                          color: MyColors().greyTextColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-
-                                  SizedBox(
-                                    height: heightSize(1),
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.people,
-                                        color: MyColors().greyTextColor,
-                                      ),
-                                      SizedBox(
-                                        width: widthSize(2),
-                                      ),
-                                      Text(
-                                        "34 Katılımcı",
-                                        style: TextStyle(
-                                          fontFamily: "Zona",
-                                          fontSize: heightSize(2),
-                                          color: MyColors().greyTextColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                            Container(
+                              height: heightSize(22),
+                              child: Image.asset(
+                                "assets/images/event_birthday.jpg",
                               ),
                             ),
                           ],
