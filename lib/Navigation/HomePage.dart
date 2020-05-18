@@ -1,5 +1,7 @@
+import 'package:eventizer/Settings/AppSettings.dart';
 import 'package:eventizer/Tools/BottomNavigation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
@@ -22,22 +24,19 @@ class BottomNavWidget extends StatefulWidget {
 }
 
 class _BottomNavWidgetState extends State<BottomNavWidget> {
-  int _selectedIndex = 1;
-
-  //static const TextStyle optionStyle =
-  //   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: askForQuit,
-      child: Scaffold(
-          //backgroundColor: Colors.yellow,
-          body: Center(
-            child: bottomPages(context).elementAt(_selectedIndex),
-          ),
+        onWillPop: askForQuit,
+        child: Scaffold(
+            //backgroundColor: Colors.yellow,
+            body: Center(
+              child: Consumer<AppSettings>(
+                builder: (con, settings, w) => getNavigatedPage(context),
+              ),
+            ),
 
-          /*
+            /*
           floatingActionButton: FloatingActionButton(
             backgroundColor: MyColors().blueThemeColor,
             foregroundColor: Colors.white,
@@ -56,12 +55,7 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
            */
 
-          bottomNavigationBar: bottomNavigationBar(_selectedIndex, context,
-              setState: (int changedIndex) {
-            setState(() {
-              _selectedIndex = changedIndex;
-            });
-          })
+            bottomNavigationBar: bottomNavigationBar(context)));
 
 /*
           BottomNavigationBar(
@@ -93,9 +87,6 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
           ),
 
  */
-
-          ),
-    );
   }
 
   Future<bool> askForQuit() => showDialog(

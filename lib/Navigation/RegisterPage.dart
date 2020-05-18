@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:eventizer/Navigation/LoginPage.dart';
 import 'package:eventizer/Navigation/Old/OldLoginPage.dart';
 import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
@@ -347,7 +348,7 @@ class _RegisterPageState extends State<RegisterPage2> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (BuildContext context) =>
-                                            OldLoginPage()));
+                                            LoginPage()));
                               },
                               child: Center(
                                   child: Text(
