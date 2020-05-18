@@ -1,3 +1,4 @@
+import 'package:eventizer/Tools/BottomNavigation.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
 
@@ -336,6 +337,7 @@ class _EventPageState extends State<EventPage> {
           ),
         ),
       ),
+      bottomNavigationBar: bottomNavigationBar(context),
     );
   }
 }

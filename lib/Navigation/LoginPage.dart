@@ -1,7 +1,13 @@
 import 'package:eventizer/Navigation/ExploreEventPage.dart';
+import 'package:eventizer/Services/AuthCheck.dart';
+import 'package:eventizer/Services/AuthService.dart';
+import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,10 +15,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  TextEditingController mailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  String userId;
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
   String errorText;
+  bool _loading = false;
 
   double heightSize(double value) {
     value /= 100;
@@ -53,7 +60,8 @@ class _LoginPageState extends State<LoginPage> {
     return Column(
       children: <Widget>[
         TextFormField(
-          controller: mailController,
+          //onSaved: (value) => email = value,
+          controller: email,
           textAlign: TextAlign.left,
           decoration: InputDecoration(
             border: InputBorder.none,
@@ -79,38 +87,7 @@ class _LoginPageState extends State<LoginPage> {
         SizedBox(
           height: heightSize(5),
         ),
-        TextFormField(
-          controller: passwordController,
-          obscureText: true,
-          textAlign: TextAlign.left,
-          decoration: InputDecoration(
-            errorText: errorText,
-            errorStyle: TextStyle(
-              fontSize: heightSize(2),
-              fontFamily: "Zona",
-              color: Colors.red,
-            ),
-            border: InputBorder.none,
-            hintText: "Şifre",
-            hintStyle: TextStyle(
-              fontFamily: "Zona",
-              color: MyColors().loginGreyColor,
-            ),
-            alignLabelWithHint: true,
-            suffixIcon: showPasswordIcon(),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: MyColors().loginGreyColor),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: MyColors().loginGreyColor),
-            ),
-          ),
-          style: TextStyle(
-            fontSize: heightSize(2.5),
-            fontFamily: "ZonaLight",
-            color: MyColors().loginGreyColor,
-          ),
-        ),
+        passwordField(password),
         SizedBox(
           height: heightSize(2),
         ),
@@ -134,15 +111,66 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget showPasswordIcon() {
-    return GestureDetector(
-      onTap: () {
-        showPassword();
+  Widget passwordField(password) {
+    bool showPassword = true;
+    print("building custom stateful textfield password");
+    return StatefulBuilder(
+      builder: (context, state) {
+        print("building internal state");
+        return Row(
+          children: <Widget>[
+            Expanded(
+              child: TextFormField(
+                //onSaved: (value) => password = value,
+                controller: password,
+                obscureText: showPassword,
+                textAlign: TextAlign.left,
+                decoration: InputDecoration(
+                  errorText: errorText,
+                  errorStyle: TextStyle(
+                    fontSize: heightSize(2),
+                    fontFamily: "Zona",
+                    color: Colors.red,
+                  ),
+                  border: InputBorder.none,
+                  hintText: "Şifre",
+                  hintStyle: TextStyle(
+                    fontFamily: "Zona",
+                    color: MyColors().loginGreyColor,
+                  ),
+                  alignLabelWithHint: true,
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: MyColors().loginGreyColor),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: MyColors().loginGreyColor),
+                  ),
+                ),
+                style: TextStyle(
+                  fontSize: heightSize(2.5),
+                  fontFamily: "ZonaLight",
+                  color: MyColors().loginGreyColor,
+                ),
+              ),
+            ),
+            Center(
+              child: SizedBox(
+                width: widthSize(12),
+                height: heightSize(6),
+                child: FlatButton(
+                  child: Icon(
+                      showPassword ? Icons.visibility : Icons.visibility_off),
+                  onPressed: () {
+                    state(() {
+                      showPassword = !showPassword;
+                    });
+                  },
+                ),
+              ),
+            ),
+          ],
+        );
       },
-      child: Icon(
-        Icons.remove_red_eye,
-        color: MyColors().greyTextColor,
-      ),
     );
   }
 
@@ -154,7 +182,10 @@ class _LoginPageState extends State<LoginPage> {
         highlightColor: MyColors().purpleContainerSplash,
         splashColor: MyColors().purpleContainerSplash,
         onPressed: () {
-          loginButton();
+          setState(() {
+            _loading = true;
+          });
+          loginButton(context);
         },
         child: Container(
           height: heightSize(8),
@@ -177,55 +208,60 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
           children: <Widget>[
-            SizedBox(
-              height: heightSize(10),
-            ),
-            welcomeText(),
-            SizedBox(
-              height: heightSize(5),
-            ),
-            emailAndPasswordFields(),
-            Spacer(),
-            singInButton(),
-            SizedBox(
-              height: heightSize(5),
-            ),
-          ],
-        ),
-      ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(
+                        height: heightSize(10),
+                      ),
+                      welcomeText(),
+                      SizedBox(
+                        height: heightSize(5),
+                      ),
+                      emailAndPasswordFields(),
+                      Spacer(),
+                      singInButton(),
+                      SizedBox(
+                        height: heightSize(5),
+                      ),
+                    ],
+                  ),
+                ),
+              ] +
+              (_loading
+                  ? [PageComponents().loadingOverlay(context, Colors.white)]
+                  : [])),
     );
   }
 
   //ANCHOR All Gestures are start here
-  Future<void> loginButton() async {
-    var mailSingIn = mailController.text;
-    var passwordSingIn = passwordController.text;
-    await auth.signInWithEmailAndPassword(email: mailSingIn, password: passwordSingIn).then((loggedInUser) {
-      //ANCHOR Login Mail Verified condition are start here
-      /*
-      if (loggedInUser.user.isEmailVerified) {
-        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ExploreEventPage()));
-      } else {
-        errorText = "Lütfen onay mailinizdeki linke tıklayın.";
+  Future<void> loginButton(BuildContext context) async {
+    var auth = AuthService.of(context).auth;
+    userId = await auth.signIn(email.text, password.text);
+    if (userId == null) {
+      setState(() => _loading = false);
+      Fluttertoast.showToast(
+          msg: "Şifre veya Eposta yanlış!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 18.0);
+    } else {
+      if (await UserService(userId)
+          .updateSingleInfo("LastLoggedIn", "timeStamp")) {
+        print('Signed in: $userId');
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
       }
-       */
-    }).catchError((e) {
-      setState(() {
-        errorText = "Email ya da şifre hatalı.";
-      });
-    });
-
-    if (mailSingIn + passwordSingIn == null) {
-      return errorText = "Email ya da şifre hatalı.";
     }
   }
 
-  void showPassword() {}
-
+  //TODO -  Şifremi unuttum işlemi yapılacak
   void forgetPassword() {}
 }
