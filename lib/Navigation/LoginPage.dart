@@ -160,6 +160,8 @@ class _LoginPageState extends State<LoginPage> {
                 child: FlatButton(
                   child: Icon(
                       showPassword ? Icons.visibility : Icons.visibility_off),
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
                   onPressed: () {
                     state(() {
                       showPassword = !showPassword;
