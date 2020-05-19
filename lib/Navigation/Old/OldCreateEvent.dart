@@ -10,14 +10,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-class CreateEvent extends StatefulWidget {
-  CreateEvent({Key key}) : super(key: key);
+class OldCreateEvent extends StatefulWidget {
+  OldCreateEvent({Key key}) : super(key: key);
 
   @override
-  _CreateEventState createState() => _CreateEventState();
+  _OldCreateEventState createState() => _OldCreateEventState();
 }
 
-class _CreateEventState extends State<CreateEvent> {
+class _OldCreateEventState extends State<OldCreateEvent> {
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
   Color myBlueColor = MyColors().blueThemeColor;
   TextEditingController controllerAd = TextEditingController();
@@ -310,7 +310,9 @@ class _CreateEventState extends State<CreateEvent> {
               ),
             ] +
             (loadingOverLay
-                ? <Widget>[PageComponents().loadingOverlay(context)]
+                ? <Widget>[
+                    PageComponents().loadingOverlay(context, Colors.white)
+                  ]
                 : <Widget>[]),
       ),
     );

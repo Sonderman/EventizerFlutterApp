@@ -48,9 +48,21 @@ class UserService with ChangeNotifier {
         false;
   }
 
+<<<<<<< HEAD
   void updateSingleInfo(String maptext, String changedtext) {
     firebaseDatabaseWorks.updateSingleInfo(
         usermodel.userID, maptext, changedtext);
+=======
+  Future<bool> updateSingleInfo(String maptext, String changedtext) async {
+    bool iscomplete = false;
+    await firebaseDatabaseWorks
+        .updateSingleInfo(usermodel.userID, maptext, changedtext)
+        .whenComplete(() => iscomplete = true)
+        .catchError((e) {
+      print(e);
+    });
+    return iscomplete;
+>>>>>>> DevMurat
   }
 
   Future<bool> followToggle(String otherUserID) async {

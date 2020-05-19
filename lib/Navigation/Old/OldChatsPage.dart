@@ -6,14 +6,14 @@ import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ChatsPage extends StatefulWidget {
-  ChatsPage({Key key}) : super(key: key);
+class OldChatsPage extends StatefulWidget {
+  OldChatsPage({Key key}) : super(key: key);
 
   @override
-  _ChatsPageState createState() => _ChatsPageState();
+  _OldChatsPageState createState() => _OldChatsPageState();
 }
 
-class _ChatsPageState extends State<ChatsPage> {
+class _OldChatsPageState extends State<OldChatsPage> {
   @override
   Widget build(BuildContext context) {
     var messageService = Provider.of<MessagingService>(context);
@@ -30,7 +30,7 @@ class _ChatsPageState extends State<ChatsPage> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             //FIXME Buraya bir çözüm bul çember şekilsiz oluyor
-            return PageComponents().loadingOverlay(context);
+            return PageComponents().loadingOverlay(context, Colors.white);
           } else {
             List<DocumentSnapshot> items = snapshot.data.documents;
             int itemLenght = items.length;
@@ -80,7 +80,8 @@ class _ChatsPageState extends State<ChatsPage> {
                       case ConnectionState.none:
                         return Text("Hata");
                       case ConnectionState.waiting:
-                        return PageComponents().loadingOverlay(context);
+                        return PageComponents()
+                            .loadingOverlay(context, Colors.white);
                       default:
                         return Text("Beklenmedik durum");
                     }

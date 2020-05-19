@@ -9,6 +9,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
+  //ANCHOR burada ekranın dönmesi engellenir, dikey mod
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   return runApp(MyApp());
 }
@@ -19,6 +20,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  // ANCHOR Burası Splash ekran olusturmak için
   Future redirectAuth() {
     return Future.delayed(Duration(seconds: 2));
   }

@@ -10,6 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="acf10fe4-b608-47a5-9fbb-f441cf333a58" name="Default Changelist" comment="">
+<<<<<<< HEAD
       <change afterPath="$PROJECT_DIR$/assets/icons/location.png" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/Navigation/NewAddEventPage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins" afterDir="false" />
@@ -23,6 +24,12 @@
       <change beforePath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Navigation/NewEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/NewEventPage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/assets/Colors.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/assets/Colors.dart" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" afterDir="false" />
+>>>>>>> DevMurat
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -67,6 +74,11 @@
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="flutter.settings" />
     <property name="show.migrate.to.gradle.popup" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/lib/Navigation/Old" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -125,7 +137,46 @@
       <option name="project" value="LOCAL" />
       <updated>1588784334269</updated>
     </task>
+<<<<<<< HEAD
     <option name="localTasksCounter" value="5" />
+=======
+    <task id="LOCAL-00005" summary="&quot;event page&quot; rengi değiştirildi.&#10;&quot;sign in page&quot; tamamlandı.&#10;&quot;sign up page&quot; tamamlandı.">
+      <created>1589073060341</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1589073060341</updated>
+    </task>
+    <task id="LOCAL-00006" summary="&quot;chat page&quot; tamamlandı.&#10;&quot;signup page&quot; şifre girerken rakam klavyesi eklendi.">
+      <created>1589154259348</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1589154259348</updated>
+    </task>
+    <task id="LOCAL-00007" summary="&quot;explore event page&quot; event box'ların altına tarih, konum ve katılımcı sayısı eklendi.&#10;&quot;home page&quot; bottombar değiştirildi.&#10;&quot;profile page&quot; ayarlarım iconu değiştirildi.&#10;&quot;pubspec.yaml&quot; bottombar eklendi.">
+      <created>1589244618902</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1589244618902</updated>
+    </task>
+    <task id="LOCAL-00008" summary="&quot;Login Page&quot; tamamlandı.&#10;&quot;ExploreEvent Page&quot; event box düzenlendi.&#10;&quot;Profile Page&quot; tasarım değiştirildi, geçmiş ve gelecek etkinlikler için iconlar eklenecek.">
+      <created>1589763545224</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1589763545224</updated>
+    </task>
+    <task id="LOCAL-00009" summary="&quot;profil page&quot; geçmiş ve gelecek etkinlikler için iconlar eklendi.">
+      <created>1589843888221</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1589843888221</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
+>>>>>>> DevMurat
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -145,6 +196,15 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="&quot;profile page kullanıcı&quot; yarım&#10;&quot;profile page ziyaretçi&quot; eklendi&#10;&quot;event page&quot; yeni başlandı" />
     <MESSAGE value="&quot;event page&quot; ver 1.1" />
+<<<<<<< HEAD
     <option name="LAST_COMMIT_MESSAGE" value="&quot;event page&quot; ver 1.1" />
+=======
+    <MESSAGE value="&quot;event page&quot; rengi değiştirildi.&#10;&quot;sign in page&quot; tamamlandı.&#10;&quot;sign up page&quot; tamamlandı." />
+    <MESSAGE value="&quot;chat page&quot; tamamlandı.&#10;&quot;signup page&quot; şifre girerken rakam klavyesi eklendi." />
+    <MESSAGE value="&quot;explore event page&quot; event box'ların altına tarih, konum ve katılımcı sayısı eklendi.&#10;&quot;home page&quot; bottombar değiştirildi.&#10;&quot;profile page&quot; ayarlarım iconu değiştirildi.&#10;&quot;pubspec.yaml&quot; bottombar eklendi." />
+    <MESSAGE value="&quot;Login Page&quot; tamamlandı.&#10;&quot;ExploreEvent Page&quot; event box düzenlendi.&#10;&quot;Profile Page&quot; tasarım değiştirildi, geçmiş ve gelecek etkinlikler için iconlar eklenecek." />
+    <MESSAGE value="&quot;profil page&quot; geçmiş ve gelecek etkinlikler için iconlar eklendi." />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;profil page&quot; geçmiş ve gelecek etkinlikler için iconlar eklendi." />
+>>>>>>> DevMurat
   </component>
 </project>

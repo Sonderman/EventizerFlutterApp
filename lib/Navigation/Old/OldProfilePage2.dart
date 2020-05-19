@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
 
-class ProfilePage2 extends StatelessWidget {
+class OldProfilePage2 extends StatelessWidget {
   final userId;
   final isFromEvent;
-  ProfilePage2(this.userId, this.isFromEvent);
+  OldProfilePage2(this.userId, this.isFromEvent);
 
   final List<String> assetNames = [
     'assets/images/brady-bellini-212790-unsplash.jpg',
@@ -371,7 +371,11 @@ class HeroHeader implements SliverPersistentHeaderDelegate {
 
   Container profilImage(userId, BuildContext context) {
     var userWorker = Provider.of<UserService>(context);
+<<<<<<< HEAD:lib/Navigation/ProfilePage2.dart
     
+=======
+
+>>>>>>> DevMurat:lib/Navigation/Old/OldProfilePage2.dart
     return Container(
       child: FutureBuilder(
         future: userWorker.firebaseDatabaseWorks.getUserProfilePhotoUrl(userId),

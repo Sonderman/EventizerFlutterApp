@@ -1,14 +1,5 @@
-import 'package:eventizer/Navigation/ChatsPage.dart';
-import 'package:eventizer/Navigation/CreateEvent.dart';
-import 'package:eventizer/Navigation/ExplorePage.dart';
-import 'package:eventizer/Navigation/NewAddEventPage.dart';
-import 'package:eventizer/Navigation/SettingsPage.dart';
-import 'package:eventizer/Services/Repository.dart';
-import 'package:eventizer/assets/Colors.dart';
+import 'package:eventizer/Tools/BottomNavigation.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-import 'NewProfilePage.dart';
 
 class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
@@ -31,50 +22,54 @@ class BottomNavWidget extends StatefulWidget {
 }
 
 class _BottomNavWidgetState extends State<BottomNavWidget> {
-  int _selectedIndex = 2;
+  int _selectedIndex = 0;
 
   //static const TextStyle optionStyle =
   //   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    UserService userWorker = Provider.of<UserService>(context);
-
-    List<Widget> _widgetOptions = <Widget>[
-      ChatsPage(),
-      ExplorePage(),
-      NewAddEventPage(),
-      /*
-      NewProfilePage(
-          userID: userWorker.usermodel.getUserId(), isFromEvent: false),
-       */
-      //ProfilePage(userWorker.getUserId(), false),
-      SettingsPage()
-    ];
-
     return WillPopScope(
       onWillPop: askForQuit,
       child: Scaffold(
-        //backgroundColor: Colors.yellow,
-        body: Center(
-          child: _widgetOptions.elementAt(_selectedIndex),
-        ),
-        bottomNavigationBar: BottomAppBar(
-          shape: CircularNotchedRectangle(),
-          notchMargin: 1.0,
-          clipBehavior: Clip.antiAlias,
-          child: BottomNavigationBar(
+          //backgroundColor: Colors.yellow,
+          body: Center(
+            child: bottomPages(context).elementAt(_selectedIndex),
+          ),
+
+          /*
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: MyColors().blueThemeColor,
+            foregroundColor: Colors.white,
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => CreateEventPage())).then((value) {
+                //ANCHOR Yeni etkinlik oluşturulduğunda sayfayı güncelliyor
+                if (value == "success") {
+                  setState(() {});
+                }
+              });
+            },
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30), side: BorderSide(color: Colors.white, width: 5)),
+            child: Icon(Icons.add),
+          ),
+
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+           */
+
+          bottomNavigationBar: bottomNavigationBar(_selectedIndex, context,
+              setState: (int changedIndex) {
+            setState(() {
+              _selectedIndex = changedIndex;
+            });
+          })
+
+/*
+          BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             elevation: 8.0,
-            backgroundColor: MyColors().blueThemeColor,
+            backgroundColor: MyColors().lightBlueContainer,
             currentIndex: _selectedIndex,
-            selectedItemColor: Colors.yellowAccent,
+            selectedItemColor: Colors.blueGrey,
             unselectedItemColor: Colors.white,
             onTap: _onItemTapped,
             items: <BottomNavigationBarItem>[
@@ -96,30 +91,10 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
               ),
             ],
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          mini: true,
-          backgroundColor: MyColors().blueThemeColor,
-          foregroundColor: Colors.white,
-          onPressed: () {
-            Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => CreateEvent()))
-                .then((value) {
-              //ANCHOR Yeni etkinlik oluşturulduğunda sayfayı güncelliyor
-              if (value == "success") {
-                setState(() {});
-              }
-            });
-          },
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-              side: BorderSide(color: Colors.white, width: 5)),
-          child: Icon(Icons.add),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      ),
+
+ */
+
+          ),
     );
   }
 
