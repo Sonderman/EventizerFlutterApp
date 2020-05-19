@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/Tools/Message.dart';
+import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChatPage extends StatefulWidget {
   @override
@@ -16,6 +21,151 @@ class _ChatPageState extends State<ChatPage> {
   double widthSize(double value) {
     value /= 100;
     return MediaQuery.of(context).size.width * value;
+  }
+
+  //NOTE The group chat buttons are not include of image.
+  // Just selectable of color.
+  // Because this is more plain and looks like colorful and stable than with image.
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          children: <Widget>[
+            /*
+            SizedBox(
+              height: heightSize(10),
+            ),
+            groupChatButtons(),
+            */
+            SizedBox(
+              height: heightSize(5),
+            ),
+            chatRows(),
+            SizedBox(
+              height: heightSize(5),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget chatRows() {
+    var messageService = Provider.of<MessagingService>(context);
+    var userService = Provider.of<UserService>(context);
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Mesajlar",
+            style: TextStyle(
+              fontFamily: "Zona",
+              fontSize: heightSize(3),
+              color: MyColors().loginGreyColor,
+            ),
+          ),
+          SizedBox(
+            height: heightSize(3),
+          ),
+          Expanded(
+            child: StreamBuilder(
+              stream: messageService
+                  .getUserChatsSnapshot(userService.usermodel.getUserId()),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return PageComponents().loadingOverlay(context, Colors.white);
+                } else {
+                  List<DocumentSnapshot> items = snapshot.data.documents;
+                  int itemLength = items.length;
+                  return ListView.separated(
+                      separatorBuilder: (BuildContext context, int index) =>
+                          Divider(
+                            height: 50,
+                          ),
+                      itemCount: itemLength,
+                      itemBuilder: (context, index) {
+                        String userID = items[index].data['OtherUserID'];
+                        return FutureBuilder(
+                            future: userService.findUserbyID(userID),
+                            builder: (context, snapshot) {
+                              switch (snapshot.connectionState) {
+                                case ConnectionState.done:
+                                  String url = snapshot.data['ProfilePhotoUrl'];
+                                  String userName = snapshot.data['Name'];
+
+                                  return InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  Message(userID, userName)));
+                                    },
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                          height: heightSize(7),
+                                          width: widthSize(14),
+                                          decoration: new BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image: NetworkImage(url),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: widthSize(3),
+                                        ),
+                                        RichText(
+                                          text: TextSpan(
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                text: "$userName\n",
+                                                style: TextStyle(
+                                                  fontFamily: "Zona",
+                                                  fontSize: heightSize(2.5),
+                                                  color:
+                                                      MyColors().loginGreyColor,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: "Eventizer tutsa bari",
+                                                style: TextStyle(
+                                                  height: heightSize(0.2),
+                                                  fontFamily: "ZonaLight",
+                                                  fontSize: heightSize(2),
+                                                  color:
+                                                      MyColors().greyTextColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                  break;
+                                case ConnectionState.none:
+                                  return Text("Hata");
+                                case ConnectionState.waiting:
+                                  return PageComponents()
+                                      .loadingSmallOverlay(40);
+                                default:
+                                  return Text("Beklenmedik durum");
+                              }
+                            });
+                      });
+                }
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget groupChatButtons() {
@@ -171,25 +321,12 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget chatRows() {
-    return Expanded(
-      child: Column(
+  void addNewGroupChatVoid() {}
+}
 
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            "Mesajlar",
-            style: TextStyle(
-              fontFamily: "Zona",
-              fontSize: heightSize(3),
-              color: MyColors().loginGreyColor,
-            ),
-          ),
+/*
 
-          SizedBox(
-            height: heightSize(3),
-          ),
-          Expanded(
+Expanded(
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
@@ -225,7 +362,8 @@ class _ChatPageState extends State<ChatPage> {
                                 ),
                               ),
                               TextSpan(
-                                text: "Senin karşında 'Hello World' yazan ben yok artık...",
+                                text:
+                                    "Senin karşında 'Hello World' yazan ben yok artık...",
                                 style: TextStyle(
                                   height: heightSize(0.2),
                                   fontFamily: "ZonaLight",
@@ -365,7 +503,8 @@ class _ChatPageState extends State<ChatPage> {
                                 ),
                               ),
                               TextSpan(
-                                text: "Bizim zamanımızda Flutter vardı da biz mi app yapmadık yeğen?",
+                                text:
+                                    "Bizim zamanımızda Flutter vardı da biz mi app yapmadık yeğen?",
                                 style: TextStyle(
                                   height: heightSize(0.2),
                                   fontFamily: "ZonaLight",
@@ -431,38 +570,6 @@ class _ChatPageState extends State<ChatPage> {
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
+        
 
-  //NOTE The group chat buttons are not include of image.
-  // Just selectable of color.
-  // Because this is more plain and looks like colorful and stable than with image.
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          children: <Widget>[
-            SizedBox(
-              height: heightSize(10),
-            ),
-            groupChatButtons(),
-            SizedBox(
-              height: heightSize(5),
-            ),
-            chatRows(),
-
-            SizedBox(
-              height: heightSize(5),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void addNewGroupChatVoid() {}
-}
+*/

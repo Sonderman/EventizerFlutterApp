@@ -1,8 +1,12 @@
 import 'package:eventizer/Navigation/ExploreEventPage.dart';
+import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
+import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginPage extends StatefulWidget {
@@ -12,9 +16,10 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   String userId;
-  String email;
-  String password;
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
   String errorText;
+  bool _loading = false;
 
   double heightSize(double value) {
     value /= 100;
@@ -55,8 +60,8 @@ class _LoginPageState extends State<LoginPage> {
     return Column(
       children: <Widget>[
         TextFormField(
-          onSaved: (value) => email = value,
-          //controller: mail,
+          //onSaved: (value) => email = value,
+          controller: email,
           textAlign: TextAlign.left,
           decoration: InputDecoration(
             border: InputBorder.none,
@@ -82,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
         SizedBox(
           height: heightSize(5),
         ),
-        buildPasswordField(password),
+        passwordField(password),
         SizedBox(
           height: heightSize(2),
         ),
@@ -106,20 +111,19 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget buildPasswordField(password) {
-    bool showPassword = false;
-    bool visibleWidget = false;
+  Widget passwordField(password) {
+    bool showPassword = true;
     print("building custom stateful textfield password");
     return StatefulBuilder(
-      builder: (context, fn) {
+      builder: (context, state) {
         print("building internal state");
         return Row(
           children: <Widget>[
             Expanded(
               child: TextFormField(
-                onSaved: (value) => password = value,
-                //controller: password,
-                obscureText: !showPassword,
+                //onSaved: (value) => password = value,
+                controller: password,
+                obscureText: showPassword,
                 textAlign: TextAlign.left,
                 decoration: InputDecoration(
                   errorText: errorText,
@@ -154,12 +158,14 @@ class _LoginPageState extends State<LoginPage> {
                 width: widthSize(12),
                 height: heightSize(6),
                 child: FlatButton(
+                  child: Icon(
+                      showPassword ? Icons.visibility : Icons.visibility_off),
                   splashColor: Colors.transparent,
                   highlightColor: Colors.transparent,
-                  child: Icon(showPassword ? Icons.visibility_off : Icons.visibility),
                   onPressed: () {
-                    showPassword = !showPassword;
-                    fn(() {});
+                    state(() {
+                      showPassword = !showPassword;
+                    });
                   },
                 ),
               ),
@@ -178,7 +184,10 @@ class _LoginPageState extends State<LoginPage> {
         highlightColor: MyColors().purpleContainerSplash,
         splashColor: MyColors().purpleContainerSplash,
         onPressed: () {
-          loginButton(context, email, password);
+          setState(() {
+            _loading = true;
+          });
+          loginButton(context);
         },
         child: Container(
           height: heightSize(8),
@@ -201,42 +210,60 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
           children: <Widget>[
-            SizedBox(
-              height: heightSize(10),
-            ),
-            welcomeText(),
-            SizedBox(
-              height: heightSize(5),
-            ),
-            emailAndPasswordFields(),
-            Spacer(),
-            singInButton(),
-            SizedBox(
-              height: heightSize(5),
-            ),
-          ],
-        ),
-      ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(
+                        height: heightSize(10),
+                      ),
+                      welcomeText(),
+                      SizedBox(
+                        height: heightSize(5),
+                      ),
+                      emailAndPasswordFields(),
+                      Spacer(),
+                      singInButton(),
+                      SizedBox(
+                        height: heightSize(5),
+                      ),
+                    ],
+                  ),
+                ),
+              ] +
+              (_loading
+                  ? [PageComponents().loadingOverlay(context, Colors.white)]
+                  : [])),
     );
   }
 
   //ANCHOR All Gestures are start here
-  Future<void> loginButton(BuildContext context, email, password) async {
+  Future<void> loginButton(BuildContext context) async {
     var auth = AuthService.of(context).auth;
-    userId = await auth.signIn(email, password).whenComplete(
-          () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ExploreEventPage())),
-        );
+    userId = await auth.signIn(email.text, password.text);
+    if (userId == null) {
+      setState(() => _loading = false);
+      Fluttertoast.showToast(
+          msg: "Şifre veya Eposta yanlış!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 18.0);
+    } else {
+      if (await UserService(userId)
+          .updateSingleInfo("LastLoggedIn", "timeStamp")) {
+        print('Signed in: $userId');
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
+      }
+    }
   }
 
-  void forgetPassword() {
-
-    setState(() {
-      visibleWidget = !visibleWidget;
-    });
-  }
+  //TODO -  Şifremi unuttum işlemi yapılacak
+  void forgetPassword() {}
 }

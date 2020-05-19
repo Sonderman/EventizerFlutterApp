@@ -13,6 +13,14 @@ class PageComponents {
     return MediaQuery.of(context).size.width * value;
   }
 
+  Widget loadingSmallOverlay(double size) {
+    return Container(
+      height: size,
+      width: size,
+      child: SpinKitRing(size: 75, color: MyColors().blueThemeColor),
+    );
+  }
+
   Widget loadingOverlay(BuildContext context, Color backgroundColor) {
     return Container(
         height: MediaQuery.of(context).size.height,

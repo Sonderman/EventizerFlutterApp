@@ -9,11 +9,24 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
+    <list default="true" id="acf10fe4-b608-47a5-9fbb-f441cf333a58" name="Default Changelist" comment="&quot;explore event page&quot; event box'ların altına tarih, konum ve katılımcı sayısı eklendi.&#10;&quot;home page&quot; bottombar değiştirildi.&#10;&quot;profile page&quot; ayarlarım iconu değiştirildi.&#10;&quot;pubspec.yaml&quot; bottombar eklendi.">
+      <change beforePath="$PROJECT_DIR$/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/local.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/ExploreEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ExploreEventPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Tools/BottomNavigation.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Tools/BottomNavigation.dart" afterDir="false" />
+=======
     <list default="true" id="acf10fe4-b608-47a5-9fbb-f441cf333a58" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" afterDir="false" />
+>>>>>>> de7b841... Merge branch 'DevMurat' of https://github.com/Sonderman/EventizerFlutterApp into DevMurat
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -142,6 +155,9 @@
       <option name="project" value="LOCAL" />
       <updated>1589244618902</updated>
     </task>
+<<<<<<< HEAD
+    <option name="localTasksCounter" value="8" />
+=======
     <task id="LOCAL-00008" summary="&quot;Login Page&quot; tamamlandı.&#10;&quot;ExploreEvent Page&quot; event box düzenlendi.&#10;&quot;Profile Page&quot; tasarım değiştirildi, geçmiş ve gelecek etkinlikler için iconlar eklenecek.">
       <created>1589763545224</created>
       <option name="number" value="00008" />
@@ -157,6 +173,7 @@
       <updated>1589843888221</updated>
     </task>
     <option name="localTasksCounter" value="10" />
+>>>>>>> de7b841... Merge branch 'DevMurat' of https://github.com/Sonderman/EventizerFlutterApp into DevMurat
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -179,8 +196,12 @@
     <MESSAGE value="&quot;event page&quot; rengi değiştirildi.&#10;&quot;sign in page&quot; tamamlandı.&#10;&quot;sign up page&quot; tamamlandı." />
     <MESSAGE value="&quot;chat page&quot; tamamlandı.&#10;&quot;signup page&quot; şifre girerken rakam klavyesi eklendi." />
     <MESSAGE value="&quot;explore event page&quot; event box'ların altına tarih, konum ve katılımcı sayısı eklendi.&#10;&quot;home page&quot; bottombar değiştirildi.&#10;&quot;profile page&quot; ayarlarım iconu değiştirildi.&#10;&quot;pubspec.yaml&quot; bottombar eklendi." />
+<<<<<<< HEAD
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;explore event page&quot; event box'ların altına tarih, konum ve katılımcı sayısı eklendi.&#10;&quot;home page&quot; bottombar değiştirildi.&#10;&quot;profile page&quot; ayarlarım iconu değiştirildi.&#10;&quot;pubspec.yaml&quot; bottombar eklendi." />
+=======
     <MESSAGE value="&quot;Login Page&quot; tamamlandı.&#10;&quot;ExploreEvent Page&quot; event box düzenlendi.&#10;&quot;Profile Page&quot; tasarım değiştirildi, geçmiş ve gelecek etkinlikler için iconlar eklenecek." />
     <MESSAGE value="&quot;profil page&quot; geçmiş ve gelecek etkinlikler için iconlar eklendi." />
     <option name="LAST_COMMIT_MESSAGE" value="&quot;profil page&quot; geçmiş ve gelecek etkinlikler için iconlar eklendi." />
+>>>>>>> de7b841... Merge branch 'DevMurat' of https://github.com/Sonderman/EventizerFlutterApp into DevMurat
   </component>
 </project>
