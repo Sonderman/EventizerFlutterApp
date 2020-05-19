@@ -376,9 +376,9 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                   Container(
                     width: widthSize(43),
                     height: heightSize(8),
-                    decoration: new BoxDecoration(
+                    decoration:  BoxDecoration(
                       color: MyColors().purpleContainer,
-                      borderRadius: new BorderRadius.all(
+                      borderRadius:  BorderRadius.all(
                         Radius.circular(20),
                       ),
                     ),
@@ -699,7 +699,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                               ),
                               SliverPadding(
                                 padding: const EdgeInsets.symmetric(horizontal: 25),
-                                sliver: eventList(),
+                                sliver: eventList(), //ANCHOR Event list
                               )
                             ],
                           ),

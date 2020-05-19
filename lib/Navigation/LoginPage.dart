@@ -108,6 +108,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget buildPasswordField(password) {
     bool showPassword = false;
+    bool visibleWidget = false;
     print("building custom stateful textfield password");
     return StatefulBuilder(
       builder: (context, fn) {
@@ -153,7 +154,9 @@ class _LoginPageState extends State<LoginPage> {
                 width: widthSize(12),
                 height: heightSize(6),
                 child: FlatButton(
-                  child: Icon(showPassword ? Icons.visibility : Icons.visibility_off),
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  child: Icon(showPassword ? Icons.visibility_off : Icons.visibility),
                   onPressed: () {
                     showPassword = !showPassword;
                     fn(() {});
@@ -231,7 +234,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void forgetPassword() {
-    var auth = AuthService.of(context).auth;
 
+    setState(() {
+      visibleWidget = !visibleWidget;
+    });
   }
 }
