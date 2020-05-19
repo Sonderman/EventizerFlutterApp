@@ -9,6 +9,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
+  //ANCHOR burada ekranın dönmesi engellenir, dikey mod
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   return runApp(MyApp());
 }

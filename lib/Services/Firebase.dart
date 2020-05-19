@@ -265,16 +265,17 @@ class DatabaseWorks {
   }
 
   //ANCHOR burada sadece 1 veride değişiklik yapar
-  void updateSingleInfo(String userId, String maptext, String changedtext) {
+  Future<void> updateSingleInfo(
+      String userId, String maptext, String changedtext) async {
     if (changedtext == "timeStamp") {
-      ref
+      await ref
           .collection("EventizerApp")
           .document(_server)
           .collection('users')
           .document(userId)
           .updateData({maptext: FieldValue.serverTimestamp()});
     } else {
-      ref
+      await ref
           .collection("EventizerApp")
           .document(_server)
           .collection('users')

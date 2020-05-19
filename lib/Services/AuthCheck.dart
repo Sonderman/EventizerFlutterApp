@@ -1,8 +1,10 @@
 import 'package:eventizer/Navigation/HomePage.dart';
+import 'package:eventizer/Navigation/LoginPage.dart';
 import 'package:eventizer/Navigation/Old/OldLoginPage.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/BaseAuth.dart';
 import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/Settings/AppSettings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,8 +24,12 @@ class AuthCheck extends StatelessWidget {
                       (BuildContext context, AsyncSnapshot<String> snapshot) {
                     if (snapshot.connectionState == ConnectionState.done ||
                         snapshot.data != null) {
+                      //ANCHOR Providerlar burada tanımlanıyor
                       return MultiProvider(
                         providers: [
+                          ChangeNotifierProvider<AppSettings>(
+                            create: (context) => AppSettings(),
+                          ),
                           ChangeNotifierProvider<UserService>(
                               create: (context) => UserService(
                                     snapshot.data,
@@ -40,7 +46,7 @@ class AuthCheck extends StatelessWidget {
                     }
                   },
                 )
-              : OldLoginPage();
+              : LoginPage();
         }
         return buildWaitingScreen();
       },
