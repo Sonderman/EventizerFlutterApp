@@ -337,7 +337,6 @@ class _EventPageState extends State<EventPage> {
           ),
         ),
       ),
-      bottomNavigationBar: bottomNavigationBar(context),
     );
   }
 }

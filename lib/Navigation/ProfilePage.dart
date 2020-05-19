@@ -3,6 +3,7 @@ import 'package:eventizer/Navigation/EventPage.dart';
 import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/Settings/AppSettings.dart';
 import 'package:eventizer/Tools/Message.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
@@ -100,9 +101,11 @@ class _ProfilePageState extends State<ProfilePage>
                   Radius.circular(20),
                 ),
               ),
-              //NOTE Currently avatar size is extreme big for default "avatar_man.png". But not for your "Mandolian" avatar. :)
               width: widthSize(82),
               child: FadeInImage.assetNetwork(
+                  height: widthSize(48),
+                  width: widthSize(80),
+                  fit: BoxFit.fill,
                   placeholder: "assets/images/avatar_man.png",
                   image: profilePhotoUrl),
             ),
@@ -516,6 +519,15 @@ class _ProfilePageState extends State<ProfilePage>
                         .then((amIparticipant) {
                       print("Kullanıcı bu etkinliğe katılmış:" +
                           amIparticipant.toString());
+
+                      Provider.of<AppSettings>(context, listen: false)
+                          .setCurrentPage(EventPage(
+                              //eventData: eventDatas,
+                              // userData: userData.data,
+                              //amIparticipant: amIparticipant,
+                              ));
+
+                      /*
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -524,6 +536,7 @@ class _ProfilePageState extends State<ProfilePage>
                                   // userData: userData.data,
                                   //amIparticipant: amIparticipant,
                                   )));
+                                  */
                     });
                   },
                   child: itemCard(title, category, name, imageUrl, startDate));

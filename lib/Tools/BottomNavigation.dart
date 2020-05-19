@@ -16,45 +16,50 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 Widget getNavigatedPage(BuildContext context) {
-  UserService userWorker = Provider.of<UserService>(context);
-  List<Widget> pages = [
-    ChatPage(),
-    CreateEventPage(),
-    ExploreEventPage(),
-    ProfilePage(userID: userWorker.usermodel.getUserId(), isFromEvent: false),
-    //SettingsPage()
-  ];
-  return pages[
-      Provider.of<AppSettings>(context, listen: false).getBottomNavIndex()];
+  if (Provider.of<AppSettings>(context, listen: false).getCurrentPage() !=
+      null) {
+    return Provider.of<AppSettings>(context, listen: false).getCurrentPage();
+  } else {
+    UserService userWorker = Provider.of<UserService>(context);
+    List<Widget> pages = [
+      ChatPage(),
+      CreateEventPage(),
+      ExploreEventPage(),
+      ProfilePage(userID: userWorker.usermodel.getUserId(), isFromEvent: false),
+      //SettingsPage()
+    ];
+    return pages[
+        Provider.of<AppSettings>(context, listen: false).getBottomNavIndex()];
+  }
 }
 
 Widget bottomNavigationBar(BuildContext context) {
+  AppSettings navigation = Provider.of<AppSettings>(context, listen: false);
+
+  int currentPosition = navigation.getBottomNavIndex();
+
+  currentPageSetter() {
+    navigation.setBottomNavIndex(currentPosition);
+  }
+
   return FancyBottomNavigation(
-    initialSelection:
-        Provider.of<AppSettings>(context, listen: false).getBottomNavIndex(),
+    initialSelection: navigation.getBottomNavIndex(),
     inactiveIconColor: MyColors().purpleContainer,
     circleColor: MyColors().purpleContainer,
     tabs: [
+      TabData(iconData: Icons.chat, title: "Chat", onclick: currentPageSetter),
       TabData(
-        iconData: Icons.chat,
-        title: "Chat",
-      ),
+          iconData: Icons.add, title: "Oluştur", onclick: currentPageSetter),
       TabData(
-        iconData: Icons.add,
-        title: "Oluştur",
-      ),
+          iconData: Icons.search, title: "Keşfet", onclick: currentPageSetter),
       TabData(
-        iconData: Icons.search,
-        title: "Keşfet",
-      ),
-      TabData(
-        iconData: Icons.assignment_ind,
-        title: "Profil",
-      ),
+          iconData: Icons.assignment_ind,
+          title: "Profil",
+          onclick: currentPageSetter),
     ],
     onTabChangedListener: (position) {
-      Provider.of<AppSettings>(context, listen: false)
-          .setBottomNavIndex(position);
+      currentPosition = position;
+      navigation.setBottomNavIndex(position);
       //setState();
     },
   );

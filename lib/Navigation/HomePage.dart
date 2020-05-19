@@ -29,64 +29,12 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
     return WillPopScope(
         onWillPop: askForQuit,
         child: Scaffold(
-            //backgroundColor: Colors.yellow,
             body: Center(
               child: Consumer<AppSettings>(
                 builder: (con, settings, w) => getNavigatedPage(context),
               ),
             ),
-
-            /*
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: MyColors().blueThemeColor,
-            foregroundColor: Colors.white,
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => CreateEventPage())).then((value) {
-                //ANCHOR Yeni etkinlik oluşturulduğunda sayfayı güncelliyor
-                if (value == "success") {
-                  setState(() {});
-                }
-              });
-            },
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30), side: BorderSide(color: Colors.white, width: 5)),
-            child: Icon(Icons.add),
-          ),
-
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-           */
-
             bottomNavigationBar: bottomNavigationBar(context)));
-
-/*
-          BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            elevation: 8.0,
-            backgroundColor: MyColors().lightBlueContainer,
-            currentIndex: _selectedIndex,
-            selectedItemColor: Colors.blueGrey,
-            unselectedItemColor: Colors.white,
-            onTap: _onItemTapped,
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.inbox),
-                title: Text('Gelen Kutusu'),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.search),
-                title: Text('Keşfet'),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.user),
-                title: Text('Profil'),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                title: Text('Ayarlar'),
-              ),
-            ],
-          ),
-
- */
   }
 
   Future<bool> askForQuit() => showDialog(
