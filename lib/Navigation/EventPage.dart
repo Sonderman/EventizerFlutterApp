@@ -1,13 +1,23 @@
+import 'package:eventizer/Navigation/ProfilePage.dart';
+import 'package:eventizer/Settings/AppSettings.dart';
 import 'package:eventizer/Tools/BottomNavigation.dart';
+import 'package:eventizer/Tools/NavigationManager.dart';
+import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class EventPage extends StatefulWidget {
+  final Map<String, dynamic> eventData;
+  final Map<String, dynamic> userData;
+  final bool amIparticipant;
+  const EventPage({Key key, this.eventData, this.userData, this.amIparticipant})
+      : super(key: key);
   @override
   _EventPageState createState() => _EventPageState();
 }
 
-class _EventPageState extends State<EventPage> {
+class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   double heightSize(double value) {
     value /= 100;
     return MediaQuery.of(context).size.height * value;
@@ -16,6 +26,81 @@ class _EventPageState extends State<EventPage> {
   double widthSize(double value) {
     value /= 100;
     return MediaQuery.of(context).size.width * value;
+  }
+
+  TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _tabController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.deepOrangeAccent,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            children: <Widget>[
+              Container(
+                child: TabBar(
+                    indicatorColor: Colors.teal,
+                    labelColor: Colors.teal,
+                    unselectedLabelColor: Colors.black54,
+                    controller: _tabController,
+                    isScrollable: true,
+                    tabs: [
+                      Tab(
+                        text: "Etkinlik Detay",
+                      ),
+                      Tab(
+                        text: "Yorumlar",
+                      ),
+                      Tab(
+                        text: "Katılımcılar",
+                      ),
+                    ]),
+              ),
+              Expanded(
+                child: TabBarView(controller: _tabController, children: [
+                  Column(
+                    children: <Widget>[
+                      userPhotoAndName(),
+                      SizedBox(
+                        height: heightSize(2),
+                      ),
+                      eventPhotoAndTitle(),
+                      dateAndDetails(),
+                      SizedBox(
+                        height: heightSize(2),
+                      ),
+                      mapAndJoin(),
+                    ],
+                  ),
+                  //TODO buraya Yorumlar sayfası yapılcak
+                  Center(
+                    child: PageComponents().underConstruction(context),
+                  ),
+                  //TODO buraya Katılımcılar sayfası yapılcak
+                  Center(
+                    child: PageComponents().underConstruction(context),
+                  )
+                ]),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget userPhotoAndName() {
@@ -28,7 +113,7 @@ class _EventPageState extends State<EventPage> {
             shape: BoxShape.circle,
             image: DecorationImage(
               fit: BoxFit.cover,
-              image: AssetImage("assets/images/avatar_man.png"),
+              image: NetworkImage(widget.userData['ProfilePhotoUrl']),
             ),
           ),
         ),
@@ -39,7 +124,7 @@ class _EventPageState extends State<EventPage> {
           text: TextSpan(
             children: <TextSpan>[
               TextSpan(
-                text: "Murat Altıntaş\n",
+                text: widget.userData['Name'] + widget.userData['Surname'],
                 style: TextStyle(
                   fontFamily: "Zona",
                   fontSize: heightSize(2.5),
@@ -47,7 +132,7 @@ class _EventPageState extends State<EventPage> {
                 ),
               ),
               TextSpan(
-                text: "@altintas",
+                text: "\n@nickname",
                 style: TextStyle(
                   height: heightSize(0.2),
                   fontFamily: "ZonaLight",
@@ -61,35 +146,44 @@ class _EventPageState extends State<EventPage> {
         SizedBox(
           width: widthSize(10),
         ),
-        Container(
-          width: widthSize(30),
-          height: heightSize(8),
-          decoration: new BoxDecoration(
-            color: MyColors().darkOrangeContainer,
-            borderRadius: new BorderRadius.all(
-              Radius.circular(20),
+        InkWell(
+          onTap: () {
+            //ANCHOR kullanıcı profiline buradan gidiyor
+            NavigationManager(context).pushPage(ProfilePage(
+              userID: widget.eventData["OrganizerID"],
+              isFromEvent: true,
+            ));
+          },
+          child: Container(
+            width: widthSize(30),
+            height: heightSize(8),
+            decoration: new BoxDecoration(
+              color: MyColors().darkOrangeContainer,
+              borderRadius: new BorderRadius.all(
+                Radius.circular(20),
+              ),
             ),
-          ),
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Container(
-                      height: heightSize(4),
-                      child: Image.asset(
-                        "assets/icons/showProfile.png",
-                      )),
-                  Text(
-                    "Gözat",
-                    style: TextStyle(
-                      fontFamily: "Zona",
-                      fontSize: heightSize(2),
-                      color: MyColors().whiteTextColor,
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Container(
+                        height: heightSize(4),
+                        child: Image.asset(
+                          "assets/icons/showProfile.png",
+                        )),
+                    Text(
+                      "Gözat",
+                      style: TextStyle(
+                        fontFamily: "Zona",
+                        fontSize: heightSize(2),
+                        color: MyColors().whiteTextColor,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -103,7 +197,7 @@ class _EventPageState extends State<EventPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          "Balkanlar Turu",
+          widget.eventData['Title'],
           style: TextStyle(
             fontFamily: "Zona",
             fontSize: heightSize(3.5),
@@ -121,7 +215,10 @@ class _EventPageState extends State<EventPage> {
             color: MyColors().blackOpacityContainer,
             width: widthSize(100),
             height: heightSize(25),
-            child: Center(child: Text("Default photo are here")),
+            child: FadeInImage.assetNetwork(
+                fit: BoxFit.cover,
+                placeholder: 'assets/images/etkinlik.jpg',
+                image: widget.eventData['EventImageUrl']),
           ),
         ),
         SizedBox(
@@ -153,7 +250,7 @@ class _EventPageState extends State<EventPage> {
                     text: TextSpan(
                       children: <TextSpan>[
                         TextSpan(
-                          text: "07.10.2020",
+                          text: widget.eventData['StartDate'],
                           style: TextStyle(
                             fontFamily: "Zona",
                             fontSize: heightSize(2),
@@ -190,7 +287,7 @@ class _EventPageState extends State<EventPage> {
                     text: TextSpan(
                       children: <TextSpan>[
                         TextSpan(
-                          text: "14.10.2020",
+                          text: widget.eventData['FinishDate'],
                           style: TextStyle(
                             fontFamily: "Zona",
                             fontSize: heightSize(2),
@@ -213,7 +310,7 @@ class _EventPageState extends State<EventPage> {
             ),
           ],
         ),
-        //ANCHOR Detailst start are here
+        //ANCHOR Details start are here
         SizedBox(
           height: heightSize(2),
         ),
@@ -228,7 +325,7 @@ class _EventPageState extends State<EventPage> {
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Text(
-                "This is event's details container...",
+                widget.eventData['Detail'],
                 style: TextStyle(
                   fontFamily: "ZonaLight",
                   color: MyColors().whiteTextColor,
@@ -243,101 +340,113 @@ class _EventPageState extends State<EventPage> {
   }
 
   Widget mapAndJoin() {
+    List<Widget> buttons = [];
+
+    if (widget.amIparticipant) {
+      buttons.add(Container(
+        width: widthSize(43),
+        height: heightSize(8),
+        decoration: new BoxDecoration(
+          color: MyColors().darkOrangeContainer,
+          borderRadius: new BorderRadius.all(
+            Radius.circular(20),
+          ),
+        ),
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 35),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Container(
+                  height: heightSize(4),
+                  child: Image.asset("assets/icons/joinEvent.png"),
+                ),
+                Text(
+                  "AYRIL",
+                  style: TextStyle(
+                    fontFamily: "Zona",
+                    fontSize: heightSize(2),
+                    color: MyColors().whiteTextColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ));
+    } else {
+      buttons.add(Container(
+        width: widthSize(43),
+        height: heightSize(8),
+        decoration: new BoxDecoration(
+          color: MyColors().darkOrangeContainer,
+          borderRadius: new BorderRadius.all(
+            Radius.circular(20),
+          ),
+        ),
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 35),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Container(
+                  height: heightSize(4),
+                  child: Image.asset("assets/icons/joinEvent.png"),
+                ),
+                Text(
+                  "KATIL",
+                  style: TextStyle(
+                    fontFamily: "Zona",
+                    fontSize: heightSize(2),
+                    color: MyColors().whiteTextColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ));
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Container(
-          width: widthSize(43),
-          height: heightSize(8),
-          decoration: new BoxDecoration(
-            color: MyColors().darkOrangeContainer,
-            borderRadius: new BorderRadius.all(
-              Radius.circular(20),
-            ),
-          ),
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Container(
-                    height: heightSize(4),
-                    child: Image.asset("assets/icons/location.png"),
+            Container(
+              width: widthSize(43),
+              height: heightSize(8),
+              decoration: new BoxDecoration(
+                color: MyColors().darkOrangeContainer,
+                borderRadius: new BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Container(
+                        height: heightSize(4),
+                        child: Image.asset("assets/icons/location.png"),
+                      ),
+                      Text(
+                        "Konum",
+                        style: TextStyle(
+                          fontFamily: "Zona",
+                          fontSize: heightSize(2),
+                          color: MyColors().whiteTextColor,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    "Konum",
-                    style: TextStyle(
-                      fontFamily: "Zona",
-                      fontSize: heightSize(2),
-                      color: MyColors().whiteTextColor,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-        Container(
-          width: widthSize(43),
-          height: heightSize(8),
-          decoration: new BoxDecoration(
-            color: MyColors().darkOrangeContainer,
-            borderRadius: new BorderRadius.all(
-              Radius.circular(20),
-            ),
-          ),
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 35),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Container(
-                    height: heightSize(4),
-                    child: Image.asset("assets/icons/joinEvent.png"),
-                  ),
-                  Text(
-                    "KATIL",
-                    style: TextStyle(
-                      fontFamily: "Zona",
-                      fontSize: heightSize(2),
-                      color: MyColors().whiteTextColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.deepOrangeAccent,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: <Widget>[
-              userPhotoAndName(),
-              SizedBox(
-                height: heightSize(2),
-              ),
-              eventPhotoAndTitle(),
-              dateAndDetails(),
-              SizedBox(
-                height: heightSize(2),
-              ),
-              mapAndJoin(),
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: bottomNavigationBar(context),
+          ] +
+          buttons,
     );
   }
 }

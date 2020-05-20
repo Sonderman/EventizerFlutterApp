@@ -1,62 +1,55 @@
 import 'package:eventizer/Navigation/ChatPage.dart';
 import 'package:eventizer/Navigation/CreateEventPage.dart';
 import 'package:eventizer/Navigation/ExploreEventPage.dart';
-import 'package:eventizer/Navigation/LoginPage.dart';
-import 'package:eventizer/Navigation/Old/OldChatsPage.dart';
-import 'package:eventizer/Navigation/Old/OldCreateEvent.dart';
-import 'package:eventizer/Navigation/Old/OldLoginPage.dart';
 import 'package:eventizer/Navigation/ProfilePage.dart';
-import 'package:eventizer/Navigation/SettingsPage.dart';
-import 'package:eventizer/Navigation/SignupPage.dart';
 import 'package:eventizer/Services/Repository.dart';
-import 'package:eventizer/Settings/AppSettings.dart';
+import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/assets/Colors.dart';
-import 'package:eventizer/locator.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 Widget getNavigatedPage(BuildContext context) {
-  UserService userWorker = Provider.of<UserService>(context);
-  List<Widget> pages = [
-    ChatPage(),
-    CreateEventPage(),
-    ExploreEventPage(),
-    ProfilePage(userID: userWorker.usermodel.getUserId(), isFromEvent: false),
-    //SettingsPage()
-  ];
-  return pages[
-      Provider.of<AppSettings>(context, listen: false).getBottomNavIndex()];
+  //ANCHOR stack de widget varsa o sayfayı döndürür yoksa default veya mevcut indexe göre sayfayı açar
+  if (NavigationManager(context).getLastPage() != null) {
+    return NavigationManager(context).getLastPage();
+  } else {
+    UserService userWorker = Provider.of<UserService>(context);
+    List<Widget> pages = [
+      ChatPage(),
+      CreateEventPage(),
+      ExploreEventPage(),
+      ProfilePage(userID: userWorker.usermodel.getUserId(), isFromEvent: false),
+    ];
+    return pages[NavigationManager(context).getBottomNavIndex()];
+  }
 }
 
 Widget bottomNavigationBar(BuildContext context) {
+  NavigationManager navigation = NavigationManager(context);
+  int currentPosition = navigation.getBottomNavIndex();
+  currentPageSetter() {
+    navigation.setBottomNavIndex(currentPosition);
+  }
+
   return FancyBottomNavigation(
-    initialSelection:
-        Provider.of<AppSettings>(context, listen: false).getBottomNavIndex(),
+    initialSelection: currentPosition,
     inactiveIconColor: MyColors().purpleContainer,
     circleColor: MyColors().purpleContainer,
     tabs: [
+      TabData(iconData: Icons.chat, title: "Chat", onclick: currentPageSetter),
       TabData(
-        iconData: Icons.chat,
-        title: "Chat",
-      ),
+          iconData: Icons.add, title: "Oluştur", onclick: currentPageSetter),
       TabData(
-        iconData: Icons.add,
-        title: "Oluştur",
-      ),
+          iconData: Icons.search, title: "Keşfet", onclick: currentPageSetter),
       TabData(
-        iconData: Icons.search,
-        title: "Keşfet",
-      ),
-      TabData(
-        iconData: Icons.assignment_ind,
-        title: "Profil",
-      ),
+          iconData: Icons.assignment_ind,
+          title: "Profil",
+          onclick: currentPageSetter),
     ],
     onTabChangedListener: (position) {
-      Provider.of<AppSettings>(context, listen: false)
-          .setBottomNavIndex(position);
-      //setState();
+      currentPosition = position;
+      navigation.setBottomNavIndex(position);
     },
   );
 }
