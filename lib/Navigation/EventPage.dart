@@ -1,6 +1,5 @@
 import 'package:eventizer/Navigation/ProfilePage.dart';
-import 'package:eventizer/Settings/AppSettings.dart';
-import 'package:eventizer/Tools/BottomNavigation.dart';
+import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
@@ -29,17 +28,23 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   }
 
   TabController _tabController;
+  bool katilbutton;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    katilbutton = widget.amIparticipant;
   }
 
   @override
   void dispose() {
     super.dispose();
     _tabController.dispose();
+  }
+
+  void toggleJoinButton() {
+    katilbutton ? katilbutton = false : katilbutton = true;
   }
 
   @override
@@ -340,10 +345,10 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   }
 
   Widget mapAndJoin() {
-    List<Widget> buttons = [];
+    Widget joinUnjoinButton;
 
-    if (widget.amIparticipant) {
-      buttons.add(Container(
+    if (katilbutton) {
+      joinUnjoinButton = Container(
         width: widthSize(43),
         height: heightSize(8),
         decoration: new BoxDecoration(
@@ -374,9 +379,9 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             ),
           ),
         ),
-      ));
+      );
     } else {
-      buttons.add(Container(
+      joinUnjoinButton = Container(
         width: widthSize(43),
         height: heightSize(8),
         decoration: new BoxDecoration(
@@ -407,7 +412,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             ),
           ),
         ),
-      ));
+      );
     }
 
     return Row(
@@ -446,7 +451,39 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
               ),
             ),
           ] +
-          buttons,
+          [
+            InkWell(
+                onTap: () async {
+                  var eventService =
+                      Provider.of<EventService>(context, listen: false);
+                  var userService =
+                      Provider.of<UserService>(context, listen: false);
+                  if (katilbutton) {
+                    if (await eventService.leaveEvent(
+                        userService.usermodel.getUserId(),
+                        widget.eventData['eventID'])) {
+                      setState(() {
+                        toggleJoinButton();
+                        print("Ayrıldı");
+                      });
+                    } else {
+                      print("Hata");
+                    }
+                  } else {
+                    if (await eventService.joinEvent(
+                        userService.usermodel.getUserId(),
+                        widget.eventData['eventID'])) {
+                      setState(() {
+                        toggleJoinButton();
+                        print("Katıldı");
+                      });
+                    } else {
+                      print("Hata");
+                    }
+                  }
+                },
+                child: joinUnjoinButton)
+          ],
     );
   }
 }
