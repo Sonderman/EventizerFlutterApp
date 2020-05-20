@@ -4,7 +4,9 @@ import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Settings/AppSettings.dart';
+import 'package:eventizer/Tools/BottomNavigation.dart';
 import 'package:eventizer/Tools/Message.dart';
+import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
@@ -519,13 +521,12 @@ class _ProfilePageState extends State<ProfilePage>
                         .then((amIparticipant) {
                       print("Kullanıcı bu etkinliğe katılmış:" +
                           amIparticipant.toString());
-
-                      Provider.of<AppSettings>(context, listen: false)
-                          .setCurrentPage(EventPage(
-                              //eventData: eventDatas,
-                              // userData: userData.data,
-                              //amIparticipant: amIparticipant,
-                              ));
+                      //ANCHOR tıklanınca eventPage e giden yer
+                      NavigationManager(context).pushPage(EventPage(
+                        eventData: eventDatas,
+                        userData: userData.data,
+                        amIparticipant: amIparticipant,
+                      ));
 
                       /*
                       Navigator.push(
@@ -584,13 +585,6 @@ class _ProfilePageState extends State<ProfilePage>
               usermodel.parseMap(data.data);
               textUpdaterByUserModel(usermodel);
               return Scaffold(
-                appBar: AppBar(
-                  backgroundColor: MyColors().blueThemeColor,
-                  centerTitle: true,
-                  title: Text(usermodel.getUserName() +
-                      " " +
-                      usermodel.getUserSurname()),
-                ),
                 body: Column(
                   children: <Widget>[
                     SizedBox(
@@ -638,9 +632,6 @@ class _ProfilePageState extends State<ProfilePage>
                           Center(
                             child: PageComponents().underConstruction(context),
                           ),
-                          Center(
-                            child: PageComponents().underConstruction(context),
-                          )
                         ],
                       ),
                     ),

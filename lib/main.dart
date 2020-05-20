@@ -11,6 +11,11 @@ void main() {
   setupLocator();
   //ANCHOR burada ekranın dönmesi engellenir, dikey mod
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  //ANCHOR status barı transparent yapıyor
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarBrightness: Brightness.light,
+  ));
   return runApp(MyApp());
 }
 

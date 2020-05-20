@@ -3,20 +3,33 @@ import 'package:flutter/material.dart';
 class AppSettings with ChangeNotifier {
   int _bottomNavIndex = 2;
 
-  Widget _currentPageWidget;
+  List<Widget> _pageStack = [];
 
-  Widget getCurrentPage() => _currentPageWidget;
-
-  void setCurrentPage(Widget page) {
-    _currentPageWidget = page;
+  void refresh() {
     notifyListeners();
   }
 
+  //ANCHOR Getters Here
   int getBottomNavIndex() => _bottomNavIndex;
+  List<Widget> getPageStack() => _pageStack;
 
-  void setBottomNavIndex(int newIndex) {
-    _bottomNavIndex = newIndex;
-    _currentPageWidget = null; //Only clever boys can do this:D
-    notifyListeners();
+  //ANCHOR Setters Here
+  void setBottomNavIndex(int index) {
+    _bottomNavIndex = index;
+    refresh();
+  }
+
+  void flushStack() {
+    _pageStack.clear();
+  }
+
+  void pushPage(Widget page) {
+    _pageStack.add(page);
+    refresh();
+  }
+
+  void popPage() {
+    _pageStack.removeLast();
+    refresh();
   }
 }
