@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppSettings with ChangeNotifier {
-  int _bottomNavIndex = 2;
+  int _bottomNavIndex = 1;
 
   List<Widget> _pageStack = [];
 

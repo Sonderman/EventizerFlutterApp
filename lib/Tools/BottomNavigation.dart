@@ -1,6 +1,8 @@
 import 'package:eventizer/Navigation/ChatPage.dart';
 import 'package:eventizer/Navigation/CreateEventPage.dart';
+import 'package:eventizer/Navigation/EventPage.dart';
 import 'package:eventizer/Navigation/ExploreEventPage.dart';
+import 'package:eventizer/Navigation/LoginPage.dart';
 import 'package:eventizer/Navigation/ProfilePage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
@@ -16,9 +18,9 @@ Widget getNavigatedPage(BuildContext context) {
   } else {
     UserService userWorker = Provider.of<UserService>(context);
     List<Widget> pages = [
-      ChatPage(),
+      EventPage(),
       CreateEventPage(),
-      ExploreEventPage(),
+      LoginPage(),
       ProfilePage(userID: userWorker.usermodel.getUserId(), isFromEvent: false),
     ];
     return pages[NavigationManager(context).getBottomNavIndex()];
