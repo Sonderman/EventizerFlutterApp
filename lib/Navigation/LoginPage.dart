@@ -20,6 +20,8 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController password = TextEditingController();
   String errorText;
   bool _loading = false;
+  bool visiblePassword = true;
+  String sendPasswordMail = "Giriş";
 
   double heightSize(double value) {
     value /= 100;
@@ -32,28 +34,53 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget welcomeText() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          "Tekrar Hoşgeldin",
-          style: TextStyle(
-            fontFamily: "Zona",
-            fontSize: heightSize(4),
-            color: MyColors().loginGreyColor,
+    if (visiblePassword == false) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Şifre Sıfırlama",
+            style: TextStyle(
+              fontFamily: "Zona",
+              fontSize: heightSize(4),
+              color: MyColors().loginGreyColor,
+            ),
           ),
-        ),
-        Text(
-          "Giriş yap ve devam et",
-          style: TextStyle(
-            height: heightSize(0.2),
-            fontFamily: "ZonaLight",
-            fontSize: heightSize(3.3),
-            color: MyColors().greyTextColor,
+          Text(
+            "Mail Adresini Gir",
+            style: TextStyle(
+              height: heightSize(0.2),
+              fontFamily: "ZonaLight",
+              fontSize: heightSize(3.3),
+              color: MyColors().greyTextColor,
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    } else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Tekrar Hoşgeldin",
+            style: TextStyle(
+              fontFamily: "Zona",
+              fontSize: heightSize(4),
+              color: MyColors().loginGreyColor,
+            ),
+          ),
+          Text(
+            "Giriş yap ve devam et",
+            style: TextStyle(
+              height: heightSize(0.2),
+              fontFamily: "ZonaLight",
+              fontSize: heightSize(3.3),
+              color: MyColors().greyTextColor,
+            ),
+          ),
+        ],
+      );
+    }
   }
 
   Widget emailAndPasswordFields() {
@@ -88,25 +115,6 @@ class _LoginPageState extends State<LoginPage> {
           height: heightSize(5),
         ),
         passwordField(password),
-        SizedBox(
-          height: heightSize(2),
-        ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: GestureDetector(
-            onTap: () {
-              forgetPassword();
-            },
-            child: Text(
-              "Şifremi Unuttum",
-              style: TextStyle(
-                fontFamily: "ZonaLight",
-                fontSize: heightSize(2),
-                color: MyColors().loginGreyColor,
-              ),
-            ),
-          ),
-        ),
       ],
     );
   }
@@ -117,60 +125,89 @@ class _LoginPageState extends State<LoginPage> {
     return StatefulBuilder(
       builder: (context, state) {
         print("building internal state");
-        return Row(
-          children: <Widget>[
-            Expanded(
-              child: TextFormField(
-                //onSaved: (value) => password = value,
-                controller: password,
-                obscureText: showPassword,
-                textAlign: TextAlign.left,
-                decoration: InputDecoration(
-                  errorText: errorText,
-                  errorStyle: TextStyle(
-                    fontSize: heightSize(2),
-                    fontFamily: "Zona",
-                    color: Colors.red,
+        return Visibility(
+          visible: visiblePassword,
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: TextFormField(
+                      //onSaved: (value) => password = value,
+                      controller: password,
+                      obscureText: showPassword,
+                      textAlign: TextAlign.left,
+                      decoration: InputDecoration(
+                        errorText: errorText,
+                        errorStyle: TextStyle(
+                          fontSize: heightSize(2),
+                          fontFamily: "Zona",
+                          color: Colors.red,
+                        ),
+                        border: InputBorder.none,
+                        hintText: "Şifre",
+                        hintStyle: TextStyle(
+                          fontFamily: "Zona",
+                          color: MyColors().loginGreyColor,
+                        ),
+                        alignLabelWithHint: true,
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: MyColors().loginGreyColor),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: MyColors().loginGreyColor),
+                        ),
+                      ),
+                      style: TextStyle(
+                        fontSize: heightSize(2.5),
+                        fontFamily: "ZonaLight",
+                        color: MyColors().loginGreyColor,
+                      ),
+                    ),
                   ),
-                  border: InputBorder.none,
-                  hintText: "Şifre",
-                  hintStyle: TextStyle(
-                    fontFamily: "Zona",
-                    color: MyColors().loginGreyColor,
+                  Center(
+                    child: SizedBox(
+                      width: widthSize(12),
+                      height: heightSize(6),
+                      child: FlatButton(
+                        child: Icon(showPassword
+                            ? Icons.visibility
+                            : Icons.visibility_off),
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        onPressed: () {
+                          state(() {
+                            showPassword = !showPassword;
+                          });
+                        },
+                      ),
+                    ),
                   ),
-                  alignLabelWithHint: true,
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: MyColors().loginGreyColor),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: MyColors().loginGreyColor),
-                  ),
-                ),
-                style: TextStyle(
-                  fontSize: heightSize(2.5),
-                  fontFamily: "ZonaLight",
-                  color: MyColors().loginGreyColor,
-                ),
+                ],
               ),
-            ),
-            Center(
-              child: SizedBox(
-                width: widthSize(12),
-                height: heightSize(6),
-                child: FlatButton(
-                  child: Icon(
-                      showPassword ? Icons.visibility : Icons.visibility_off),
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  onPressed: () {
-                    state(() {
-                      showPassword = !showPassword;
-                    });
+              SizedBox(
+                height: heightSize(2),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: GestureDetector(
+                  onTap: () {
+                    forgetPassword();
                   },
+                  child: Text(
+                    "Şifremi Unuttum",
+                    style: TextStyle(
+                      fontFamily: "ZonaLight",
+                      fontSize: heightSize(2),
+                      color: MyColors().loginGreyColor,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
@@ -184,10 +221,15 @@ class _LoginPageState extends State<LoginPage> {
         highlightColor: MyColors().purpleContainerSplash,
         splashColor: MyColors().purpleContainerSplash,
         onPressed: () {
-          setState(() {
-            _loading = true;
-          });
-          loginButton(context);
+          if (visiblePassword == true) {
+            setState(() {
+              _loading = true;
+            });
+            loginButton(context);
+          } else {
+            debugPrint("mail gönderildi");
+            passwordReset(context);
+          }
         },
         child: Container(
           height: heightSize(8),
@@ -195,7 +237,7 @@ class _LoginPageState extends State<LoginPage> {
           alignment: Alignment.center,
 
           child: Text(
-            "Giriş",
+            sendPasswordMail,
             style: TextStyle(
               fontFamily: "Zona",
               fontSize: heightSize(3),
@@ -264,6 +306,17 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  //TODO -  Şifremi unuttum işlemi yapılacak
-  void forgetPassword() {}
+  void forgetPassword() {
+    setState(() {
+      visiblePassword = !visiblePassword;
+      sendPasswordMail = "Mail gönder";
+    });
+  }
+
+  Future<void> passwordReset(BuildContext context) async {
+    var auth = AuthService.of(context).auth;
+    //ANCHOR release yaparken açılacak
+    //auth.sendPasswordResetEmail(email.text);
+    debugPrint("şifre sıfırlama maili gönderildi");
+  }
 }

@@ -1,6 +1,8 @@
 import 'package:eventizer/Navigation/ChatPage.dart';
 import 'package:eventizer/Navigation/CreateEventPage.dart';
+import 'package:eventizer/Navigation/EventPage.dart';
 import 'package:eventizer/Navigation/ExploreEventPage.dart';
+import 'package:eventizer/Navigation/LoginPage.dart';
 import 'package:eventizer/Navigation/ProfilePage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
