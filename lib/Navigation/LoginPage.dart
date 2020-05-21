@@ -152,10 +152,12 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         alignLabelWithHint: true,
                         enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: MyColors().loginGreyColor),
+                          borderSide:
+                              BorderSide(color: MyColors().loginGreyColor),
                         ),
                         focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: MyColors().loginGreyColor),
+                          borderSide:
+                              BorderSide(color: MyColors().loginGreyColor),
                         ),
                       ),
                       style: TextStyle(
@@ -170,7 +172,9 @@ class _LoginPageState extends State<LoginPage> {
                       width: widthSize(12),
                       height: heightSize(6),
                       child: FlatButton(
-                        child: Icon(showPassword ? Icons.visibility : Icons.visibility_off),
+                        child: Icon(showPassword
+                            ? Icons.visibility
+                            : Icons.visibility_off),
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,
                         onPressed: () {
@@ -217,10 +221,10 @@ class _LoginPageState extends State<LoginPage> {
         highlightColor: MyColors().purpleContainerSplash,
         splashColor: MyColors().purpleContainerSplash,
         onPressed: () {
-          setState(() {
-            _loading = true;
-          });
           if (visiblePassword == true) {
+            setState(() {
+              _loading = true;
+            });
             loginButton(context);
           } else {
             debugPrint("mail gönderildi");
@@ -272,7 +276,9 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ] +
-              (_loading ? [PageComponents().loadingOverlay(context, Colors.white)] : [])),
+              (_loading
+                  ? [PageComponents().loadingOverlay(context, Colors.white)]
+                  : [])),
     );
   }
 
@@ -282,11 +288,20 @@ class _LoginPageState extends State<LoginPage> {
     userId = await auth.signIn(email.text, password.text);
     if (userId == null) {
       setState(() => _loading = false);
-      Fluttertoast.showToast(msg: "Şifre veya Eposta yanlış!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 2, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 18.0);
+      Fluttertoast.showToast(
+          msg: "Şifre veya Eposta yanlış!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 18.0);
     } else {
-      if (await UserService(userId).updateSingleInfo("LastLoggedIn", "timeStamp")) {
+      if (await UserService(userId)
+          .updateSingleInfo("LastLoggedIn", "timeStamp")) {
         print('Signed in: $userId');
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
       }
     }
   }
@@ -300,7 +315,8 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> passwordReset(BuildContext context) async {
     var auth = AuthService.of(context).auth;
-    auth.sendPasswordResetEmail(email.text);
-    debugPrint("şifre sıfırlama maili gönderdildi");
+    //ANCHOR release yaparken açılacak
+    //auth.sendPasswordResetEmail(email.text);
+    debugPrint("şifre sıfırlama maili gönderildi");
   }
 }
