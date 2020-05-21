@@ -1,5 +1,10 @@
+import 'package:eventizer/Navigation/EventPage.dart';
+import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/Tools/NavigationManager.dart';
+import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ExploreEventPage extends StatefulWidget {
   @override
@@ -34,7 +39,114 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
     );
   }
 
+  Widget eventItem(Map<String, dynamic> eventDatas) {
+    UserService userWorker = Provider.of<UserService>(context);
+    var eventService = Provider.of<EventService>(context);
+    String eventID = eventDatas['eventID'];
+    String title = eventDatas['Title'];
+    String ownerID = eventDatas['OrganizerID'];
+    String category = eventDatas['Category'];
+    String imageUrl = eventDatas['EventImageUrl'];
+    String startDate = eventDatas['StartDate'];
+    Map<String, dynamic> ownerData;
+    return InkWell(
+      onTap: () async {
+        eventService
+            .amIparticipant(userWorker.usermodel.getUserId(), eventID)
+            .then((amIparticipant) {
+          print("Kullanıcı bu etkinliğe katılmış:" + amIparticipant.toString());
+          NavigationManager(context).pushPage(EventPage(
+            eventData: eventDatas,
+            userData: ownerData,
+            amIparticipant: amIparticipant,
+          ));
+        });
+      },
+      child: ClipRRect(
+        borderRadius: new BorderRadius.all(
+          Radius.circular(20),
+        ),
+        child: Container(
+          width: widthSize(100),
+          height: heightSize(33),
+          color: Colors.white,
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: heightSize(2),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      height: heightSize(5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20),
+                        ),
+                      ),
+                      child: FutureBuilder(
+                          future: userWorker.findUserbyID(ownerID),
+                          builder: (BuildContext _,
+                              AsyncSnapshot<dynamic> userData) {
+                            if (userData.connectionState ==
+                                ConnectionState.done) {
+                              ownerData = userData.data;
+                              //ANCHOR user profil resmi burada
+                              return Container(
+                                height: heightSize(5),
+                                width: widthSize(10),
+                                decoration: new BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage(
+                                          userData.data['ProfilePhotoUrl'])),
+                                ),
+                              );
+                            } else
+                              return Image.asset(
+                                  "assets/images/avatar_man.png");
+                          }),
+                    ),
+                    SizedBox(
+                      width: widthSize(2),
+                    ),
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontFamily: "Zona",
+                        fontSize: heightSize(2),
+                        color: MyColors().greyTextColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Divider(
+                  thickness: 2,
+                  color: MyColors().loginGreyColor,
+                ),
+              ),
+              Container(
+                height: heightSize(22),
+                child: FadeInImage.assetNetwork(
+                    placeholder: "assets/images/event_birthday.jpg",
+                    image: imageUrl),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget eventList() {
+    var _eventManager = Provider.of<EventService>(context);
+    String category;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -49,271 +161,32 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
           ),
           //ANCHOR event list start are here---------------------------------------------
           Container(
-            height: heightSize(55),
-            child: ListView(
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    ClipRRect(
-                      borderRadius: new BorderRadius.all(
-                        Radius.circular(20),
-                      ),
-                      child: Container(
-                        width: widthSize(100),
-                        height: heightSize(33),
-                        color: Colors.white,
-                        child: Column(
-                          children: <Widget>[
-                            SizedBox(
-                              height: heightSize(2),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child: Row(
-                                children: <Widget>[
-                                  Container(
-                                    height: heightSize(5),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(20),
-                                      ),
+              height: heightSize(55),
+              child: FutureBuilder(
+                  future: (category == null || category == "Hepsi")
+                      ? _eventManager.fetchActiveEventLists()
+                      : _eventManager.fetchActiveEventListsByCategory(category),
+                  builder: (BuildContext context, AsyncSnapshot fetchedlist) {
+                    if (fetchedlist.connectionState == ConnectionState.done) {
+                      List<Map<String, dynamic>> listofMaps = fetchedlist.data;
+                      if (listofMaps.length == 0) {
+                        return Text("Etkinlik Yok");
+                      } else {
+                        return ListView.separated(
+                            separatorBuilder:
+                                //ANCHOR ayıraç burada
+                                (BuildContext context, int index) => SizedBox(
+                                      height: heightSize(3),
                                     ),
-                                    child: Image.asset(
-                                      "assets/images/avatar_man.png",
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: widthSize(2),
-                                  ),
-                                  Text(
-                                    "Doğum günü partisi",
-                                    style: TextStyle(
-                                      fontFamily: "Zona",
-                                      fontSize: heightSize(2),
-                                      color: MyColors().greyTextColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child: Divider(
-                                thickness: 2,
-                                color: MyColors().loginGreyColor,
-                              ),
-                            ),
-                            Container(
-                              height: heightSize(22),
-                              child: Image.asset(
-                                "assets/images/event_birthday.jpg",
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: heightSize(4),
-                    ),
-                    //ANCHOR other event start are here----------------------------------------------------
-                    ClipRRect(
-                      borderRadius: new BorderRadius.all(
-                        Radius.circular(20),
-                      ),
-                      child: Container(
-                        width: widthSize(100),
-                        height: heightSize(25),
-                        child: Stack(
-                          children: <Widget>[
-                            Image.asset(
-                              "assets/images/event_camp.jpg",
-                              //fit: BoxFit.cover,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                              child: Align(
-                                alignment: Alignment.bottomLeft,
-                                child: RichText(
-                                  text: TextSpan(
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: "14 Ağu. Cmt.\n",
-                                        style: TextStyle(
-                                          fontFamily: "Zona",
-                                          fontSize: heightSize(2),
-                                          color: MyColors().purpleContainer,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: "Yıldız Parkı - İst.",
-                                        style: TextStyle(
-                                          fontFamily: "ZonaLight",
-                                          fontSize: heightSize(2),
-                                          color: MyColors().purpleContainer,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: heightSize(4),
-                    ),
-                    //ANCHOR other event start are here----------------------------------------------------
-                    ClipRRect(
-                      borderRadius: new BorderRadius.all(
-                        Radius.circular(20),
-                      ),
-                      child: Container(
-                        width: widthSize(100),
-                        height: heightSize(25),
-                        child: Stack(
-                          children: <Widget>[
-                            Image.asset(
-                              "assets/images/event_world_travel.jpg",
-                              //fit: BoxFit.cover,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                              child: Align(
-                                alignment: Alignment.bottomLeft,
-                                child: RichText(
-                                  text: TextSpan(
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: "21 Eyl. Cmt.\n",
-                                        style: TextStyle(
-                                          fontFamily: "Zona",
-                                          fontSize: heightSize(2),
-                                          color: MyColors().purpleContainer,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: "Balkanlar Turu",
-                                        style: TextStyle(
-                                          fontFamily: "ZonaLight",
-                                          fontSize: heightSize(2),
-                                          color: MyColors().purpleContainer,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: heightSize(4),
-                    ),
-                    //ANCHOR other event start are here----------------------------------------------------
-                    ClipRRect(
-                      borderRadius: new BorderRadius.all(
-                        Radius.circular(20),
-                      ),
-                      child: Container(
-                        width: widthSize(100),
-                        height: heightSize(25),
-                        child: Stack(
-                          children: <Widget>[
-                            Image.asset(
-                              "assets/images/event_travel.jpg",
-                              //fit: BoxFit.cover,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                              child: Align(
-                                alignment: Alignment.bottomLeft,
-                                child: RichText(
-                                  text: TextSpan(
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: "2 Eki. Pz.\n",
-                                        style: TextStyle(
-                                          fontFamily: "Zona",
-                                          fontSize: heightSize(2),
-                                          color: MyColors().purpleContainer,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: "İç Anadolu Turu",
-                                        style: TextStyle(
-                                          fontFamily: "ZonaLight",
-                                          fontSize: heightSize(2),
-                                          color: MyColors().purpleContainer,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: heightSize(4),
-                    ),
-                    //ANCHOR other event start are here----------------------------------------------------
-                    ClipRRect(
-                      borderRadius: new BorderRadius.all(
-                        Radius.circular(20),
-                      ),
-                      child: Container(
-                        width: widthSize(100),
-                        height: heightSize(25),
-                        child: Stack(
-                          children: <Widget>[
-                            Image.asset(
-                              "assets/images/event_conferance.jpg",
-                              //fit: BoxFit.cover,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                              child: Align(
-                                alignment: Alignment.bottomLeft,
-                                child: RichText(
-                                  text: TextSpan(
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: "18 Kas. Pz.\n",
-                                        style: TextStyle(
-                                          fontFamily: "Zona",
-                                          fontSize: heightSize(2),
-                                          color: MyColors().purpleContainer,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: "Flutter'a Giriş ~ 100. Yıl Kültür Merkezi - Çankırı",
-                                        style: TextStyle(
-                                          fontFamily: "ZonaLight",
-                                          fontSize: heightSize(2),
-                                          color: MyColors().purpleContainer,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+                            itemCount: listofMaps.length,
+                            itemBuilder: (context, index) {
+                              return eventItem(listofMaps[index]);
+                            });
+                      }
+                    } else
+                      return PageComponents()
+                          .loadingCustomOverlay(500, Colors.white);
+                  })),
         ],
       ),
     );
@@ -388,7 +261,8 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         children: <Widget>[
                           Container(
                             height: heightSize(4),
-                            child: Image.asset("assets/icons/birthdayCategory.png"),
+                            child: Image.asset(
+                                "assets/icons/birthdayCategory.png"),
                           ),
                           Text(
                             "Doğum Günü",
@@ -422,7 +296,8 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         children: <Widget>[
                           Container(
                             height: heightSize(4),
-                            child: Image.asset("assets/icons/travelCategory.png"),
+                            child:
+                                Image.asset("assets/icons/travelCategory.png"),
                           ),
                           Text(
                             "Gezi Turu",
@@ -456,7 +331,8 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         children: <Widget>[
                           Container(
                             height: heightSize(4),
-                            child: Image.asset("assets/icons/worldtravelCategory.png"),
+                            child: Image.asset(
+                                "assets/icons/worldtravelCategory.png"),
                           ),
                           Text(
                             "Dünya Turu",
@@ -521,7 +397,8 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         children: <Widget>[
                           Container(
                             height: heightSize(4),
-                            child: Image.asset("assets/icons/conferenceCategory.png"),
+                            child: Image.asset(
+                                "assets/icons/conferenceCategory.png"),
                           ),
                           Text(
                             "Konferans",

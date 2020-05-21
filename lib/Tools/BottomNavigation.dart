@@ -28,6 +28,7 @@ Widget getNavigatedPage(BuildContext context) {
 Widget bottomNavigationBar(BuildContext context) {
   NavigationManager navigation = NavigationManager(context);
   int currentPosition = navigation.getBottomNavIndex();
+
   currentPageSetter() {
     navigation.setBottomNavIndex(currentPosition);
   }

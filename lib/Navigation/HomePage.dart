@@ -18,7 +18,6 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-//Bottom Navigation Widget kısmı
 class BottomNavWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

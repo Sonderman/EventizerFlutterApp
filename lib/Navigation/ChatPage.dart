@@ -152,8 +152,8 @@ class _ChatPageState extends State<ChatPage> {
                                 case ConnectionState.none:
                                   return Text("Hata");
                                 case ConnectionState.waiting:
-                                  return PageComponents()
-                                      .loadingSmallOverlay(40);
+                                  return PageComponents().loadingCustomOverlay(
+                                      40, MyColors().blueThemeColor);
                                 default:
                                   return Text("Beklenmedik durum");
                               }
