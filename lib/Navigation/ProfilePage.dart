@@ -327,9 +327,6 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget numberDatas() => Column(
         children: <Widget>[
-          SizedBox(
-            height: heightSize(5),
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -407,9 +404,6 @@ class _ProfilePageState extends State<ProfilePage>
                 ],
               )
             ],
-          ),
-          SizedBox(
-            height: heightSize(5),
           ),
         ],
       );
@@ -616,8 +610,8 @@ class _ProfilePageState extends State<ProfilePage>
                                 child: Column(
                                   children: <Widget>[
                                     avatarAndname(),
-                                    threeBoxes(),
                                     numberDatas(),
+                                    threeBoxes(),
                                     //eventList,
                                   ],
                                 ),
@@ -677,8 +671,8 @@ class _ProfilePageState extends State<ProfilePage>
                         child: Column(
                           children: <Widget>[
                             avatarAndname(),
-                            threeBoxesOwnProfile(),
                             numberDatas(),
+                            threeBoxesOwnProfile(),
                             //eventList,
                           ],
                         ),

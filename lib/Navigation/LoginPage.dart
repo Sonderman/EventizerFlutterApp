@@ -21,7 +21,8 @@ class _LoginPageState extends State<LoginPage> {
   String errorText;
   bool _loading = false;
   bool visiblePassword = true;
-  String sendPasswordMail = "Giriş";
+  bool showLogin = false;
+  String sendPasswordMailText = "Giriş";
 
   double heightSize(double value) {
     value /= 100;
@@ -111,6 +112,32 @@ class _LoginPageState extends State<LoginPage> {
             color: MyColors().loginGreyColor,
           ),
         ),
+        Visibility(
+          visible: showLogin,
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: heightSize(2),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: GestureDetector(
+                  onTap: () {
+                    rememberPass();
+                  },
+                  child: Text(
+                    "Giriş Yap",
+                    style: TextStyle(
+                      fontFamily: "ZonaLight",
+                      fontSize: heightSize(2),
+                      color: MyColors().loginGreyColor,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
         SizedBox(
           height: heightSize(5),
         ),
@@ -152,12 +179,10 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         alignLabelWithHint: true,
                         enabledBorder: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(color: MyColors().loginGreyColor),
+                          borderSide: BorderSide(color: MyColors().loginGreyColor),
                         ),
                         focusedBorder: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(color: MyColors().loginGreyColor),
+                          borderSide: BorderSide(color: MyColors().loginGreyColor),
                         ),
                       ),
                       style: TextStyle(
@@ -172,9 +197,7 @@ class _LoginPageState extends State<LoginPage> {
                       width: widthSize(12),
                       height: heightSize(6),
                       child: FlatButton(
-                        child: Icon(showPassword
-                            ? Icons.visibility
-                            : Icons.visibility_off),
+                        child: Icon(showPassword ? Icons.visibility : Icons.visibility_off),
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,
                         onPressed: () {
@@ -237,7 +260,7 @@ class _LoginPageState extends State<LoginPage> {
           alignment: Alignment.center,
 
           child: Text(
-            sendPasswordMail,
+            sendPasswordMailText,
             style: TextStyle(
               fontFamily: "Zona",
               fontSize: heightSize(3),
@@ -276,9 +299,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ] +
-              (_loading
-                  ? [PageComponents().loadingOverlay(context, Colors.white)]
-                  : [])),
+              (_loading ? [PageComponents().loadingOverlay(context, Colors.white)] : [])),
     );
   }
 
@@ -288,20 +309,11 @@ class _LoginPageState extends State<LoginPage> {
     userId = await auth.signIn(email.text, password.text);
     if (userId == null) {
       setState(() => _loading = false);
-      Fluttertoast.showToast(
-          msg: "Şifre veya Eposta yanlış!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 18.0);
+      Fluttertoast.showToast(msg: "Şifre veya Eposta yanlış!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 2, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 18.0);
     } else {
-      if (await UserService(userId)
-          .updateSingleInfo("LastLoggedIn", "timeStamp")) {
+      if (await UserService(userId).updateSingleInfo("LastLoggedIn", "timeStamp")) {
         print('Signed in: $userId');
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
       }
     }
   }
@@ -309,7 +321,8 @@ class _LoginPageState extends State<LoginPage> {
   void forgetPassword() {
     setState(() {
       visiblePassword = !visiblePassword;
-      sendPasswordMail = "Mail gönder";
+      sendPasswordMailText = "Mail Gönder";
+      showLogin = true;
     });
   }
 
@@ -318,5 +331,16 @@ class _LoginPageState extends State<LoginPage> {
     //ANCHOR release yaparken açılacak
     //auth.sendPasswordResetEmail(email.text);
     debugPrint("şifre sıfırlama maili gönderildi");
+  }
+
+  void rememberPass() {
+    setState(() {
+      if(visiblePassword == false) {
+        sendPasswordMailText = "Giriş Yap";
+        visiblePassword = true;
+        showLogin = false;
+      }
+    });
+
   }
 }

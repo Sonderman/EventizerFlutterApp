@@ -1,5 +1,6 @@
 import 'package:eventizer/Navigation/ChatPage.dart';
 import 'package:eventizer/Navigation/CreateEventPage.dart';
+import 'package:eventizer/Navigation/EditProfilePage.dart';
 import 'package:eventizer/Navigation/EventPage.dart';
 import 'package:eventizer/Navigation/ExploreEventPage.dart';
 import 'package:eventizer/Navigation/LoginPage.dart';
@@ -19,9 +20,9 @@ Widget getNavigatedPage(BuildContext context) {
     UserService userWorker = Provider.of<UserService>(context);
     List<Widget> pages = [
       ChatPage(),
-      CreateEventPage(),
-      ExploreEventPage(),
       ProfilePage(userID: userWorker.usermodel.getUserId(), isFromEvent: false),
+      CreateEventPage(),
+      LoginPage(),
     ];
     return pages[NavigationManager(context).getBottomNavIndex()];
   }
@@ -40,14 +41,9 @@ Widget bottomNavigationBar(BuildContext context) {
     circleColor: MyColors().purpleContainer,
     tabs: [
       TabData(iconData: Icons.chat, title: "Chat", onclick: currentPageSetter),
-      TabData(
-          iconData: Icons.add, title: "Oluştur", onclick: currentPageSetter),
-      TabData(
-          iconData: Icons.search, title: "Keşfet", onclick: currentPageSetter),
-      TabData(
-          iconData: Icons.assignment_ind,
-          title: "Profil",
-          onclick: currentPageSetter),
+      TabData(iconData: Icons.add, title: "Oluştur", onclick: currentPageSetter),
+      TabData(iconData: Icons.search, title: "Keşfet", onclick: currentPageSetter),
+      TabData(iconData: Icons.assignment_ind, title: "Profil", onclick: currentPageSetter),
     ],
     onTabChangedListener: (position) {
       currentPosition = position;
