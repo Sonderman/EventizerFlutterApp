@@ -479,22 +479,24 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
   List<Widget> pages() {
     return [
-      Column(
-        children: <Widget>[
-          eventPhotoAndButtons(),
-          SizedBox(
-            height: heightSize(3),
-          ),
-          dateButtons(),
-          SizedBox(
-            height: heightSize(3),
-          ),
-          eventTitleAndDetails(),
-          SizedBox(
-            height: heightSize(3),
-          ),
-          nextPageButton(),
-        ],
+      SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            eventPhotoAndButtons(),
+            SizedBox(
+              height: heightSize(3),
+            ),
+            dateButtons(),
+            SizedBox(
+              height: heightSize(3),
+            ),
+            eventTitleAndDetails(),
+            SizedBox(
+              height: heightSize(3),
+            ),
+            nextPageButton(),
+          ],
+        ),
       ),
       Column(
         mainAxisAlignment: MainAxisAlignment.center,

@@ -21,7 +21,7 @@ Widget getNavigatedPage(BuildContext context) {
     List<Widget> pages = [
       EventPage(),
       EventPage(),
-      ProfilePage(userID: userWorker.usermodel.getUserId(), isFromEvent: false),
+      CreateEventPage(),
       LoginPage(),
     ];
     return pages[NavigationManager(context).getBottomNavIndex()];
