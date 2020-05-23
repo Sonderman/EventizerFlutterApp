@@ -115,8 +115,23 @@ class _ProfilePageState extends State<ProfilePage>
               height: heightSize(1),
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
+                Container(
+                  height: heightSize(6),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Image.asset(
+                      "assets/icons/options.png",
+                    ),
+                  ),
+                  decoration: new BoxDecoration(
+                    color: MyColors().yellowContainer,
+                    borderRadius: new BorderRadius.all(
+                      Radius.circular(20),
+                    ),
+                  ),
+                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -136,17 +151,19 @@ class _ProfilePageState extends State<ProfilePage>
                     ),
                   ],
                 ),
-                SizedBox(
-                  width: widthSize(10),
-                ),
                 Container(
                   height: heightSize(6),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Image.asset(
-                      "assets/icons/options.png",
-                    ),
-                  ),
+                  child: IconButton(
+                      icon: Icon(FontAwesomeIcons.signOutAlt),
+                      onPressed: () {
+                        var auth = AuthService.of(context).auth;
+                        auth.signOut();
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    AuthCheck()));
+                      }),
                   decoration: new BoxDecoration(
                     color: MyColors().yellowContainer,
                     borderRadius: new BorderRadius.all(
@@ -327,9 +344,6 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget numberDatas() => Column(
         children: <Widget>[
-          SizedBox(
-            height: heightSize(5),
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -407,9 +421,6 @@ class _ProfilePageState extends State<ProfilePage>
                 ],
               )
             ],
-          ),
-          SizedBox(
-            height: heightSize(5),
           ),
         ],
       );
@@ -616,8 +627,8 @@ class _ProfilePageState extends State<ProfilePage>
                                 child: Column(
                                   children: <Widget>[
                                     avatarAndname(),
-                                    threeBoxes(),
                                     numberDatas(),
+                                    threeBoxes(),
                                     //eventList,
                                   ],
                                 ),
@@ -677,8 +688,8 @@ class _ProfilePageState extends State<ProfilePage>
                         child: Column(
                           children: <Widget>[
                             avatarAndname(),
-                            threeBoxesOwnProfile(),
                             numberDatas(),
+                            threeBoxesOwnProfile(),
                             //eventList,
                           ],
                         ),

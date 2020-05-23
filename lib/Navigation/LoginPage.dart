@@ -21,7 +21,8 @@ class _LoginPageState extends State<LoginPage> {
   String errorText;
   bool _loading = false;
   bool visiblePassword = true;
-  String sendPasswordMail = "Giriş";
+  bool showLogin = false;
+  String sendPasswordMailText = "Giriş";
 
   double heightSize(double value) {
     value /= 100;
@@ -109,6 +110,32 @@ class _LoginPageState extends State<LoginPage> {
             fontSize: heightSize(2.5),
             fontFamily: "ZonaLight",
             color: MyColors().loginGreyColor,
+          ),
+        ),
+        Visibility(
+          visible: showLogin,
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: heightSize(2),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: GestureDetector(
+                  onTap: () {
+                    rememberPass();
+                  },
+                  child: Text(
+                    "Giriş Yap",
+                    style: TextStyle(
+                      fontFamily: "ZonaLight",
+                      fontSize: heightSize(2),
+                      color: MyColors().loginGreyColor,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
         SizedBox(
@@ -237,7 +264,7 @@ class _LoginPageState extends State<LoginPage> {
           alignment: Alignment.center,
 
           child: Text(
-            sendPasswordMail,
+            sendPasswordMailText,
             style: TextStyle(
               fontFamily: "Zona",
               fontSize: heightSize(3),
@@ -309,7 +336,8 @@ class _LoginPageState extends State<LoginPage> {
   void forgetPassword() {
     setState(() {
       visiblePassword = !visiblePassword;
-      sendPasswordMail = "Mail gönder";
+      sendPasswordMailText = "Mail Gönder";
+      showLogin = true;
     });
   }
 
@@ -318,5 +346,15 @@ class _LoginPageState extends State<LoginPage> {
     //ANCHOR release yaparken açılacak
     //auth.sendPasswordResetEmail(email.text);
     debugPrint("şifre sıfırlama maili gönderildi");
+  }
+
+  void rememberPass() {
+    setState(() {
+      if (visiblePassword == false) {
+        sendPasswordMailText = "Giriş Yap";
+        visiblePassword = true;
+        showLogin = false;
+      }
+    });
   }
 }
