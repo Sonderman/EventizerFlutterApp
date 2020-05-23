@@ -11,7 +11,8 @@ class EventPage extends StatefulWidget {
   final Map<String, dynamic> userData;
   final bool amIparticipant;
 
-  const EventPage({Key key, this.eventData, this.userData, this.amIparticipant}) : super(key: key);
+  const EventPage({Key key, this.eventData, this.userData, this.amIparticipant})
+      : super(key: key);
 
   @override
   _EventPageState createState() => _EventPageState();
@@ -228,7 +229,10 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             color: MyColors().blackOpacityContainer,
             width: widthSize(100),
             height: heightSize(25),
-            child: FadeInImage.assetNetwork(fit: BoxFit.cover, placeholder: 'assets/images/etkinlik.jpg', image: widget.eventData['EventImageUrl']),
+            child: FadeInImage.assetNetwork(
+                fit: BoxFit.cover,
+                placeholder: 'assets/images/etkinlik.jpg',
+                image: widget.eventData['EventImageUrl']),
           ),
         ),
         SizedBox(
@@ -239,6 +243,8 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   }
 
   Widget dateAndDetails() {
+    String startTime = widget.eventData['StartTime'] ?? "null";
+    String finishTime = widget.eventData['FinishTime'] ?? "null";
     return Column(
       children: <Widget>[
         Row(
@@ -268,7 +274,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                           ),
                         ),
                         TextSpan(
-                          text: " | 20:30",
+                          text: " | " + startTime,
                           style: TextStyle(
                             fontFamily: "ZonaLight",
                             fontSize: heightSize(2),
@@ -305,7 +311,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                           ),
                         ),
                         TextSpan(
-                          text: " | 00:30",
+                          text: " | " + finishTime,
                           style: TextStyle(
                             fontFamily: "ZonaLight",
                             fontSize: heightSize(2),
@@ -448,7 +454,6 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
               children: <Widget>[
                 Container(
                   height: heightSize(4),
-
                   child: Image.asset("assets/icons/unjoin.png"),
                 ),
                 Text(
@@ -538,10 +543,14 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
           [
             InkWell(
                 onTap: () async {
-                  var eventService = Provider.of<EventService>(context, listen: false);
-                  var userService = Provider.of<UserService>(context, listen: false);
+                  var eventService =
+                      Provider.of<EventService>(context, listen: false);
+                  var userService =
+                      Provider.of<UserService>(context, listen: false);
                   if (katilbutton) {
-                    if (await eventService.leaveEvent(userService.usermodel.getUserId(), widget.eventData['eventID'])) {
+                    if (await eventService.leaveEvent(
+                        userService.usermodel.getUserId(),
+                        widget.eventData['eventID'])) {
                       setState(() {
                         toggleJoinButton();
                         print("Ayrıldı");
@@ -550,7 +559,9 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                       print("Hata");
                     }
                   } else {
-                    if (await eventService.joinEvent(userService.usermodel.getUserId(), widget.eventData['eventID'])) {
+                    if (await eventService.joinEvent(
+                        userService.usermodel.getUserId(),
+                        widget.eventData['eventID'])) {
                       setState(() {
                         toggleJoinButton();
                         print("Katıldı");

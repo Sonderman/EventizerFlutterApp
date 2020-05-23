@@ -1,8 +1,10 @@
 import 'dart:typed_data';
 import 'package:eventizer/Navigation/HomePage.dart';
+import 'package:eventizer/Navigation/ProfilePage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Settings/EventSettings.dart';
 import 'package:eventizer/Tools/ImageEditor.dart';
+import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
@@ -47,13 +49,21 @@ class _CreateEventPageState extends State<CreateEventPage> {
   TextEditingController controllerTitle = TextEditingController();
   TextEditingController controllerDetail = TextEditingController();
   List<String> categoryItems = locator<EventSettings>().categoryItems ?? [];
+  MaterialLocalizations localizations;
   bool loadingOverLay = false;
   String category;
   String eventStartDate;
+  String eventStartTime;
+  TimeOfDay eventStartTimeOfDay;
+  TimeOfDay eventFinishTimeOfDay;
   DateTime eventStartDateTime;
   String eventFinishDate;
+  String eventFinishTime;
   bool isStartDateSelected = false;
+  bool isStartTimeSelected = false;
   bool isFinishDateSelected = false;
+  bool isFinishTimeSelected = false;
+
   Uint8List _image;
 
   Widget eventPhotoAndButtons() {
@@ -74,7 +84,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
               width: widthSize(100),
               height: heightSize(25),
               child: _image == null
-              //NOTE Default "Event Image" must will be change.
+                  //NOTE Default "Event Image" must will be change.
                   ? Image.asset('assets/images/etkinlik.jpg', fit: BoxFit.fill)
                   : Image.memory(
                       _image,
@@ -188,7 +198,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     firstDate: DateTime(DateTime.now().year),
                     lastDate: DateTime(DateTime.now().year + 2),
                     selectableDayPredicate: (DateTime currentDate) {
-                      if (currentDate.day >= DateTime.now().day && currentDate.month >= DateTime.now().month) {
+                      if (currentDate.day >= DateTime.now().day &&
+                          currentDate.month >= DateTime.now().month) {
                         return true;
                       } else
                         return false;
@@ -199,7 +210,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     isStartDateSelected = true;
                     eventFinishDate = null;
                     isFinishDateSelected = false;
-                    eventStartDate = "${datePick.day}/${datePick.month}/${datePick.year}";
+                    eventStartDate =
+                        "${datePick.day}/${datePick.month}/${datePick.year}";
                   });
                 }
               },
@@ -214,7 +226,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         child: Image.asset("assets/icons/startDate.png"),
                       ),
                       Text(
-                        eventStartDate == null ? "Başlangıç" : "$eventStartDate",
+                        eventStartDate == null
+                            ? "Başlangıç"
+                            : "$eventStartDate",
                         style: TextStyle(
                           fontFamily: "Zona",
                           fontSize: heightSize(2),
@@ -244,7 +258,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     firstDate: DateTime(eventStartDateTime.year),
                     lastDate: DateTime(DateTime.now().year + 1),
                     selectableDayPredicate: (DateTime currentDate) {
-                      if (currentDate.day >= eventStartDateTime.day && currentDate.month >= eventStartDateTime.month) {
+                      if (currentDate.day >= eventStartDateTime.day &&
+                          currentDate.month >= eventStartDateTime.month) {
                         return true;
                       } else
                         return false;
@@ -252,13 +267,16 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 if (datePick != null) {
                   setState(() {
                     isFinishDateSelected = true;
-                    eventFinishDate = "${datePick.day}/${datePick.month}/${datePick.year}";
+                    eventFinishDate =
+                        "${datePick.day}/${datePick.month}/${datePick.year}";
                   });
                 }
               },
               child: Center(
                 child: Padding(
-                  padding: eventFinishDate == null ? EdgeInsets.symmetric(horizontal: 40) : EdgeInsets.symmetric(horizontal: 15),
+                  padding: eventFinishDate == null
+                      ? EdgeInsets.symmetric(horizontal: 40)
+                      : EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
@@ -268,6 +286,125 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       ),
                       Text(
                         eventFinishDate == null ? "Bitiş" : "$eventFinishDate",
+                        style: TextStyle(
+                          fontFamily: "Zona",
+                          fontSize: heightSize(2),
+                          color: MyColors().whiteTextColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget timeButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Container(
+            width: widthSize(43),
+            height: heightSize(8),
+            decoration: new BoxDecoration(
+              color: MyColors().blackOpacityContainer,
+              borderRadius: new BorderRadius.all(
+                Radius.circular(20),
+              ),
+            ),
+            child: InkWell(
+              onTap: () async {
+                await showTimePicker(
+                  context: context,
+                  initialTime: TimeOfDay.now(),
+                ).then((timePick) {
+                  if (timePick != null) {
+                    eventStartTimeOfDay = timePick;
+                    setState(() {
+                      isStartTimeSelected = true;
+                      eventFinishTime = null;
+                      isFinishTimeSelected = false;
+                      eventStartTime =
+                          localizations.formatTimeOfDay(eventStartTimeOfDay);
+                    });
+                  }
+                });
+              },
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Container(
+                        height: heightSize(4),
+                        child: Image.asset("assets/icons/startDate.png"),
+                      ),
+                      Text(
+                        eventStartTime == null
+                            ? "Başlangıç Saati"
+                            : "$eventStartTime",
+                        style: TextStyle(
+                          fontFamily: "Zona",
+                          fontSize: heightSize(2),
+                          color: MyColors().whiteTextColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            width: widthSize(43),
+            height: heightSize(8),
+            decoration: new BoxDecoration(
+              color: MyColors().blackOpacityContainer,
+              borderRadius: new BorderRadius.all(
+                Radius.circular(20),
+              ),
+            ),
+            child: InkWell(
+              onTap: () async {
+                if (eventStartTimeOfDay != null) {
+                  await showTimePicker(
+                    context: context,
+                    initialTime: eventStartTimeOfDay,
+                  ).then((timePick) {
+                    if (timePick != null) {
+                      eventFinishTimeOfDay = timePick;
+                      setState(() {
+                        isFinishTimeSelected = true;
+                        eventFinishTime =
+                            localizations.formatTimeOfDay(eventFinishTimeOfDay);
+                      });
+                    }
+                  });
+                }
+              },
+              child: Center(
+                child: Padding(
+                  padding: eventFinishDate == null
+                      ? EdgeInsets.symmetric(horizontal: 40)
+                      : EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Container(
+                        height: heightSize(4),
+                        child: Image.asset("assets/icons/end_date.png"),
+                      ),
+                      Text(
+                        eventFinishTime == null
+                            ? "Bitiş Saati"
+                            : "$eventFinishTime",
                         style: TextStyle(
                           fontFamily: "Zona",
                           fontSize: heightSize(2),
@@ -356,7 +493,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Widget nextPageButton() {
     return InkWell(
       onTap: () {
-        _pageController.nextPage(duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
+        _pageController.nextPage(
+            duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -387,13 +525,21 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Widget createEventButton() {
     return InkWell(
       onTap: () async {
-        if (controllerTitle.text != "" && category != null && eventStartDate != null && eventFinishDate != null) {
+        if (controllerTitle.text != "" &&
+            category != null &&
+            eventStartDate != null &&
+            eventStartTime != null &&
+            eventFinishDate != null &&
+            eventFinishTime != null) {
           setState(() {
             loadingOverLay = true;
           });
 
-          final eventManager = Provider.of<EventService>(context, listen: false);
-          final userID = Provider.of<UserService>(context, listen: false).usermodel.getUserId();
+          final eventManager =
+              Provider.of<EventService>(context, listen: false);
+          final userID = Provider.of<UserService>(context, listen: false)
+              .usermodel
+              .getUserId();
           Map<String, dynamic> eventData = {
             // REVIEW Veri tabanında yazılan yer burası , burası için bir çözüm bul
             "OrganizerID": userID,
@@ -401,12 +547,18 @@ class _CreateEventPageState extends State<CreateEventPage> {
             "Category": category,
             "StartDate": eventStartDate,
             "FinishDate": eventFinishDate,
+            "StartTime": eventStartTime,
+            "FinishTime": eventFinishTime,
             "Detail": controllerDetail.text,
             "Status": "New"
           };
           if (await eventManager.createEvent(userID, eventData, _image)) {
             print("Event oluşturma başarılı");
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => HomePage()), (route) => false);
+            UserService userWorker =
+                Provider.of<UserService>(context, listen: false);
+            //ANCHOR Event oluşturma başarılıysa profilepage e gidiyor.
+            NavigationManager(context).pushPage(ProfilePage(
+                userID: userWorker.usermodel.getUserId(), isFromEvent: false));
           } else {
             setState(() {
               loadingOverLay = false;
@@ -456,7 +608,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
   void getImageFromCamera() async {
     await ImagePicker.pickImage(source: ImageSource.camera).then((image) {
       if (image != null) {
-        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ImageEditorPage(image))).then((editedImage) {
+        Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => ImageEditorPage(image)))
+            .then((editedImage) {
           setState(() {
             _image = editedImage;
           });
@@ -468,7 +624,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
   void getImageFromGallery() async {
     await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {
       if (image != null) {
-        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ImageEditorPage(image))).then((editedImage) {
+        Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => ImageEditorPage(image)))
+            .then((editedImage) {
           setState(() {
             _image = editedImage;
           });
@@ -479,6 +639,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
   List<Widget> pages() {
     return [
+      //ANCHOR 1. sayfa
       SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -490,21 +651,30 @@ class _CreateEventPageState extends State<CreateEventPage> {
             SizedBox(
               height: heightSize(3),
             ),
+            timeButtons(),
+            SizedBox(
+              height: heightSize(3),
+            ),
             eventTitleAndDetails(),
             SizedBox(
               height: heightSize(3),
             ),
             nextPageButton(),
+            SizedBox(
+              height: heightSize(5),
+            ),
           ],
         ),
       ),
+      //ANCHOR 2. sayfa
       Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           DropdownButton<String>(
               hint: Text("Kategori Seçiniz"),
               value: category != null ? category : null,
-              items: categoryItems.map<DropdownMenuItem<String>>((String value) {
+              items:
+                  categoryItems.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
@@ -518,19 +688,23 @@ class _CreateEventPageState extends State<CreateEventPage> {
           createEventButton(),
         ],
       ),
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[Text("3. Sayfa")],
-      )
     ];
   }
 
   @override
   Widget build(BuildContext context) {
+    localizations = MaterialLocalizations.of(context);
     return Scaffold(
         backgroundColor: Colors.deepPurpleAccent,
         body: Stack(
-          children: <Widget>[PageView(controller: _pageController, children: pages())] + (loadingOverLay ? <Widget>[PageComponents().loadingOverlay(context, Colors.white)] : <Widget>[]),
+          children: <Widget>[
+                PageView(controller: _pageController, children: pages())
+              ] +
+              (loadingOverLay
+                  ? <Widget>[
+                      PageComponents().loadingOverlay(context, Colors.white)
+                    ]
+                  : <Widget>[]),
         ));
   }
 }
