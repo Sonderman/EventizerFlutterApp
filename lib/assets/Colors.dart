@@ -7,7 +7,8 @@ class MyColors {
   Color blueContainer = Colors.blue;
   Color orangeContainer = Colors.orange;
   Color loginGreyColor = Colors.black.withOpacity(0.7);
-  Color darkOrangeContainer = Colors.deepOrange;
+  Color lightGreen = Colors.lightGreen;
+  Color darkblueText = Colors.blue.shade900;
   Color blackOpacityContainer = Colors.black.withOpacity(0.15);
   Color lightBlueContainer = Colors.lightBlueAccent;
   Color purpleContainer = Colors.deepPurple;
