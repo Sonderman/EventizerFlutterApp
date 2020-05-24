@@ -343,11 +343,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     children: <Widget>[
                       Container(
                         height: heightSize(4),
-                        child: Image.asset("assets/icons/startDate.png"),
+                        child: Image.asset("assets/icons/startTime.png"),
                       ),
                       Text(
                         eventStartTime == null
-                            ? "Başlangıç Saati"
+                            ? "Başlangıç"
                             : "$eventStartTime",
                         style: TextStyle(
                           fontFamily: "Zona",
@@ -390,19 +390,17 @@ class _CreateEventPageState extends State<CreateEventPage> {
               },
               child: Center(
                 child: Padding(
-                  padding: eventFinishDate == null
-                      ? EdgeInsets.symmetric(horizontal: 40)
-                      : EdgeInsets.symmetric(horizontal: 15),
+                  padding: eventFinishTime == null ? EdgeInsets.symmetric(horizontal: 40) : EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Container(
                         height: heightSize(4),
-                        child: Image.asset("assets/icons/end_date.png"),
+                        child: Image.asset("assets/icons/endTime.png"),
                       ),
                       Text(
                         eventFinishTime == null
-                            ? "Bitiş Saati"
+                            ? "Bitiş"
                             : "$eventFinishTime",
                         style: TextStyle(
                           fontFamily: "Zona",
