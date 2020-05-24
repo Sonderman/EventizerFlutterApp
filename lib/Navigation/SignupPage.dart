@@ -11,8 +11,9 @@ import 'package:image_picker/image_picker.dart';
 
 class SignupPage extends StatefulWidget {
   final PageController pageController;
-  SignupPage(this.pageController);
 
+  SignupPage(this.pageController);
+  //NOTE We should be just use the button of "Create Account" for navigation to "Create Account Page". Not with slide.
   @override
   _SignupPageState createState() => _SignupPageState();
 }
@@ -93,42 +94,16 @@ class _SignupPageState extends State<SignupPage> {
       loading = true;
     });
     //ANCHOR Veritabanına kaydetmek için
-    List<String> datalist = [
-      _name,
-      _surname,
-      mailController.text,
-      _phonenumber,
-      _gender ? "Man" : "Woman",
-      _country,
-      _birthday
-    ];
+    List<String> datalist = [_name, _surname, mailController.text, _phonenumber, _gender ? "Man" : "Woman", _country, _birthday];
     print(datalist);
-    await loginAndRegister
-        .registerUser(context, mailController.text, passwordController.text,
-            datalist, _image)
-        .whenComplete(() {
-      Fluttertoast.showToast(
-          msg: "Doğrulama maili gönderildi.Lütfen mailinizi doğrulayınız!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.cyan,
-          textColor: Colors.white,
-          fontSize: 18.0);
+    await loginAndRegister.registerUser(context, mailController.text, passwordController.text, datalist, _image).whenComplete(() {
+      Fluttertoast.showToast(msg: "Doğrulama maili gönderildi.Lütfen mailinizi doğrulayınız!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 2, backgroundColor: Colors.cyan, textColor: Colors.white, fontSize: 18.0);
       Future.delayed(const Duration(milliseconds: 200), () {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
       });
     }).catchError((error) {
       print(error);
-      Fluttertoast.showToast(
-          msg: "Girdileri gözden geçiriniz!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 18.0);
+      Fluttertoast.showToast(msg: "Girdileri gözden geçiriniz!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 2, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 18.0);
       setState(() {
         loading = false;
       });
@@ -152,9 +127,7 @@ class _SignupPageState extends State<SignupPage> {
           child: Center(
             child: Container(
               height: heightSize(5),
-              child: _image == null
-                  ? Image.asset('assets/images/add-user.png')
-                  : Image.file(_image),
+              child: _image == null ? Image.asset('assets/images/add-user.png') : Image.file(_image),
             ),
           ),
         ),
@@ -269,8 +242,7 @@ class _SignupPageState extends State<SignupPage> {
             ),
             alignLabelWithHint: true,
             suffixIcon: FlatButton(
-              child:
-                  Icon(showPassword ? Icons.visibility : Icons.visibility_off),
+              child: Icon(showPassword ? Icons.visibility : Icons.visibility_off),
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onPressed: () {
@@ -374,15 +346,10 @@ class _SignupPageState extends State<SignupPage> {
         ),
         InkWell(
           onTap: () async {
-            final datePick = await showDatePicker(
-                context: context,
-                initialDate: DateTime(DateTime.now().year - 18),
-                firstDate: DateTime(DateTime.now().year - 70),
-                lastDate: DateTime(DateTime.now().year - 18));
+            final datePick = await showDatePicker(context: context, initialDate: DateTime(DateTime.now().year - 18), firstDate: DateTime(DateTime.now().year - 70), lastDate: DateTime(DateTime.now().year - 18));
             if (datePick != null) {
               setState(() {
-                _birthday =
-                    "${datePick.day}/${datePick.month}/${datePick.year}";
+                _birthday = "${datePick.day}/${datePick.month}/${datePick.year}";
               });
             }
           },
@@ -425,9 +392,7 @@ class _SignupPageState extends State<SignupPage> {
             width: widthSize(43),
             height: heightSize(5),
             decoration: new BoxDecoration(
-              color: _gender != null
-                  ? _gender ? Colors.black : menColor()
-                  : menColor(),
+              color: _gender != null ? _gender ? Colors.black : menColor() : menColor(),
               borderRadius: new BorderRadius.all(
                 Radius.circular(20),
               ),
@@ -454,9 +419,7 @@ class _SignupPageState extends State<SignupPage> {
             width: widthSize(43),
             height: heightSize(5),
             decoration: new BoxDecoration(
-              color: _gender != null
-                  ? _gender ? womenColor() : Colors.black
-                  : womenColor(),
+              color: _gender != null ? _gender ? womenColor() : Colors.black : womenColor(),
               borderRadius: new BorderRadius.all(
                 Radius.circular(20),
               ),
@@ -478,80 +441,67 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Widget signUpButton() {
-    return InkWell(
-      onTap: () {
-        //ANCHOR veri kontrolleri burda
-        if (_image != null &&
-            _name != null &&
-            _surname != null &&
-            mailController.text != null &&
-            passwordController.text != null &&
-            _gender != null &&
-            _birthday != null &&
-            _country != null) {
-          signUp();
-          setState(() {
-            loading = true;
-          });
-        } else {
-          Fluttertoast.showToast(
-              msg: "Lütfen Girdileri Kontrol Ediniz!",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 3,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 18.0);
-        }
-      },
-      child: Container(
-        width: widthSize(100),
-        height: heightSize(8),
-        decoration: new BoxDecoration(
-          color: MyColors().purpleContainer,
-          borderRadius: new BorderRadius.all(
-            Radius.circular(20),
-          ),
-        ),
-        child: Center(
-          child: Text(
-            "Hesabı Oluştur",
-            style: TextStyle(
-              fontFamily: "Zona",
-              fontSize: heightSize(2),
-              color: MyColors().whiteTextColor,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          child: FlatButton(
+            color: MyColors().purpleContainer,
+            highlightColor: MyColors().purpleContainerSplash,
+            splashColor: MyColors().purpleContainerSplash,
+            onPressed: () {
+              widget.pageController.previousPage(duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
+            },
+            child: Container(
+              height: heightSize(8),
+              width: widthSize(35),
+              alignment: Alignment.center,
+              child: Text(
+                "Hesabım Var",
+                style: TextStyle(
+                  fontFamily: "Zona",
+                  fontSize: heightSize(2),
+                  color: MyColors().whiteTextColor,
+                ),
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget signInButton() {
-    return ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(20)),
-      child: FlatButton(
-        color: MyColors().purpleContainer,
-        highlightColor: MyColors().purpleContainerSplash,
-        splashColor: MyColors().purpleContainerSplash,
-        onPressed: () {
-          widget.pageController.previousPage(
-              duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
-        },
-        child: Container(
-          height: heightSize(3),
-          width: widthSize(30),
-          alignment: Alignment.center,
-          child: Text(
-            "Hesabım Var",
-            style: TextStyle(
-              fontFamily: "Zona",
-              fontSize: heightSize(2),
-              color: MyColors().whiteTextColor,
+        InkWell(
+          onTap: () {
+            //ANCHOR veri kontrolleri burda
+            if (_image != null && _name != null && _surname != null && mailController.text != null && passwordController.text != null && _gender != null && _birthday != null && _country != null) {
+              signUp();
+              setState(() {
+                loading = true;
+              });
+            } else {
+              Fluttertoast.showToast(msg: "Lütfen Girdileri Kontrol Ediniz!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 3, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 18.0);
+            }
+          },
+          child: Container(
+            width: widthSize(43),
+            height: heightSize(8),
+            decoration: new BoxDecoration(
+              color: MyColors().purpleContainer,
+              borderRadius: new BorderRadius.all(
+                Radius.circular(20),
+              ),
+            ),
+            child: Center(
+              child: Text(
+                "Hesabı Oluştur",
+                style: TextStyle(
+                  fontFamily: "Zona",
+                  fontSize: heightSize(2),
+                  color: MyColors().whiteTextColor,
+                ),
+              ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 
@@ -594,10 +544,6 @@ class _SignupPageState extends State<SignupPage> {
                   signUpButton(),
                   SizedBox(
                     height: heightSize(2),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[signInButton()],
                   ),
                 ],
               ),

@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _loading = false;
   bool visiblePassword = true;
   bool showLogin = false;
-  String sendPasswordMailText = "Giriş";
+  String sendPasswordMailText = "Giriş Yap";
 
   PageController _pageController;
 
@@ -193,12 +193,10 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         alignLabelWithHint: true,
                         enabledBorder: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(color: MyColors().loginGreyColor),
+                          borderSide: BorderSide(color: MyColors().loginGreyColor),
                         ),
                         focusedBorder: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(color: MyColors().loginGreyColor),
+                          borderSide: BorderSide(color: MyColors().loginGreyColor),
                         ),
                       ),
                       style: TextStyle(
@@ -213,9 +211,7 @@ class _LoginPageState extends State<LoginPage> {
                       width: widthSize(12),
                       height: heightSize(6),
                       child: FlatButton(
-                        child: Icon(showPassword
-                            ? Icons.visibility
-                            : Icons.visibility_off),
+                        child: Icon(showPassword ? Icons.visibility : Icons.visibility_off),
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,
                         onPressed: () {
@@ -255,66 +251,66 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget signInButton() {
-    return ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(20)),
-      child: FlatButton(
-        color: MyColors().purpleContainer,
-        highlightColor: MyColors().purpleContainerSplash,
-        splashColor: MyColors().purpleContainerSplash,
-        onPressed: () {
-          if (visiblePassword == true) {
-            setState(() {
-              _loading = true;
-            });
-            loginButton(context);
-          } else {
-            debugPrint("mail gönderildi");
-            passwordReset(context);
-          }
-        },
-        child: Container(
-          height: heightSize(8),
-          //width: widthSize(90),
-          alignment: Alignment.center,
-
-          child: Text(
-            sendPasswordMailText,
-            style: TextStyle(
-              fontFamily: "Zona",
-              fontSize: heightSize(3),
-              color: MyColors().whiteTextColor,
+    return Row(
+      children: <Widget>[
+        ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          child: FlatButton(
+            color: MyColors().purpleContainer,
+            highlightColor: MyColors().purpleContainerSplash,
+            splashColor: MyColors().purpleContainerSplash,
+            onPressed: () {
+              _pageController.nextPage(duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
+            },
+            child: Container(
+              height: heightSize(8),
+              width: widthSize(35),
+              alignment: Alignment.center,
+              child: Text(
+                "Hesabım Yok",
+                style: TextStyle(
+                  fontFamily: "Zona",
+                  fontSize: heightSize(2.5),
+                  color: MyColors().whiteTextColor,
+                ),
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget signUpButton() {
-    return ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(20)),
-      child: FlatButton(
-        color: MyColors().purpleContainer,
-        highlightColor: MyColors().purpleContainerSplash,
-        splashColor: MyColors().purpleContainerSplash,
-        onPressed: () {
-          _pageController.nextPage(
-              duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
-        },
-        child: Container(
-          height: heightSize(3),
-          width: widthSize(30),
-          alignment: Alignment.center,
-          child: Text(
-            "Hesabım Yok",
-            style: TextStyle(
-              fontFamily: "Zona",
-              fontSize: heightSize(2),
-              color: MyColors().whiteTextColor,
+        Spacer(),
+        ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          child: FlatButton(
+            color: MyColors().purpleContainer,
+            highlightColor: MyColors().purpleContainerSplash,
+            splashColor: MyColors().purpleContainerSplash,
+            onPressed: () {
+              if (visiblePassword == true) {
+                setState(() {
+                  _loading = true;
+                });
+                loginButton(context);
+              } else {
+                debugPrint("mail gönderildi");
+                passwordReset(context);
+              }
+            },
+            child: Container(
+              height: heightSize(8),
+              width: widthSize(35),
+              alignment: Alignment.center,
+              child: Text(
+                sendPasswordMailText,
+                style: TextStyle(
+                  fontFamily: "Zona",
+                  fontSize: heightSize(2.5),
+                  color: MyColors().whiteTextColor,
+                ),
+              ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 
@@ -345,10 +341,6 @@ class _LoginPageState extends State<LoginPage> {
                           SizedBox(
                             height: heightSize(1),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[signUpButton()],
-                          ),
                           SizedBox(
                             height: heightSize(5),
                           ),
@@ -360,9 +352,7 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 )
               ] +
-              (_loading
-                  ? [PageComponents().loadingOverlay(context, Colors.white)]
-                  : [])),
+              (_loading ? [PageComponents().loadingOverlay(context, Colors.white)] : [])),
     );
   }
 
@@ -372,20 +362,11 @@ class _LoginPageState extends State<LoginPage> {
     userId = await auth.signIn(email.text, password.text);
     if (userId == null) {
       setState(() => _loading = false);
-      Fluttertoast.showToast(
-          msg: "Şifre veya Eposta yanlış!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 18.0);
+      Fluttertoast.showToast(msg: "Şifre veya Eposta yanlış!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 2, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 18.0);
     } else {
-      if (await UserService(userId)
-          .updateSingleInfo("LastLoggedIn", "timeStamp")) {
+      if (await UserService(userId).updateSingleInfo("LastLoggedIn", "timeStamp")) {
         print('Signed in: $userId');
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
       }
     }
   }
