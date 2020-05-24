@@ -3,9 +3,6 @@ import 'package:eventizer/Navigation/EventPage.dart';
 import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/Repository.dart';
-import 'package:eventizer/Settings/AppSettings.dart';
-import 'package:eventizer/Tools/BottomNavigation.dart';
-import 'package:eventizer/Tools/Message.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
@@ -139,7 +136,7 @@ class _ProfilePageState extends State<ProfilePage>
                       nameText.toUpperCase() + ' ' + surnameText.toUpperCase(),
                       style: TextStyle(
                         fontFamily: "Zona",
-                        fontSize: heightSize(3),
+                        fontSize: widthSize(4),
                       ),
                     ),
                     Text(

@@ -1,8 +1,18 @@
+import 'dart:io';
+
+import 'package:eventizer/Services/AuthCheck.dart';
+import 'package:eventizer/Services/AuthService.dart';
+import 'package:eventizer/Tools/loading.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SignupPage extends StatefulWidget {
+  final PageController pageController;
+  SignupPage(this.pageController);
+
   @override
   _SignupPageState createState() => _SignupPageState();
 }
@@ -11,6 +21,12 @@ class _SignupPageState extends State<SignupPage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   TextEditingController mailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  LoginAndRegister loginAndRegister = LoginAndRegister();
+  File _image;
+  bool loading = false;
+  String _name, _surname, _phonenumber, _country, _birthday;
+  bool _gender;
+  bool showPassword = true;
 
   double heightSize(double value) {
     value /= 100;
@@ -22,10 +38,107 @@ class _SignupPageState extends State<SignupPage> {
     return MediaQuery.of(context).size.width * value;
   }
 
+  // ANCHOR kameradan foto almaya yarar
+  Future _getImageFromCamera() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    setState(() {
+      _image = image;
+    });
+  }
+
+// ANCHOR galeriden foto almaya yarar
+  Future _getImageFromGalery() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = image;
+    });
+  }
+
+  Future<void> _showChoiceDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Bir Seçim Yapınız'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  GestureDetector(
+                      child: Text('Galeri'),
+                      onTap: () {
+                        _getImageFromGalery().whenComplete(() {
+                          Navigator.pop(context);
+                        });
+                      }),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                  ),
+                  GestureDetector(
+                      child: Text('Kamera'),
+                      onTap: () {
+                        _getImageFromCamera().whenComplete(() {
+                          Navigator.pop(context);
+                        });
+                      }),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  void signUp() async {
+    // ANCHOR Kullanici kayit olana kadar loading kismini gosterecek
+    setState(() {
+      loading = true;
+    });
+    //ANCHOR Veritabanına kaydetmek için
+    List<String> datalist = [
+      _name,
+      _surname,
+      mailController.text,
+      _phonenumber,
+      _gender ? "Man" : "Woman",
+      _country,
+      _birthday
+    ];
+    print(datalist);
+    await loginAndRegister
+        .registerUser(context, mailController.text, passwordController.text,
+            datalist, _image)
+        .whenComplete(() {
+      Fluttertoast.showToast(
+          msg: "Doğrulama maili gönderildi.Lütfen mailinizi doğrulayınız!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.cyan,
+          textColor: Colors.white,
+          fontSize: 18.0);
+      Future.delayed(const Duration(milliseconds: 200), () {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
+      });
+    }).catchError((error) {
+      print(error);
+      Fluttertoast.showToast(
+          msg: "Girdileri gözden geçiriniz!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 18.0);
+      setState(() {
+        loading = false;
+      });
+    });
+  }
+
   Widget addPhoto() {
     return GestureDetector(
       onTap: () {
-        addPhotoVoid();
+        _showChoiceDialog(context);
       },
       child: Center(
         child: Container(
@@ -39,9 +152,9 @@ class _SignupPageState extends State<SignupPage> {
           child: Center(
             child: Container(
               height: heightSize(5),
-              child: Image.asset(
-                "assets/icons/addPhoto.png",
-              ),
+              child: _image == null
+                  ? Image.asset('assets/images/add-user.png')
+                  : Image.file(_image),
             ),
           ),
         ),
@@ -57,6 +170,7 @@ class _SignupPageState extends State<SignupPage> {
           height: heightSize(8),
           width: widthSize(40),
           child: TextFormField(
+            onChanged: (ad) => _name = ad,
             textAlign: TextAlign.left,
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -84,6 +198,7 @@ class _SignupPageState extends State<SignupPage> {
           height: heightSize(8),
           width: widthSize(40),
           child: TextFormField(
+            onChanged: (soyad) => _surname = soyad,
             textAlign: TextAlign.left,
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -143,7 +258,7 @@ class _SignupPageState extends State<SignupPage> {
         ),
         TextFormField(
           controller: passwordController,
-          obscureText: true,
+          obscureText: showPassword,
           textAlign: TextAlign.left,
           decoration: InputDecoration(
             border: InputBorder.none,
@@ -153,7 +268,17 @@ class _SignupPageState extends State<SignupPage> {
               color: MyColors().loginGreyColor,
             ),
             alignLabelWithHint: true,
-            suffixIcon: showPasswordIcon(),
+            suffixIcon: FlatButton(
+              child:
+                  Icon(showPassword ? Icons.visibility : Icons.visibility_off),
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              onPressed: () {
+                setState(() {
+                  showPassword = !showPassword;
+                });
+              },
+            ),
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: MyColors().loginGreyColor),
             ),
@@ -168,23 +293,7 @@ class _SignupPageState extends State<SignupPage> {
           ),
         ),
         SizedBox(
-          height: heightSize(2),
-        ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: GestureDetector(
-            onTap: () {
-              forgetPassword();
-            },
-            child: Text(
-              "Şifremi Unuttum",
-              style: TextStyle(
-                fontFamily: "ZonaLight",
-                fontSize: heightSize(2),
-                color: MyColors().loginGreyColor,
-              ),
-            ),
-          ),
+          height: heightSize(3),
         ),
       ],
     );
@@ -192,6 +301,7 @@ class _SignupPageState extends State<SignupPage> {
 
   Widget telephoneNumber() {
     return TextFormField(
+      onChanged: (phone) => _phonenumber = phone,
       textAlign: TextAlign.left,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
@@ -233,7 +343,7 @@ class _SignupPageState extends State<SignupPage> {
           child: Center(
             child: DropdownButton<String>(
               hint: Text(
-                ("Şehir"),
+                _country != null ? _country : ("Ülke Seçin"),
                 style: TextStyle(
                   fontFamily: "Zona",
                   fontSize: heightSize(2),
@@ -242,29 +352,57 @@ class _SignupPageState extends State<SignupPage> {
               ),
               items: [
                 DropdownMenuItem(
-                  child: Text("Adana merkez"),
+                  child: Text("Türkiye"),
+                  value: "TR",
+                ),
+                DropdownMenuItem(
+                  child: Text("United States"),
+                  value: "US",
+                ),
+                DropdownMenuItem(
+                  child: Text("United Kingdom"),
+                  value: "UK",
                 ),
               ],
-              onChanged: (String selected) {},
+              onChanged: (country) {
+                setState(() {
+                  _country = country;
+                });
+              },
             ),
           ),
         ),
-        Container(
-          width: widthSize(43),
-          height: heightSize(8),
-          decoration: new BoxDecoration(
-            color: MyColors().yellowContainer,
-            borderRadius: new BorderRadius.all(
-              Radius.circular(20),
+        InkWell(
+          onTap: () async {
+            final datePick = await showDatePicker(
+                context: context,
+                initialDate: DateTime(DateTime.now().year - 18),
+                firstDate: DateTime(DateTime.now().year - 70),
+                lastDate: DateTime(DateTime.now().year - 18));
+            if (datePick != null) {
+              setState(() {
+                _birthday =
+                    "${datePick.day}/${datePick.month}/${datePick.year}";
+              });
+            }
+          },
+          child: Container(
+            width: widthSize(43),
+            height: heightSize(8),
+            decoration: new BoxDecoration(
+              color: MyColors().yellowContainer,
+              borderRadius: new BorderRadius.all(
+                Radius.circular(20),
+              ),
             ),
-          ),
-          child: Center(
-            child: Text(
-              "01.01.2020",
-              style: TextStyle(
-                fontFamily: "Zona",
-                fontSize: heightSize(2),
-                color: MyColors().whiteTextColor,
+            child: Center(
+              child: Text(
+                _birthday != null ? _birthday : "Doğum Tarihiniz",
+                style: TextStyle(
+                  fontFamily: "Zona",
+                  fontSize: heightSize(2),
+                  color: MyColors().whiteTextColor,
+                ),
               ),
             ),
           ),
@@ -279,13 +417,17 @@ class _SignupPageState extends State<SignupPage> {
       children: <Widget>[
         InkWell(
           onTap: () {
-            menVoid();
+            setState(() {
+              _gender = true;
+            });
           },
           child: Container(
             width: widthSize(43),
             height: heightSize(5),
             decoration: new BoxDecoration(
-              color: menColor(),
+              color: _gender != null
+                  ? _gender ? Colors.black : menColor()
+                  : menColor(),
               borderRadius: new BorderRadius.all(
                 Radius.circular(20),
               ),
@@ -304,13 +446,17 @@ class _SignupPageState extends State<SignupPage> {
         ),
         InkWell(
           onTap: () {
-            womenVoid();
+            setState(() {
+              _gender = false;
+            });
           },
           child: Container(
             width: widthSize(43),
             height: heightSize(5),
             decoration: new BoxDecoration(
-              color: womenColor(),
+              color: _gender != null
+                  ? _gender ? womenColor() : Colors.black
+                  : womenColor(),
               borderRadius: new BorderRadius.all(
                 Radius.circular(20),
               ),
@@ -334,7 +480,29 @@ class _SignupPageState extends State<SignupPage> {
   Widget signUpButton() {
     return InkWell(
       onTap: () {
-        signUpVoid();
+        //ANCHOR veri kontrolleri burda
+        if (_image != null &&
+            _name != null &&
+            _surname != null &&
+            mailController.text != null &&
+            passwordController.text != null &&
+            _gender != null &&
+            _birthday != null &&
+            _country != null) {
+          signUp();
+          setState(() {
+            loading = true;
+          });
+        } else {
+          Fluttertoast.showToast(
+              msg: "Lütfen Girdileri Kontrol Ediniz!",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 3,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 18.0);
+        }
       },
       child: Container(
         width: widthSize(100),
@@ -347,7 +515,35 @@ class _SignupPageState extends State<SignupPage> {
         ),
         child: Center(
           child: Text(
-            "KATILIMI TAMAMLA",
+            "Hesabı Oluştur",
+            style: TextStyle(
+              fontFamily: "Zona",
+              fontSize: heightSize(2),
+              color: MyColors().whiteTextColor,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget signInButton() {
+    return ClipRRect(
+      borderRadius: BorderRadius.all(Radius.circular(20)),
+      child: FlatButton(
+        color: MyColors().purpleContainer,
+        highlightColor: MyColors().purpleContainerSplash,
+        splashColor: MyColors().purpleContainerSplash,
+        onPressed: () {
+          widget.pageController.previousPage(
+              duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
+        },
+        child: Container(
+          height: heightSize(3),
+          width: widthSize(30),
+          alignment: Alignment.center,
+          child: Text(
+            "Hesabım Var",
             style: TextStyle(
               fontFamily: "Zona",
               fontSize: heightSize(2),
@@ -361,80 +557,52 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          children: <Widget>[
-            addPhoto(),
-            SizedBox(
-              height: heightSize(1),
+    return loading
+        ? Loading()
+        : Scaffold(
+            body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: heightSize(5),
+                  ),
+                  addPhoto(),
+                  SizedBox(
+                    height: heightSize(1),
+                  ),
+                  nameSurname(),
+                  SizedBox(
+                    height: heightSize(1),
+                  ),
+                  emailAndPasswordFields(),
+                  SizedBox(
+                    height: heightSize(1),
+                  ),
+                  telephoneNumber(),
+                  SizedBox(
+                    height: heightSize(2),
+                  ),
+                  countryAndBirthDate(),
+                  SizedBox(
+                    height: heightSize(2),
+                  ),
+                  selectGender(),
+                  SizedBox(
+                    height: heightSize(2),
+                  ),
+                  signUpButton(),
+                  SizedBox(
+                    height: heightSize(2),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[signInButton()],
+                  ),
+                ],
+              ),
             ),
-            nameSurname(),
-            SizedBox(
-              height: heightSize(1),
-            ),
-            emailAndPasswordFields(),
-            SizedBox(
-              height: heightSize(1),
-            ),
-            telephoneNumber(),
-            SizedBox(
-              height: heightSize(2),
-            ),
-            countryAndBirthDate(),
-            SizedBox(
-              height: heightSize(2),
-            ),
-            selectGender(),
-            SizedBox(
-              height: heightSize(2),
-            ),
-            signUpButton(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget showPasswordIcon() {
-    return GestureDetector(
-      onTap: () {
-        showPassword();
-      },
-      child: Icon(
-        Icons.remove_red_eye,
-        color: MyColors().greyTextColor,
-      ),
-    );
-  }
-
-  void showPassword() {}
-
-  void forgetPassword() {}
-
-  void addPhotoVoid() {}
-
-  Future<void> signUpVoid() async {
-    var mailSingUp = mailController.text;
-    var passwordSingUp = passwordController.text;
-    var firebaseUser = await auth.createUserWithEmailAndPassword(email: mailSingUp, password: passwordSingUp).catchError((e) {
-      debugPrint(
-        "Error:" + e.toString(),
-      );
-    });
-
-    //ANCHOR SingUp Mail Verified condition are start here
-    /*
-    if (firebaseUser != null) {
-      firebaseUser.user.sendEmailVerification().then((data) {
-        auth.signOut();
-      }).catchError((e) {
-        debugPrint("Confirmation mail sending ERROR");
-      });
-      debugPrint("userID: ${firebaseUser.user.uid} mail: ${firebaseUser.user.email} mailConfirmation: ${firebaseUser.user.isEmailVerified}");
-    }
-     */
+          );
   }
 
   //ANCHOR cinsiyet seçildikten sonra container'lar siyah olsun mu?
@@ -445,8 +613,4 @@ class _SignupPageState extends State<SignupPage> {
   womenColor() {
     return Colors.pinkAccent;
   }
-
-  void womenVoid() {}
-
-  void menVoid() {}
 }

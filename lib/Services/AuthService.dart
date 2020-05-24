@@ -26,6 +26,7 @@ class AuthService extends InheritedWidget {
 class LoginAndRegister {
   String _server = DatabaseWorks().getServer();
 
+  //TODO kayıt olma işlemi repository e taşınacak
   Future<void> registerUser(BuildContext context, String eposta, String sifre,
       List<String> datalist, File image) async {
     var auth = AuthService.of(context).auth;
@@ -34,7 +35,10 @@ class LoginAndRegister {
       "Name": datalist[0],
       "Surname": datalist[1],
       "Email": datalist[2],
-      //"ProfilePhotoUrl": "null",
+      "PhoneNumber": datalist[3],
+      "Gender": datalist[4],
+      "Country": datalist[5],
+      "BirthDay": datalist[6],
       "RegisteredAt": FieldValue.serverTimestamp()
     };
 

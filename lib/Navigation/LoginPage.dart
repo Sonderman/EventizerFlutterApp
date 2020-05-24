@@ -1,13 +1,11 @@
-import 'package:eventizer/Navigation/ExploreEventPage.dart';
+import 'package:eventizer/Navigation/SignupPage.dart';
 import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -23,6 +21,22 @@ class _LoginPageState extends State<LoginPage> {
   bool visiblePassword = true;
   bool showLogin = false;
   String sendPasswordMailText = "Giriş";
+
+  PageController _pageController;
+
+  @override
+  void initState() {
+    _pageController = PageController(
+      initialPage: 0,
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   double heightSize(double value) {
     value /= 100;
@@ -240,7 +254,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget singInButton() {
+  Widget signInButton() {
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(20)),
       child: FlatButton(
@@ -276,32 +290,75 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Widget signUpButton() {
+    return ClipRRect(
+      borderRadius: BorderRadius.all(Radius.circular(20)),
+      child: FlatButton(
+        color: MyColors().purpleContainer,
+        highlightColor: MyColors().purpleContainerSplash,
+        splashColor: MyColors().purpleContainerSplash,
+        onPressed: () {
+          _pageController.nextPage(
+              duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
+        },
+        child: Container(
+          height: heightSize(3),
+          width: widthSize(30),
+          alignment: Alignment.center,
+          child: Text(
+            "Hesabım Yok",
+            style: TextStyle(
+              fontFamily: "Zona",
+              fontSize: heightSize(2),
+              color: MyColors().whiteTextColor,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
           children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(
-                        height: heightSize(10),
+                PageView(
+                  controller: _pageController,
+                  children: <Widget>[
+                    //ANCHOR Login sayfası
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            height: heightSize(10),
+                          ),
+                          welcomeText(),
+                          SizedBox(
+                            height: heightSize(5),
+                          ),
+                          emailAndPasswordFields(),
+                          Spacer(),
+                          signInButton(),
+                          SizedBox(
+                            height: heightSize(1),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[signUpButton()],
+                          ),
+                          SizedBox(
+                            height: heightSize(5),
+                          ),
+                        ],
                       ),
-                      welcomeText(),
-                      SizedBox(
-                        height: heightSize(5),
-                      ),
-                      emailAndPasswordFields(),
-                      Spacer(),
-                      singInButton(),
-                      SizedBox(
-                        height: heightSize(5),
-                      ),
-                    ],
-                  ),
-                ),
+                    ),
+                    //ANCHOR SignUp sayfası
+                    SignupPage(_pageController)
+                  ],
+                )
               ] +
               (_loading
                   ? [PageComponents().loadingOverlay(context, Colors.white)]

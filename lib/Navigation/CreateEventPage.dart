@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:eventizer/Navigation/HomePage.dart';
 import 'package:eventizer/Navigation/ProfilePage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Settings/EventSettings.dart';
