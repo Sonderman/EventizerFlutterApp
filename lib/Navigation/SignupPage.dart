@@ -60,12 +60,24 @@ class _SignupPageState extends State<SignupPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Bir Seçim Yapınız'),
+            title: Text('Bir Seçim Yapınız',
+              style: TextStyle(
+                fontSize: heightSize(2.5),
+                fontFamily: "Zona",
+                color: MyColors().loginGreyColor,
+              ),
+            ),
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
                   GestureDetector(
-                      child: Text('Galeri'),
+                      child: Text('Galeri',
+                        style: TextStyle(
+                          fontSize: heightSize(2),
+                          fontFamily: "ZonaLight",
+                          color: MyColors().loginGreyColor,
+                        ),
+                      ),
                       onTap: () {
                         _getImageFromGalery().whenComplete(() {
                           Navigator.pop(context);
@@ -75,7 +87,13 @@ class _SignupPageState extends State<SignupPage> {
                     padding: EdgeInsets.all(8.0),
                   ),
                   GestureDetector(
-                      child: Text('Kamera'),
+                      child: Text('Kamera',
+                        style: TextStyle(
+                          fontSize: heightSize(2),
+                          fontFamily: "ZonaLight",
+                          color: MyColors().loginGreyColor,
+                        ),
+                      ),
                       onTap: () {
                         _getImageFromCamera().whenComplete(() {
                           Navigator.pop(context);
@@ -115,20 +133,18 @@ class _SignupPageState extends State<SignupPage> {
       onTap: () {
         _showChoiceDialog(context);
       },
-      child: Center(
-        child: Container(
-          //ANCHOR Mevcut size void'imizi kullandığımızda anlamsız bir height oluşuyor, çözemedim. Bundan ötürü normal ölçüleri kullandım burada:
-          height: 150,
-          width: 150,
-          decoration: BoxDecoration(
-            color: MyColors().yellowContainer,
-            shape: BoxShape.circle,
-          ),
-          child: Center(
-            child: Container(
-              height: heightSize(5),
-              child: _image == null ? Image.asset('assets/images/add-user.png') : Image.file(_image),
-            ),
+      child: Container(
+        //ANCHOR Mevcut size void'imizi kullandığımızda anlamsız bir height oluşuyor, çözemedim. Bundan ötürü normal ölçüleri kullandım burada:
+        // NOTE Fixed.
+        height: heightSize(20),
+        decoration: BoxDecoration(
+          color: MyColors().yellowContainer,
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: Container(
+            height: heightSize(5),
+            child: _image == null ? Image.asset('assets/images/add-user.png') : Image.file(_image),
           ),
         ),
       ),

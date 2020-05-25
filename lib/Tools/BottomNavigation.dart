@@ -3,6 +3,8 @@ import 'package:eventizer/Navigation/CreateEventPage.dart';
 import 'package:eventizer/Navigation/ExploreEventPage.dart';
 import 'package:eventizer/Navigation/LoginPage.dart';
 import 'package:eventizer/Navigation/ProfilePage.dart';
+import 'package:eventizer/Navigation/SettingsPage.dart';
+import 'package:eventizer/Navigation/SignupPage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/assets/Colors.dart';
