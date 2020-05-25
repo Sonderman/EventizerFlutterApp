@@ -1,4 +1,4 @@
-import 'package:eventizer/Navigation/SignupPage.dart';
+import 'package:eventizer/Navigation/SignUpPage.dart';
 import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/Repository.dart';
@@ -348,7 +348,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     //ANCHOR SignUp sayfası
-                    SignupPage(_pageController)
+                    SignUpPage(_pageController)
                   ],
                 )
               ] +

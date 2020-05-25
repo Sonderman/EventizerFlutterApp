@@ -137,7 +137,7 @@ class _EventPageState extends State<OldEventPage> {
     var eventService = Provider.of<EventService>(context);
     var userService = Provider.of<UserService>(context);
     List<Widget> buttons = [];
-    if (widget.userData['UserID'] != userService.usermodel.getUserId()) {
+    if (widget.userData['UserID'] != userService.userModel.getUserId()) {
       if (katilbutton) {
         buttons.add(SizedBox(
           width: MediaQuery.of(context).size.width *
@@ -152,7 +152,7 @@ class _EventPageState extends State<OldEventPage> {
             textColor: Colors.black,
             onPressed: () async {
               if (await eventService.leaveEvent(
-                  userService.usermodel.getUserId(), eventData['eventID'])) {
+                  userService.userModel.getUserId(), eventData['eventID'])) {
                 setState(() {
                   toggleJoinButton();
                   print("Ayrıldı");
@@ -177,7 +177,7 @@ class _EventPageState extends State<OldEventPage> {
             textColor: Colors.black,
             onPressed: () async {
               if (await eventService.joinEvent(
-                  userService.usermodel.getUserId(), eventData['eventID'])) {
+                  userService.userModel.getUserId(), eventData['eventID'])) {
                 setState(() {
                   toggleJoinButton();
                   print("Katıldı");
@@ -294,7 +294,7 @@ class _EventPageState extends State<OldEventPage> {
                       itemBuilder: (BuildContext context, int index) {
                         return FutureBuilder(
                           //ANCHOR Her bir list itemi için kullanıcı bilgisi getirir
-                          future: userService.findUserbyID(
+                          future: userService.findUserByID(
                               snapshot.data[index]['CommentOwnerID']),
                           builder: (BuildContext context, AsyncSnapshot user) {
                             if (user.connectionState == ConnectionState.done) {
@@ -410,7 +410,7 @@ class _EventPageState extends State<OldEventPage> {
                                 //ANCHOR  Yorum gönderme backend işlemleri
                                 if (await eventService.sendComment(
                                     widget.eventData['eventID'],
-                                    userService.usermodel.getUserId(),
+                                    userService.userModel.getUserId(),
                                     commentController.text)) {
                                   /* nestedScrollController.jumpTo(
                                       nestedScrollController
@@ -453,7 +453,7 @@ class _EventPageState extends State<OldEventPage> {
               itemBuilder: (BuildContext context, int index) {
                 return FutureBuilder(
                   future: userService
-                      .findUserbyID(snapshot.data[index]['ParticipantID']),
+                      .findUserByID(snapshot.data[index]['ParticipantID']),
                   builder: (BuildContext context, AsyncSnapshot user) {
                     if (user.connectionState == ConnectionState.done) {
                       return Padding(

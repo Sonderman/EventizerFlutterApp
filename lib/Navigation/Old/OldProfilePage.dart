@@ -244,7 +244,7 @@ class _ProfilePageState extends State<OldProfilePage> {
     List<Widget> mapList() {
       List<Widget> wlist = [];
 
-      var userMap = userWorker.usermodel.toMap();
+      var userMap = userWorker.userModel.toMap();
       userMap.forEach((k, v) {
         wlist.add(Text("$k: $v"));
       });
@@ -260,7 +260,7 @@ class _ProfilePageState extends State<OldProfilePage> {
     }
 
     //ANCHOR bu sayfaya gelen kişinin cihaza kayıtlı olan kişimi yoksa başkasımı anlıyoruz
-    if (userID == userWorker.usermodel.getUserId()) {
+    if (userID == userWorker.userModel.getUserId()) {
       return Card(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -269,7 +269,7 @@ class _ProfilePageState extends State<OldProfilePage> {
       );
     } else {
       return FutureBuilder(
-        future: userWorker.findUserbyID(userID),
+        future: userWorker.findUserByID(userID),
         builder: (BuildContext context, AsyncSnapshot<dynamic> infoData) {
           if (infoData.connectionState == ConnectionState.done) {
             return Card(
@@ -483,10 +483,10 @@ class _ProfilePageState extends State<OldProfilePage> {
               textColor: Colors.black,
               onPressed: () async {
                 // ANCHOR  Mesaj sayfasına gitmek için
-                if (userService.usermodel.getUserId() != widget.userID) {
+                if (userService.userModel.getUserId() != widget.userID) {
                   //ANCHOR mesajlaşma sayfasında karşıdaki kişinin ismini getirip parametre olarak veriyoruz,
                   //Bu sayede appbarda ismi görünüyor
-                  await userService.findUserbyID(widget.userID).then((data) {
+                  await userService.findUserByID(widget.userID).then((data) {
                     Navigator.push(
                         context,
                         MaterialPageRoute(

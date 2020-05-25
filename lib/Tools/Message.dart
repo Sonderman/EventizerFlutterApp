@@ -38,12 +38,12 @@ class _MessageState extends State<Message> {
     super.didChangeDependencies();
     //ANCHOR Providerda context e ihtiyacımız olduğundan didchangedependecies ile contexte ulaşabiliyoruz, bu bir nevi initstate işlevi görüyor
     userService = Provider.of<UserService>(context);
-    currentUserID = userService.usermodel.getUserId();
+    currentUserID = userService.userModel.getUserId();
     otherUserID = widget.otherUserID;
-    currentUserPhotoUrl = userService.usermodel.getUserProfilePhotoUrl();
+    currentUserPhotoUrl = userService.userModel.getUserProfilePhotoUrl();
     //ANCHOR Buradaki user sağ tarafta görülen kendimiz
     user = ChatUser(
-      name: userService.usermodel.getUserName(),
+      name: userService.userModel.getUserName(),
       uid: currentUserID,
       avatar: currentUserPhotoUrl, // Kendi url miz
     );

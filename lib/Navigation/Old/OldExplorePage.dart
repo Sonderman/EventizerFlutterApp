@@ -92,7 +92,7 @@ class _ExplorePageState extends State<OldExplorePage> {
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: FutureBuilder(
-          future: userWorker.findUserbyID(ownerID),
+          future: userWorker.findUserByID(ownerID),
           builder: (BuildContext context,
               AsyncSnapshot<Map<String, dynamic>> userData) {
             if (userData.connectionState == ConnectionState.done) {
@@ -101,7 +101,7 @@ class _ExplorePageState extends State<OldExplorePage> {
                   onTap: () async {
                     eventService
                         .amIparticipant(
-                            userWorker.usermodel.getUserId(), eventID)
+                            userWorker.userModel.getUserId(), eventID)
                         .then((amIparticipant) {
                       print("Kullanıcı bu etkinliğe katılmış:" +
                           amIparticipant.toString());

@@ -73,7 +73,7 @@ class _ChatPageState extends State<ChatPage> {
           Expanded(
             child: StreamBuilder(
               stream: messageService
-                  .getUserChatsSnapshot(userService.usermodel.getUserId()),
+                  .getUserChatsSnapshot(userService.userModel.getUserId()),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return PageComponents().loadingOverlay(context, Colors.white);
@@ -89,7 +89,7 @@ class _ChatPageState extends State<ChatPage> {
                       itemBuilder: (context, index) {
                         String userID = items[index].data['OtherUserID'];
                         return FutureBuilder(
-                            future: userService.findUserbyID(userID),
+                            future: userService.findUserByID(userID),
                             builder: (context, snapshot) {
                               switch (snapshot.connectionState) {
                                 case ConnectionState.done:

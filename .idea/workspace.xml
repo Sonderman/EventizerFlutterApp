@@ -1,32 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AndroidLayouts">
-    <shared>
-      <config />
-    </shared>
-  </component>
-  <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
-  </component>
   <component name="ChangeListManager">
-<<<<<<< HEAD
-    <list default="true" id="acf10fe4-b608-47a5-9fbb-f441cf333a58" name="Default Changelist" comment="&quot;explore event page&quot; event box'ların altına tarih, konum ve katılımcı sayısı eklendi.&#10;&quot;home page&quot; bottombar değiştirildi.&#10;&quot;profile page&quot; ayarlarım iconu değiştirildi.&#10;&quot;pubspec.yaml&quot; bottombar eklendi.">
+    <list default="true" id="86d488d1-aca7-4e9f-83a7-304b826fa6fb" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/lib/Navigation/Old/OldSettingsPage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileChanges/last-build.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/gc.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/vcs-1/gc.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/local.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Models/UserModel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Models/UserModel.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/ChatPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ChatPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/CreateEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/CreateEventPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/EventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/EventPage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Navigation/ExploreEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ExploreEventPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldChatsPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/Old/OldChatsPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldCreateEvent.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/Old/OldCreateEvent.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/Old/OldEventPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldExplorePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/Old/OldExplorePage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldProfilePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/Old/OldProfilePage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/SettingsPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/SettingsPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/SignupPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/SignUpPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Services/Firebase.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Services/Firebase.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Services/Repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Services/Repository.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Tools/BottomNavigation.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Tools/BottomNavigation.dart" afterDir="false" />
-=======
-    <list default="true" id="acf10fe4-b608-47a5-9fbb-f441cf333a58" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" afterDir="false" />
->>>>>>> de7b841... Merge branch 'DevMurat' of https://github.com/Sonderman/EventizerFlutterApp into DevMurat
+      <change beforePath="$PROJECT_DIR$/lib/Tools/Message.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Tools/Message.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/locator.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/locator.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -34,14 +43,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="DefaultGradleProjectSettings">
-    <option name="testRunner" value="GRADLE" />
-    <option name="delegatedBuild" value="true" />
-  </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="Nexus_4_API_28" />
-  <component name="FavoritesManager">
-    <favorites_list name="EventizerFlutterApp" />
-  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="emulator-5554" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -50,31 +52,25 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="PREVIEW_PUSH_PROTECTED_ONLY" value="true" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectId" id="1bAaUbXT2wclKzkpg3vgGXLLKEU" />
+  <component name="ProjectId" id="1cOHbGbVOZYue63oVuXueJEgX5N" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="PropertiesComponent">
-    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="DEBUGGABLE_DEVICE" value="emulator-5554" />
     <property name="DEBUGGABLE_PROCESS" value="com.eventizerapps.eventizer" />
-    <property name="SHOW_ALL_PROCESSES" value="false" />
-    <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
+    <property name="DEBUGGER_ID" value="Java" />
+    <property name="SHOW_ALL_PROCESSES" value="true" />
     <property name="dart.analysis.tool.window.force.activate" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="SDK Location" />
-    <property name="project.structure.proportion" value="0.17" />
-    <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="flutter.settings" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/lib/Navigation/Old" />
+      <recent name="C:\EventizerFlutter\lib\Navigation\Old" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -100,80 +96,12 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="acf10fe4-b608-47a5-9fbb-f441cf333a58" name="Default Changelist" comment="" />
-      <created>1581859968435</created>
+      <changelist id="86d488d1-aca7-4e9f-83a7-304b826fa6fb" name="Default Changelist" comment="" />
+      <created>1590392788800</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1581859968435</updated>
+      <updated>1590392788800</updated>
     </task>
-    <task id="LOCAL-00001" summary="&quot;profile page kullanıcı&quot; yarım&#10;&quot;profile page ziyaretçi&quot; eklendi&#10;&quot;event page&quot; yeni başlandı">
-      <created>1588688921283</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1588688921283</updated>
-    </task>
-    <task id="LOCAL-00002" summary="&quot;profile page kullanıcı&quot; yarım&#10;&quot;profile page ziyaretçi&quot; eklendi&#10;&quot;event page&quot; yeni başlandı">
-      <created>1588689069631</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1588689069631</updated>
-    </task>
-    <task id="LOCAL-00003" summary="&quot;profile page kullanıcı&quot; yarım&#10;&quot;profile page ziyaretçi&quot; eklendi&#10;&quot;event page&quot; yeni başlandı">
-      <created>1588692689362</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1588692689362</updated>
-    </task>
-    <task id="LOCAL-00004" summary="&quot;event page&quot; ver 1.1">
-      <created>1588784334269</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1588784334269</updated>
-    </task>
-    <task id="LOCAL-00005" summary="&quot;event page&quot; rengi değiştirildi.&#10;&quot;sign in page&quot; tamamlandı.&#10;&quot;sign up page&quot; tamamlandı.">
-      <created>1589073060341</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1589073060341</updated>
-    </task>
-    <task id="LOCAL-00006" summary="&quot;chat page&quot; tamamlandı.&#10;&quot;signup page&quot; şifre girerken rakam klavyesi eklendi.">
-      <created>1589154259348</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1589154259348</updated>
-    </task>
-    <task id="LOCAL-00007" summary="&quot;explore event page&quot; event box'ların altına tarih, konum ve katılımcı sayısı eklendi.&#10;&quot;home page&quot; bottombar değiştirildi.&#10;&quot;profile page&quot; ayarlarım iconu değiştirildi.&#10;&quot;pubspec.yaml&quot; bottombar eklendi.">
-      <created>1589244618902</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1589244618902</updated>
-    </task>
-<<<<<<< HEAD
-    <option name="localTasksCounter" value="8" />
-=======
-    <task id="LOCAL-00008" summary="&quot;Login Page&quot; tamamlandı.&#10;&quot;ExploreEvent Page&quot; event box düzenlendi.&#10;&quot;Profile Page&quot; tasarım değiştirildi, geçmiş ve gelecek etkinlikler için iconlar eklenecek.">
-      <created>1589763545224</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1589763545224</updated>
-    </task>
-    <task id="LOCAL-00009" summary="&quot;profil page&quot; geçmiş ve gelecek etkinlikler için iconlar eklendi.">
-      <created>1589843888221</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1589843888221</updated>
-    </task>
-    <option name="localTasksCounter" value="10" />
->>>>>>> de7b841... Merge branch 'DevMurat' of https://github.com/Sonderman/EventizerFlutterApp into DevMurat
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -189,19 +117,15 @@
       </map>
     </option>
   </component>
-  <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="&quot;profile page kullanıcı&quot; yarım&#10;&quot;profile page ziyaretçi&quot; eklendi&#10;&quot;event page&quot; yeni başlandı" />
-    <MESSAGE value="&quot;event page&quot; ver 1.1" />
-    <MESSAGE value="&quot;event page&quot; rengi değiştirildi.&#10;&quot;sign in page&quot; tamamlandı.&#10;&quot;sign up page&quot; tamamlandı." />
-    <MESSAGE value="&quot;chat page&quot; tamamlandı.&#10;&quot;signup page&quot; şifre girerken rakam klavyesi eklendi." />
-    <MESSAGE value="&quot;explore event page&quot; event box'ların altına tarih, konum ve katılımcı sayısı eklendi.&#10;&quot;home page&quot; bottombar değiştirildi.&#10;&quot;profile page&quot; ayarlarım iconu değiştirildi.&#10;&quot;pubspec.yaml&quot; bottombar eklendi." />
-<<<<<<< HEAD
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;explore event page&quot; event box'ların altına tarih, konum ve katılımcı sayısı eklendi.&#10;&quot;home page&quot; bottombar değiştirildi.&#10;&quot;profile page&quot; ayarlarım iconu değiştirildi.&#10;&quot;pubspec.yaml&quot; bottombar eklendi." />
-=======
-    <MESSAGE value="&quot;Login Page&quot; tamamlandı.&#10;&quot;ExploreEvent Page&quot; event box düzenlendi.&#10;&quot;Profile Page&quot; tasarım değiştirildi, geçmiş ve gelecek etkinlikler için iconlar eklenecek." />
-    <MESSAGE value="&quot;profil page&quot; geçmiş ve gelecek etkinlikler için iconlar eklendi." />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;profil page&quot; geçmiş ve gelecek etkinlikler için iconlar eklendi." />
->>>>>>> de7b841... Merge branch 'DevMurat' of https://github.com/Sonderman/EventizerFlutterApp into DevMurat
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="Dart">
+          <url>file://$PROJECT_DIR$/lib/Navigation/SettingsPage.dart</url>
+          <line>184</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

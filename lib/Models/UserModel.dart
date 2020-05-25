@@ -6,8 +6,9 @@ class User {
   String _surname;
   String _nickname;
   String _email;
-  String _telno;
+  int _telNo;
   String _birthday;
+  String _country;
   String _city;
   String _gender;
   String _about;
@@ -18,6 +19,7 @@ class User {
 
   User({@required this.userID});
 
+  //ANCHOR Getters
   String getUserId() => userID;
 
   String getUserName() => _name;
@@ -30,7 +32,13 @@ class User {
 
   String getUserSurname() => _surname;
 
-  String getUserTelno() => _telno;
+  String getUserGender() => _gender;
+
+  int getUserTelNo() => _telNo;
+
+  String getUserCountry() => _country;
+
+  String getUserCity() => _city;
 
   String getUserBirthday() => _birthday;
 
@@ -47,32 +55,45 @@ class User {
       return _profilePhotoUrl;
   }
 
+  //ANCHOR Setters
   void setUserName(String name) {
     _name = name;
   }
 
-  void setSurname(String surname) {
+  void setUserSurname(String surname) {
     _surname = surname;
   }
 
-  void setNickName(String nickname) {
+  void setUserNickName(String nickname) {
     _nickname = nickname;
   }
 
-  void setEmail(String email) {
+  void setUserEmail(String email) {
     _email = email;
   }
 
-  void setAbout(String about) {
+  void setUserCountry(String country) {
+    _country = country;
+  }
+
+  void setUserAbout(String about) {
     _about = about;
   }
 
-  void setBirthday(String birthday) {
+  void setUserGender(String gender) {
+    _gender = gender;
+  }
+
+  void setUserBirthday(String birthday) {
     _birthday = birthday;
   }
 
-  void setCity(String city) {
+  void setUserCity(String city) {
     _city = city;
+  }
+
+  void setUserTelNo(int telNo) {
+    _telNo = telNo;
   }
 
   Map<String, dynamic> toMap() {
@@ -83,10 +104,11 @@ class User {
       'Email': _email ?? 'null',
       'Birthday': _birthday ?? 'null',
       'Gender': _gender ?? 'null',
+      'Country': _country ?? 'null',
       'City': _city ?? 'null',
-      'Telno': _telno ?? 'null',
       'ProfilePhotoUrl': _profilePhotoUrl ?? 'null',
       'About': _about ?? 'null',
+      'PhoneNumber': _telNo ?? 0,
       'Nof_follower': _numberOfFollowers ?? 0,
       'Nof_events': _numberOfEvents ?? 0,
       'Nof_trustPoint': _numberOfTrustPoints ?? 0,
@@ -98,12 +120,13 @@ class User {
     _surname = map["Surname"] ?? "null";
     _nickname = map["NickName"] ?? "null";
     _email = map["Email"] ?? "null";
-    _telno = map["Telno"] ?? "null";
+    _country = map["Country"] ?? "null";
     _city = map["City"] ?? "null";
     _birthday = map["Birthday"] ?? "null";
     _gender = map["Gender"] ?? "null";
     _profilePhotoUrl = map["ProfilePhotoUrl"];
     _about = map['About'] ?? "Henüz Detay Girilmedi.";
+    _telNo = map["PhoneNumber"] ?? 0;
     _numberOfFollowers = map['Nof_follower'] ?? 0;
     _numberOfEvents = map['Nof_events'] ?? 0;
     _numberOfTrustPoints = map['Nof_trustPoint'] ?? 0;

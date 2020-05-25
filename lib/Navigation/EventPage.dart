@@ -549,7 +549,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                       Provider.of<UserService>(context, listen: false);
                   if (katilbutton) {
                     if (await eventService.leaveEvent(
-                        userService.usermodel.getUserId(),
+                        userService.userModel.getUserId(),
                         widget.eventData['eventID'])) {
                       setState(() {
                         toggleJoinButton();
@@ -560,7 +560,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                     }
                   } else {
                     if (await eventService.joinEvent(
-                        userService.usermodel.getUserId(),
+                        userService.userModel.getUserId(),
                         widget.eventData['eventID'])) {
                       setState(() {
                         toggleJoinButton();

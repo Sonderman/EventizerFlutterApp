@@ -26,7 +26,7 @@ class _OldChatsPageState extends State<OldChatsPage> {
       ),
       body: StreamBuilder(
         stream: messageService
-            .getUserChatsSnapshot(userService.usermodel.getUserId()),
+            .getUserChatsSnapshot(userService.userModel.getUserId()),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return PageComponents().loadingOverlay(context, Colors.white);
@@ -38,7 +38,7 @@ class _OldChatsPageState extends State<OldChatsPage> {
               itemBuilder: (context, index) {
                 String userID = items[index].data['OtherUserID'];
                 return FutureBuilder(
-                  future: userService.findUserbyID(
+                  future: userService.findUserByID(
                       userID), //ANCHOR Burada karşıdaki kişinin bütün bilgileri geliyor
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {

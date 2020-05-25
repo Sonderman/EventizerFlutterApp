@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Tools/loading.dart';
@@ -9,23 +8,23 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
-class SignupPage extends StatefulWidget {
+class SignUpPage extends StatefulWidget {
   final PageController pageController;
 
-  SignupPage(this.pageController);
+  SignUpPage(this.pageController);
   //NOTE We should be just use the button of "Create Account" for navigation to "Create Account Page". Not with slide.
   @override
-  _SignupPageState createState() => _SignupPageState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   TextEditingController mailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   LoginAndRegister loginAndRegister = LoginAndRegister();
   File _image;
   bool loading = false;
-  String _name, _surname, _phonenumber, _country, _birthday;
+  String _name, _surname, _phoneNumber, _country, _birthday;
   bool _gender;
   bool showPassword = true;
 
@@ -112,7 +111,7 @@ class _SignupPageState extends State<SignupPage> {
       loading = true;
     });
     //ANCHOR Veritabanına kaydetmek için
-    List<String> datalist = [_name, _surname, mailController.text, _phonenumber, _gender ? "Man" : "Woman", _country, _birthday];
+    List<String> datalist = [_name, _surname, mailController.text, _phoneNumber, _gender ? "Man" : "Woman", _country, _birthday];
     print(datalist);
     await loginAndRegister.registerUser(context, mailController.text, passwordController.text, datalist, _image).whenComplete(() {
       Fluttertoast.showToast(msg: "Doğrulama maili gönderildi.Lütfen mailinizi doğrulayınız!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 2, backgroundColor: Colors.cyan, textColor: Colors.white, fontSize: 18.0);
@@ -289,7 +288,7 @@ class _SignupPageState extends State<SignupPage> {
 
   Widget telephoneNumber() {
     return TextFormField(
-      onChanged: (phone) => _phonenumber = phone,
+      onChanged: (phone) => _phoneNumber = phone,
       textAlign: TextAlign.left,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
