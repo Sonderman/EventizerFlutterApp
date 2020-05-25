@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat/dash_chat.dart';
+import 'package:eventizer/Models/UserModel.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class AutoIdGenerator {
@@ -29,12 +31,30 @@ class AutoIdGenerator {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class DatabaseWorks {
   final Firestore ref = Firestore.instance;
+
   // String _server = "Release";
   String _server = "Development";
+
   //String _server = "OpenTest";
   String getServer() => _server;
+
   DatabaseWorks() {
     print("DatabaseWorks locator running");
+  }
+
+  Future<bool> userModelUpdater(User model) async {
+    try {
+      return await ref
+          .collection("EventizerApp")
+          .document(_server)
+          .collection("users")
+          .document(model.getUserId())
+          .updateData(model.toMap())
+          .then((value) => true);
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   Future<bool> amIFollowing(String userID, String otherUserID) async {

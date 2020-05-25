@@ -1,20 +1,16 @@
 import 'dart:io';
-import 'package:eventizer/Services/AuthCheck.dart';
-import 'package:eventizer/Services/AuthService.dart';
-import 'package:eventizer/Services/BaseAuth.dart';
+import 'package:eventizer/Models/UserModel.dart';
 import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/Tools/NavigationManager.dart';
+import 'package:eventizer/Tools/loading.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:eventizer/assets/Sehirler.dart';
-import 'package:extended_image/extended_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_search_panel/flutter_search_panel.dart';
 import 'package:flutter_search_panel/search_item.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -23,137 +19,218 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  TextEditingController controllerAd;
-  TextEditingController controllerSoyad;
-  TextEditingController controllerTelNo;
+  UserService userService;
+  User userModel;
+  final PageController pageController = PageController();
+  TextEditingController mailController = TextEditingController();
+  TextEditingController detailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  File _image;
+  bool loading = false;
+  String _name, _surname, _phoneNumber, _country, _city;
 
-  bool triggerToast = false;
+  bool showPassword = true;
 
-  void _signedOut() {
-    var auth = AuthService.of(context).auth;
-    auth.signOut();
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
+  @override
+  void didChangeDependencies() {
+    userService = Provider.of<UserService>(context);
+    userModel = userService.userModel;
+    mailController.text = userModel.getUserEmail();
+    detailController.text = userModel.getUserAbout();
+    super.didChangeDependencies();
+  }
+
+  double heightSize(double value) {
+    value /= 100;
+    return MediaQuery.of(context).size.height * value;
+  }
+
+  double widthSize(double value) {
+    value /= 100;
+    return MediaQuery.of(context).size.width * value;
+  }
+
+  // ANCHOR kameradan foto almaya yarar
+  Future _getImageFromCamera() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    setState(() {
+      _image = image;
+    });
+  }
+
+// ANCHOR galeriden foto almaya yarar
+  Future _getImageFromGallery() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = image;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    var userWorker = Provider.of<UserService>(context);
-    return Scaffold(
-      backgroundColor: MyColors().blueThemeColor,
-      appBar: AppBar(
-        title: Text("Ayarlar"),
-        backgroundColor: MyColors().blueThemeColor,
-        centerTitle: true,
-        actions: <Widget>[
-          Card(
-            color: Colors.red,
-            child: IconButton(
-                icon: Icon(FontAwesomeIcons.signOutAlt), onPressed: _signedOut),
-          )
-        ],
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(48.0),
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+    return loading
+        ? Loading()
+        : Scaffold(
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: heightSize(5),
+                    ),
+                    addPhoto(),
+                    SizedBox(
+                      height: heightSize(1),
+                    ),
+                    nameSurname(),
+                    SizedBox(
+                      height: heightSize(1),
+                    ),
+                    emailField(),
+                    SizedBox(
+                      height: heightSize(1),
+                    ),
+                    detailField(),
+                    SizedBox(
+                      height: heightSize(2),
+                    ),
+                    telephoneNumber(),
+                    SizedBox(
+                      height: heightSize(2),
+                    ),
+                    countryAndCity(),
+                    SizedBox(
+                      height: heightSize(2),
+                    ),
+                    saveChangesButton(),
+                    SizedBox(
+                      height: heightSize(2),
+                    ),
+                  ],
+                ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
+            ),
+          );
+  }
+
+  Widget detailField() {
+    return TextFormField(
+      controller: detailController,
+      textAlign: TextAlign.left,
+      keyboardType: TextInputType.multiline,
+      enableInteractiveSelection: true,
+      minLines: 2,
+      maxLines: 10,
+      expands: false,
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        hintText: "Hakkımda",
+        hintStyle: TextStyle(
+          fontFamily: "Zona",
+          color: MyColors().loginGreyColor,
+        ),
+        alignLabelWithHint: true,
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: MyColors().loginGreyColor),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: MyColors().loginGreyColor),
+        ),
+      ),
+      style: TextStyle(
+        fontSize: heightSize(2.5),
+        fontFamily: "ZonaLight",
+        color: MyColors().loginGreyColor,
+      ),
+    );
+  }
+
+  Future<void> _showChoiceDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Bir Seçim Yapınız'),
+            content: SingleChildScrollView(
+              child: ListBody(
                 children: <Widget>[
-                  FlatButton.icon(
-                    icon: Icon(LineAwesomeIcons.user),
-                    label: Text('Kişisel bilgileri düzenle'),
-                    onPressed: () {
-                      triggerToast = false;
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return updateMyPersonalInfoDialog(userWorker);
-                          }).whenComplete(() {
-                        if (triggerToast) {
-                          userWorker.userModelUpdater(
-                              userWorker.usermodel.getUserId());
-                          Fluttertoast.showToast(
-                              msg: "Kişisel bilgileriniz Güncellendi",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 2,
-                              backgroundColor: Colors.green,
-                              textColor: Colors.white,
-                              fontSize: 18.0);
-                        }
-                      });
-                    },
+                  GestureDetector(
+                      child: Text('Galeri'),
+                      onTap: () {
+                        _getImageFromGallery().whenComplete(() {
+                          Navigator.pop(context);
+                        });
+                      }),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.grey,
-                    height: 1,
-                  ),
-                  FlatButton.icon(
-                    icon: Icon(LineAwesomeIcons.envelope),
-                    label: Text('Email adresini güncelle'),
-                    onPressed: () {
-                      triggerToast = false;
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return myChangeEmailDialog(userWorker);
-                          }).whenComplete(() {
-                        if (triggerToast) {
-                          userWorker.userModelUpdater(
-                              userWorker.usermodel.getUserId());
-                          Fluttertoast.showToast(
-                              msg: "Email adresiniz Güncellendi",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 2,
-                              backgroundColor: Colors.green,
-                              textColor: Colors.white,
-                              fontSize: 18.0);
-                        }
-                      });
-                    },
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.grey,
-                    height: 1,
-                  ),
-                  FlatButton.icon(
-                    icon: Icon(LineAwesomeIcons.key),
-                    label: Text('Şifreni güncelle'),
-                    onPressed: () {
-                      triggerToast = false;
-                      showDialog(
-                          context: context,
-                          builder: (newcontext) {
-                            return myUpdatePasswordDialog(userWorker);
-                          }).whenComplete(() {
-                        if (triggerToast) {
-                          userWorker.userModelUpdater(
-                              userWorker.usermodel.getUserId());
-                          Fluttertoast.showToast(
-                              msg: "Şifreniz Güncellendi",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 2,
-                              backgroundColor: Colors.green,
-                              textColor: Colors.white,
-                              fontSize: 18.0);
-                        }
-                      });
-                    },
-                  ),
+                  GestureDetector(
+                      child: Text('Kamera'),
+                      onTap: () {
+                        _getImageFromCamera().whenComplete(() {
+                          Navigator.pop(context);
+                        });
+                      }),
                 ],
               ),
+            ),
+          );
+        });
+  }
+
+  void saveChanges() async {
+    setState(() {
+      loading = true;
+    });
+    userService.userModelUpdater(userModel).then((value) {
+      if (value) {
+        NavigationManager(context).popPage();
+        Fluttertoast.showToast(
+            msg: "Bilgileriniz Güncellenmiştir",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 18.0);
+      } else {
+        setState(() {
+          loading = false;
+          Fluttertoast.showToast(
+              msg: "İnternet bağlantınızı kontrol ediniz!",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 18.0);
+          NavigationManager(context).popPage();
+        });
+      }
+    });
+  }
+
+  Widget addPhoto() {
+    return GestureDetector(
+      onTap: () {
+        _showChoiceDialog(context);
+      },
+      child: Center(
+        child: Container(
+          //ANCHOR Mevcut size void'imizi kullandığımızda anlamsız bir height oluşuyor, çözemedim. Bundan ötürü normal ölçüleri kullandım burada:
+          height: 150,
+          width: 150,
+          decoration: BoxDecoration(
+            color: MyColors().yellowContainer,
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: Container(
+              height: heightSize(5),
+              child: _image == null
+                  ? Image.network(userModel.getUserProfilePhotoUrl())
+                  : Image.file(_image),
             ),
           ),
         ),
@@ -161,588 +238,325 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  AlertDialog myChangeEmailDialog(UserService userWorker) {
-    final BaseAuth auth = AuthService.of(context).auth;
-    FirebaseUser user;
-    TextEditingController controllerMevcut = TextEditingController();
-    TextEditingController controllerYeni = TextEditingController();
-    TextEditingController controllerMevcutPassword = TextEditingController();
-    auth.getCurrentUser().then((data) {
-      user = data;
-    });
-
-    return AlertDialog(
-        content: StatefulBuilder(builder: (context, StateSetter setState) {
-      return SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: controllerMevcut,
-                decoration:
-                    InputDecoration(labelText: 'Mevcut Email adresiniz'),
-                validator: (value) =>
-                    value.isEmpty ? 'Geçerli email girilmeli' : null,
+  Widget nameSurname() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Container(
+          height: heightSize(8),
+          width: widthSize(40),
+          child: TextFormField(
+            initialValue: userModel.getUserName(),
+            onChanged: (ad) => _name = ad,
+            textAlign: TextAlign.left,
+            decoration: InputDecoration(
+              hintText: "Ad*",
+              border: InputBorder.none,
+              hintStyle: TextStyle(
+                fontFamily: "Zona",
+                color: MyColors().loginGreyColor,
+              ),
+              alignLabelWithHint: true,
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: MyColors().loginGreyColor),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: MyColors().loginGreyColor),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                obscureText: true,
-                controller: controllerMevcutPassword,
-                decoration: InputDecoration(labelText: 'Mevcut şifreniz'),
-                validator: (value) =>
-                    value.isEmpty ? 'Şifrenizi kontrol edin' : null,
-              ),
+            style: TextStyle(
+              fontSize: heightSize(2.5),
+              fontFamily: "ZonaLight",
+              color: MyColors().loginGreyColor,
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: controllerYeni,
-                decoration: InputDecoration(labelText: 'Yeni email adresiniz'),
-                validator: (value) =>
-                    value.isEmpty ? 'Geçerli email girilmeli' : null,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Material(
-                  borderRadius: BorderRadius.circular(30.0),
-                  //elevation: 5.0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: MaterialButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      minWidth: 50.0,
-                      height: 30.0,
-                      color: Color(0xFF179CDF),
-                      child: Text(
-                        "İptal",
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Material(
-                  borderRadius: BorderRadius.circular(30.0),
-                  //elevation: 5.0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: MaterialButton(
-                      onPressed: () async {
-                        if (controllerMevcut.text ==
-                                userWorker.usermodel.getUserEmail() &&
-                            controllerYeni.text != null &&
-                            await auth.checkPassword(controllerMevcut.text,
-                                controllerMevcutPassword.text)) {
-                          user.updateEmail(controllerYeni.text);
-                          triggerToast = true;
-                          userWorker.usermodel.setEmail(controllerYeni.text);
-                          userWorker.updateSingleInfo(
-                              "Email", userWorker.usermodel.getUserEmail());
-                          Navigator.pop(context);
-                        } else {
-                          Fluttertoast.showToast(
-                              msg: "Hata: Lütfen bilgileri kontrol ediniz!.",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 2,
-                              backgroundColor: Colors.red,
-                              textColor: Colors.white,
-                              fontSize: 18.0);
-                          controllerYeni.clear();
-                          controllerMevcut.clear();
-                          controllerMevcutPassword.clear();
-                        }
-                      },
-                      minWidth: 50.0,
-                      height: 30.0,
-                      color: Color(0xFF179CDF),
-                      child: Text(
-                        "Güncelle",
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            )
-          ],
+          ),
         ),
-      );
-    }));
+        Container(
+          height: heightSize(8),
+          width: widthSize(40),
+          child: TextFormField(
+            initialValue: userModel.getUserSurname(),
+            onChanged: (soyad) => _surname = soyad,
+            textAlign: TextAlign.left,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: "Soyad*",
+              hintStyle: TextStyle(
+                fontFamily: "Zona",
+                color: MyColors().loginGreyColor,
+              ),
+              alignLabelWithHint: true,
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: MyColors().loginGreyColor),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: MyColors().loginGreyColor),
+              ),
+            ),
+            style: TextStyle(
+              fontSize: heightSize(2.5),
+              fontFamily: "ZonaLight",
+              color: MyColors().loginGreyColor,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
-  AlertDialog myUpdatePasswordDialog(UserService userWorker) {
-    final BaseAuth auth = AuthService.of(context).auth;
-    FirebaseUser user;
-    TextEditingController controllerYeni2Password = TextEditingController();
-    TextEditingController controllerYeniPassword = TextEditingController();
-    TextEditingController controllerMevcutPassword = TextEditingController();
-    auth.getCurrentUser().then((data) {
-      user = data;
-    });
-
-    return AlertDialog(
-        content: StatefulBuilder(builder: (context, StateSetter setState) {
-      return SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: controllerMevcutPassword,
-                obscureText: true,
-                decoration: InputDecoration(labelText: 'Mevcut şifreniz'),
-                validator: (value) => value.isEmpty ? 'Boş olamaz' : null,
-              ),
+  Widget emailField() {
+    return Column(
+      children: <Widget>[
+        TextFormField(
+          controller: mailController,
+          textAlign: TextAlign.left,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: "Email*",
+            hintStyle: TextStyle(
+              fontFamily: "Zona",
+              color: MyColors().loginGreyColor,
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: controllerYeniPassword,
-                obscureText: true,
-                decoration: InputDecoration(labelText: 'Yeni şifreniz'),
-                validator: (value) => value.isEmpty ? 'Boş olamaz' : null,
-              ),
+            alignLabelWithHint: true,
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: MyColors().loginGreyColor),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: controllerYeni2Password,
-                obscureText: true,
-                decoration: InputDecoration(labelText: 'Yeni şifreniz(Tekrar)'),
-                validator: (value) => value.isEmpty ? 'Boş olamaz' : null,
-              ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: MyColors().loginGreyColor),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GestureDetector(
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text("Onayla"),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Text(userWorker.usermodel.getUserEmail() +
-                                  "\nBu email adresine bir şifre sıfırlama epostası gönderilecektir.\nOnaylıyormusunuz?")
-                            ],
-                          ),
-                          actions: <Widget>[
-                            Material(
-                              borderRadius: BorderRadius.circular(30.0),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: MaterialButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  minWidth: 50.0,
-                                  height: 30.0,
-                                  color: Color(0xFF179CDF),
-                                  child: Text(
-                                    "İptal",
-                                    style: TextStyle(
-                                      fontSize: 16.0,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Material(
-                              borderRadius: BorderRadius.circular(30.0),
-                              //elevation: 5.0,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: MaterialButton(
-                                  onPressed: () {
-                                    auth.sendPasswordResetEmail(
-                                        userWorker.usermodel.getUserEmail());
-                                    Navigator.pop(context);
-                                  },
-                                  minWidth: 50.0,
-                                  height: 30.0,
-                                  color: Color(0xFF179CDF),
-                                  child: Text(
-                                    "Onayla",
-                                    style: TextStyle(
-                                      fontSize: 16.0,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        );
-                      }).whenComplete(() {
-                    Navigator.pop(context);
-                  });
-                },
-                child: Text(
-                  "Şifremi unuttum.",
-                  style: TextStyle(color: MyColors().blueThemeColor),
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Material(
-                  borderRadius: BorderRadius.circular(30.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: MaterialButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      minWidth: 50.0,
-                      height: 30.0,
-                      color: Color(0xFF179CDF),
-                      child: Text(
-                        "İptal",
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Material(
-                  borderRadius: BorderRadius.circular(30.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: MaterialButton(
-                      onPressed: () async {
-                        if (controllerYeniPassword.text ==
-                                controllerYeni2Password.text &&
-                            await auth.checkPassword(
-                                userWorker.usermodel.getUserEmail(),
-                                controllerYeniPassword.text)) {
-                          user.updatePassword(controllerYeniPassword.text);
-                          triggerToast = true;
-                          Navigator.pop(context);
-                        } else {
-                          Fluttertoast.showToast(
-                              msg: "Hata: Lütfen bilgileri kontrol ediniz!.",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 2,
-                              backgroundColor: Colors.red,
-                              textColor: Colors.white,
-                              fontSize: 18.0);
-                        }
-                        controllerMevcutPassword.clear();
-                        controllerYeniPassword.clear();
-                        controllerYeni2Password.clear();
-                      },
-                      minWidth: 50.0,
-                      height: 30.0,
-                      color: Color(0xFF179CDF),
-                      child: Text(
-                        "Kaydet",
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            )
-          ],
+          ),
+          style: TextStyle(
+            fontSize: heightSize(2.5),
+            fontFamily: "ZonaLight",
+            color: MyColors().loginGreyColor,
+          ),
         ),
-      );
-    }));
+        SizedBox(
+          height: heightSize(3),
+        ),
+        /*
+        TextFormField(
+          controller: passwordController,
+          obscureText: showPassword,
+          textAlign: TextAlign.left,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: "Şifre*",
+            hintStyle: TextStyle(
+              fontFamily: "Zona",
+              color: MyColors().loginGreyColor,
+            ),
+            alignLabelWithHint: true,
+            suffixIcon: FlatButton(
+              child:
+                  Icon(showPassword ? Icons.visibility : Icons.visibility_off),
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              onPressed: () {
+                setState(() {
+                  showPassword = !showPassword;
+                });
+              },
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: MyColors().loginGreyColor),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: MyColors().loginGreyColor),
+            ),
+          ),
+          style: TextStyle(
+            fontSize: heightSize(2.5),
+            fontFamily: "ZonaLight",
+            color: MyColors().loginGreyColor,
+          ),
+        ),
+        SizedBox(
+          height: heightSize(3),
+        ),
+    */
+      ],
+    );
   }
 
-  Widget updateMyPersonalInfoDialog(UserService userWorker) {
-    File _image;
+  Widget telephoneNumber() {
+    return TextFormField(
+      initialValue: userModel.getUserTelNo() == 0
+          ? null
+          : userModel.getUserTelNo().toString(),
+      onChanged: (phone) => _phoneNumber = phone,
+      textAlign: TextAlign.left,
+      keyboardType: TextInputType.number,
+      inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+      maxLength: 10,
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        hintText: "Telefon Numarası",
+        hintStyle: TextStyle(
+          fontFamily: "Zona",
+          color: MyColors().loginGreyColor,
+        ),
+        alignLabelWithHint: true,
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: MyColors().loginGreyColor),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: MyColors().loginGreyColor),
+        ),
+      ),
+      style: TextStyle(
+        fontSize: heightSize(2.5),
+        fontFamily: "ZonaLight",
+        color: MyColors().loginGreyColor,
+      ),
+    );
+  }
 
-    String birthday = "${userWorker.usermodel.getUserBirthday()}";
-    String displayedBirthday = "Şuanki doğum tarihiniz:" + birthday;
-    String city;
-    if (controllerAd == null) {
-      controllerAd =
-          TextEditingController(text: userWorker.usermodel.getUserName());
-      controllerSoyad =
-          TextEditingController(text: userWorker.usermodel.getUserSurname());
-      controllerTelNo = TextEditingController(
-          text: userWorker.usermodel.getUserTelno() == "null"
-              ? ""
-              : userWorker.usermodel.getUserTelno());
+  Widget countryAndCity() {
+    List<SearchItem<int>> sehirler = [];
+    sehirler.add(SearchItem(0, "Şehir Seçin"));
+    for (int i = 1; i <= 81; i++) {
+      sehirler.add(SearchItem(i, Sehirler().sehirler[i - 1]));
     }
-
-    //REVIEW Alertdialog default ayarları sebebiyle yanlardan ayarlama yapılamıyor gerekirse custom birşeyler yap
-    return AlertDialog(
-      title: Text("Bilgileri Düzenle"),
-      //ANCHOR dialoğun içinde ayrıyeten bir statefull oluşturdum
-      content: StatefulBuilder(
-        builder: (context, StateSetter setState) {
-          Future<void> getImageFromCamera() async {
-            _image = await ImagePicker.pickImage(source: ImageSource.camera)
-                .whenComplete(() {
-              setState(() {});
-            });
-          }
-
-          Future<void> getImageFromGalery() async {
-            _image = await ImagePicker.pickImage(source: ImageSource.gallery)
-                .whenComplete(() {
-              setState(() {});
-            });
-          }
-
-          List<SearchItem<int>> sehirler = [];
-          for (int i = 1; i <= 81; i++) {
-            sehirler.add(SearchItem(i, Sehirler().sehirler[i - 1]));
-          }
-
-          return SingleChildScrollView(
-            child: Column(
-              // mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Container(
-                  width: 150.0,
-                  height: 150.0,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: ExtendedNetworkImageProvider(
-                            userWorker.usermodel.getUserProfilePhotoUrl(),
-                            cache: true),
-                        fit: BoxFit.fill),
-                    borderRadius: BorderRadius.circular(120.0),
-                  ),
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(120.0),
-                      child: _image == null
-                          ? null //Text('Resim seçilmedi!.')
-                          : Image.file(_image)),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    GestureDetector(
-                        onTap: getImageFromCamera,
-                        child: Container(
-                            width: 50.0,
-                            height: 50.0,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(120.0),
-                            ),
-                            child: Icon(FontAwesomeIcons.camera))),
-                    GestureDetector(
-                        onTap: getImageFromGalery,
-                        child: Container(
-                            width: 50.0,
-                            height: 50.0,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(120.0),
-                            ),
-                            child: Icon(FontAwesomeIcons.images)))
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    controller: controllerAd,
-                    decoration: InputDecoration(labelText: 'Adınız'),
-                    validator: (value) =>
-                        value.isEmpty ? 'Ad boş olamaz' : null,
-                    onSaved: (value) => null,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    controller: controllerSoyad,
-                    decoration: InputDecoration(labelText: 'Soyadınız'),
-                    validator: (value) =>
-                        value.isEmpty ? 'Soyad boş olamaz' : null,
-                    onSaved: (value) => null,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    controller: controllerTelNo,
-                    maxLength: 11,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(labelText: 'Telefon Numarası'),
-                    validator: (value) =>
-                        value.isEmpty ? 'Telefon numarası boş olamaz' : null,
-                    onSaved: (value) => null,
-                  ),
-                ),
-                Text(
-                  displayedBirthday,
-                  style: TextStyle(fontSize: 15.0),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Doğum Tarihinizi Seçiniz:',
-                        style: TextStyle(fontSize: 15.0),
-                      ),
-                    ),
-                    GestureDetector(
-                        child: new Icon(Icons.date_range),
-                        onTap: () async {
-                          final datePick = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime(DateTime.now().year - 18),
-                              firstDate: DateTime(1900),
-                              lastDate: DateTime(DateTime.now().year - 18));
-                          if (datePick != null) {
-                            setState(() {
-                              displayedBirthday = "Güncellenmiş doğum tarihiniz :" +
-                                  "${datePick.day}/${datePick.month}/${datePick.year}";
-                              birthday =
-                                  "${datePick.day}/${datePick.month}/${datePick.year}";
-                            });
-                          }
-                        }),
-                  ],
-                ),
-                /*FindDropdown(
-                  items: Sehirler().sehirler,
-                  onChanged: (String item) {
-                    city = item;
-                  },
-                  selectedItem: "Şehir Seçiniz",
-                ),*/
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text("Şehir Seçiniz:"),
-                    SizedBox(
-                      width: 25,
-                    ),
-                    FlutterSearchPanel<int>(
-                      selected: 1,
-                      title: "Şehir Seçiniz",
-                      data: sehirler,
-                      icon: Icon(Icons.check_circle, color: Colors.white),
-                      color: Colors.red,
-                      textStyle: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12.0,
-                          decorationStyle: TextDecorationStyle.dotted),
-                      onChanged: (int item) {
-                        city = Sehirler().sehirler[item - 1];
-                      },
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Material(
-                      borderRadius: BorderRadius.circular(30.0),
-                      //elevation: 5.0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: MaterialButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          minWidth: 50.0,
-                          height: 30.0,
-                          color: Color(0xFF179CDF),
-                          child: Text(
-                            "İptal",
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Material(
-                      borderRadius: BorderRadius.circular(30.0),
-                      //elevation: 5.0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: MaterialButton(
-                          onPressed: () async {
-                            if (await userWorker.updateProfilePhoto(_image)) {
-                              print("foto güncellendi");
-                              triggerToast = true;
-                            }
-                            if (controllerAd.text !=
-                                userWorker.usermodel.getUserName()) {
-                              userWorker.updateSingleInfo(
-                                  "Name", controllerAd.text);
-                              triggerToast = true;
-                            }
-                            if (controllerSoyad.text !=
-                                userWorker.usermodel.getUserSurname()) {
-                              userWorker.updateSingleInfo(
-                                  "Surname", controllerSoyad.text);
-                              triggerToast = true;
-                            }
-                            if (controllerTelNo.text !=
-                                userWorker.usermodel.getUserTelno()) {
-                              userWorker.updateSingleInfo(
-                                  "Telno", controllerTelNo.text);
-                              triggerToast = true;
-                            }
-                            if (birthday !=
-                                userWorker.usermodel.getUserBirthday()) {
-                              userWorker.updateSingleInfo("Birthday", birthday);
-                              triggerToast = true;
-                            }
-                            if (city != null) {
-                              userWorker.updateSingleInfo("City", city);
-                              triggerToast = true;
-                            }
-                            Navigator.pop(context);
-                          },
-                          minWidth: 50.0,
-                          height: 30.0,
-                          color: Color(0xFF179CDF),
-                          child: Text(
-                            "Kaydet",
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                )
-              ],
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Container(
+          width: widthSize(43),
+          height: heightSize(8),
+          decoration: new BoxDecoration(
+            color: MyColors().yellowContainer,
+            borderRadius: new BorderRadius.all(
+              Radius.circular(20),
             ),
-          );
-        },
+          ),
+          child: Center(
+            child: DropdownButton<String>(
+              hint: Text(
+                _country != null ? _country : ("Ülke Seçin"),
+                style: TextStyle(
+                  fontFamily: "Zona",
+                  fontSize: heightSize(2),
+                  color: MyColors().whiteTextColor,
+                ),
+              ),
+              items: [
+                DropdownMenuItem(
+                  child: Text("Türkiye"),
+                  value: "TR",
+                ),
+                DropdownMenuItem(
+                  child: Text("United States"),
+                  value: "US",
+                ),
+                DropdownMenuItem(
+                  child: Text("United Kingdom"),
+                  value: "UK",
+                ),
+              ],
+              onChanged: (country) {
+                setState(() {
+                  _country = country;
+                });
+              },
+            ),
+          ),
+        ),
+        Container(
+          width: widthSize(43),
+          height: heightSize(8),
+          decoration: BoxDecoration(
+            color: MyColors().yellowContainer,
+            borderRadius: BorderRadius.all(
+              Radius.circular(20),
+            ),
+          ),
+          child: Center(
+            child: FlutterSearchPanel<int>(
+              selected: 0,
+              title: "Şehir Seçiniz",
+              data: sehirler,
+              color: Colors.red,
+              icon: Icon(Icons.check_circle, color: Colors.white),
+              textStyle: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12.0,
+                  decorationStyle: TextDecorationStyle.dotted),
+              onChanged: (int item) {
+                if (item != 0) {
+                  _city = Sehirler().sehirler[item - 1];
+                }
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget saveChangesButton() {
+    return InkWell(
+      onTap: () {
+        //ANCHOR veri kontrolleri burda
+        bool isChanged = false;
+        if (_name != null) {
+          isChanged = true;
+          userModel.setUserName(_name);
+        }
+        if (_surname != null) {
+          isChanged = true;
+          userModel.setUserSurname(_surname);
+        }
+        if (mailController.text != null) {
+          isChanged = true;
+          userModel.setUserEmail(mailController.text);
+        }
+        if (detailController.text != null) {
+          isChanged = true;
+          userModel.setUserAbout(detailController.text);
+        }
+        if (_country != null) {
+          isChanged = true;
+          userModel.setUserCountry(_country);
+        }
+        if (_city != null) {
+          isChanged = true;
+          userModel.setUserCity(_city);
+        }
+
+        if (isChanged) {
+          saveChanges();
+        } else {
+          Fluttertoast.showToast(
+              msg: "Güncellemek için değişiklik yapmalısınız",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 3,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 18.0);
+        }
+      },
+      child: Container(
+        width: widthSize(75),
+        height: heightSize(8),
+        decoration: new BoxDecoration(
+          color: MyColors().purpleContainer,
+          borderRadius: new BorderRadius.all(
+            Radius.circular(20),
+          ),
+        ),
+        child: Center(
+          child: Text(
+            "Güncelle",
+            style: TextStyle(
+              fontFamily: "Zona",
+              fontSize: heightSize(2),
+              color: MyColors().whiteTextColor,
+            ),
+          ),
+        ),
       ),
     );
   }

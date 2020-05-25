@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat/dash_chat.dart';
 import 'package:eventizer/Models/UserModel.dart';
@@ -9,7 +10,7 @@ import 'package:flutter/material.dart';
 
 ///UserService*****************************************************************************************************
 class UserService with ChangeNotifier {
-  User usermodel;
+  User userModel;
   final DatabaseWorks firebaseDatabaseWorks = locator<DatabaseWorks>();
   final StorageWorks firebaseStorageWorks = locator<StorageWorks>();
 
@@ -21,52 +22,56 @@ class UserService with ChangeNotifier {
   void userInitializer(String userId) {
     if (userId == null || userId == "") {
       userId = "0000000000000000";
-      usermodel = User(userID: userId);
+      userModel = User(userID: userId);
     } else {
-      usermodel = User(userID: userId);
-      userModelUpdater(userId);
+      userModel = User(userID: userId);
+      userModelSync(userId);
     }
   }
 
-  //TODO - tüm veriler gelene kadar navigation işlemini bekletecek bir makanizma yap
-  void userModelUpdater(String userId) {
+  //TODO - tüm veriler gelene kadar navigation işlemini bekletecek bir mekanizma yap
+  void userModelSync(String userId) {
     firebaseDatabaseWorks.findUserbyID(userId).then((map) {
-      usermodel.parseMap(map);
+      userModel.parseMap(map);
     }).whenComplete(() {
       refresh();
     });
   }
 
-  Future<Map<String, dynamic>> findUserbyID(String userID) {
+  Future<Map<String, dynamic>> findUserByID(String userID) {
     return firebaseDatabaseWorks.findUserbyID(userID);
   }
 
   Future<bool> updateProfilePhoto(File image) async {
     if (image == null) return false;
     return await firebaseStorageWorks.updateProfilePhoto(
-            usermodel.userID, image) ??
+            userModel.userID, image) ??
         false;
   }
 
+  Future<bool> userModelUpdater(User model) async {
+    return await firebaseDatabaseWorks.userModelUpdater(model);
+  }
+
   Future<bool> updateSingleInfo(String maptext, String changedtext) async {
-    bool iscomplete = false;
+    bool isCompleted = false;
     await firebaseDatabaseWorks
-        .updateSingleInfo(usermodel.userID, maptext, changedtext)
-        .whenComplete(() => iscomplete = true)
+        .updateSingleInfo(userModel.userID, maptext, changedtext)
+        .whenComplete(() => isCompleted = true)
         .catchError((e) {
       print(e);
     });
-    return iscomplete;
+    return isCompleted;
   }
 
   Future<bool> followToggle(String otherUserID) async {
     return await firebaseDatabaseWorks.followToggle(
-        usermodel.userID, otherUserID);
+        userModel.userID, otherUserID);
   }
 
   Future<bool> amIFollowing(String otherUserID) async {
     return await firebaseDatabaseWorks.amIFollowing(
-        usermodel.userID, otherUserID);
+        userModel.userID, otherUserID);
   }
 
   void refresh() {

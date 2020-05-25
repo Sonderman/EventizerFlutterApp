@@ -52,7 +52,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
     return InkWell(
       onTap: () async {
         eventService
-            .amIparticipant(userWorker.usermodel.getUserId(), eventID)
+            .amIparticipant(userWorker.userModel.getUserId(), eventID)
             .then((amIparticipant) {
           print("Kullanıcı bu etkinliğe katılmış:" + amIparticipant.toString());
           NavigationManager(context).pushPage(EventPage(
@@ -87,7 +87,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         ),
                       ),
                       child: FutureBuilder(
-                          future: userWorker.findUserbyID(ownerID),
+                          future: userWorker.findUserByID(ownerID),
                           builder: (BuildContext _,
                               AsyncSnapshot<dynamic> userData) {
                             if (userData.connectionState ==

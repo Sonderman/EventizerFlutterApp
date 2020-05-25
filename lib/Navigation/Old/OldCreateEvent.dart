@@ -267,7 +267,7 @@ class _OldCreateEventState extends State<OldCreateEvent> {
                                     final userID = Provider.of<UserService>(
                                             context,
                                             listen: false)
-                                        .usermodel
+                                        .userModel
                                         .getUserId();
                                     Map<String, dynamic> eventData = {
                                       // REVIEW Veri tabanında yazılan yer burası , burası için bir çözüm bul

@@ -1,5 +1,6 @@
 import 'package:eventizer/Models/UserModel.dart';
 import 'package:eventizer/Navigation/EventPage.dart';
+import 'package:eventizer/Navigation/SettingsPage.dart';
 import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/Repository.dart';
@@ -34,7 +35,7 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   UserService userWorker;
-  User usermodel;
+  User userModel;
   bool amIFollowing = false;
   String nameText;
   String surnameText;
@@ -50,15 +51,15 @@ class _ProfilePageState extends State<ProfilePage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    usermodel = User(userID: widget.userID);
+    userModel = User(userID: widget.userID);
   }
 
   @override
-  Future<void> didChangeDependencies() async {
+  void didChangeDependencies() async {
     super.didChangeDependencies();
     userWorker = Provider.of<UserService>(context);
-    if (widget.userID != userWorker.usermodel.userID) if (await userWorker
-        .amIFollowing(usermodel.userID)) {
+    if (widget.userID != userWorker.userModel.userID) if (await userWorker
+        .amIFollowing(userModel.userID)) {
       setState(() {
         amIFollowing = true;
       });
@@ -85,7 +86,7 @@ class _ProfilePageState extends State<ProfilePage>
     profilePhotoUrl = model.getUserProfilePhotoUrl();
   }
 
-  Widget avatarAndname() => Container(
+  Widget avatarAndName() => Container(
         alignment: Alignment.center,
         height: heightSize(35),
         width: widthSize(85),
@@ -114,18 +115,22 @@ class _ProfilePageState extends State<ProfilePage>
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Container(
-                  height: heightSize(6),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Image.asset(
-                      "assets/icons/options.png",
+                InkWell(
+                  onTap: () =>
+                      NavigationManager(context).pushPage(SettingsPage()),
+                  child: Container(
+                    height: heightSize(6),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Image.asset(
+                        "assets/icons/options.png",
+                      ),
                     ),
-                  ),
-                  decoration: new BoxDecoration(
-                    color: MyColors().yellowContainer,
-                    borderRadius: new BorderRadius.all(
-                      Radius.circular(20),
+                    decoration: new BoxDecoration(
+                      color: MyColors().yellowContainer,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
                     ),
                   ),
                 ),
@@ -516,7 +521,7 @@ class _ProfilePageState extends State<ProfilePage>
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: FutureBuilder(
-          future: userWorker.findUserbyID(ownerID),
+          future: userWorker.findUserByID(ownerID),
           builder: (BuildContext context,
               AsyncSnapshot<Map<String, dynamic>> userData) {
             if (userData.connectionState == ConnectionState.done) {
@@ -525,7 +530,7 @@ class _ProfilePageState extends State<ProfilePage>
                   onTap: () async {
                     eventService
                         .amIparticipant(
-                            userWorker.usermodel.getUserId(), eventID)
+                            userWorker.userModel.getUserId(), eventID)
                         .then((amIparticipant) {
                       print("Kullanıcı bu etkinliğe katılmış:" +
                           amIparticipant.toString());
@@ -559,7 +564,7 @@ class _ProfilePageState extends State<ProfilePage>
     var eventService = Provider.of<EventService>(context);
     return FutureBuilder(
       future:
-          eventService.fetchListOfUserEvents(userWorker.usermodel.getUserId()),
+          eventService.fetchListOfUserEvents(userWorker.userModel.getUserId()),
       builder: (BuildContext context, AsyncSnapshot fetchedlist) {
         if (fetchedlist.connectionState == ConnectionState.done) {
           List<Map<String, dynamic>> listofMaps = fetchedlist.data;
@@ -582,16 +587,16 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    if (widget.userID != userWorker.usermodel.userID) {
+    if (widget.userID != userWorker.userModel.userID) {
       print("Gelen userID:" + widget.userID);
 
       return FutureBuilder(
-          future: userWorker.findUserbyID(widget.userID),
+          future: userWorker.findUserByID(widget.userID),
           builder:
               (BuildContext context, AsyncSnapshot<Map<String, dynamic>> data) {
             if (data.connectionState == ConnectionState.done) {
-              usermodel.parseMap(data.data);
-              textUpdaterByUserModel(usermodel);
+              userModel.parseMap(data.data);
+              textUpdaterByUserModel(userModel);
               return Scaffold(
                 body: Column(
                   children: <Widget>[
@@ -623,7 +628,7 @@ class _ProfilePageState extends State<ProfilePage>
                               SliverToBoxAdapter(
                                 child: Column(
                                   children: <Widget>[
-                                    avatarAndname(),
+                                    avatarAndName(),
                                     numberDatas(),
                                     threeBoxes(),
                                     //eventList,
@@ -652,7 +657,7 @@ class _ProfilePageState extends State<ProfilePage>
               );
           });
     } else {
-      textUpdaterByUserModel(userWorker.usermodel);
+      textUpdaterByUserModel(userWorker.userModel);
       return Scaffold(
         body: Column(
           children: <Widget>[
@@ -684,7 +689,7 @@ class _ProfilePageState extends State<ProfilePage>
                       SliverToBoxAdapter(
                         child: Column(
                           children: <Widget>[
-                            avatarAndname(),
+                            avatarAndName(),
                             numberDatas(),
                             threeBoxesOwnProfile(),
                             //eventList,

@@ -200,7 +200,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     firstDate: DateTime(DateTime.now().year),
                     lastDate: DateTime(DateTime.now().year + 2),
                     selectableDayPredicate: (DateTime currentDate) {
-                      if (currentDate.day >= DateTime.now().day && currentDate.month >= DateTime.now().month) {
+                      if (currentDate.day >= DateTime.now().day &&
+                          currentDate.month >= DateTime.now().month) {
                         return true;
                       } else
                         return false;
@@ -211,7 +212,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     isStartDateSelected = true;
                     eventFinishDate = null;
                     isFinishDateSelected = false;
-                    eventStartDate = "${datePick.day}/${datePick.month}/${datePick.year}";
+                    eventStartDate =
+                        "${datePick.day}/${datePick.month}/${datePick.year}";
                   });
                 }
               },
@@ -226,7 +228,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         child: Image.asset("assets/icons/startDate.png"),
                       ),
                       Text(
-                        eventStartDate == null ? "Başlangıç" : "$eventStartDate",
+                        eventStartDate == null
+                            ? "Başlangıç"
+                            : "$eventStartDate",
                         style: TextStyle(
                           fontFamily: "Zona",
                           fontSize: heightSize(2),
@@ -256,7 +260,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     firstDate: DateTime(eventStartDateTime.year),
                     lastDate: DateTime(DateTime.now().year + 1),
                     selectableDayPredicate: (DateTime currentDate) {
-                      if (currentDate.day >= eventStartDateTime.day && currentDate.month >= eventStartDateTime.month) {
+                      if (currentDate.day >= eventStartDateTime.day &&
+                          currentDate.month >= eventStartDateTime.month) {
                         return true;
                       } else
                         return false;
@@ -264,13 +269,16 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 if (datePick != null) {
                   setState(() {
                     isFinishDateSelected = true;
-                    eventFinishDate = "${datePick.day}/${datePick.month}/${datePick.year}";
+                    eventFinishDate =
+                        "${datePick.day}/${datePick.month}/${datePick.year}";
                   });
                 }
               },
               child: Center(
                 child: Padding(
-                  padding: eventFinishDate == null ? EdgeInsets.symmetric(horizontal: 40) : EdgeInsets.symmetric(horizontal: 15),
+                  padding: eventFinishDate == null
+                      ? EdgeInsets.symmetric(horizontal: 40)
+                      : EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
@@ -324,7 +332,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       isStartTimeSelected = true;
                       eventFinishTime = null;
                       isFinishTimeSelected = false;
-                      eventStartTime = localizations.formatTimeOfDay(eventStartTimeOfDay);
+                      eventStartTime =
+                          localizations.formatTimeOfDay(eventStartTimeOfDay);
                     });
                   }
                 });
@@ -340,7 +349,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         child: Image.asset("assets/icons/startTime.png"),
                       ),
                       Text(
-                        eventStartTime == null ? "Başlangıç" : "$eventStartTime",
+                        eventStartTime == null
+                            ? "Başlangıç"
+                            : "$eventStartTime",
                         style: TextStyle(
                           fontFamily: "Zona",
                           fontSize: heightSize(2),
@@ -373,7 +384,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       eventFinishTimeOfDay = timePick;
                       setState(() {
                         isFinishTimeSelected = true;
-                        eventFinishTime = localizations.formatTimeOfDay(eventFinishTimeOfDay);
+                        eventFinishTime =
+                            localizations.formatTimeOfDay(eventFinishTimeOfDay);
                       });
                     }
                   });
@@ -381,7 +393,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
               },
               child: Center(
                 child: Padding(
-                  padding: eventFinishTime == null ? EdgeInsets.symmetric(horizontal: 40) : EdgeInsets.symmetric(horizontal: 20),
+                  padding: eventFinishTime == null
+                      ? EdgeInsets.symmetric(horizontal: 40)
+                      : EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
@@ -479,7 +493,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Widget nextPageButton() {
     return InkWell(
       onTap: () {
-        _pageController.nextPage(duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
+        _pageController.nextPage(
+            duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -510,13 +525,21 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Widget createEventButton() {
     return InkWell(
       onTap: () async {
-        if (controllerTitle.text != "" && subCategory != null && eventStartDate != null && eventStartTime != null && eventFinishDate != null && eventFinishTime != null) {
+        if (controllerTitle.text != "" &&
+            subCategory != null &&
+            eventStartDate != null &&
+            eventStartTime != null &&
+            eventFinishDate != null &&
+            eventFinishTime != null) {
           setState(() {
             loadingOverLay = true;
           });
 
-          final eventManager = Provider.of<EventService>(context, listen: false);
-          final userID = Provider.of<UserService>(context, listen: false).usermodel.getUserId();
+          final eventManager =
+              Provider.of<EventService>(context, listen: false);
+          final userID = Provider.of<UserService>(context, listen: false)
+              .userModel
+              .getUserId();
           Map<String, dynamic> eventData = {
             // REVIEW Veri tabanında yazılan yer burası , burası için bir çözüm bul
             "OrganizerID": userID,
@@ -531,9 +554,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
           };
           if (await eventManager.createEvent(userID, eventData, _image)) {
             print("Event oluşturma başarılı");
-            UserService userWorker = Provider.of<UserService>(context, listen: false);
+            UserService userWorker =
+                Provider.of<UserService>(context, listen: false);
             //ANCHOR Event oluşturma başarılıysa profilepage e gidiyor.
-            NavigationManager(context).pushPage(ProfilePage(userID: userWorker.usermodel.getUserId(), isFromEvent: false));
+            NavigationManager(context).pushPage(ProfilePage(
+                userID: userWorker.userModel.getUserId(), isFromEvent: false));
           } else {
             setState(() {
               loadingOverLay = false;
@@ -588,7 +613,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
     return Colors.pinkAccent;
   }
 
-  Widget numberOfPatricipants() {
+  Widget numberOfParticipants() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -605,7 +630,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
-
                 children: <Widget>[
                   Text(
                     "Katılım Sınırı:",
@@ -625,7 +649,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         border: InputBorder.none,
                         hintText: "0",
                         hintStyle: TextStyle(
-
                           fontFamily: "Zona",
                           color: MyColors().whiteTextColor,
                         ),
@@ -634,7 +657,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                           borderSide: BorderSide(color: Colors.transparent),
                         ),
                         focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: MyColors().whiteTextColor),
+                          borderSide:
+                              BorderSide(color: MyColors().whiteTextColor),
                         ),
                       ),
                       style: TextStyle(
@@ -674,7 +698,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   width: widthSize(43),
                   height: heightSize(5),
                   decoration: new BoxDecoration(
-                    color: _gender != null ? _gender ? MyColors().blackOpacityContainer : menColor() : menColor(),
+                    color: _gender != null
+                        ? _gender
+                            ? MyColors().blackOpacityContainer
+                            : menColor()
+                        : menColor(),
                     borderRadius: new BorderRadius.all(
                       Radius.circular(20),
                     ),
@@ -701,7 +729,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   width: widthSize(43),
                   height: heightSize(5),
                   decoration: new BoxDecoration(
-                    color: _gender != null ? _gender ? womenColor() : MyColors().blackOpacityContainer : womenColor(),
+                    color: _gender != null
+                        ? _gender
+                            ? womenColor()
+                            : MyColors().blackOpacityContainer
+                        : womenColor(),
                     borderRadius: new BorderRadius.all(
                       Radius.circular(20),
                     ),
@@ -754,7 +786,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     ),
                   ),
                   value: mainCategory != null ? mainCategory : null,
-                  items: categoryItems.map<DropdownMenuItem<String>>((String value) {
+                  items: categoryItems
+                      .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(
@@ -782,7 +815,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
     );
   }
 
-  Widget selectSubMainCategory() {
+  Widget selectSubCategory() {
     return Column(
       children: <Widget>[
         Padding(
@@ -808,7 +841,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     ),
                   ),
                   value: subCategory != null ? subCategory : null,
-                  items: categoryItems.map<DropdownMenuItem<String>>((String value) {
+                  items: categoryItems
+                      .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(
@@ -839,7 +873,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
   void getImageFromCamera() async {
     await ImagePicker.pickImage(source: ImageSource.camera).then((image) {
       if (image != null) {
-        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ImageEditorPage(image))).then((editedImage) {
+        Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => ImageEditorPage(image)))
+            .then((editedImage) {
           setState(() {
             _image = editedImage;
           });
@@ -851,7 +889,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
   void getImageFromGallery() async {
     await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {
       if (image != null) {
-        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ImageEditorPage(image))).then((editedImage) {
+        Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => ImageEditorPage(image)))
+            .then((editedImage) {
           setState(() {
             _image = editedImage;
           });
@@ -862,17 +904,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
   List<Widget> pages() {
     return [
-      //ANCHOR 2. sayfa
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          numberOfPatricipants(),
-          selectGender(),
-          selectMainCategory(),
-          selectSubMainCategory(),
-          createEventButton(),
-        ],
-      ),
       //ANCHOR 1. sayfa
       SingleChildScrollView(
         child: Column(
@@ -900,6 +931,17 @@ class _CreateEventPageState extends State<CreateEventPage> {
           ],
         ),
       ),
+      //ANCHOR 2. sayfa
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          numberOfParticipants(),
+          selectGender(),
+          selectMainCategory(),
+          selectSubCategory(),
+          createEventButton(),
+        ],
+      ),
     ];
   }
 
@@ -909,7 +951,14 @@ class _CreateEventPageState extends State<CreateEventPage> {
     return Scaffold(
         backgroundColor: Colors.deepPurpleAccent,
         body: Stack(
-          children: <Widget>[PageView(controller: _pageController, children: pages())] + (loadingOverLay ? <Widget>[PageComponents().loadingOverlay(context, Colors.white)] : <Widget>[]),
+          children: <Widget>[
+                PageView(controller: _pageController, children: pages())
+              ] +
+              (loadingOverLay
+                  ? <Widget>[
+                      PageComponents().loadingOverlay(context, Colors.white)
+                    ]
+                  : <Widget>[]),
         ));
   }
 }
