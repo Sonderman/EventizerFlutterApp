@@ -182,9 +182,13 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       loading = true;
     });
-    userService.userModelUpdater(userModel).then((value) {
+    userService.userModelUpdater(userModel).then((value) async {
       if (value) {
-        NavigationManager(context).popPage();
+        if (await Provider.of<UserService>(context, listen: false)
+            .userModelSync(userModel.getUserId())) {
+          NavigationManager(context).popPage();
+        }
+
         Fluttertoast.showToast(
             msg: "Bilgileriniz Güncellenmiştir",
             toastLength: Toast.LENGTH_SHORT,
@@ -496,7 +500,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget saveChangesButton() {
     return InkWell(
-      onTap: () {
+      onTap: () async {
         //ANCHOR veri kontrolleri burda
         bool isChanged = false;
         if (_name != null) {
@@ -523,7 +527,26 @@ class _SettingsPageState extends State<SettingsPage> {
           isChanged = true;
           userModel.setUserCity(_city);
         }
-
+        if (_phoneNumber != null) {
+          isChanged = true;
+          userModel.setUserTelNo(int.parse(_phoneNumber));
+        }
+        if (_image != null) {
+          setState(() {
+            loading = true;
+          });
+          if (!await userService.updateProfilePhoto(_image)) {
+            Fluttertoast.showToast(
+                msg:
+                    " Resim Güncellenemedi,İnternet bağlantınızı kontrol ediniz!",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 2,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 18.0);
+          }
+        }
         if (isChanged) {
           saveChanges();
         } else {

@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventizer/Services/BaseAuth.dart';
-import 'package:eventizer/Services/Firebase.dart';
+import 'package:eventizer/Settings/AppSettings.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/widgets.dart';
 
@@ -24,7 +23,7 @@ class AuthService extends InheritedWidget {
 
 //REVIEW Repositorye taşınacak
 class LoginAndRegister {
-  String _server = DatabaseWorks().getServer();
+  AppSettings settings = AppSettings();
 
   //TODO kayıt olma işlemi repository e taşınacak
   Future<void> registerUser(BuildContext context, String eposta, String sifre,
@@ -47,7 +46,7 @@ class LoginAndRegister {
         data['UserID'] = userId;
         Firestore.instance
             .collection("EventizerApp")
-            .document(_server)
+            .document(settings.getServer())
             .collection('users')
             .document(userId)
             .setData(data)
@@ -73,7 +72,7 @@ class LoginAndRegister {
             }).whenComplete(() {
               Firestore.instance
                   .collection("EventizerApp")
-                  .document(_server)
+                  .document(settings.getServer())
                   .collection('users')
                   .document(userId)
                   .updateData({"ProfilePhotoUrl": url});

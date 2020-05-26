@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat/dash_chat.dart';
 import 'package:eventizer/Models/UserModel.dart';
+import 'package:eventizer/Settings/AppSettings.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class AutoIdGenerator {
@@ -31,12 +32,7 @@ class AutoIdGenerator {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class DatabaseWorks {
   final Firestore ref = Firestore.instance;
-
-  // String _server = "Release";
-  String _server = "Development";
-
-  //String _server = "OpenTest";
-  String getServer() => _server;
+  AppSettings settings = AppSettings();
 
   DatabaseWorks() {
     print("DatabaseWorks locator running");
@@ -45,8 +41,8 @@ class DatabaseWorks {
   Future<bool> userModelUpdater(User model) async {
     try {
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection("users")
           .document(model.getUserId())
           .updateData(model.toMap())
@@ -60,8 +56,8 @@ class DatabaseWorks {
   Future<bool> amIFollowing(String userID, String otherUserID) async {
     try {
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection("users")
           .document(userID)
           .collection("following")
@@ -83,8 +79,8 @@ class DatabaseWorks {
     int followerCounter = 0;
     try {
       await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection("users")
           .document(otherUserID)
           .get()
@@ -93,8 +89,8 @@ class DatabaseWorks {
       });
 
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection("users")
           .document(userID)
           .collection("following")
@@ -103,16 +99,16 @@ class DatabaseWorks {
         if (onValue.documents.isNotEmpty) {
           await ref.runTransaction((transaction) async {
             await transaction.delete(ref
-                .collection("EventizerApp")
-                .document(_server)
+                .collection(settings.appName)
+                .document(settings.getServer())
                 .collection('users')
                 .document(userID)
                 .collection('following')
                 .document(otherUserID));
 
             await transaction.delete(ref
-                .collection("EventizerApp")
-                .document(_server)
+                .collection(settings.appName)
+                .document(settings.getServer())
                 .collection('users')
                 .document(otherUserID)
                 .collection('followers')
@@ -121,8 +117,8 @@ class DatabaseWorks {
             if (followerCounter > 0)
               await transaction.update(
                   ref
-                      .collection("EventizerApp")
-                      .document(_server)
+                      .collection(settings.appName)
+                      .document(settings.getServer())
                       .collection('users')
                       .document(otherUserID),
                   {"Nof_follower": followerCounter - 1});
@@ -134,8 +130,8 @@ class DatabaseWorks {
           await ref.runTransaction((transaction) async {
             await transaction.set(
                 ref
-                    .collection("EventizerApp")
-                    .document(_server)
+                    .collection(settings.appName)
+                    .document(settings.getServer())
                     .collection('users')
                     .document(userID)
                     .collection('following')
@@ -144,8 +140,8 @@ class DatabaseWorks {
 
             await transaction.set(
                 ref
-                    .collection("EventizerApp")
-                    .document(_server)
+                    .collection(settings.appName)
+                    .document(settings.getServer())
                     .collection('users')
                     .document(otherUserID)
                     .collection('followers')
@@ -154,8 +150,8 @@ class DatabaseWorks {
 
             await transaction.update(
                 ref
-                    .collection("EventizerApp")
-                    .document(_server)
+                    .collection(settings.appName)
+                    .document(settings.getServer())
                     .collection('users')
                     .document(otherUserID),
                 {"Nof_follower": followerCounter + 1});
@@ -179,16 +175,16 @@ class DatabaseWorks {
     eventData['eventID'] = generatedID;
     try {
       await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection("users")
           .document(userId)
           .collection("events")
           .document(generatedID)
           .setData(eventData);
       await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection("activeEvents")
           .document(generatedID)
           .setData(eventData);
@@ -204,8 +200,8 @@ class DatabaseWorks {
     try {
       List<Map<String, dynamic>> eventList = [];
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection("activeEvents")
           .where("OrganizerID", isEqualTo: userID)
           .where("Status", isEqualTo: "Accepted")
@@ -226,8 +222,8 @@ class DatabaseWorks {
     try {
       List<Map<String, dynamic>> eventList = [];
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection("activeEvents")
           .where("Status", isEqualTo: "Accepted")
           .getDocuments()
@@ -249,8 +245,8 @@ class DatabaseWorks {
     try {
       List<Map<String, dynamic>> eventList = [];
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection("activeEvents")
           .where("Category", isEqualTo: category)
           .where("Status", isEqualTo: "Accepted")
@@ -270,8 +266,8 @@ class DatabaseWorks {
   Future<String> getUserProfilePhotoUrl(String userId) async {
     try {
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection("users")
           .document(userId)
           .get()
@@ -289,15 +285,15 @@ class DatabaseWorks {
       String userId, String maptext, String changedtext) async {
     if (changedtext == "timeStamp") {
       await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection('users')
           .document(userId)
           .updateData({maptext: FieldValue.serverTimestamp()});
     } else {
       await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection('users')
           .document(userId)
           .updateData({maptext: changedtext});
@@ -307,8 +303,8 @@ class DatabaseWorks {
   Future<Map<String, dynamic>> findUserbyID(String userID) async {
     try {
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection("users")
           .document(userID)
           .get()
@@ -323,8 +319,8 @@ class DatabaseWorks {
 
   Stream<QuerySnapshot> getSnapshot(String chatID) {
     return ref
-        .collection("EventizerApp")
-        .document(_server)
+        .collection(settings.appName)
+        .document(settings.getServer())
         .collection('messagePool')
         .document(chatID)
         .collection('messages')
@@ -339,8 +335,8 @@ class DatabaseWorks {
       await Firestore.instance.runTransaction((transaction) async {
         await transaction.set(
             Firestore.instance
-                .collection("EventizerApp")
-                .document(_server)
+                .collection(settings.appName)
+                .document(settings.getServer())
                 .collection('users')
                 .document(currentUser)
                 .collection('messages')
@@ -348,8 +344,8 @@ class DatabaseWorks {
             {"OtherUserID": otherUser});
         await transaction.set(
             Firestore.instance
-                .collection("EventizerApp")
-                .document(_server)
+                .collection(settings.appName)
+                .document(settings.getServer())
                 .collection('users')
                 .document(otherUser)
                 .collection('messages')
@@ -358,8 +354,8 @@ class DatabaseWorks {
       });
     }
     var messageRef = Firestore.instance
-        .collection("EventizerApp")
-        .document(_server)
+        .collection(settings.appName)
+        .document(settings.getServer())
         .collection('messagePool')
         .document(chatID)
         .collection('messages')
@@ -375,8 +371,8 @@ class DatabaseWorks {
   Future<String> checkConversation(String currentUser, String otherUser) async {
     try {
       return await Firestore.instance
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection('users')
           .document(currentUser)
           .collection('messages')
@@ -395,8 +391,8 @@ class DatabaseWorks {
   Future sendImageMessage(
       ChatMessage message, String time, String chatID) async {
     var messageRef = ref
-        .collection("EventizerApp")
-        .document(_server)
+        .collection(settings.appName)
+        .document(settings.getServer())
         .collection('messagePool')
         .document(chatID)
         .collection('messages')
@@ -412,8 +408,8 @@ class DatabaseWorks {
 
   Stream<QuerySnapshot> getUserChatsSnapshots(String currentUser) {
     return ref
-        .collection("EventizerApp")
-        .document(_server)
+        .collection(settings.appName)
+        .document(settings.getServer())
         .collection('users')
         .document(currentUser)
         .collection('messages')
@@ -424,8 +420,8 @@ class DatabaseWorks {
   Future<List<String>> getEventCategories() async {
     List<String> categories = [];
     return await ref
-        .collection("EventizerApp")
-        .document(_server)
+        .collection(settings.appName)
+        .document(settings.getServer())
         .collection('Settings')
         .document('Event')
         .get()
@@ -444,8 +440,8 @@ class DatabaseWorks {
   Future<List<List<String>>> getEventSubCategories() async {
     List<List<String>> subCategories = [];
     return await ref
-        .collection("EventizerApp")
-        .document(_server)
+        .collection(settings.appName)
+        .document(settings.getServer())
         .collection('Settings')
         .document('Event')
         .get()
@@ -462,8 +458,8 @@ class DatabaseWorks {
   Future<bool> joinEvent(String userID, String eventID) async {
     try {
       ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection('activeEvents')
           .document(eventID)
           .collection('Participants')
@@ -480,8 +476,8 @@ class DatabaseWorks {
   Future<bool> amIparticipant(String userId, String eventID) async {
     try {
       var doc = await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection('activeEvents')
           .document(eventID)
           .collection('Participants')
@@ -497,8 +493,8 @@ class DatabaseWorks {
   Future<bool> leaveEvent(String userID, String eventID) async {
     try {
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection("activeEvents")
           .document(eventID)
           .collection("Participants")
@@ -517,8 +513,8 @@ class DatabaseWorks {
       String eventID, String userID, String comment) async {
     try {
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection("activeEvents")
           .document(eventID)
           .collection("Comments")
@@ -536,8 +532,8 @@ class DatabaseWorks {
     List<Map<String, dynamic>> commmentList = [];
     try {
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection("activeEvents")
           .document(eventID)
           .collection("Comments")
@@ -559,8 +555,8 @@ class DatabaseWorks {
     List<Map<String, dynamic>> participants = [];
     try {
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection("activeEvents")
           .document(eventID)
           .collection("Participants")
@@ -582,7 +578,7 @@ class DatabaseWorks {
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 class StorageWorks {
   final StorageReference ref = FirebaseStorage().ref();
-
+  AppSettings settings = AppSettings();
   StorageWorks() {
     print("StorageWorks locator running");
   }
@@ -613,6 +609,8 @@ class StorageWorks {
         print("Url:" + url);
       }).whenComplete(() {
         Firestore.instance
+            .collection(settings.appName)
+            .document(settings.getServer())
             .collection('users')
             .document(userId)
             .updateData({"ProfilePhotoUrl": url});

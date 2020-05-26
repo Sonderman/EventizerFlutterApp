@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 
 class AppSettings with ChangeNotifier {
+  String appName = "EventizerApp";
+
+  // String _server = "Release";
+  String _server = "Development";
+  //String _server = "OpenTest";
+  String getServer() => _server;
+
   int _bottomNavIndex = 2;
 
   List<Widget> _pageStack = [];

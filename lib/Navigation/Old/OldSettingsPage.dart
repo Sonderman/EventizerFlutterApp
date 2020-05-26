@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/BaseAuth.dart';

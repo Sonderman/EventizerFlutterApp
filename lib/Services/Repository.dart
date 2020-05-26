@@ -30,12 +30,16 @@ class UserService with ChangeNotifier {
   }
 
   //TODO - tüm veriler gelene kadar navigation işlemini bekletecek bir mekanizma yap
-  void userModelSync(String userId) {
-    firebaseDatabaseWorks.findUserbyID(userId).then((map) {
-      userModel.parseMap(map);
-    }).whenComplete(() {
-      refresh();
-    });
+  Future<bool> userModelSync(String userId) async {
+    try {
+      return await firebaseDatabaseWorks.findUserbyID(userId).then((map) {
+        userModel.parseMap(map);
+        return true;
+      });
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   Future<Map<String, dynamic>> findUserByID(String userID) {
