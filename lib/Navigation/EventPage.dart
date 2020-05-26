@@ -3,6 +3,7 @@ import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +32,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
 
   TabController _tabController;
   bool katilbutton;
+  TextEditingController commentController = TextEditingController();
 
   @override
   void initState() {
@@ -125,10 +127,8 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                       ],
                     ),
                   ),
-                  //TODO buraya Yorumlar sayfası yapılcak
-                  Center(
-                    child: PageComponents().underConstruction(context),
-                  ),
+                  //ANCHOR Comments page
+                  commentsPage(),
                   //TODO buraya Katılımcılar sayfası yapılcak
                   Center(
                     child: PageComponents().underConstruction(context),
@@ -139,6 +139,172 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
           ),
         ),
       ),
+    );
+  }
+
+  // REVIEW  Yorum Sayfası tasarımı gözden geçir
+  Widget commentsPage() {
+    var eventService = Provider.of<EventService>(context);
+    var userService = Provider.of<UserService>(context);
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: FutureBuilder(
+              future: eventService.getComments(widget.eventData['eventID']),
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.data.length == 0) {
+                    return Text("Henüz yorum yapılmadı");
+                  } else
+                    return ListView.builder(
+                        //physics: ClampingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return FutureBuilder(
+                            //ANCHOR Her bir list itemi için kullanıcı bilgisi getirir
+                            future: userService.findUserByID(
+                                snapshot.data[index]['CommentOwnerID']),
+                            builder:
+                                (BuildContext context, AsyncSnapshot user) {
+                              if (user.connectionState ==
+                                  ConnectionState.done) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  //TODO Zaman göstergeci ekle
+                                  child: Card(
+                                      child: Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                          flex: 3,
+                                          child: AspectRatio(
+                                            aspectRatio: 1,
+                                            child: CircleAvatar(
+                                              radius: 120,
+                                              backgroundImage:
+                                                  ExtendedNetworkImageProvider(
+                                                      user.data[
+                                                          'ProfilePhotoUrl'],
+                                                      cache: true),
+                                            ),
+                                          )),
+                                      Expanded(flex: 1, child: SizedBox()),
+                                      Expanded(
+                                          flex: 8,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(user.data['Name'] +
+                                                  " " +
+                                                  user.data['Surname']),
+                                              Divider(
+                                                height: 5,
+                                              ),
+                                              Text(snapshot.data[index]
+                                                  ['Comment'])
+                                            ],
+                                          ))
+                                    ],
+                                  )),
+                                );
+                              } else {
+                                return CircularProgressIndicator();
+                              }
+                            },
+                          );
+                        });
+                } else
+                  return PageComponents().loadingOverlay(context, Colors.white);
+              }),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Wrap(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 3,
+                    child: Padding(
+                        padding: EdgeInsets.fromLTRB(5, 3, 5, 1),
+                        child: TextField(
+                          controller: commentController,
+                          maxLines: null,
+                          minLines: null,
+                          keyboardType: TextInputType.text,
+                          enableInteractiveSelection: true,
+                          cursorColor: MyColors().blueThemeColor,
+                          maxLength: 256,
+                          textCapitalization: TextCapitalization.sentences,
+                          onChanged: (text) {},
+                          decoration: InputDecoration(
+                            labelText: 'Yorum yapın.',
+                            labelStyle: TextStyle(
+                                color: MyColors().blueThemeColor,
+                                fontSize: 14.0),
+                            errorStyle: TextStyle(
+                              color: Colors.red,
+                            ),
+                            fillColor: MyColors().blueThemeColor,
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: MyColors().blueThemeColor)),
+                            counterText: '',
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
+                              borderSide: BorderSide(
+                                  width: 1, color: MyColors().blueThemeColor),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
+                              borderSide: BorderSide(
+                                  width: 1, color: MyColors().blueThemeColor),
+                            ),
+                          ),
+                        )),
+                  ),
+                  Expanded(
+                      flex: 1,
+                      child: Padding(
+                          padding: const EdgeInsets.fromLTRB(5, 3, 5, 1),
+                          child: Container(
+                            color: Colors.green,
+                            child: FlatButton(
+                              onPressed: () async {
+                                //ANCHOR  Yorum gönderme backend işlemleri
+                                if (await eventService.sendComment(
+                                    widget.eventData['eventID'],
+                                    userService.userModel.getUserId(),
+                                    commentController.text)) {
+                                  /* nestedScrollController.jumpTo(
+                                      nestedScrollController
+                                              .position.maxScrollExtent
+                                          );*/
+                                  setState(() {
+                                    commentController.text = '';
+                                  });
+
+                                  print("Yorum yapıldı");
+                                }
+                              },
+                              child: Text("Yorum Yap"),
+                            ),
+                          )))
+                ],
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: heightSize(5),
+        )
+      ],
     );
   }
 
