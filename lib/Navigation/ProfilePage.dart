@@ -1,5 +1,5 @@
 import 'package:eventizer/Models/UserModel.dart';
-import 'package:eventizer/Navigation/EventPage.dart';
+import 'package:eventizer/Navigation/MyEventsPage.dart';
 import 'package:eventizer/Navigation/SettingsPage.dart';
 import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
@@ -34,39 +34,35 @@ class _ProfilePageState extends State<ProfilePage>
     return MediaQuery.of(context).size.width * value;
   }
 
-  UserService userWorker;
+  UserService userService;
   User userModel;
-  bool amIFollowing = false;
-  String nameText;
-  String surnameText;
-  String aboutText;
-  String followersText;
-  String eventsText;
-  String trustText;
-  String profilePhotoUrl;
+  bool amIFollowing = false, isThisProfileMine;
+  String nameText,
+      surnameText,
+      aboutText,
+      followersText,
+      eventsText,
+      trustText,
+      profilePhotoUrl;
 
   TabController _tabController;
 
   @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-    userModel = User(userID: widget.userID);
-  }
-
-  @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-    userWorker = Provider.of<UserService>(context);
-    if (widget.userID != userWorker.userModel.userID) if (await userWorker
-        .amIFollowing(userModel.userID)) {
-      setState(() {
+    userService = Provider.of<UserService>(context);
+    if (widget.userID != userService.userModel.userID) {
+      isThisProfileMine = false;
+      userModel = User(userID: widget.userID);
+      if (await userService.amIFollowing(userModel.userID)) {
         amIFollowing = true;
-      });
-    } else {
-      setState(() {
+      } else {
         amIFollowing = false;
-      });
+      }
+    } else {
+      isThisProfileMine = true;
+      _tabController = TabController(length: 2, vsync: this);
+      userModel = User(userID: widget.userID);
     }
   }
 
@@ -115,21 +111,25 @@ class _ProfilePageState extends State<ProfilePage>
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                InkWell(
-                  onTap: () =>
-                      NavigationManager(context).pushPage(SettingsPage()),
-                  child: Container(
-                    height: heightSize(6),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Image.asset(
-                        "assets/icons/options.png",
+                Visibility(
+                  //replacement: SizedBox(),
+                  visible: isThisProfileMine,
+                  child: InkWell(
+                    onTap: () =>
+                        NavigationManager(context).pushPage(SettingsPage()),
+                    child: Container(
+                      height: heightSize(6),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Image.asset(
+                          "assets/icons/options.png",
+                        ),
                       ),
-                    ),
-                    decoration: new BoxDecoration(
-                      color: MyColors().yellowContainer,
-                      borderRadius: new BorderRadius.all(
-                        Radius.circular(20),
+                      decoration: new BoxDecoration(
+                        color: MyColors().yellowContainer,
+                        borderRadius: new BorderRadius.all(
+                          Radius.circular(20),
+                        ),
                       ),
                     ),
                   ),
@@ -153,23 +153,27 @@ class _ProfilePageState extends State<ProfilePage>
                     ),
                   ],
                 ),
-                Container(
-                  height: heightSize(6),
-                  child: IconButton(
-                      icon: Icon(FontAwesomeIcons.signOutAlt),
-                      onPressed: () {
-                        var auth = AuthService.of(context).auth;
-                        auth.signOut();
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    AuthCheck()));
-                      }),
-                  decoration: new BoxDecoration(
-                    color: MyColors().yellowContainer,
-                    borderRadius: new BorderRadius.all(
-                      Radius.circular(20),
+                Visibility(
+                  replacement: SizedBox(),
+                  visible: isThisProfileMine,
+                  child: Container(
+                    height: heightSize(6),
+                    child: IconButton(
+                        icon: Icon(FontAwesomeIcons.signOutAlt),
+                        onPressed: () {
+                          var auth = AuthService.of(context).auth;
+                          auth.signOut();
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      AuthCheck()));
+                        }),
+                    decoration: new BoxDecoration(
+                      color: MyColors().yellowContainer,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
                     ),
                   ),
                 ),
@@ -179,68 +183,7 @@ class _ProfilePageState extends State<ProfilePage>
         ),
       );
 
-  //ANCHOR yabancı tarafından görülen kısım
-  Widget threeBoxes() => Column(
-        children: <Widget>[
-          //ANCHOR About myself box is here
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(
-                Radius.circular(20),
-              ),
-            ),
-            width: widthSize(82),
-            child: FadeInImage.assetNetwork(
-                placeholder: "assets/images/avatar_man.png",
-                image: profilePhotoUrl),
-          ),
-          SizedBox(
-            height: heightSize(1),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                height: heightSize(8),
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Image.asset("assets/icons/options.png"),
-                ),
-                decoration: new BoxDecoration(
-                  color: MyColors().yellowContainer,
-                  borderRadius: new BorderRadius.all(
-                    Radius.circular(20),
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: widthSize(2),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    nameText.toUpperCase() + ' ' + surnameText.toUpperCase(),
-                    style: TextStyle(
-                      fontFamily: "Zona",
-                      fontSize: heightSize(3),
-                    ),
-                  ),
-                  Text(
-                    "@nickname",
-                    style: TextStyle(
-                      fontFamily: "ZonaLight",
-                      fontSize: heightSize(2),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      );
-
-  Widget threeBoxesOwnProfile() => Padding(
+  Widget threeBoxes() => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: <Widget>[
@@ -276,64 +219,80 @@ class _ProfilePageState extends State<ProfilePage>
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Container(
-                  width: widthSize(43),
-                  height: heightSize(8),
-                  decoration: new BoxDecoration(
-                    color: MyColors().purpleContainer,
-                    borderRadius: new BorderRadius.all(
-                      Radius.circular(20),
+                InkWell(
+                  onTap: () {
+                    NavigationManager(context).pushPage(MyEventsPage(
+                      isOld: false,
+                      userID: null,
+                    ));
+                  },
+                  child: Container(
+                    width: widthSize(43),
+                    height: heightSize(8),
+                    decoration: new BoxDecoration(
+                      color: MyColors().purpleContainer,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
                     ),
-                  ),
-                  child: InkWell(
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Container(
-                            height: heightSize(5),
-                            child: Image.asset("assets/icons/future.png"),
-                          ),
-                          Text(
-                            "Gelecek \nEtkinlikler",
-                            style: TextStyle(
-                              fontFamily: "Zona",
-                              fontSize: heightSize(2),
-                              color: MyColors().whiteTextColor,
+                    child: InkWell(
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Container(
+                              height: heightSize(5),
+                              child: Image.asset("assets/icons/future.png"),
                             ),
-                          ),
-                        ],
+                            Text(
+                              "Gelecek \nEtkinlikler",
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                fontSize: heightSize(2),
+                                color: MyColors().whiteTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-                Container(
-                  width: widthSize(43),
-                  height: heightSize(8),
-                  decoration: BoxDecoration(
-                    color: MyColors().purpleContainer,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(20),
+                InkWell(
+                  onTap: () {
+                    NavigationManager(context).pushPage(MyEventsPage(
+                      isOld: true,
+                      userID: null,
+                    ));
+                  },
+                  child: Container(
+                    width: widthSize(43),
+                    height: heightSize(8),
+                    decoration: BoxDecoration(
+                      color: MyColors().purpleContainer,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20),
+                      ),
                     ),
-                  ),
-                  child: InkWell(
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Container(
-                            height: heightSize(5),
-                            child: Image.asset("assets/icons/past.png"),
-                          ),
-                          Text(
-                            "Geçmiş \nEtkinlikler",
-                            style: TextStyle(
-                              fontFamily: "Zona",
-                              fontSize: heightSize(2),
-                              color: MyColors().whiteTextColor,
+                    child: InkWell(
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Container(
+                              height: heightSize(5),
+                              child: Image.asset("assets/icons/past.png"),
                             ),
-                          ),
-                        ],
+                            Text(
+                              "Geçmiş \nEtkinlikler",
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                fontSize: heightSize(2),
+                                color: MyColors().whiteTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -427,171 +386,11 @@ class _ProfilePageState extends State<ProfilePage>
         ],
       );
 
-  Widget itemCard(String title, String category, String name, String imageUrl,
-      String startDate) {
-    return Stack(
-      children: <Widget>[
-        Positioned.fill(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10.0),
-            //ANCHOR resimlerin cache de saklanması sağlandı
-            child: FadeInImage.assetNetwork(
-              placeholder: 'assets/images/etkinlik.jpg',
-              image: imageUrl,
-              fit: BoxFit.fill,
-            ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            height: 200.0,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [
-                  Colors.black.withOpacity(1),
-                  Colors.black.withOpacity(0.9),
-                  Colors.black.withOpacity(0.8),
-                  Colors.black.withOpacity(0.7),
-                  Colors.black.withOpacity(0.6),
-                  Colors.black.withOpacity(0.5),
-                  Colors.black.withOpacity(0.4),
-                  Colors.black.withOpacity(0.1),
-                  Colors.black.withOpacity(0.05),
-                  Colors.black.withOpacity(0.025),
-                  Colors.black.withOpacity(0),
-                ],
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Text(
-                  title ?? "",
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        category ?? "",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        startDate ?? "",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 10),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget eventItem(Map<String, dynamic> eventDatas) {
-    UserService userWorker = Provider.of<UserService>(context);
-    var eventService = Provider.of<EventService>(context);
-    String eventID = eventDatas['eventID'];
-    String title = eventDatas['Title'];
-    String ownerID = eventDatas['OrganizerID'];
-    String category = eventDatas['Category'];
-    String imageUrl = eventDatas['EventImageUrl'];
-    String startDate = eventDatas['StartDate'];
-    //String detail = eventDatas['Detail'];
-    return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: FutureBuilder(
-          future: userWorker.findUserByID(ownerID),
-          builder: (BuildContext context,
-              AsyncSnapshot<Map<String, dynamic>> userData) {
-            if (userData.connectionState == ConnectionState.done) {
-              String name = userData.data['Name'];
-              return GestureDetector(
-                  onTap: () async {
-                    eventService
-                        .amIparticipant(
-                            userWorker.userModel.getUserId(), eventID)
-                        .then((amIparticipant) {
-                      print("Kullanıcı bu etkinliğe katılmış:" +
-                          amIparticipant.toString());
-                      //ANCHOR tıklanınca eventPage e giden yer
-                      NavigationManager(context).pushPage(EventPage(
-                        eventData: eventDatas,
-                        userData: userData.data,
-                        amIparticipant: amIparticipant,
-                      ));
-
-                      /*
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) => EventPage(
-                                  //eventData: eventDatas,
-                                  // userData: userData.data,
-                                  //amIparticipant: amIparticipant,
-                                  )));
-                                  */
-                    });
-                  },
-                  child: itemCard(title, category, name, imageUrl, startDate));
-            } else
-              return PageComponents().loadingOverlay(context, Colors.white);
-          },
-        ));
-  }
-
-  Widget eventList() {
-    var eventService = Provider.of<EventService>(context);
-    return FutureBuilder(
-      future:
-          eventService.fetchListOfUserEvents(userWorker.userModel.getUserId()),
-      builder: (BuildContext context, AsyncSnapshot fetchedlist) {
-        if (fetchedlist.connectionState == ConnectionState.done) {
-          List<Map<String, dynamic>> listofMaps = fetchedlist.data;
-          if (listofMaps.length == 0) {
-            return SliverToBoxAdapter(child: Text("Etkinlik Yok"));
-          } else {
-            return SliverGrid(
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  return eventItem(listofMaps[index]);
-                }, childCount: listofMaps.length),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1));
-          }
-        } else
-          return SliverToBoxAdapter(
-              child: PageComponents().loadingOverlay(context, Colors.white));
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (widget.userID != userWorker.userModel.userID) {
-      print("Gelen userID:" + widget.userID);
-
+    if (!isThisProfileMine) {
       return FutureBuilder(
-          future: userWorker.findUserByID(widget.userID),
+          future: userService.findUserByID(widget.userID),
           builder:
               (BuildContext context, AsyncSnapshot<Map<String, dynamic>> data) {
             if (data.connectionState == ConnectionState.done) {
@@ -603,49 +402,15 @@ class _ProfilePageState extends State<ProfilePage>
                     SizedBox(
                       height: 25,
                     ),
-                    Container(
-                      child: TabBar(
-                          indicatorColor: Colors.teal,
-                          labelColor: Colors.teal,
-                          unselectedLabelColor: Colors.black54,
-                          controller: _tabController,
-                          isScrollable: true,
-                          tabs: [
-                            Tab(
-                              text: "Profilim",
-                            ),
-                            Tab(
-                              text: "Bildirimler",
-                            ),
-                          ]),
-                    ),
                     Expanded(
-                      child: TabBarView(
-                        controller: _tabController,
-                        children: <Widget>[
-                          CustomScrollView(
-                            slivers: <Widget>[
-                              SliverToBoxAdapter(
-                                child: Column(
-                                  children: <Widget>[
-                                    avatarAndName(),
-                                    numberDatas(),
-                                    threeBoxes(),
-                                    //eventList,
-                                  ],
-                                ),
-                              ),
-                              SliverPadding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 25),
-                                sliver: eventList(), //ANCHOR Event list
-                              )
-                            ],
-                          ),
-                          Center(
-                            child: PageComponents().underConstruction(context),
-                          ),
-                        ],
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            avatarAndName(),
+                            numberDatas(),
+                            threeBoxes(),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -657,7 +422,7 @@ class _ProfilePageState extends State<ProfilePage>
               );
           });
     } else {
-      textUpdaterByUserModel(userWorker.userModel);
+      textUpdaterByUserModel(userService.userModel);
       return Scaffold(
         body: Column(
           children: <Widget>[
@@ -684,23 +449,14 @@ class _ProfilePageState extends State<ProfilePage>
               child: TabBarView(
                 controller: _tabController,
                 children: <Widget>[
-                  CustomScrollView(
-                    slivers: <Widget>[
-                      SliverToBoxAdapter(
-                        child: Column(
-                          children: <Widget>[
-                            avatarAndName(),
-                            numberDatas(),
-                            threeBoxesOwnProfile(),
-                            //eventList,
-                          ],
-                        ),
-                      ),
-                      SliverPadding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25),
-                        sliver: eventList(),
-                      )
-                    ],
+                  SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        avatarAndName(),
+                        numberDatas(),
+                        threeBoxes(),
+                      ],
+                    ),
                   ),
                   Center(
                     child: PageComponents().underConstruction(context),
