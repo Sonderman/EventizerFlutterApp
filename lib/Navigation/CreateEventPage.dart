@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:eventizer/Models/UserModel.dart';
 import 'package:eventizer/Navigation/ProfilePage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Settings/EventSettings.dart';
@@ -7,6 +8,8 @@ import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../locator.dart';
@@ -17,8 +20,6 @@ class CreateEventPage extends StatefulWidget {
 }
 
 class _CreateEventPageState extends State<CreateEventPage> {
-  bool _gender;
-
   double heightSize(double value) {
     value /= 100;
     return MediaQuery.of(context).size.height * value;
@@ -30,6 +31,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
   }
 
   PageController _pageController;
+  UserService userService;
+  User userModel;
 
   @override
   void initState() {
@@ -37,6 +40,13 @@ class _CreateEventPageState extends State<CreateEventPage> {
       initialPage: 0,
     );
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    userService = Provider.of<UserService>(context);
+    userModel = userService.userModel;
+    super.didChangeDependencies();
   }
 
   @override
@@ -49,24 +59,52 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Color myBlueColor = MyColors().blueThemeColor;
   TextEditingController controllerTitle = TextEditingController();
   TextEditingController controllerDetail = TextEditingController();
+  TextEditingController participantNumberController = TextEditingController();
   List<String> categoryItems = locator<EventSettings>().categoryItems ?? [];
+  List<List<String>> subCategoryItems =
+      locator<EventSettings>().subCategoryItems ?? [];
   MaterialLocalizations localizations;
-  bool loadingOverLay = false;
-  String subCategory;
-  String mainCategory;
-  String eventStartDate;
-  String eventStartTime;
-  TimeOfDay eventStartTimeOfDay;
-  TimeOfDay eventFinishTimeOfDay;
+  String subCategory,
+      mainCategory,
+      eventStartDate,
+      eventStartTime,
+      eventFinishDate,
+      eventFinishTime;
+  TimeOfDay eventStartTimeOfDay, eventFinishTimeOfDay;
   DateTime eventStartDateTime;
-  String eventFinishDate;
-  String eventFinishTime;
-  bool isStartDateSelected = false;
-  bool isStartTimeSelected = false;
-  bool isFinishDateSelected = false;
-  bool isFinishTimeSelected = false;
-
+  bool isStartDateSelected = false,
+      isStartTimeSelected = false,
+      isFinishDateSelected = false,
+      isFinishTimeSelected = false,
+      isMainCategorySelected = false,
+      maleCheck = false,
+      femaleCheck = false,
+      loadingOverLay = false;
   Uint8List _image;
+
+  @override
+  Widget build(BuildContext context) {
+    //ANCHOR kişi etkinlik oluştururken kendi cinsiyetini dahil etmek zorundadır.
+    if (userModel.getUserGender() == "Man") {
+      maleCheck = true;
+    }
+    if (userModel.getUserGender() == "Female") {
+      femaleCheck = true;
+    }
+    localizations = MaterialLocalizations.of(context);
+    return Scaffold(
+        backgroundColor: Colors.deepPurpleAccent,
+        body: Stack(
+          children: <Widget>[
+                PageView(controller: _pageController, children: pages())
+              ] +
+              (loadingOverLay
+                  ? <Widget>[
+                      PageComponents().loadingOverlay(context, Colors.white)
+                    ]
+                  : <Widget>[]),
+        ));
+  }
 
   Widget eventPhotoAndButtons() {
     return Padding(
@@ -459,17 +497,20 @@ class _CreateEventPageState extends State<CreateEventPage> {
             height: heightSize(1.5),
           ),
           ClipRRect(
-            borderRadius: new BorderRadius.all(
+            borderRadius: BorderRadius.all(
               Radius.circular(20),
             ),
             child: Container(
               color: MyColors().blackOpacityContainer,
               width: widthSize(100),
-              height: heightSize(8),
               child: Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 8),
                 child: TextFormField(
                   controller: controllerDetail,
+                  minLines: 3,
+                  maxLines: 10,
+                  keyboardType: TextInputType.multiline,
+                  enableInteractiveSelection: true,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: "Etkinlik içeriği...",
@@ -526,7 +567,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
     return InkWell(
       onTap: () async {
         if (controllerTitle.text != "" &&
+            controllerDetail.text != "" &&
+            participantNumberController.text != "0" &&
+            _image != null &&
             subCategory != null &&
+            mainCategory != null &&
             eventStartDate != null &&
             eventStartTime != null &&
             eventFinishDate != null &&
@@ -544,12 +589,17 @@ class _CreateEventPageState extends State<CreateEventPage> {
             // REVIEW Veri tabanında yazılan yer burası , burası için bir çözüm bul
             "OrganizerID": userID,
             "Title": controllerTitle.text,
-            "Category": subCategory,
+            "ParticipantNumber": int.parse(participantNumberController.text),
+            "MainCategory": mainCategory,
+            "SubCategory": subCategory,
             "StartDate": eventStartDate,
             "FinishDate": eventFinishDate,
             "StartTime": eventStartTime,
             "FinishTime": eventFinishTime,
             "Detail": controllerDetail.text,
+            //ANCHOR Erkek izin verildiyse "10", kadın izin verildiyse "01" , ikiside izin verildiyse "11"
+            "AllowedGenders":
+                (maleCheck ? "1" : "0") + (femaleCheck ? "1" : "0"),
             "Status": "New"
           };
           if (await eventManager.createEvent(userID, eventData, _image)) {
@@ -559,12 +609,37 @@ class _CreateEventPageState extends State<CreateEventPage> {
             //ANCHOR Event oluşturma başarılıysa profilepage e gidiyor.
             NavigationManager(context).pushPage(ProfilePage(
                 userID: userWorker.userModel.getUserId(), isFromEvent: false));
+
+            Fluttertoast.showToast(
+                msg: "Etkinlik Oluşturuldu",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 4,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 18.0);
           } else {
             setState(() {
               loadingOverLay = false;
             });
-            print("Event oluşturulamadı");
+            Fluttertoast.showToast(
+                msg: "İnternet Bağlantınızı kontrol ediniz!",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 3,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 18.0);
           }
+        } else {
+          Fluttertoast.showToast(
+              msg: "Eksik Alanları Doldurunuz!",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 3,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 18.0);
         }
       },
       child: Padding(
@@ -641,11 +716,19 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   ),
                   Spacer(),
                   Container(
-                    width: widthSize(10),
+                    width: widthSize(20),
                     child: TextFormField(
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.right,
+                      maxLength: 3,
+                      enableInteractiveSelection: false,
+                      controller: participantNumberController,
+                      expands: false,
+                      inputFormatters: <TextInputFormatter>[
+                        WhitelistingTextInputFormatter.digitsOnly
+                      ],
                       decoration: InputDecoration(
+                        counterText: "",
                         border: InputBorder.none,
                         hintText: "0",
                         hintStyle: TextStyle(
@@ -691,15 +774,15 @@ class _CreateEventPageState extends State<CreateEventPage> {
               InkWell(
                 onTap: () {
                   setState(() {
-                    _gender = true;
+                    maleCheck = !maleCheck;
                   });
                 },
                 child: Container(
                   width: widthSize(43),
                   height: heightSize(5),
                   decoration: new BoxDecoration(
-                    color: _gender != null
-                        ? _gender
+                    color: maleCheck != null
+                        ? maleCheck
                             ? MyColors().blackOpacityContainer
                             : menColor()
                         : menColor(),
@@ -707,30 +790,40 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       Radius.circular(20),
                     ),
                   ),
-                  child: Center(
-                    child: Text(
-                      ("Erkek"),
-                      style: TextStyle(
-                        fontFamily: "Zona",
-                        fontSize: heightSize(2),
-                        color: MyColors().whiteTextColor,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Text(
+                        ("Erkek"),
+                        style: TextStyle(
+                          fontFamily: "Zona",
+                          fontSize: heightSize(2),
+                          color: MyColors().whiteTextColor,
+                        ),
                       ),
-                    ),
+                      Checkbox(
+                          value: maleCheck,
+                          onChanged: (check) {
+                            setState(() {
+                              maleCheck = check;
+                            });
+                          })
+                    ],
                   ),
                 ),
               ),
               InkWell(
                 onTap: () {
                   setState(() {
-                    _gender = false;
+                    femaleCheck = !femaleCheck;
                   });
                 },
                 child: Container(
                   width: widthSize(43),
                   height: heightSize(5),
                   decoration: new BoxDecoration(
-                    color: _gender != null
-                        ? _gender
+                    color: femaleCheck != null
+                        ? femaleCheck
                             ? womenColor()
                             : MyColors().blackOpacityContainer
                         : womenColor(),
@@ -738,15 +831,25 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       Radius.circular(20),
                     ),
                   ),
-                  child: Center(
-                    child: Text(
-                      "Kadın",
-                      style: TextStyle(
-                        fontFamily: "Zona",
-                        fontSize: heightSize(2),
-                        color: MyColors().whiteTextColor,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Text(
+                        "Kadın",
+                        style: TextStyle(
+                          fontFamily: "Zona",
+                          fontSize: heightSize(2),
+                          color: MyColors().whiteTextColor,
+                        ),
                       ),
-                    ),
+                      Checkbox(
+                          value: femaleCheck,
+                          onChanged: (check) {
+                            setState(() {
+                              femaleCheck = check;
+                            });
+                          })
+                    ],
                   ),
                 ),
               ),
@@ -776,6 +879,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
             ),
             child: Center(
               child: DropdownButton<String>(
+                  iconEnabledColor: Colors.white,
                   dropdownColor: MyColors().purpleContainerSplash,
                   hint: Text(
                     "Kategori Seçiniz",
@@ -802,7 +906,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   }).toList(),
                   onChanged: (chosen) {
                     setState(() {
-                      mainCategory = chosen;
+                      if (mainCategory != chosen) {
+                        mainCategory = chosen;
+                        isMainCategorySelected = true;
+                        subCategory = null;
+                      }
                     });
                   }),
             ),
@@ -816,6 +924,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
   }
 
   Widget selectSubCategory() {
+    int selectedMainCategoryIndex =
+        categoryItems.indexWhere((element) => element == mainCategory);
     return Column(
       children: <Widget>[
         Padding(
@@ -831,9 +941,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
             ),
             child: Center(
               child: DropdownButton<String>(
+                  iconEnabledColor: Colors.white,
                   dropdownColor: MyColors().purpleContainerSplash,
                   hint: Text(
-                    "Kategori Seçiniz",
+                    "Alt Kategori Seçiniz",
                     style: TextStyle(
                       fontFamily: "Zona",
                       fontSize: heightSize(2),
@@ -841,7 +952,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     ),
                   ),
                   value: subCategory != null ? subCategory : null,
-                  items: categoryItems
+                  items: subCategoryItems[selectedMainCategoryIndex]
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
@@ -935,30 +1046,19 @@ class _CreateEventPageState extends State<CreateEventPage> {
       Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          numberOfParticipants(),
-          selectGender(),
-          selectMainCategory(),
-          selectSubCategory(),
-          createEventButton(),
-        ],
+              numberOfParticipants(),
+              selectGender(),
+              selectMainCategory(),
+            ] +
+            (isMainCategorySelected
+                ? <Widget>[
+                    selectSubCategory(),
+                  ]
+                : <Widget>[]) +
+            <Widget>[
+              createEventButton(),
+            ],
       ),
     ];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    localizations = MaterialLocalizations.of(context);
-    return Scaffold(
-        backgroundColor: Colors.deepPurpleAccent,
-        body: Stack(
-          children: <Widget>[
-                PageView(controller: _pageController, children: pages())
-              ] +
-              (loadingOverLay
-                  ? <Widget>[
-                      PageComponents().loadingOverlay(context, Colors.white)
-                    ]
-                  : <Widget>[]),
-        ));
   }
 }

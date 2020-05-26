@@ -420,19 +420,42 @@ class DatabaseWorks {
         .snapshots();
   }
 
-//NOTE Burası Settings
-  Future<List<String>> getEventCategories() {
-    List<String> categories;
-    return ref
+//NOTE Burası EventSettings
+  Future<List<String>> getEventCategories() async {
+    List<String> categories = [];
+    return await ref
         .collection("EventizerApp")
         .document(_server)
         .collection('Settings')
         .document('Event')
         .get()
         .then((eventSettings) {
-      categories = List.from(eventSettings.data['Categories']);
+      Map<String, dynamic> temp;
+      temp = eventSettings.data['Category'];
+      temp.forEach((key, value) {
+        categories.add(key);
+      });
       print(categories);
       return categories;
+    });
+  }
+
+  //NOTE Burası EventSettings
+  Future<List<List<String>>> getEventSubCategories() async {
+    List<List<String>> subCategories = [];
+    return await ref
+        .collection("EventizerApp")
+        .document(_server)
+        .collection('Settings')
+        .document('Event')
+        .get()
+        .then((eventSettings) {
+      Map<String, dynamic> temp;
+      temp = eventSettings.data['Category'];
+      temp.forEach((key, value) {
+        subCategories.add(List<String>.from(value));
+      });
+      return subCategories;
     });
   }
 

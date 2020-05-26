@@ -122,7 +122,6 @@ class _SettingsPageState extends State<SettingsPage> {
       enableInteractiveSelection: true,
       minLines: 2,
       maxLines: 10,
-      expands: false,
       decoration: InputDecoration(
         border: InputBorder.none,
         hintText: "Hakkımda",
