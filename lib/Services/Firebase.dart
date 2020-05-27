@@ -218,6 +218,45 @@ class DatabaseWorks {
     }
   }
 
+  Future<List<Map<String, dynamic>>> fetchEventListsForUser(
+      String organizerID, bool isOld) async {
+    try {
+      List<Map<String, dynamic>> eventList = [];
+      if (isOld) {
+        return await ref
+            .collection(settings.appName)
+            .document(settings.getServer())
+            .collection("finishedEvents")
+            .where("OrganizerID", isEqualTo: organizerID)
+            .getDocuments()
+            .then((docs) {
+          // print("gelen verinin uzunluğu:" + docs.documents.length.toString());
+          docs.documents.forEach((event) {
+            eventList.add(event.data);
+          });
+          return eventList;
+        });
+      } else {
+        return await ref
+            .collection(settings.appName)
+            .document(settings.getServer())
+            .collection("activeEvents")
+            .where("OrganizerID", isEqualTo: organizerID)
+            .getDocuments()
+            .then((docs) {
+          // print("gelen verinin uzunluğu:" + docs.documents.length.toString());
+          docs.documents.forEach((event) {
+            eventList.add(event.data);
+          });
+          return eventList;
+        });
+      }
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   Future<List<Map<String, dynamic>>> fetchActiveEventLists() async {
     try {
       List<Map<String, dynamic>> eventList = [];

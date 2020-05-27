@@ -138,6 +138,11 @@ class EventService with ChangeNotifier {
     return firebaseDatabaseWorks.fetchActiveEventListsByCategory(category);
   }
 
+  Future<List<Map<String, dynamic>>> fetchEventListsForUser(
+      String organizerID, bool isOld) {
+    return firebaseDatabaseWorks.fetchEventListsForUser(organizerID, isOld);
+  }
+
   //ANCHOR Yapılan yorumu firestore da event içerisine kaydeder
   Future<bool> sendComment(
       String eventID, String userID, String comment) async {
