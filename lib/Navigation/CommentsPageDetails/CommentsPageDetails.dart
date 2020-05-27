@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class ProfileListItem extends StatefulWidget {
   final Map<String, dynamic> jsonData;
 
-  ProfileListItem({this.jsonData});
+  ProfileListItem.CommentsPageDetails({this.jsonData});
 
   @override
   _ProfileListItemState createState() => _ProfileListItemState();

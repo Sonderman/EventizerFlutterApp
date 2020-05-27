@@ -1,10 +1,11 @@
+import 'package:eventizer/Navigation/CommentsPageDetails/CommentsPageDetails.dart';
 import 'package:eventizer/Navigation/ProfilePage.dart';
-import 'package:eventizer/Navigation/event_page/ProfileListItem.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,18 +23,12 @@ class EventPage extends StatefulWidget {
 class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   double heightSize(double value) {
     value /= 100;
-    return MediaQuery
-        .of(context)
-        .size
-        .height * value;
+    return MediaQuery.of(context).size.height * value;
   }
 
   double widthSize(double value) {
     value /= 100;
-    return MediaQuery
-        .of(context)
-        .size
-        .width * value;
+    return MediaQuery.of(context).size.width * value;
   }
 
   TabController _tabController;
@@ -99,6 +94,8 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
               ),
               Expanded(
                 child: TabBarView(controller: _tabController, children: [
+                  //ANCHOR Participants page
+                  participantsPage(),
                   //ANCHOR Comments page
                   commentsPage(),
                   SingleChildScrollView(
@@ -135,11 +132,6 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                       ],
                     ),
                   ),
-
-                  //TODO buraya Katılımcılar sayfası yapılcak
-                  Center(
-                    child: PageComponents().underConstruction(context),
-                  )
                 ]),
               ),
             ],
@@ -149,7 +141,91 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
     );
   }
 
-  // REVIEW  Yorum Sayfası tasarımı gözden geçir
+  Widget participantsPage() {
+    var eventService = Provider.of<EventService>(context);
+    var userService = Provider.of<UserService>(context);
+    bool katilbutton;
+    void toggleJoinButton() {
+      katilbutton ? katilbutton = false : katilbutton = true;
+    }
+
+    return FutureBuilder(
+      future: eventService.getParticipants(widget.eventData['eventID']),
+      builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.data.length == 0) {
+            return Text("Katılımcı Yok");
+          } else {
+            return ListView.separated(
+              separatorBuilder: (BuildContext context, int index) {
+                return Text("");
+              },
+              itemCount: snapshot.data.length,
+              itemBuilder: (BuildContext context, int index) {
+                return FutureBuilder(
+                  future: userService.findUserByID(snapshot.data[index]['ParticipantID']),
+                  builder: (BuildContext context, AsyncSnapshot user) {
+                    if (user.connectionState == ConnectionState.done) {
+                      return Column(
+                        children: <Widget>[
+                          Container(
+                            height: heightSize(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              color: MyColors().lightGreen,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    height: heightSize(7),
+                                    width: widthSize(14),
+                                    decoration: new BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: ExtendedNetworkImageProvider(user.data['ProfilePhotoUrl'], cache: true),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: widthSize(3),
+                                  ),
+                                  Text(
+                                    user.data['Name'] + user.data['Surname'],
+                                    style: TextStyle(
+                                      fontFamily: "Zona",
+                                      fontSize: heightSize(2.5),
+                                      color: MyColors().darkblueText,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: heightSize(3),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return CircularProgressIndicator();
+                    }
+                  },
+                );
+              },
+            );
+          }
+        } else {
+          return CircularProgressIndicator();
+        }
+      },
+    );
+  }
+
   Widget commentsPage() {
     var eventService = Provider.of<EventService>(context);
     var userService = Provider.of<UserService>(context);
@@ -164,12 +240,12 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                     return Text("Henüz yorum yapılmadı");
                   } else
                     return ListView.separated(
-                      //physics: ClampingScrollPhysics(),
+                        //physics: ClampingScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: snapshot.data.length,
                         separatorBuilder: (ctx, index) => SizedBox(height: heightSize(3)),
                         itemBuilder: (BuildContext context, int index) {
-                          return ProfileListItem(jsonData: snapshot.data[index]);
+                          return ProfileListItem.CommentsPageDetails(jsonData: snapshot.data[index]);
                         });
                 } else
                   return PageComponents().loadingOverlay(context, Colors.white);
@@ -625,39 +701,39 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Container(
-          width: widthSize(43),
-          height: heightSize(8),
-          decoration: new BoxDecoration(
-            color: MyColors().darkblueText,
-            borderRadius: new BorderRadius.all(
-              Radius.circular(20),
-            ),
-          ),
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Container(
-                    height: heightSize(4),
-                    child: Image.asset("assets/icons/location.png"),
+            Container(
+              width: widthSize(43),
+              height: heightSize(8),
+              decoration: new BoxDecoration(
+                color: MyColors().darkblueText,
+                borderRadius: new BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Container(
+                        height: heightSize(4),
+                        child: Image.asset("assets/icons/location.png"),
+                      ),
+                      Text(
+                        "Konum",
+                        style: TextStyle(
+                          fontFamily: "Zona",
+                          fontSize: heightSize(2),
+                          color: MyColors().whiteTextColor,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    "Konum",
-                    style: TextStyle(
-                      fontFamily: "Zona",
-                      fontSize: heightSize(2),
-                      color: MyColors().whiteTextColor,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-      ] +
+          ] +
           [
             InkWell(
                 onTap: () async {
