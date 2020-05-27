@@ -1,4 +1,5 @@
 import 'package:eventizer/Navigation/ProfilePage.dart';
+import 'package:eventizer/Navigation/event_page/ProfileListItem.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
@@ -12,8 +13,7 @@ class EventPage extends StatefulWidget {
   final Map<String, dynamic> userData;
   final bool amIparticipant;
 
-  const EventPage({Key key, this.eventData, this.userData, this.amIparticipant})
-      : super(key: key);
+  const EventPage({Key key, this.eventData, this.userData, this.amIparticipant}) : super(key: key);
 
   @override
   _EventPageState createState() => _EventPageState();
@@ -22,12 +22,18 @@ class EventPage extends StatefulWidget {
 class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   double heightSize(double value) {
     value /= 100;
-    return MediaQuery.of(context).size.height * value;
+    return MediaQuery
+        .of(context)
+        .size
+        .height * value;
   }
 
   double widthSize(double value) {
     value /= 100;
-    return MediaQuery.of(context).size.width * value;
+    return MediaQuery
+        .of(context)
+        .size
+        .width * value;
   }
 
   TabController _tabController;
@@ -93,6 +99,8 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
               ),
               Expanded(
                 child: TabBarView(controller: _tabController, children: [
+                  //ANCHOR Comments page
+                  commentsPage(),
                   SingleChildScrollView(
                     child: Column(
                       children: <Widget>[
@@ -127,8 +135,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                       ],
                     ),
                   ),
-                  //ANCHOR Comments page
-                  commentsPage(),
+
                   //TODO buraya Katılımcılar sayfası yapılcak
                   Center(
                     child: PageComponents().underConstruction(context),
@@ -151,75 +158,25 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
         Expanded(
           child: FutureBuilder(
               future: eventService.getComments(widget.eventData['eventID']),
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+              builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.data.length == 0) {
                     return Text("Henüz yorum yapılmadı");
                   } else
-                    return ListView.builder(
-                        //physics: ClampingScrollPhysics(),
+                    return ListView.separated(
+                      //physics: ClampingScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: snapshot.data.length,
+                        separatorBuilder: (ctx, index) => SizedBox(height: heightSize(3)),
                         itemBuilder: (BuildContext context, int index) {
-                          return FutureBuilder(
-                            //ANCHOR Her bir list itemi için kullanıcı bilgisi getirir
-                            future: userService.findUserByID(
-                                snapshot.data[index]['CommentOwnerID']),
-                            builder:
-                                (BuildContext context, AsyncSnapshot user) {
-                              if (user.connectionState ==
-                                  ConnectionState.done) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  //TODO Zaman göstergeci ekle
-                                  child: Card(
-                                      child: Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                          flex: 3,
-                                          child: AspectRatio(
-                                            aspectRatio: 1,
-                                            child: CircleAvatar(
-                                              radius: 120,
-                                              backgroundImage:
-                                                  ExtendedNetworkImageProvider(
-                                                      user.data[
-                                                          'ProfilePhotoUrl'],
-                                                      cache: true),
-                                            ),
-                                          )),
-                                      Expanded(flex: 1, child: SizedBox()),
-                                      Expanded(
-                                          flex: 8,
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Text(user.data['Name'] +
-                                                  " " +
-                                                  user.data['Surname']),
-                                              Divider(
-                                                height: 5,
-                                              ),
-                                              Text(snapshot.data[index]
-                                                  ['Comment'])
-                                            ],
-                                          ))
-                                    ],
-                                  )),
-                                );
-                              } else {
-                                return CircularProgressIndicator();
-                              }
-                            },
-                          );
+                          return ProfileListItem(jsonData: snapshot.data[index]);
                         });
                 } else
                   return PageComponents().loadingOverlay(context, Colors.white);
               }),
+        ),
+        SizedBox(
+          height: heightSize(5),
         ),
         Align(
           alignment: Alignment.bottomCenter,
@@ -232,9 +189,12 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                     child: Padding(
                         padding: EdgeInsets.fromLTRB(5, 3, 5, 1),
                         child: TextField(
+                          style: TextStyle(
+                            fontFamily: "ZonaLight",
+                            fontSize: heightSize(2),
+                            color: MyColors().darkblueText,
+                          ),
                           controller: commentController,
-                          maxLines: null,
-                          minLines: null,
                           keyboardType: TextInputType.text,
                           enableInteractiveSelection: true,
                           cursorColor: MyColors().blueThemeColor,
@@ -244,58 +204,53 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                           decoration: InputDecoration(
                             labelText: 'Yorum yapın.',
                             labelStyle: TextStyle(
-                                color: MyColors().blueThemeColor,
-                                fontSize: 14.0),
+                              fontFamily: "ZonaLight",
+                              fontSize: heightSize(2),
+                              color: MyColors().darkblueText,
+                            ),
                             errorStyle: TextStyle(
                               color: Colors.red,
                             ),
                             fillColor: MyColors().blueThemeColor,
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: MyColors().blueThemeColor)),
+                            border: OutlineInputBorder(borderSide: BorderSide(color: MyColors().blueThemeColor)),
                             counterText: '',
                             focusedBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(4)),
-                              borderSide: BorderSide(
-                                  width: 1, color: MyColors().blueThemeColor),
+                              borderRadius: BorderRadius.all(Radius.circular(4)),
+                              borderSide: BorderSide(width: 1, color: MyColors().blueThemeColor),
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(4)),
-                              borderSide: BorderSide(
-                                  width: 1, color: MyColors().blueThemeColor),
+                              borderRadius: BorderRadius.all(Radius.circular(4)),
+                              borderSide: BorderSide(width: 1, color: MyColors().blueThemeColor),
                             ),
                           ),
                         )),
                   ),
-                  Expanded(
-                      flex: 1,
-                      child: Padding(
-                          padding: const EdgeInsets.fromLTRB(5, 3, 5, 1),
-                          child: Container(
-                            color: Colors.green,
-                            child: FlatButton(
-                              onPressed: () async {
-                                //ANCHOR  Yorum gönderme backend işlemleri
-                                if (await eventService.sendComment(
-                                    widget.eventData['eventID'],
-                                    userService.userModel.getUserId(),
-                                    commentController.text)) {
-                                  /* nestedScrollController.jumpTo(
-                                      nestedScrollController
-                                              .position.maxScrollExtent
-                                          );*/
-                                  setState(() {
-                                    commentController.text = '';
-                                  });
-
-                                  print("Yorum yapıldı");
-                                }
-                              },
-                              child: Text("Yorum Yap"),
-                            ),
-                          )))
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 3, 5, 1),
+                      child: FlatButton(
+                        onPressed: () async {
+                          //ANCHOR  Yorum gönderme backend işlemleri
+                          if (commentController.text != "") {
+                            await eventService.sendComment(widget.eventData['eventID'], userService.userModel.getUserId(), commentController.text);
+                            setState(() {
+                              commentController.text = '';
+                            });
+                            print("Yorum yapıldı");
+                            /* nestedScrollController.jumpTo(
+                                nestedScrollController
+                                        .position.maxScrollExtent
+                                    );*/
+                          }
+                        },
+                        child: Text(
+                          "Gönder",
+                          style: TextStyle(
+                            fontFamily: "Zona",
+                            fontSize: heightSize(2),
+                            color: MyColors().darkblueText,
+                          ),
+                        ),
+                      ))
                 ],
               ),
             ],
@@ -395,10 +350,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             color: MyColors().blackOpacityContainer,
             width: widthSize(100),
             height: heightSize(25),
-            child: FadeInImage.assetNetwork(
-                fit: BoxFit.cover,
-                placeholder: 'assets/images/etkinlik.jpg',
-                image: widget.eventData['EventImageUrl']),
+            child: FadeInImage.assetNetwork(fit: BoxFit.cover, placeholder: 'assets/images/etkinlik.jpg', image: widget.eventData['EventImageUrl']),
           ),
         ),
         SizedBox(
@@ -673,50 +625,46 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-            Container(
-              width: widthSize(43),
-              height: heightSize(8),
-              decoration: new BoxDecoration(
-                color: MyColors().darkblueText,
-                borderRadius: new BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Container(
-                        height: heightSize(4),
-                        child: Image.asset("assets/icons/location.png"),
-                      ),
-                      Text(
-                        "Konum",
-                        style: TextStyle(
-                          fontFamily: "Zona",
-                          fontSize: heightSize(2),
-                          color: MyColors().whiteTextColor,
-                        ),
-                      ),
-                    ],
+        Container(
+          width: widthSize(43),
+          height: heightSize(8),
+          decoration: new BoxDecoration(
+            color: MyColors().darkblueText,
+            borderRadius: new BorderRadius.all(
+              Radius.circular(20),
+            ),
+          ),
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Container(
+                    height: heightSize(4),
+                    child: Image.asset("assets/icons/location.png"),
                   ),
-                ),
+                  Text(
+                    "Konum",
+                    style: TextStyle(
+                      fontFamily: "Zona",
+                      fontSize: heightSize(2),
+                      color: MyColors().whiteTextColor,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ] +
+          ),
+        ),
+      ] +
           [
             InkWell(
                 onTap: () async {
-                  var eventService =
-                      Provider.of<EventService>(context, listen: false);
-                  var userService =
-                      Provider.of<UserService>(context, listen: false);
+                  var eventService = Provider.of<EventService>(context, listen: false);
+                  var userService = Provider.of<UserService>(context, listen: false);
                   if (katilbutton) {
-                    if (await eventService.leaveEvent(
-                        userService.userModel.getUserId(),
-                        widget.eventData['eventID'])) {
+                    if (await eventService.leaveEvent(userService.userModel.getUserId(), widget.eventData['eventID'])) {
                       setState(() {
                         toggleJoinButton();
                         print("Ayrıldı");
@@ -725,9 +673,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                       print("Hata");
                     }
                   } else {
-                    if (await eventService.joinEvent(
-                        userService.userModel.getUserId(),
-                        widget.eventData['eventID'])) {
+                    if (await eventService.joinEvent(userService.userModel.getUserId(), widget.eventData['eventID'])) {
                       setState(() {
                         toggleJoinButton();
                         print("Katıldı");

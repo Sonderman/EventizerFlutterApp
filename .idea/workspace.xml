@@ -2,40 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="86d488d1-aca7-4e9f-83a7-304b826fa6fb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/Navigation/Old/OldSettingsPage.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/Navigation/event_page/ProfileListItem.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileChanges/last-build.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/gc.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/vcs-1/gc.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/local.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Models/UserModel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Models/UserModel.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/ChatPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ChatPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/CreateEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/CreateEventPage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Navigation/EventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/EventPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/ExploreEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ExploreEventPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldChatsPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/Old/OldChatsPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldCreateEvent.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/Old/OldCreateEvent.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/Old/OldEventPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldExplorePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/Old/OldExplorePage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldProfilePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/Old/OldProfilePage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/SettingsPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/SettingsPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/SignupPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/SignUpPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Services/Firebase.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Services/Firebase.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Services/Repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Services/Repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Tools/BottomNavigation.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Tools/BottomNavigation.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Tools/Message.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Tools/Message.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/locator.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/locator.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -43,7 +19,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="emulator-5554" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="Pixel_3a_XL_API_29" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -65,7 +41,7 @@
     <property name="SHOW_ALL_PROCESSES" value="true" />
     <property name="dart.analysis.tool.window.force.activate" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="settings.editor.selected.configurable" value="flutter.settings" />
+    <property name="settings.editor.selected.configurable" value="dart.settings" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
