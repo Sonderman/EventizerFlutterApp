@@ -1,4 +1,5 @@
 import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ import 'package:provider/provider.dart';
 class ProfileListItem extends StatefulWidget {
   final Map<String, dynamic> jsonData;
 
-  ProfileListItem.CommentsPageDetails({this.jsonData});
+  const ProfileListItem({Key key, this.jsonData}) : super(key: key);
 
   @override
   _ProfileListItemState createState() => _ProfileListItemState();
@@ -26,13 +27,7 @@ class _ProfileListItemState extends State<ProfileListItem> {
         if (user.connectionState == ConnectionState.done) {
           return buildItem(user.data);
         } else {
-          return Container(
-            height: 200,
-            width: double.infinity,
-            decoration: BoxDecoration(color: Colors.white12, borderRadius: BorderRadius.circular(12)),
-            alignment: Alignment.center,
-            child: SizedBox(width: 32, height: 32, child: CircularProgressIndicator()),
-          );
+          return PageComponents().loadingCustomOverlay(32, Colors.white);
         }
       },
     );
@@ -56,7 +51,8 @@ class _ProfileListItemInternal extends StatefulWidget {
   _ProfileListItemInternal({this.name, this.image, this.comment});
 
   @override
-  _ProfileListItemInternalState createState() => _ProfileListItemInternalState();
+  _ProfileListItemInternalState createState() =>
+      _ProfileListItemInternalState();
 }
 
 class _ProfileListItemInternalState extends State<_ProfileListItemInternal> {
@@ -85,7 +81,7 @@ class _ProfileListItemInternalState extends State<_ProfileListItemInternal> {
       },
       child: Container(
 //        height: _height,
-        padding:EdgeInsets.symmetric(vertical: 12, horizontal:8),
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
           color: MyColors().lightGreen,
@@ -101,7 +97,8 @@ class _ProfileListItemInternalState extends State<_ProfileListItemInternal> {
                   shape: BoxShape.circle,
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: ExtendedNetworkImageProvider(widget.image, cache: true),
+                    image:
+                        ExtendedNetworkImageProvider(widget.image, cache: true),
                   ),
                 ),
               ),
