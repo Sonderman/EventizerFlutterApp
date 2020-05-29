@@ -22,8 +22,7 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage>
-    with TickerProviderStateMixin {
+class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
   double heightSize(double value) {
     value /= 100;
     return MediaQuery.of(context).size.height * value;
@@ -37,13 +36,7 @@ class _ProfilePageState extends State<ProfilePage>
   UserService userService;
   User userModel;
   bool amIFollowing = false, isThisProfileMine;
-  String nameText,
-      surnameText,
-      aboutText,
-      followersText,
-      eventsText,
-      trustText,
-      profilePhotoUrl;
+  String nameText, surnameText, aboutText, followersText, eventsText, trustText, profilePhotoUrl;
 
   TabController _tabController;
 
@@ -98,12 +91,7 @@ class _ProfilePageState extends State<ProfilePage>
                 ),
               ),
               width: widthSize(82),
-              child: FadeInImage.assetNetwork(
-                  height: widthSize(48),
-                  width: widthSize(80),
-                  fit: BoxFit.fill,
-                  placeholder: "assets/images/avatar_man.png",
-                  image: profilePhotoUrl),
+              child: FadeInImage.assetNetwork(height: widthSize(48), width: widthSize(80), fit: BoxFit.fill, placeholder: "assets/images/avatar_man.png", image: profilePhotoUrl),
             ),
             SizedBox(
               height: heightSize(1),
@@ -115,8 +103,7 @@ class _ProfilePageState extends State<ProfilePage>
                   //replacement: SizedBox(),
                   visible: isThisProfileMine,
                   child: InkWell(
-                    onTap: () =>
-                        NavigationManager(context).pushPage(SettingsPage()),
+                    onTap: () => NavigationManager(context).pushPage(SettingsPage()),
                     child: Container(
                       height: heightSize(6),
                       child: Padding(
@@ -163,11 +150,7 @@ class _ProfilePageState extends State<ProfilePage>
                         onPressed: () {
                           var auth = AuthService.of(context).auth;
                           auth.signOut();
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      AuthCheck()));
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
                         }),
                     decoration: new BoxDecoration(
                       color: MyColors().yellowContainer,
@@ -189,10 +172,10 @@ class _ProfilePageState extends State<ProfilePage>
           children: <Widget>[
             //ANCHOR About myself box are here
             SizedBox(
-              height: heightSize(3),
+              height: heightSize(2),
             ),
             Container(
-              height: heightSize(20),
+              height: heightSize(12),
               child: Padding(
                 padding: const EdgeInsets.all(15),
                 child: Center(
@@ -386,13 +369,109 @@ class _ProfilePageState extends State<ProfilePage>
         ],
       );
 
+  Widget followAndMessage() => Column(
+        children: <Widget>[
+          SizedBox(
+            height: heightSize(3),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                InkWell(
+                  onTap: () {},
+                  child: Container(
+                    width: widthSize(43),
+                    height: heightSize(8),
+                    decoration: new BoxDecoration(
+                      color: MyColors().lightGreen,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                    child: InkWell(
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 40),
+
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                height: heightSize(5),
+                                child: Image.asset("assets/icons/follow.png"),
+                              ),
+                              Spacer(),
+                              Text(
+                                "Takip \nEt",
+                                style: TextStyle(
+                                  fontFamily: "Zona",
+                                  fontSize: heightSize(2),
+                                  color: MyColors().whiteTextColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    NavigationManager(context).pushPage(MyEventsPage(
+                      isOld: true,
+                      userID: null,
+                    ));
+                  },
+                  child: Container(
+                    width: widthSize(43),
+                    height: heightSize(8),
+                    decoration: BoxDecoration(
+                      color: MyColors().darkblueText,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                    child: InkWell(
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          child: Row(
+                            children: <Widget>[
+                              Container(
+                                height: heightSize(4.2),
+                                child: Image.asset("assets/icons/sendMessage.png"),
+                              ),
+                              Spacer(),
+                              Text(
+                                "Mesaj \nGönder",
+                                style: TextStyle(
+                                  fontFamily: "Zona",
+                                  fontSize: heightSize(2),
+                                  color: MyColors().whiteTextColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+
   @override
   Widget build(BuildContext context) {
     if (!isThisProfileMine) {
       return FutureBuilder(
           future: userService.findUserByID(widget.userID),
-          builder:
-              (BuildContext context, AsyncSnapshot<Map<String, dynamic>> data) {
+          builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> data) {
             if (data.connectionState == ConnectionState.done) {
               userModel.parseMap(data.data);
               textUpdaterByUserModel(userModel);
@@ -430,20 +509,14 @@ class _ProfilePageState extends State<ProfilePage>
               height: 25,
             ),
             Container(
-              child: TabBar(
-                  indicatorColor: Colors.teal,
-                  labelColor: Colors.teal,
-                  unselectedLabelColor: Colors.black54,
-                  controller: _tabController,
-                  isScrollable: true,
-                  tabs: [
-                    Tab(
-                      text: "Profilim",
-                    ),
-                    Tab(
-                      text: "Bildirimler",
-                    ),
-                  ]),
+              child: TabBar(indicatorColor: Colors.teal, labelColor: Colors.teal, unselectedLabelColor: Colors.black54, controller: _tabController, isScrollable: true, tabs: [
+                Tab(
+                  text: "Profilim",
+                ),
+                Tab(
+                  text: "Bildirimler",
+                ),
+              ]),
             ),
             Expanded(
               child: TabBarView(
@@ -455,6 +528,7 @@ class _ProfilePageState extends State<ProfilePage>
                         avatarAndName(),
                         numberDatas(),
                         threeBoxes(),
+                        followAndMessage(),
                       ],
                     ),
                   ),

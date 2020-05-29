@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="86d488d1-aca7-4e9f-83a7-304b826fa6fb" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/assets/icons/sendMessage.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/EventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/EventPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/event_page/ProfileListItem.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/CommentsPageDetails/CommentsPageDetails.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/ExploreEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ExploreEventPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -29,6 +30,7 @@
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="DEBUGGABLE_DEVICE" value="emulator-5554" />
     <property name="DEBUGGABLE_PROCESS" value="com.eventizerapps.eventizer" />
     <property name="DEBUGGER_ID" value="Java" />
@@ -72,6 +74,14 @@
       <option name="presentableId" value="Default" />
       <updated>1590392788800</updated>
     </task>
+    <task id="LOCAL-00001" summary="&quot;EventPage&quot; yorumlar bölümü tamamlandı">
+      <created>1590614279178</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1590614279179</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -86,6 +96,11 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="&quot;EventPage&quot; yorumlar bölümü tamamlandı" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;EventPage&quot; yorumlar bölümü tamamlandı" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

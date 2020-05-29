@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:eventizer/Navigation/EventPage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
@@ -51,9 +53,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
     Map<String, dynamic> ownerData;
     return InkWell(
       onTap: () async {
-        eventService
-            .amIparticipant(userWorker.userModel.getUserId(), eventID)
-            .then((amIparticipant) {
+        eventService.amIparticipant(userWorker.userModel.getUserId(), eventID).then((amIparticipant) {
           print("Kullanıcı bu etkinliğe katılmış:" + amIparticipant.toString());
           NavigationManager(context).pushPage(EventPage(
             eventData: eventDatas,
@@ -68,7 +68,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
         ),
         child: Container(
           width: widthSize(100),
-          height: heightSize(33),
+          height: heightSize(47),
           color: Colors.white,
           child: Column(
             children: <Widget>[
@@ -79,47 +79,66 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: <Widget>[
-                    Container(
-                      height: heightSize(5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(20),
+                    Row(
+                      children: <Widget>[
+                        Container(
+                          height: heightSize(5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(20),
+                            ),
+                          ),
+                          child: FutureBuilder(
+                              future: userWorker.findUserByID(ownerID),
+                              builder: (BuildContext _, AsyncSnapshot<dynamic> userData) {
+                                if (userData.connectionState == ConnectionState.done) {
+                                  ownerData = userData.data;
+                                  //ANCHOR user profil resmi burada
+                                  return Container(
+                                    height: heightSize(5),
+                                    width: widthSize(10),
+                                    decoration: new BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(userData.data['ProfilePhotoUrl'])),
+                                    ),
+                                  );
+                                } else
+                                  return Image.asset("assets/images/avatar_man.png");
+                              }),
                         ),
-                      ),
-                      child: FutureBuilder(
-                          future: userWorker.findUserByID(ownerID),
-                          builder: (BuildContext _,
-                              AsyncSnapshot<dynamic> userData) {
-                            if (userData.connectionState ==
-                                ConnectionState.done) {
-                              ownerData = userData.data;
-                              //ANCHOR user profil resmi burada
-                              return Container(
-                                height: heightSize(5),
-                                width: widthSize(10),
-                                decoration: new BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: NetworkImage(
-                                          userData.data['ProfilePhotoUrl'])),
-                                ),
-                              );
-                            } else
-                              return Image.asset(
-                                  "assets/images/avatar_man.png");
-                          }),
+                        SizedBox(
+                          width: widthSize(2),
+                        ),
+                        Text(
+                          title,
+                          style: TextStyle(
+                            fontFamily: "Zona",
+                            fontSize: heightSize(2),
+                            color: MyColors().greyTextColor,
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      width: widthSize(2),
-                    ),
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontFamily: "Zona",
-                        fontSize: heightSize(2),
-                        color: MyColors().greyTextColor,
-                      ),
+                    Spacer(),
+                    DropdownButton<String>(
+                      items: [
+                        DropdownMenuItem<String>(
+                          child: IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.share, color: MyColors().purpleContainer),
+                          ),
+                          value: "share",
+                        ),
+                        DropdownMenuItem<String>(
+                          child: IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.delete, color: MyColors().purpleContainer),
+                          ),
+                          value: "delete",
+                        ),
+                      ],
+                      onChanged: (String selected) {},
+                      hint: Icon(Icons.menu, color: MyColors().purpleContainer),
                     ),
                   ],
                 ),
@@ -133,9 +152,95 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
               ),
               Container(
                 height: heightSize(22),
-                child: FadeInImage.assetNetwork(
-                    placeholder: "assets/images/event_birthday.jpg",
-                    image: imageUrl),
+                child: FadeInImage.assetNetwork(placeholder: "assets/images/event_birthday.jpg", image: imageUrl),
+              ),
+              Stack(
+                children: <Widget>[
+                  Positioned(
+                    top: heightSize(-12),
+                    bottom: 0,
+                    left: 10,
+                    right: 10,
+                    child: Divider(
+                      thickness: 2,
+                      color: MyColors().loginGreyColor,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        SizedBox(
+                          height: heightSize(1),
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Icon(
+                              Icons.date_range,
+                              color: MyColors().greyTextColor,
+                            ),
+                            SizedBox(
+                              width: widthSize(2),
+                            ),
+                            Text(
+                              "21 Tem. Perş.",
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                fontSize: heightSize(2),
+                                color: MyColors().greyTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: heightSize(1),
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Icon(
+                              Icons.location_on,
+                              color: MyColors().greyTextColor,
+                            ),
+                            SizedBox(
+                              width: widthSize(2),
+                            ),
+                            Text(
+                              "Istanbul, Taksim - Dream Cafe",
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                fontSize: heightSize(2),
+                                color: MyColors().greyTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: heightSize(1),
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Icon(
+                              Icons.people,
+                              color: MyColors().greyTextColor,
+                            ),
+                            SizedBox(
+                              width: widthSize(2),
+                            ),
+                            Text(
+                              "34 Katılımcı",
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                fontSize: heightSize(2),
+                                color: MyColors().greyTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -163,9 +268,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
           Container(
               height: heightSize(55),
               child: FutureBuilder(
-                  future: (category == null || category == "Hepsi")
-                      ? _eventManager.fetchActiveEventLists()
-                      : _eventManager.fetchActiveEventListsByCategory(category),
+                  future: (category == null || category == "Hepsi") ? _eventManager.fetchActiveEventLists() : _eventManager.fetchActiveEventListsByCategory(category),
                   builder: (BuildContext context, AsyncSnapshot fetchedlist) {
                     if (fetchedlist.connectionState == ConnectionState.done) {
                       List<Map<String, dynamic>> listofMaps = fetchedlist.data;
@@ -184,8 +287,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                             });
                       }
                     } else
-                      return PageComponents()
-                          .loadingCustomOverlay(500, Colors.white);
+                      return PageComponents().loadingCustomOverlay(500, Colors.white);
                   })),
         ],
       ),
@@ -261,8 +363,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         children: <Widget>[
                           Container(
                             height: heightSize(4),
-                            child: Image.asset(
-                                "assets/icons/birthdayCategory.png"),
+                            child: Image.asset("assets/icons/birthdayCategory.png"),
                           ),
                           Text(
                             "Doğum Günü",
@@ -296,8 +397,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         children: <Widget>[
                           Container(
                             height: heightSize(4),
-                            child:
-                                Image.asset("assets/icons/travelCategory.png"),
+                            child: Image.asset("assets/icons/travelCategory.png"),
                           ),
                           Text(
                             "Gezi Turu",
@@ -331,8 +431,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         children: <Widget>[
                           Container(
                             height: heightSize(4),
-                            child: Image.asset(
-                                "assets/icons/worldtravelCategory.png"),
+                            child: Image.asset("assets/icons/worldtravelCategory.png"),
                           ),
                           Text(
                             "Dünya Turu",
@@ -397,8 +496,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         children: <Widget>[
                           Container(
                             height: heightSize(4),
-                            child: Image.asset(
-                                "assets/icons/conferenceCategory.png"),
+                            child: Image.asset("assets/icons/conferenceCategory.png"),
                           ),
                           Text(
                             "Konferans",
