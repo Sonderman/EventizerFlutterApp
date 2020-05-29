@@ -14,7 +14,8 @@ class EventPage extends StatefulWidget {
   final Map<String, dynamic> userData;
   final bool amIparticipant;
 
-  const EventPage({Key key, this.eventData, this.userData, this.amIparticipant}) : super(key: key);
+  const EventPage({Key key, this.eventData, this.userData, this.amIparticipant})
+      : super(key: key);
 
   @override
   _EventPageState createState() => _EventPageState();
@@ -32,14 +33,14 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   }
 
   TabController _tabController;
-  bool katilbutton;
+  bool joinButton;
   TextEditingController commentController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    katilbutton = widget.amIparticipant;
+    joinButton = widget.amIparticipant;
   }
 
   @override
@@ -49,7 +50,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   }
 
   void toggleJoinButton() {
-    katilbutton ? katilbutton = false : katilbutton = true;
+    joinButton = !joinButton;
   }
 
   @override
@@ -94,10 +95,6 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
               ),
               Expanded(
                 child: TabBarView(controller: _tabController, children: [
-                  //ANCHOR Participants page
-                  participantsPage(),
-                  //ANCHOR Comments page
-                  commentsPage(),
                   SingleChildScrollView(
                     child: Column(
                       children: <Widget>[
@@ -117,7 +114,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                         SizedBox(
                           height: heightSize(2),
                         ),
-                        genderBoxes(),
+                        genderAndParticipantsBoxes(),
                         SizedBox(
                           height: heightSize(2),
                         ),
@@ -132,6 +129,10 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                       ],
                     ),
                   ),
+                  //ANCHOR Comments page
+                  commentsPage(),
+                  //ANCHOR Participants page
+                  participantsPage(),
                 ]),
               ),
             ],
@@ -144,72 +145,75 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   Widget participantsPage() {
     var eventService = Provider.of<EventService>(context);
     var userService = Provider.of<UserService>(context);
-    bool katilbutton;
-    void toggleJoinButton() {
-      katilbutton ? katilbutton = false : katilbutton = true;
-    }
-
     return FutureBuilder(
       future: eventService.getParticipants(widget.eventData['eventID']),
-      builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+      builder: (BuildContext context,
+          AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.data.length == 0) {
-            return Text("Katılımcı Yok");
+            return Center(child: Text("Katılımcı Yok"));
           } else {
             return ListView.separated(
               separatorBuilder: (BuildContext context, int index) {
-                return Text("");
+                return SizedBox(
+                  height: heightSize(3),
+                );
               },
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, int index) {
                 return FutureBuilder(
-                  future: userService.findUserByID(snapshot.data[index]['ParticipantID']),
+                  future: userService
+                      .findUserByID(snapshot.data[index]['ParticipantID']),
                   builder: (BuildContext context, AsyncSnapshot user) {
                     if (user.connectionState == ConnectionState.done) {
-                      return Column(
-                        children: <Widget>[
-                          Container(
-                            height: heightSize(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              color: MyColors().lightGreen,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    height: heightSize(7),
-                                    width: widthSize(14),
-                                    decoration: new BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: ExtendedNetworkImageProvider(user.data['ProfilePhotoUrl'], cache: true),
-                                      ),
+                      return InkWell(
+                        onTap: () {
+                          //TODO ProfilePage e userID yerine usermodel gitmeli direk olarak
+                          NavigationManager(context).pushPage(ProfilePage(
+                            isFromEvent: true,
+                            userID: user.data['UserID'],
+                          ));
+                        },
+                        child: Container(
+                          height: heightSize(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            color: MyColors().lightGreen,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                  height: heightSize(7),
+                                  width: widthSize(14),
+                                  decoration: new BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: ExtendedNetworkImageProvider(
+                                          user.data['ProfilePhotoUrl'],
+                                          cache: true),
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: widthSize(3),
+                                ),
+                                SizedBox(
+                                  width: widthSize(3),
+                                ),
+                                Text(
+                                  user.data['Name'] + user.data['Surname'],
+                                  style: TextStyle(
+                                    fontFamily: "Zona",
+                                    fontSize: heightSize(2.5),
+                                    color: MyColors().darkblueText,
                                   ),
-                                  Text(
-                                    user.data['Name'] + user.data['Surname'],
-                                    style: TextStyle(
-                                      fontFamily: "Zona",
-                                      fontSize: heightSize(2.5),
-                                      color: MyColors().darkblueText,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(
-                            height: heightSize(3),
-                          ),
-                        ],
+                        ),
                       );
                     } else {
                       return CircularProgressIndicator();
@@ -234,18 +238,21 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
         Expanded(
           child: FutureBuilder(
               future: eventService.getComments(widget.eventData['eventID']),
-              builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.data.length == 0) {
-                    return Text("Henüz yorum yapılmadı");
+                    return Center(child: Text("Henüz yorum yapılmadı"));
                   } else
                     return ListView.separated(
                         //physics: ClampingScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: snapshot.data.length,
-                        separatorBuilder: (ctx, index) => SizedBox(height: heightSize(3)),
+                        separatorBuilder: (ctx, index) =>
+                            SizedBox(height: heightSize(3)),
                         itemBuilder: (BuildContext context, int index) {
-                          return ProfileListItem.CommentsPageDetails(jsonData: snapshot.data[index]);
+                          return ProfileListItem(
+                              jsonData: snapshot.data[index]);
                         });
                 } else
                   return PageComponents().loadingOverlay(context, Colors.white);
@@ -288,15 +295,21 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                               color: Colors.red,
                             ),
                             fillColor: MyColors().blueThemeColor,
-                            border: OutlineInputBorder(borderSide: BorderSide(color: MyColors().blueThemeColor)),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: MyColors().blueThemeColor)),
                             counterText: '',
                             focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(4)),
-                              borderSide: BorderSide(width: 1, color: MyColors().blueThemeColor),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
+                              borderSide: BorderSide(
+                                  width: 1, color: MyColors().blueThemeColor),
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(4)),
-                              borderSide: BorderSide(width: 1, color: MyColors().blueThemeColor),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
+                              borderSide: BorderSide(
+                                  width: 1, color: MyColors().blueThemeColor),
                             ),
                           ),
                         )),
@@ -307,7 +320,10 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                         onPressed: () async {
                           //ANCHOR  Yorum gönderme backend işlemleri
                           if (commentController.text != "") {
-                            await eventService.sendComment(widget.eventData['eventID'], userService.userModel.getUserId(), commentController.text);
+                            await eventService.sendComment(
+                                widget.eventData['eventID'],
+                                userService.userModel.getUserId(),
+                                commentController.text);
                             setState(() {
                               commentController.text = '';
                             });
@@ -426,7 +442,10 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             color: MyColors().blackOpacityContainer,
             width: widthSize(100),
             height: heightSize(25),
-            child: FadeInImage.assetNetwork(fit: BoxFit.cover, placeholder: 'assets/images/etkinlik.jpg', image: widget.eventData['EventImageUrl']),
+            child: FadeInImage.assetNetwork(
+                fit: BoxFit.cover,
+                placeholder: 'assets/images/etkinlik.jpg',
+                image: widget.eventData['EventImageUrl']),
           ),
         ),
         SizedBox(
@@ -549,7 +568,21 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
     );
   }
 
-  Widget genderBoxes() {
+  Widget genderAndParticipantsBoxes() {
+    String gender;
+    //ANCHOR cinsiyetlere durumları
+    switch (widget.eventData['AllowedGenders']) {
+      case "10":
+        gender = "Erkek";
+        break;
+      case "01":
+        gender = "Kadın";
+        break;
+      case "11":
+        gender = "Erkek/Kadın";
+        break;
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -566,7 +599,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                "Kadın/Erkek",
+                gender,
                 style: TextStyle(
                   fontFamily: "Zona",
                   fontSize: heightSize(2),
@@ -589,7 +622,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                "12/20 Katılımcı",
+                widget.eventData['ParticipantNumber'].toString(),
                 style: TextStyle(
                   fontFamily: "Zona",
                   fontSize: heightSize(2),
@@ -616,7 +649,9 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         child: Text(
-          "Kategori | Alt Kategori",
+          widget.eventData['MainCategory'] +
+              " | " +
+              widget.eventData['SubCategory'],
           style: TextStyle(
             fontFamily: "Zona",
             fontSize: heightSize(2),
@@ -630,7 +665,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   Widget mapAndJoin() {
     Widget joinUnjoinButton;
 
-    if (katilbutton) {
+    if (joinButton) {
       joinUnjoinButton = Container(
         width: widthSize(43),
         height: heightSize(8),
@@ -737,10 +772,14 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
           [
             InkWell(
                 onTap: () async {
-                  var eventService = Provider.of<EventService>(context, listen: false);
-                  var userService = Provider.of<UserService>(context, listen: false);
-                  if (katilbutton) {
-                    if (await eventService.leaveEvent(userService.userModel.getUserId(), widget.eventData['eventID'])) {
+                  var eventService =
+                      Provider.of<EventService>(context, listen: false);
+                  var userService =
+                      Provider.of<UserService>(context, listen: false);
+                  if (joinButton) {
+                    if (await eventService.leaveEvent(
+                        userService.userModel.getUserId(),
+                        widget.eventData['eventID'])) {
                       setState(() {
                         toggleJoinButton();
                         print("Ayrıldı");
@@ -749,7 +788,9 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                       print("Hata");
                     }
                   } else {
-                    if (await eventService.joinEvent(userService.userModel.getUserId(), widget.eventData['eventID'])) {
+                    if (await eventService.joinEvent(
+                        userService.userModel.getUserId(),
+                        widget.eventData['eventID'])) {
                       setState(() {
                         toggleJoinButton();
                         print("Katıldı");
