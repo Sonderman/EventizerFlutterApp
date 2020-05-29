@@ -133,6 +133,44 @@ class _MyEventsPageState extends State<MyEventsPage> {
                         color: MyColors().greyTextColor,
                       ),
                     ),
+                    Spacer(),
+                    DropdownButton<String>(
+                      items: [
+                        DropdownMenuItem<String>(
+                          value: "share",
+                          child: Row(
+                            children: <Widget>[
+                              IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.share,
+                                    color: MyColors().purpleContainer),
+                              ),
+                              Text("Paylaş")
+                            ],
+                          ),
+                        ),
+                        DropdownMenuItem<String>(
+                          value: "delete",
+                          child: Row(
+                            children: <Widget>[
+                              IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.delete,
+                                    color: MyColors().purpleContainer),
+                              ),
+                              Text("Sil")
+                            ],
+                          ),
+                        ),
+                      ],
+                      onChanged: (String selected) {},
+                      hint: Row(
+                        children: <Widget>[
+                          Icon(Icons.menu, color: MyColors().purpleContainer),
+                          Text("Seçenekler")
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

@@ -4,6 +4,7 @@ import 'package:eventizer/Navigation/SettingsPage.dart';
 import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/Tools/Message.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
@@ -22,7 +23,8 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
+class _ProfilePageState extends State<ProfilePage>
+    with TickerProviderStateMixin {
   double heightSize(double value) {
     value /= 100;
     return MediaQuery.of(context).size.height * value;
@@ -36,7 +38,13 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
   UserService userService;
   User userModel;
   bool amIFollowing = false, isThisProfileMine;
-  String nameText, surnameText, aboutText, followersText, eventsText, trustText, profilePhotoUrl;
+  String nameText,
+      surnameText,
+      aboutText,
+      followersText,
+      eventsText,
+      trustText,
+      profilePhotoUrl;
 
   TabController _tabController;
 
@@ -54,7 +62,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
       }
     } else {
       isThisProfileMine = true;
-      _tabController = TabController(length: 2, vsync: this);
+      _tabController = TabController(length: 1, vsync: this);
       userModel = User(userID: widget.userID);
     }
   }
@@ -62,7 +70,97 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
   @override
   void dispose() {
     super.dispose();
-    _tabController.dispose();
+    if (_tabController != null) _tabController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!isThisProfileMine) {
+      return FutureBuilder(
+          future: userService.findUserByID(widget.userID),
+          builder:
+              (BuildContext context, AsyncSnapshot<Map<String, dynamic>> data) {
+            if (data.connectionState == ConnectionState.done) {
+              userModel.parseMap(data.data);
+              textUpdaterByUserModel(userModel);
+              return Scaffold(
+                body: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 25,
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            avatarAndName(),
+                            numberDatas(),
+                            followAndMessage(),
+                            threeBoxes(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            } else
+              return Center(
+                child: PageComponents().loadingOverlay(context, Colors.white),
+              );
+          });
+    } else {
+      textUpdaterByUserModel(userService.userModel);
+      return Scaffold(
+        body: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 25,
+            ),
+            //TODO bildirim sayfası yaparken açılacak
+            /*
+            Container(
+              child: TabBar(
+                  indicatorColor: Colors.teal,
+                  labelColor: Colors.teal,
+                  unselectedLabelColor: Colors.black54,
+                  controller: _tabController,
+                  isScrollable: true,
+                  tabs: [
+                    Tab(
+                      text: "Profilim",
+                    ),
+                    Tab(
+                      text: "Bildirimler",
+                    ),
+                  ]),
+            ),
+            */
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: <Widget>[
+                  SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        avatarAndName(),
+                        numberDatas(),
+                        threeBoxes(),
+                      ],
+                    ),
+                  ),
+                  //Bildirim sayfası
+                  /*
+                  Center(
+                    child: PageComponents().underConstruction(context),
+                  )*/
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   void textUpdaterByUserModel(User model) {
@@ -91,7 +189,12 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                 ),
               ),
               width: widthSize(82),
-              child: FadeInImage.assetNetwork(height: widthSize(48), width: widthSize(80), fit: BoxFit.fill, placeholder: "assets/images/avatar_man.png", image: profilePhotoUrl),
+              child: FadeInImage.assetNetwork(
+                  height: widthSize(48),
+                  width: widthSize(80),
+                  fit: BoxFit.fill,
+                  placeholder: "assets/images/avatar_man.png",
+                  image: profilePhotoUrl),
             ),
             SizedBox(
               height: heightSize(1),
@@ -103,7 +206,8 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                   //replacement: SizedBox(),
                   visible: isThisProfileMine,
                   child: InkWell(
-                    onTap: () => NavigationManager(context).pushPage(SettingsPage()),
+                    onTap: () =>
+                        NavigationManager(context).pushPage(SettingsPage()),
                     child: Container(
                       height: heightSize(6),
                       child: Padding(
@@ -150,7 +254,11 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                         onPressed: () {
                           var auth = AuthService.of(context).auth;
                           auth.signOut();
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      AuthCheck()));
                         }),
                     decoration: new BoxDecoration(
                       color: MyColors().yellowContainer,
@@ -380,7 +488,15 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 InkWell(
-                  onTap: () {},
+                  onTap: () async {
+                    await userService
+                        .followToggle(userModel.getUserId())
+                        .whenComplete(() {
+                      setState(() {
+                        amIFollowing = !amIFollowing;
+                      });
+                    });
+                  },
                   child: Container(
                     width: widthSize(43),
                     height: heightSize(8),
@@ -390,40 +506,49 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                         Radius.circular(20),
                       ),
                     ),
-                    child: InkWell(
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 40),
-
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                height: heightSize(5),
-                                child: Image.asset("assets/icons/follow.png"),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              height: heightSize(5),
+                              child: amIFollowing
+                                  ? Image.asset("assets/icons/unfollow.png")
+                                  : Image.asset("assets/icons/follow.png"),
+                            ),
+                            Spacer(),
+                            Text(
+                              amIFollowing ? "Takibi \nBırak" : "Takip \nEt",
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                fontSize: heightSize(2),
+                                color: MyColors().whiteTextColor,
                               ),
-                              Spacer(),
-                              Text(
-                                "Takip \nEt",
-                                style: TextStyle(
-                                  fontFamily: "Zona",
-                                  fontSize: heightSize(2),
-                                  color: MyColors().whiteTextColor,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ),
                 ),
                 InkWell(
-                  onTap: () {
-                    NavigationManager(context).pushPage(MyEventsPage(
-                      isOld: true,
-                      userID: null,
-                    ));
+                  onTap: () async {
+                    // ANCHOR  Mesaj sayfasına gitmek için
+                    if (userService.userModel.getUserId() != widget.userID) {
+                      //ANCHOR mesajlaşma sayfasında karşıdaki kişinin ismini getirip parametre olarak veriyoruz,
+                      //Bu sayede appbarda ismi görünüyor
+                      await userService
+                          .findUserByID(widget.userID)
+                          .then((data) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    Message(widget.userID, data['Name'])));
+                      });
+                    }
                   },
                   child: Container(
                     width: widthSize(43),
@@ -442,7 +567,8 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                             children: <Widget>[
                               Container(
                                 height: heightSize(4.2),
-                                child: Image.asset("assets/icons/sendMessage.png"),
+                                child:
+                                    Image.asset("assets/icons/sendMessage.png"),
                               ),
                               Spacer(),
                               Text(
@@ -465,82 +591,4 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
           ),
         ],
       );
-
-  @override
-  Widget build(BuildContext context) {
-    if (!isThisProfileMine) {
-      return FutureBuilder(
-          future: userService.findUserByID(widget.userID),
-          builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> data) {
-            if (data.connectionState == ConnectionState.done) {
-              userModel.parseMap(data.data);
-              textUpdaterByUserModel(userModel);
-              return Scaffold(
-                body: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: 25,
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: <Widget>[
-                            avatarAndName(),
-                            numberDatas(),
-                            threeBoxes(),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            } else
-              return Center(
-                child: PageComponents().loadingOverlay(context, Colors.white),
-              );
-          });
-    } else {
-      textUpdaterByUserModel(userService.userModel);
-      return Scaffold(
-        body: Column(
-          children: <Widget>[
-            SizedBox(
-              height: 25,
-            ),
-            Container(
-              child: TabBar(indicatorColor: Colors.teal, labelColor: Colors.teal, unselectedLabelColor: Colors.black54, controller: _tabController, isScrollable: true, tabs: [
-                Tab(
-                  text: "Profilim",
-                ),
-                Tab(
-                  text: "Bildirimler",
-                ),
-              ]),
-            ),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: <Widget>[
-                  SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        avatarAndName(),
-                        numberDatas(),
-                        threeBoxes(),
-                        followAndMessage(),
-                      ],
-                    ),
-                  ),
-                  Center(
-                    child: PageComponents().underConstruction(context),
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-  }
 }
