@@ -2,6 +2,7 @@ import 'package:eventizer/Settings/AppSettings.dart';
 import 'package:eventizer/Tools/BottomNavigation.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -28,12 +29,13 @@ class BottomNavWidget extends StatelessWidget {
               actions: <Widget>[
                 FlatButton(
                     onPressed: () {
-                      Navigator.pop(context, false);
+                      Navigator.pop(context);
                     },
                     child: Text("Hayır")),
                 FlatButton(
                     onPressed: () {
-                      Navigator.pop(context, true);
+                      SystemNavigator.pop();
+                      //Navigator.pop(context);
                     },
                     child: Text("Evet"))
               ],
