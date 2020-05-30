@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:eventizer/Models/UserModel.dart';
 import 'package:eventizer/Navigation/ProfilePage.dart';
 import 'package:eventizer/Services/Repository.dart';
@@ -235,10 +234,15 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     firstDate: DateTime(DateTime.now().year),
                     lastDate: DateTime(DateTime.now().year + 2),
                     selectableDayPredicate: (DateTime currentDate) {
-                      if (currentDate.day >= DateTime.now().day &&
+                      if (currentDate.month > DateTime.now().month &&
+                          currentDate.year >= DateTime.now().year) {
+                        return true;
+                      } else if (currentDate.day >= DateTime.now().day &&
                           currentDate.month >= DateTime.now().month) {
                         return true;
-                      } else
+                      } else if (currentDate.year > DateTime.now().year)
+                        return true;
+                      else
                         return false;
                     });
                 if (datePick != null) {
@@ -290,17 +294,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
             child: InkWell(
               onTap: () async {
                 final datePick = await showDatePicker(
-                    context: context,
-                    initialDate: eventStartDateTime,
-                    firstDate: DateTime(eventStartDateTime.year),
-                    lastDate: DateTime(DateTime.now().year + 1),
-                    selectableDayPredicate: (DateTime currentDate) {
-                      if (currentDate.day >= eventStartDateTime.day &&
-                          currentDate.month >= eventStartDateTime.month) {
-                        return true;
-                      } else
-                        return false;
-                    });
+                  context: context,
+                  initialDate: eventStartDateTime,
+                  firstDate: eventStartDateTime,
+                  lastDate: DateTime(eventStartDateTime.year + 2),
+                );
                 if (datePick != null) {
                   setState(() {
                     isFinishDateSelected = true;
@@ -504,13 +502,13 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 8),
                 child: TextFormField(
                   controller: controllerDetail,
-                  minLines: 3,
+                  minLines: 2,
                   maxLines: 10,
                   keyboardType: TextInputType.multiline,
                   enableInteractiveSelection: true,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: "Etkinlik içeriği...",
+                    hintText: "Etkinlik detayı...",
                     hintStyle: TextStyle(
                       color: MyColors().whiteTextColor,
                     ),
