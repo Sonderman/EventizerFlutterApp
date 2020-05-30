@@ -4,6 +4,7 @@ import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Tools/loading.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,6 +13,7 @@ class SignUpPage extends StatefulWidget {
   final PageController pageController;
 
   SignUpPage(this.pageController);
+
   //NOTE We should be just use the button of "Create Account" for navigation to "Create Account Page". Not with slide.
   @override
   _SignUpPageState createState() => _SignUpPageState();
@@ -40,7 +42,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
   // ANCHOR kameradan foto almaya yarar
   Future _getImageFromCamera() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    var image = await ImagePicker.pickImage(
+      source: ImageSource.camera,
+    );
     setState(() {
       _image = image;
     });
@@ -59,7 +63,8 @@ class _SignUpPageState extends State<SignUpPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Bir Seçim Yapınız',
+            title: Text(
+              'Bir Seçim Yapınız',
               style: TextStyle(
                 fontSize: heightSize(2.5),
                 fontFamily: "Zona",
@@ -70,7 +75,8 @@ class _SignUpPageState extends State<SignUpPage> {
               child: ListBody(
                 children: <Widget>[
                   GestureDetector(
-                      child: Text('Galeri',
+                      child: Text(
+                        'Galeri',
                         style: TextStyle(
                           fontSize: heightSize(2),
                           fontFamily: "ZonaLight",
@@ -86,7 +92,8 @@ class _SignUpPageState extends State<SignUpPage> {
                     padding: EdgeInsets.all(8.0),
                   ),
                   GestureDetector(
-                      child: Text('Kamera',
+                      child: Text(
+                        'Kamera',
                         style: TextStyle(
                           fontSize: heightSize(2),
                           fontFamily: "ZonaLight",
@@ -133,18 +140,26 @@ class _SignUpPageState extends State<SignUpPage> {
         _showChoiceDialog(context);
       },
       child: Container(
-        //ANCHOR Mevcut size void'imizi kullandığımızda anlamsız bir height oluşuyor, çözemedim. Bundan ötürü normal ölçüleri kullandım burada:
-        // NOTE Fixed.
-        height: heightSize(20),
+        height: heightSize(15),
         decoration: BoxDecoration(
-          color: MyColors().yellowContainer,
+          color: MyColors().orangeContainer,
           shape: BoxShape.circle,
         ),
-        child: Center(
-          child: Container(
-            height: heightSize(5),
-            child: _image == null ? Image.asset('assets/images/add-user.png') : Image.file(_image),
-          ),
+        child: CircleAvatar(
+          backgroundColor: MyColors().orangeContainer,
+          radius: 100,
+          child: _image == null
+              ? Image.asset(
+                  'assets/images/add-user.png',
+                  height: heightSize(5),
+                )
+              : ClipOval(
+                  child: Image.file(
+                    _image,
+                    width: heightSize(15),
+                    fit: BoxFit.cover,
+                  ),
+                ),
         ),
       ),
     );

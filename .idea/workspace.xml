@@ -2,11 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="86d488d1-aca7-4e9f-83a7-304b826fa6fb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/icons/sendMessage.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileChanges/last-build.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/5.2.1/gc.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/vcs-1/gc.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/ExploreEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ExploreEventPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/EventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/EventPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/SignUpPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/SignUpPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Tools/BottomNavigation.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Tools/BottomNavigation.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -37,6 +43,9 @@
     <property name="SHOW_ALL_PROCESSES" value="true" />
     <property name="dart.analysis.tool.window.force.activate" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.17" />
+    <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="dart.settings" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
@@ -81,7 +90,14 @@
       <option name="project" value="LOCAL" />
       <updated>1590614279179</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="&quot;Profil Page&quot; anlamsızca kaybolmuş olan mesaj sıbıtma ve ekle beni ekleyeyim seni butonu silinmişti, geri kaktırıldı.&#10;&quot;Explore Event Page&quot; eski aşağıdaki bilgiler geri geldi, sağ üste paylaş ve sil butonları eklendi.">
+      <created>1590710526135</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1590710526135</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -100,7 +116,8 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="&quot;EventPage&quot; yorumlar bölümü tamamlandı" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;EventPage&quot; yorumlar bölümü tamamlandı" />
+    <MESSAGE value="&quot;Profil Page&quot; anlamsızca kaybolmuş olan mesaj sıbıtma ve ekle beni ekleyeyim seni butonu silinmişti, geri kaktırıldı.&#10;&quot;Explore Event Page&quot; eski aşağıdaki bilgiler geri geldi, sağ üste paylaş ve sil butonları eklendi." />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;Profil Page&quot; anlamsızca kaybolmuş olan mesaj sıbıtma ve ekle beni ekleyeyim seni butonu silinmişti, geri kaktırıldı.&#10;&quot;Explore Event Page&quot; eski aşağıdaki bilgiler geri geldi, sağ üste paylaş ve sil butonları eklendi." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

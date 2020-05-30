@@ -55,7 +55,6 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -63,7 +62,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             children: <Widget>[
               TabBar(
                   labelColor: MyColors().darkblueText,
-                  unselectedLabelColor: MyColors().whiteTextColor,
+                  unselectedLabelColor: MyColors().darkblueText,
                   labelStyle: TextStyle(
                     fontFamily: "ZonaLight",
                     fontSize: heightSize(3),
@@ -94,44 +93,45 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
               ),
               Expanded(
                 child: TabBarView(controller: _tabController, children: [
-                  //ANCHOR Participants page
-                  participantsPage(),
+                  SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: heightSize(2),
+                      ),
+                      userPhotoAndName(),
+                      divider(),
+                      SizedBox(
+                        height: heightSize(2),
+                      ),
+                      eventPhotoAndTitle(),
+                      SizedBox(
+                        height: heightSize(2),
+                      ),
+                      dateAndDetails(),
+                      SizedBox(
+                        height: heightSize(2),
+                      ),
+                      genderBoxes(),
+                      SizedBox(
+                        height: heightSize(2),
+                      ),
+                      categoryColumn(),
+                      SizedBox(
+                        height: heightSize(2),
+                      ),
+                      mapAndJoin(),
+                      SizedBox(
+                        height: heightSize(5),
+                      ),
+                    ],
+                  ),
+                ),
                   //ANCHOR Comments page
                   commentsPage(),
-                  SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: heightSize(2),
-                        ),
-                        userPhotoAndName(),
-                        divider(),
-                        SizedBox(
-                          height: heightSize(2),
-                        ),
-                        eventPhotoAndTitle(),
-                        SizedBox(
-                          height: heightSize(2),
-                        ),
-                        dateAndDetails(),
-                        SizedBox(
-                          height: heightSize(2),
-                        ),
-                        genderBoxes(),
-                        SizedBox(
-                          height: heightSize(2),
-                        ),
-                        categoryColumn(),
-                        SizedBox(
-                          height: heightSize(2),
-                        ),
-                        mapAndJoin(),
-                        SizedBox(
-                          height: heightSize(5),
-                        ),
-                      ],
-                    ),
-                  ),
+                  //ANCHOR Participants page
+                  participantsPage(),
+
                 ]),
               ),
             ],
@@ -172,7 +172,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                             height: heightSize(10),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.all(Radius.circular(10)),
-                              color: MyColors().lightGreen,
+                              color: MyColors().lightBlueContainer,
                             ),
                             child: Padding(
                               padding: const EdgeInsets.only(left: 10),
@@ -339,11 +339,37 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
     );
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   Widget userPhotoAndName() {
     return FlatButton(
       padding: EdgeInsets.all(0),
-      splashColor: MyColors().lightGreen,
-      highlightColor: MyColors().lightGreen,
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
       onPressed: () {
         //ANCHOR kullanıcı profiline buradan gidiyor
         NavigationManager(context).pushPage(ProfilePage(
@@ -448,7 +474,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
               width: widthSize(43),
               height: heightSize(6),
               decoration: new BoxDecoration(
-                color: MyColors().lightGreen,
+                color: MyColors().darkblueText,
                 borderRadius: new BorderRadius.all(
                   Radius.circular(20),
                 ),
@@ -485,7 +511,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
               width: widthSize(43),
               height: heightSize(6),
               decoration: new BoxDecoration(
-                color: MyColors().lightGreen,
+                color: MyColors().darkblueText,
                 borderRadius: new BorderRadius.all(
                   Radius.circular(20),
                 ),
@@ -529,7 +555,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             Radius.circular(20),
           ),
           child: Container(
-            color: MyColors().blackOpacityContainer,
+            color: MyColors().lightBlueContainer,
             width: widthSize(100),
             height: heightSize(20),
             child: Padding(
@@ -537,7 +563,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
               child: Text(
                 widget.eventData['Detail'],
                 style: TextStyle(
-                  fontFamily: "ZonaLight",
+                  fontFamily: "Zona",
                   color: MyColors().whiteTextColor,
                   fontSize: heightSize(2),
                 ),
@@ -580,7 +606,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
           width: widthSize(43),
           height: heightSize(6),
           decoration: new BoxDecoration(
-            color: MyColors().lightGreen,
+            color: MyColors().orangeContainer,
             borderRadius: new BorderRadius.all(
               Radius.circular(20),
             ),
@@ -608,7 +634,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
       width: widthSize(100),
       height: heightSize(6),
       decoration: new BoxDecoration(
-        color: MyColors().lightGreen,
+        color: MyColors().purpleContainer,
         borderRadius: new BorderRadius.all(
           Radius.circular(20),
         ),
