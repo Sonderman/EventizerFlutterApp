@@ -163,10 +163,6 @@ class MessagingService with ChangeNotifier {
   final DatabaseWorks firebaseDatabaseWorks = locator<DatabaseWorks>();
   final StorageWorks firebaseStorageWorks = locator<StorageWorks>();
 
-  Stream<QuerySnapshot> getSnapshot(String chatID) {
-    return firebaseDatabaseWorks.getSnapshot(chatID);
-  }
-
   sendMessage(String chatID, ChatMessage message, String currentUser,
       String otherUser) async {
     await firebaseDatabaseWorks.sendMessage(
@@ -186,8 +182,16 @@ class MessagingService with ChangeNotifier {
     return firebaseDatabaseWorks.checkConversation(currentUserID, otherUserID);
   }
 
+  Stream<QuerySnapshot> getMessagesSnapshot(String chatID) {
+    return firebaseDatabaseWorks.getMessagesSnapshot(chatID);
+  }
+
   Stream<QuerySnapshot> getUserChatsSnapshot(String currentUser) {
     return firebaseDatabaseWorks.getUserChatsSnapshots(currentUser);
+  }
+
+  Stream<DocumentSnapshot> getChatPoolSnapshot(String chatID) {
+    return firebaseDatabaseWorks.getChatPoolSnapshot(chatID);
   }
 }
 

@@ -76,7 +76,7 @@ class _MessageState extends State<Message> {
 
             print("ChatID:" + chatID);
             return StreamBuilder(
-                stream: messageService.getSnapshot(chatID),
+                stream: messageService.getMessagesSnapshot(chatID),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return Center(
