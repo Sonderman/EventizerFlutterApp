@@ -33,14 +33,14 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   }
 
   TabController _tabController;
-  bool joinButton;
+  bool katilbutton;
   TextEditingController commentController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    joinButton = widget.amIparticipant;
+    katilbutton = widget.amIparticipant;
   }
 
   @override
@@ -50,13 +50,12 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   }
 
   void toggleJoinButton() {
-    joinButton = !joinButton;
+    katilbutton ? katilbutton = false : katilbutton = true;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -64,7 +63,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             children: <Widget>[
               TabBar(
                   labelColor: MyColors().darkblueText,
-                  unselectedLabelColor: MyColors().whiteTextColor,
+                  unselectedLabelColor: MyColors().darkblueText,
                   labelStyle: TextStyle(
                     fontFamily: "ZonaLight",
                     fontSize: heightSize(3),
@@ -114,7 +113,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                         SizedBox(
                           height: heightSize(2),
                         ),
-                        genderAndParticipantsBoxes(),
+                        genderBoxes(),
                         SizedBox(
                           height: heightSize(2),
                         ),
@@ -145,19 +144,22 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   Widget participantsPage() {
     var eventService = Provider.of<EventService>(context);
     var userService = Provider.of<UserService>(context);
+    bool katilbutton;
+    void toggleJoinButton() {
+      katilbutton ? katilbutton = false : katilbutton = true;
+    }
+
     return FutureBuilder(
       future: eventService.getParticipants(widget.eventData['eventID']),
       builder: (BuildContext context,
           AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.data.length == 0) {
-            return Center(child: Text("Katılımcı Yok"));
+            return Text("Katılımcı Yok");
           } else {
             return ListView.separated(
               separatorBuilder: (BuildContext context, int index) {
-                return SizedBox(
-                  height: heightSize(3),
-                );
+                return Text("");
               },
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, int index) {
@@ -166,54 +168,53 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                       .findUserByID(snapshot.data[index]['ParticipantID']),
                   builder: (BuildContext context, AsyncSnapshot user) {
                     if (user.connectionState == ConnectionState.done) {
-                      return InkWell(
-                        onTap: () {
-                          //TODO ProfilePage e userID yerine usermodel gitmeli direk olarak
-                          NavigationManager(context).pushPage(ProfilePage(
-                            isFromEvent: true,
-                            userID: user.data['UserID'],
-                          ));
-                        },
-                        child: Container(
-                          height: heightSize(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: MyColors().lightGreen,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  height: heightSize(7),
-                                  width: widthSize(14),
-                                  decoration: new BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: ExtendedNetworkImageProvider(
-                                          user.data['ProfilePhotoUrl'],
-                                          cache: true),
+                      return Column(
+                        children: <Widget>[
+                          Container(
+                            height: heightSize(10),
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              color: MyColors().lightBlueContainer,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    height: heightSize(7),
+                                    width: widthSize(14),
+                                    decoration: new BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: ExtendedNetworkImageProvider(
+                                            user.data['ProfilePhotoUrl'],
+                                            cache: true),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: widthSize(3),
-                                ),
-                                Text(
-                                  user.data['Name'] + user.data['Surname'],
-                                  style: TextStyle(
-                                    fontFamily: "Zona",
-                                    fontSize: heightSize(2.5),
-                                    color: MyColors().darkblueText,
+                                  SizedBox(
+                                    width: widthSize(3),
                                   ),
-                                ),
-                              ],
+                                  Text(
+                                    user.data['Name'] + user.data['Surname'],
+                                    style: TextStyle(
+                                      fontFamily: "Zona",
+                                      fontSize: heightSize(2.5),
+                                      color: MyColors().darkblueText,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
+                          SizedBox(
+                            height: heightSize(3),
+                          ),
+                        ],
                       );
                     } else {
                       return CircularProgressIndicator();
@@ -242,7 +243,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                   AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.data.length == 0) {
-                    return Center(child: Text("Henüz yorum yapılmadı"));
+                    return Text("Henüz yorum yapılmadı");
                   } else
                     return ListView.separated(
                         //physics: ClampingScrollPhysics(),
@@ -358,8 +359,8 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   Widget userPhotoAndName() {
     return FlatButton(
       padding: EdgeInsets.all(0),
-      splashColor: MyColors().lightGreen,
-      highlightColor: MyColors().lightGreen,
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
       onPressed: () {
         //ANCHOR kullanıcı profiline buradan gidiyor
         NavigationManager(context).pushPage(ProfilePage(
@@ -467,7 +468,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
               width: widthSize(43),
               height: heightSize(6),
               decoration: new BoxDecoration(
-                color: MyColors().lightGreen,
+                color: MyColors().darkblueText,
                 borderRadius: new BorderRadius.all(
                   Radius.circular(20),
                 ),
@@ -504,7 +505,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
               width: widthSize(43),
               height: heightSize(6),
               decoration: new BoxDecoration(
-                color: MyColors().lightGreen,
+                color: MyColors().darkblueText,
                 borderRadius: new BorderRadius.all(
                   Radius.circular(20),
                 ),
@@ -548,7 +549,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             Radius.circular(20),
           ),
           child: Container(
-            color: MyColors().blackOpacityContainer,
+            color: MyColors().lightBlueContainer,
             width: widthSize(100),
             height: heightSize(20),
             child: Padding(
@@ -556,7 +557,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
               child: Text(
                 widget.eventData['Detail'],
                 style: TextStyle(
-                  fontFamily: "ZonaLight",
+                  fontFamily: "Zona",
                   color: MyColors().whiteTextColor,
                   fontSize: heightSize(2),
                 ),
@@ -568,21 +569,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
     );
   }
 
-  Widget genderAndParticipantsBoxes() {
-    String gender;
-    //ANCHOR cinsiyetlere durumları
-    switch (widget.eventData['AllowedGenders']) {
-      case "10":
-        gender = "Erkek";
-        break;
-      case "01":
-        gender = "Kadın";
-        break;
-      case "11":
-        gender = "Erkek/Kadın";
-        break;
-    }
-
+  Widget genderBoxes() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -599,7 +586,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                gender,
+                "Kadın/Erkek",
                 style: TextStyle(
                   fontFamily: "Zona",
                   fontSize: heightSize(2),
@@ -613,7 +600,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
           width: widthSize(43),
           height: heightSize(6),
           decoration: new BoxDecoration(
-            color: MyColors().lightGreen,
+            color: MyColors().orangeContainer,
             borderRadius: new BorderRadius.all(
               Radius.circular(20),
             ),
@@ -622,7 +609,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                widget.eventData['ParticipantNumber'].toString(),
+                "12/20 Katılımcı",
                 style: TextStyle(
                   fontFamily: "Zona",
                   fontSize: heightSize(2),
@@ -641,7 +628,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
       width: widthSize(100),
       height: heightSize(6),
       decoration: new BoxDecoration(
-        color: MyColors().lightGreen,
+        color: MyColors().purpleContainer,
         borderRadius: new BorderRadius.all(
           Radius.circular(20),
         ),
@@ -649,9 +636,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         child: Text(
-          widget.eventData['MainCategory'] +
-              " | " +
-              widget.eventData['SubCategory'],
+          "Kategori | Alt Kategori",
           style: TextStyle(
             fontFamily: "Zona",
             fontSize: heightSize(2),
@@ -665,7 +650,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   Widget mapAndJoin() {
     Widget joinUnjoinButton;
 
-    if (joinButton) {
+    if (katilbutton) {
       joinUnjoinButton = Container(
         width: widthSize(43),
         height: heightSize(8),
@@ -776,7 +761,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                       Provider.of<EventService>(context, listen: false);
                   var userService =
                       Provider.of<UserService>(context, listen: false);
-                  if (joinButton) {
+                  if (katilbutton) {
                     if (await eventService.leaveEvent(
                         userService.userModel.getUserId(),
                         widget.eventData['eventID'])) {
