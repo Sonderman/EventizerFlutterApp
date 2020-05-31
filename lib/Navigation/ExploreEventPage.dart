@@ -45,7 +45,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
     String eventID = eventDatas['eventID'];
     String title = eventDatas['Title'];
     String ownerID = eventDatas['OrganizerID'];
-    String category = eventDatas['Category'];
+    //String category = eventDatas['Category'];
     String imageUrl = eventDatas['EventImageUrl'];
     String startDate = eventDatas['StartDate'];
     Map<String, dynamic> ownerData;
