@@ -14,7 +14,8 @@ class EventPage extends StatefulWidget {
   final Map<String, dynamic> userData;
   final bool amIparticipant;
 
-  const EventPage({Key key, this.eventData, this.userData, this.amIparticipant}) : super(key: key);
+  const EventPage({Key key, this.eventData, this.userData, this.amIparticipant})
+      : super(key: key);
 
   @override
   _EventPageState createState() => _EventPageState();
@@ -94,44 +95,43 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
               Expanded(
                 child: TabBarView(controller: _tabController, children: [
                   SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: heightSize(2),
-                      ),
-                      userPhotoAndName(),
-                      divider(),
-                      SizedBox(
-                        height: heightSize(2),
-                      ),
-                      eventPhotoAndTitle(),
-                      SizedBox(
-                        height: heightSize(2),
-                      ),
-                      dateAndDetails(),
-                      SizedBox(
-                        height: heightSize(2),
-                      ),
-                      genderBoxes(),
-                      SizedBox(
-                        height: heightSize(2),
-                      ),
-                      categoryColumn(),
-                      SizedBox(
-                        height: heightSize(2),
-                      ),
-                      mapAndJoin(),
-                      SizedBox(
-                        height: heightSize(5),
-                      ),
-                    ],
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: heightSize(2),
+                        ),
+                        userPhotoAndName(),
+                        divider(),
+                        SizedBox(
+                          height: heightSize(2),
+                        ),
+                        eventPhotoAndTitle(),
+                        SizedBox(
+                          height: heightSize(2),
+                        ),
+                        dateAndDetails(),
+                        SizedBox(
+                          height: heightSize(2),
+                        ),
+                        genderBoxes(),
+                        SizedBox(
+                          height: heightSize(2),
+                        ),
+                        categoryColumn(),
+                        SizedBox(
+                          height: heightSize(2),
+                        ),
+                        mapAndJoin(),
+                        SizedBox(
+                          height: heightSize(5),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
                   //ANCHOR Comments page
                   commentsPage(),
                   //ANCHOR Participants page
                   participantsPage(),
-
                 ]),
               ),
             ],
@@ -151,7 +151,8 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
 
     return FutureBuilder(
       future: eventService.getParticipants(widget.eventData['eventID']),
-      builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+      builder: (BuildContext context,
+          AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.data.length == 0) {
             return Text("Katılımcı Yok");
@@ -163,7 +164,8 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, int index) {
                 return FutureBuilder(
-                  future: userService.findUserByID(snapshot.data[index]['ParticipantID']),
+                  future: userService
+                      .findUserByID(snapshot.data[index]['ParticipantID']),
                   builder: (BuildContext context, AsyncSnapshot user) {
                     if (user.connectionState == ConnectionState.done) {
                       return Column(
@@ -171,7 +173,8 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                           Container(
                             height: heightSize(10),
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
                               color: MyColors().lightBlueContainer,
                             ),
                             child: Padding(
@@ -187,7 +190,9 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
                                         fit: BoxFit.cover,
-                                        image: ExtendedNetworkImageProvider(user.data['ProfilePhotoUrl'], cache: true),
+                                        image: ExtendedNetworkImageProvider(
+                                            user.data['ProfilePhotoUrl'],
+                                            cache: true),
                                       ),
                                     ),
                                   ),
@@ -234,7 +239,8 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
         Expanded(
           child: FutureBuilder(
               future: eventService.getComments(widget.eventData['eventID']),
-              builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.data.length == 0) {
                     return Text("Henüz yorum yapılmadı");
@@ -243,9 +249,11 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                         //physics: ClampingScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: snapshot.data.length,
-                        separatorBuilder: (ctx, index) => SizedBox(height: heightSize(3)),
+                        separatorBuilder: (ctx, index) =>
+                            SizedBox(height: heightSize(3)),
                         itemBuilder: (BuildContext context, int index) {
-                          return ProfileListItem.CommentsPageDetails(jsonData: snapshot.data[index]);
+                          return ProfileListItem(
+                              jsonData: snapshot.data[index]);
                         });
                 } else
                   return PageComponents().loadingOverlay(context, Colors.white);
@@ -288,15 +296,21 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                               color: Colors.red,
                             ),
                             fillColor: MyColors().blueThemeColor,
-                            border: OutlineInputBorder(borderSide: BorderSide(color: MyColors().blueThemeColor)),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: MyColors().blueThemeColor)),
                             counterText: '',
                             focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(4)),
-                              borderSide: BorderSide(width: 1, color: MyColors().blueThemeColor),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
+                              borderSide: BorderSide(
+                                  width: 1, color: MyColors().blueThemeColor),
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(4)),
-                              borderSide: BorderSide(width: 1, color: MyColors().blueThemeColor),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
+                              borderSide: BorderSide(
+                                  width: 1, color: MyColors().blueThemeColor),
                             ),
                           ),
                         )),
@@ -307,7 +321,10 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                         onPressed: () async {
                           //ANCHOR  Yorum gönderme backend işlemleri
                           if (commentController.text != "") {
-                            await eventService.sendComment(widget.eventData['eventID'], userService.userModel.getUserId(), commentController.text);
+                            await eventService.sendComment(
+                                widget.eventData['eventID'],
+                                userService.userModel.getUserId(),
+                                commentController.text);
                             setState(() {
                               commentController.text = '';
                             });
@@ -338,32 +355,6 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
       ],
     );
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   Widget userPhotoAndName() {
     return FlatButton(
@@ -452,7 +443,10 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             color: MyColors().blackOpacityContainer,
             width: widthSize(100),
             height: heightSize(25),
-            child: FadeInImage.assetNetwork(fit: BoxFit.cover, placeholder: 'assets/images/etkinlik.jpg', image: widget.eventData['EventImageUrl']),
+            child: FadeInImage.assetNetwork(
+                fit: BoxFit.cover,
+                placeholder: 'assets/images/etkinlik.jpg',
+                image: widget.eventData['EventImageUrl']),
           ),
         ),
         SizedBox(
@@ -763,10 +757,14 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
           [
             InkWell(
                 onTap: () async {
-                  var eventService = Provider.of<EventService>(context, listen: false);
-                  var userService = Provider.of<UserService>(context, listen: false);
+                  var eventService =
+                      Provider.of<EventService>(context, listen: false);
+                  var userService =
+                      Provider.of<UserService>(context, listen: false);
                   if (katilbutton) {
-                    if (await eventService.leaveEvent(userService.userModel.getUserId(), widget.eventData['eventID'])) {
+                    if (await eventService.leaveEvent(
+                        userService.userModel.getUserId(),
+                        widget.eventData['eventID'])) {
                       setState(() {
                         toggleJoinButton();
                         print("Ayrıldı");
@@ -775,7 +773,9 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                       print("Hata");
                     }
                   } else {
-                    if (await eventService.joinEvent(userService.userModel.getUserId(), widget.eventData['eventID'])) {
+                    if (await eventService.joinEvent(
+                        userService.userModel.getUserId(),
+                        widget.eventData['eventID'])) {
                       setState(() {
                         toggleJoinButton();
                         print("Katıldı");

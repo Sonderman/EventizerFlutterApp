@@ -63,7 +63,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
         });
       },
       child: ClipRRect(
-        borderRadius: new BorderRadius.all(
+        borderRadius: BorderRadius.all(
           Radius.circular(20),
         ),
         child: Container(
@@ -98,7 +98,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                                   return Container(
                                     height: heightSize(5),
                                     width: widthSize(10),
-                                    decoration: new BoxDecoration(
+                                    decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
                                           fit: BoxFit.cover,
@@ -140,12 +140,13 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                   color: MyColors().loginGreyColor,
                 ),
               ),
-              Container(
-                height: heightSize(22),
-                child: FadeInImage.assetNetwork(
-                    placeholder: "assets/images/event_birthday.jpg",
-                    image: imageUrl),
-              ),
+              ClipRRect(
+                  borderRadius: BorderRadius.circular(15.0),
+                  child: FadeInImage.assetNetwork(
+                      width: widthSize(80),
+                      fit: BoxFit.cover,
+                      placeholder: "assets/images/event_birthday.jpg",
+                      image: imageUrl)),
               Stack(
                 children: <Widget>[
                   Positioned(

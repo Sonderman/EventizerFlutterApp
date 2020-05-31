@@ -23,6 +23,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   TextEditingController mailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController password2Controller = TextEditingController();
   LoginAndRegister loginAndRegister = LoginAndRegister();
   File _image;
   bool loading = false;
@@ -56,6 +57,52 @@ class _SignUpPageState extends State<SignUpPage> {
     setState(() {
       _image = image;
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return loading
+        ? Loading()
+        : Scaffold(
+            body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: heightSize(5),
+                  ),
+                  addPhoto(),
+                  SizedBox(
+                    height: heightSize(1),
+                  ),
+                  nameSurname(),
+                  SizedBox(
+                    height: heightSize(1),
+                  ),
+                  emailAndPasswordFields(),
+                  SizedBox(
+                    height: heightSize(1),
+                  ),
+                  telephoneNumber(),
+                  SizedBox(
+                    height: heightSize(2),
+                  ),
+                  countryAndBirthDate(),
+                  SizedBox(
+                    height: heightSize(2),
+                  ),
+                  selectGender(),
+                  SizedBox(
+                    height: heightSize(2),
+                  ),
+                  signUpButton(),
+                  SizedBox(
+                    height: heightSize(2),
+                  ),
+                ],
+              ),
+            ),
+          );
   }
 
   Future<void> _showChoiceDialog(BuildContext context) {
@@ -118,16 +165,42 @@ class _SignUpPageState extends State<SignUpPage> {
       loading = true;
     });
     //ANCHOR Veritabanına kaydetmek için
-    List<String> datalist = [_name, _surname, mailController.text, _phoneNumber, _gender ? "Man" : "Woman", _country, _birthday];
+    List<String> datalist = [
+      _name,
+      _surname,
+      mailController.text,
+      _phoneNumber,
+      _gender ? "Man" : "Woman",
+      _country,
+      _birthday
+    ];
     print(datalist);
-    await loginAndRegister.registerUser(context, mailController.text, passwordController.text, datalist, _image).whenComplete(() {
-      Fluttertoast.showToast(msg: "Doğrulama maili gönderildi.Lütfen mailinizi doğrulayınız!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 2, backgroundColor: Colors.cyan, textColor: Colors.white, fontSize: 18.0);
+    await loginAndRegister
+        .registerUser(context, mailController.text, passwordController.text,
+            datalist, _image)
+        .whenComplete(() {
+      Fluttertoast.showToast(
+          msg: "Doğrulama maili gönderildi.Lütfen mailinizi doğrulayınız!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.cyan,
+          textColor: Colors.white,
+          fontSize: 18.0);
       Future.delayed(const Duration(milliseconds: 200), () {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
       });
     }).catchError((error) {
       print(error);
-      Fluttertoast.showToast(msg: "Girdileri gözden geçiriniz!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 2, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 18.0);
+      Fluttertoast.showToast(
+          msg: "Girdileri gözden geçiriniz!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 18.0);
       setState(() {
         loading = false;
       });
@@ -140,11 +213,13 @@ class _SignUpPageState extends State<SignUpPage> {
         _showChoiceDialog(context);
       },
       child: Container(
-        height: heightSize(15),
+        width: widthSize(30),
+        height: widthSize(30),
+        /*
         decoration: BoxDecoration(
           color: MyColors().orangeContainer,
           shape: BoxShape.circle,
-        ),
+        ),*/
         child: CircleAvatar(
           backgroundColor: MyColors().orangeContainer,
           radius: 100,
@@ -156,7 +231,8 @@ class _SignUpPageState extends State<SignUpPage> {
               : ClipOval(
                   child: Image.file(
                     _image,
-                    width: heightSize(15),
+                    width: widthSize(30),
+                    height: widthSize(30),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -272,7 +348,47 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
             alignLabelWithHint: true,
             suffixIcon: FlatButton(
-              child: Icon(showPassword ? Icons.visibility : Icons.visibility_off),
+              child:
+                  Icon(showPassword ? Icons.visibility : Icons.visibility_off),
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              onPressed: () {
+                setState(() {
+                  showPassword = !showPassword;
+                });
+              },
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: MyColors().loginGreyColor),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: MyColors().loginGreyColor),
+            ),
+          ),
+          style: TextStyle(
+            fontSize: heightSize(2.5),
+            fontFamily: "ZonaLight",
+            color: MyColors().loginGreyColor,
+          ),
+        ),
+        SizedBox(
+          height: heightSize(3),
+        ),
+        TextFormField(
+          controller: password2Controller,
+          obscureText: showPassword,
+          textAlign: TextAlign.left,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: "Şifre Tekrar*",
+            hintStyle: TextStyle(
+              fontFamily: "Zona",
+              color: MyColors().loginGreyColor,
+            ),
+            alignLabelWithHint: true,
+            suffixIcon: FlatButton(
+              child:
+                  Icon(showPassword ? Icons.visibility : Icons.visibility_off),
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onPressed: () {
@@ -376,10 +492,15 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
         InkWell(
           onTap: () async {
-            final datePick = await showDatePicker(context: context, initialDate: DateTime(DateTime.now().year - 18), firstDate: DateTime(DateTime.now().year - 70), lastDate: DateTime(DateTime.now().year - 18));
+            final datePick = await showDatePicker(
+                context: context,
+                initialDate: DateTime(DateTime.now().year - 18),
+                firstDate: DateTime(DateTime.now().year - 70),
+                lastDate: DateTime(DateTime.now().year - 18));
             if (datePick != null) {
               setState(() {
-                _birthday = "${datePick.day}/${datePick.month}/${datePick.year}";
+                _birthday =
+                    "${datePick.day}/${datePick.month}/${datePick.year}";
               });
             }
           },
@@ -422,7 +543,9 @@ class _SignUpPageState extends State<SignUpPage> {
             width: widthSize(43),
             height: heightSize(5),
             decoration: new BoxDecoration(
-              color: _gender != null ? _gender ? Colors.black : menColor() : menColor(),
+              color: _gender != null
+                  ? _gender ? Colors.black : menColor()
+                  : menColor(),
               borderRadius: new BorderRadius.all(
                 Radius.circular(20),
               ),
@@ -449,7 +572,9 @@ class _SignUpPageState extends State<SignUpPage> {
             width: widthSize(43),
             height: heightSize(5),
             decoration: new BoxDecoration(
-              color: _gender != null ? _gender ? womenColor() : Colors.black : womenColor(),
+              color: _gender != null
+                  ? _gender ? womenColor() : Colors.black
+                  : womenColor(),
               borderRadius: new BorderRadius.all(
                 Radius.circular(20),
               ),
@@ -481,7 +606,8 @@ class _SignUpPageState extends State<SignUpPage> {
             highlightColor: MyColors().purpleContainerSplash,
             splashColor: MyColors().purpleContainerSplash,
             onPressed: () {
-              widget.pageController.previousPage(duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
+              widget.pageController.previousPage(
+                  duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
             },
             child: Container(
               height: heightSize(8),
@@ -501,13 +627,28 @@ class _SignUpPageState extends State<SignUpPage> {
         InkWell(
           onTap: () {
             //ANCHOR veri kontrolleri burda
-            if (_image != null && _name != null && _surname != null && mailController.text != null && passwordController.text != null && _gender != null && _birthday != null && _country != null) {
+            if (_image != null &&
+                _name != null &&
+                _surname != null &&
+                mailController.text != null &&
+                passwordController.text != null &&
+                passwordController.text == password2Controller.text &&
+                _gender != null &&
+                _birthday != null &&
+                _country != null) {
               signUp();
               setState(() {
                 loading = true;
               });
             } else {
-              Fluttertoast.showToast(msg: "Lütfen Girdileri Kontrol Ediniz!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 3, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 18.0);
+              Fluttertoast.showToast(
+                  msg: "Lütfen Girdileri Kontrol Ediniz!",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 3,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 18.0);
             }
           },
           child: Container(
@@ -533,52 +674,6 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ],
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return loading
-        ? Loading()
-        : Scaffold(
-            body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: heightSize(5),
-                  ),
-                  addPhoto(),
-                  SizedBox(
-                    height: heightSize(1),
-                  ),
-                  nameSurname(),
-                  SizedBox(
-                    height: heightSize(1),
-                  ),
-                  emailAndPasswordFields(),
-                  SizedBox(
-                    height: heightSize(1),
-                  ),
-                  telephoneNumber(),
-                  SizedBox(
-                    height: heightSize(2),
-                  ),
-                  countryAndBirthDate(),
-                  SizedBox(
-                    height: heightSize(2),
-                  ),
-                  selectGender(),
-                  SizedBox(
-                    height: heightSize(2),
-                  ),
-                  signUpButton(),
-                  SizedBox(
-                    height: heightSize(2),
-                  ),
-                ],
-              ),
-            ),
-          );
   }
 
   //ANCHOR cinsiyet seçildikten sonra container'lar siyah olsun mu?

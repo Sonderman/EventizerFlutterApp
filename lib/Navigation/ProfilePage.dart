@@ -175,7 +175,6 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget avatarAndName() => Container(
         alignment: Alignment.center,
-        height: heightSize(35),
         width: widthSize(85),
         child: Column(
           children: <Widget>[
@@ -183,18 +182,16 @@ class _ProfilePageState extends State<ProfilePage>
               height: heightSize(1),
             ),
             Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
               width: widthSize(82),
-              child: FadeInImage.assetNetwork(
-                  height: widthSize(48),
-                  width: widthSize(80),
-                  fit: BoxFit.fill,
-                  placeholder: "assets/images/avatar_man.png",
-                  image: profilePhotoUrl),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15.0),
+                child: FadeInImage.assetNetwork(
+                    height: heightSize(35),
+                    width: widthSize(80),
+                    fit: BoxFit.cover,
+                    placeholder: "assets/images/avatar_man.png",
+                    image: profilePhotoUrl),
+              ),
             ),
             SizedBox(
               height: heightSize(1),

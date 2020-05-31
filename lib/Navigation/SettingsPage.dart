@@ -221,21 +221,15 @@ class _SettingsPageState extends State<SettingsPage> {
       },
       child: Center(
         child: Container(
-          //ANCHOR Mevcut size void'imizi kullandığımızda anlamsız bir height oluşuyor, çözemedim. Bundan ötürü normal ölçüleri kullandım burada:
-          height: 150,
-          width: 150,
+          height: widthSize(50),
+          width: widthSize(50),
           decoration: BoxDecoration(
-            color: MyColors().yellowContainer,
-            shape: BoxShape.circle,
-          ),
-          child: Center(
-            child: Container(
-              height: heightSize(5),
-              child: _image == null
-                  ? Image.network(userModel.getUserProfilePhotoUrl())
-                  : Image.file(_image),
-            ),
-          ),
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: _image == null
+                      ? NetworkImage(userModel.getUserProfilePhotoUrl())
+                      : FileImage(_image))),
         ),
       ),
     );
