@@ -72,8 +72,7 @@ class _ChatPageState extends State<ChatPage> {
           ),
           Expanded(
             child: StreamBuilder(
-              stream: messageService
-                  .getUserChatsSnapshot(userService.userModel.getUserId()),
+              stream: messageService.getUserChatsSnapshot(userService.userModel.getUserId()),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return PageComponents().loadingOverlay(context, Colors.white);
@@ -81,8 +80,7 @@ class _ChatPageState extends State<ChatPage> {
                   List<DocumentSnapshot> items = snapshot.data.documents;
                   int itemLength = items.length;
                   return ListView.separated(
-                      separatorBuilder: (BuildContext context, int index) =>
-                          Divider(
+                      separatorBuilder: (BuildContext context, int index) => Divider(
                             height: 50,
                           ),
                       itemCount: itemLength,
@@ -99,12 +97,7 @@ class _ChatPageState extends State<ChatPage> {
 
                                   return InkWell(
                                     onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  Message(
-                                                      otherUserID, userName)));
+                                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Message(otherUserID, userName)));
                                     },
                                     child: Row(
                                       children: <Widget>[
@@ -123,86 +116,63 @@ class _ChatPageState extends State<ChatPage> {
                                           width: widthSize(3),
                                         ),
                                         Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
-                                              "$userName\n",
+                                              "$userName",
                                               style: TextStyle(
                                                 fontFamily: "Zona",
                                                 fontSize: heightSize(2.5),
-                                                color:
-                                                    MyColors().loginGreyColor,
+                                                color: MyColors().loginGreyColor,
                                               ),
                                             ),
                                             StreamBuilder(
-                                                stream: messageService
-                                                    .getChatPoolSnapshot(
-                                                        chatID),
+                                                stream: messageService.getChatPoolSnapshot(chatID),
                                                 builder: (_, lastMessageSnap) {
                                                   if (lastMessageSnap.hasData) {
-                                                    var lastMessagemap =
-                                                        lastMessageSnap.data;
-                                                    String message =
-                                                        lastMessagemap[
-                                                                "LastMessage"]
-                                                            ["Message"];
-                                                    String hours = DateTime
-                                                            .fromMillisecondsSinceEpoch(
-                                                                lastMessagemap[
-                                                                        "LastMessage"]
-                                                                    [
-                                                                    "createdAt"])
-                                                        .hour
-                                                        .toString();
-                                                    String minutes = DateTime
-                                                            .fromMillisecondsSinceEpoch(
-                                                                lastMessagemap[
-                                                                        "LastMessage"]
-                                                                    [
-                                                                    "createdAt"])
-                                                        .minute
-                                                        .toString();
-                                                    return Row(
-                                                      children: <Widget>[
-                                                        Text(
-                                                          message,
-                                                          style: TextStyle(
-                                                            height:
-                                                                heightSize(0.2),
-                                                            fontFamily:
-                                                                "ZonaLight",
-                                                            fontSize:
-                                                                heightSize(2),
-                                                            color: MyColors()
-                                                                .greyTextColor,
-                                                          ),
+                                                    var lastMessagemap = lastMessageSnap.data;
+                                                    String message = lastMessagemap["LastMessage"]["Message"];
+                                                    String hours = DateTime.fromMillisecondsSinceEpoch(lastMessagemap["LastMessage"]["createdAt"]).hour.toString();
+                                                    String minutes = DateTime.fromMillisecondsSinceEpoch(lastMessagemap["LastMessage"]["createdAt"]).minute.toString();
+                                                    return SizedBox(
+                                                      width: widthSize(62),
+                                                      child: Text(
+                                                        message,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: TextStyle(
+                                                          height: heightSize(0.2),
+                                                          fontFamily: "ZonaLight",
+                                                          fontSize: heightSize(2),
+                                                          color: MyColors().greyTextColor,
                                                         ),
-                                                        SizedBox(
-                                                          width: widthSize(50),
-                                                        ),
-                                                        Text(
-                                                          hours + ":" + minutes,
-                                                          style: TextStyle(
-                                                            height:
-                                                                heightSize(0.2),
-                                                            fontFamily:
-                                                                "ZonaLight",
-                                                            fontSize:
-                                                                heightSize(2),
-                                                            color: MyColors()
-                                                                .greyTextColor,
-                                                          ),
-                                                        ),
-                                                      ],
+                                                      ),
                                                     );
                                                   } else
                                                     return Text("null");
                                                 }),
                                           ],
                                         ),
+                                        Spacer(),
+                                        StreamBuilder(
+                                            stream: messageService.getChatPoolSnapshot(chatID),
+                                            builder: (_, lastMessageSnap) {
+                                              if (lastMessageSnap.hasData) {
+                                                var lastMessagemap = lastMessageSnap.data;
+                                                String hours = DateTime.fromMillisecondsSinceEpoch(lastMessagemap["LastMessage"]["createdAt"]).hour.toString();
+                                                String minutes = DateTime.fromMillisecondsSinceEpoch(lastMessagemap["LastMessage"]["createdAt"]).minute.toString();
+                                                return Text(
+                                                  hours + ":" + minutes,
+                                                  style: TextStyle(
+                                                    height: heightSize(0.2),
+                                                    fontFamily: "ZonaLight",
+                                                    fontSize: heightSize(2),
+                                                    color: MyColors().greyTextColor,
+                                                  ),
+                                                );
+                                              } else
+                                                return Text("null");
+                                            }),
                                       ],
                                     ),
                                   );
@@ -210,11 +180,9 @@ class _ChatPageState extends State<ChatPage> {
                                 case ConnectionState.none:
                                   return Center(child: Text("Hata"));
                                 case ConnectionState.waiting:
-                                  return PageComponents().loadingCustomOverlay(
-                                      40, MyColors().blueThemeColor);
+                                  return PageComponents().loadingCustomOverlay(40, MyColors().blueThemeColor);
                                 default:
-                                  return Center(
-                                      child: Text("Beklenmedik durum"));
+                                  return Center(child: Text("Beklenmedik durum"));
                               }
                             });
                       });

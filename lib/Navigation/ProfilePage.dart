@@ -23,8 +23,7 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage>
-    with TickerProviderStateMixin {
+class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
   double heightSize(double value) {
     value /= 100;
     return MediaQuery.of(context).size.height * value;
@@ -38,13 +37,7 @@ class _ProfilePageState extends State<ProfilePage>
   UserService userService;
   User userModel;
   bool amIFollowing = false, isThisProfileMine;
-  String nameText,
-      surnameText,
-      aboutText,
-      followersText,
-      eventsText,
-      trustText,
-      profilePhotoUrl;
+  String nameText, surnameText, aboutText, followersText, eventsText, trustText, profilePhotoUrl;
 
   TabController _tabController;
 
@@ -78,8 +71,7 @@ class _ProfilePageState extends State<ProfilePage>
     if (!isThisProfileMine) {
       return FutureBuilder(
           future: userService.findUserByID(widget.userID),
-          builder:
-              (BuildContext context, AsyncSnapshot<Map<String, dynamic>> data) {
+          builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> data) {
             if (data.connectionState == ConnectionState.done) {
               userModel.parseMap(data.data);
               textUpdaterByUserModel(userModel);
@@ -173,24 +165,18 @@ class _ProfilePageState extends State<ProfilePage>
     profilePhotoUrl = model.getUserProfilePhotoUrl();
   }
 
-  Widget avatarAndName() => Container(
-        alignment: Alignment.center,
-        width: widthSize(85),
+//ANCHOR "isThisProfileMine" screen should be redesign.
+  Widget avatarAndName() => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: <Widget>[
-            SizedBox(
-              height: heightSize(1),
-            ),
-            Container(
-              width: widthSize(82),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(15.0),
-                child: FadeInImage.assetNetwork(
-                    height: heightSize(35),
-                    width: widthSize(80),
-                    fit: BoxFit.cover,
-                    placeholder: "assets/images/avatar_man.png",
-                    image: profilePhotoUrl),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15.0),
+              child: FadeInImage.assetNetwork(
+                height: heightSize(30),
+                fit: BoxFit.cover,
+                placeholder: "assets/images/avatar_man.png",
+                image: profilePhotoUrl,
               ),
             ),
             SizedBox(
@@ -203,8 +189,7 @@ class _ProfilePageState extends State<ProfilePage>
                   //replacement: SizedBox(),
                   visible: isThisProfileMine,
                   child: InkWell(
-                    onTap: () =>
-                        NavigationManager(context).pushPage(SettingsPage()),
+                    onTap: () => NavigationManager(context).pushPage(SettingsPage()),
                     child: Container(
                       height: heightSize(6),
                       child: Padding(
@@ -244,23 +229,25 @@ class _ProfilePageState extends State<ProfilePage>
                 Visibility(
                   replacement: SizedBox(),
                   visible: isThisProfileMine,
-                  child: Container(
-                    height: heightSize(6),
-                    child: IconButton(
-                        icon: Icon(FontAwesomeIcons.signOutAlt),
-                        onPressed: () {
-                          var auth = AuthService.of(context).auth;
-                          auth.signOut();
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      AuthCheck()));
-                        }),
-                    decoration: new BoxDecoration(
-                      color: MyColors().yellowContainer,
-                      borderRadius: new BorderRadius.all(
-                        Radius.circular(20),
+                  child: InkWell(
+                    onTap: () {
+                      var auth = AuthService.of(context).auth;
+                      auth.signOut();
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
+                    },
+                    child: Container(
+                      height: heightSize(6),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Image.asset(
+                          "assets/icons/logout.png",
+                        ),
+                      ),
+                      decoration: new BoxDecoration(
+                        color: MyColors().yellowContainer,
+                        borderRadius: new BorderRadius.all(
+                          Radius.circular(20),
+                        ),
                       ),
                     ),
                   ),
@@ -280,17 +267,16 @@ class _ProfilePageState extends State<ProfilePage>
               height: heightSize(2),
             ),
             Container(
-              height: heightSize(12),
+              height: heightSize(13.5),
+              width: double.infinity,
               child: Padding(
-                padding: const EdgeInsets.all(15),
-                child: Center(
-                  child: Text(
-                    aboutText,
-                    style: TextStyle(
-                      fontFamily: "Zona",
-                      fontSize: heightSize(2),
-                      color: MyColors().whiteTextColor,
-                    ),
+                padding: const EdgeInsets.all(20),
+                child: Text(
+                  aboutText,
+                  style: TextStyle(
+                    fontFamily: "Zona",
+                    fontSize: heightSize(2),
+                    color: MyColors().whiteTextColor,
                   ),
                 ),
               ),
@@ -391,87 +377,86 @@ class _ProfilePageState extends State<ProfilePage>
         ),
       );
 
-  Widget numberDatas() => Column(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Text(
-                    "ETKİNLİK",
+  Widget numberDatas() => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Text(
+                  "ETKİNLİK",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: MyColors().blueTextColor,
+                    fontFamily: "Zona",
+                    fontSize: 17,
+                  ),
+                ),
+                Text(eventsText,
+                    style: TextStyle(
+                      color: MyColors().blueTextColor,
+                      fontFamily: "ZonaLight",
+                      fontSize: 25,
+                    )),
+              ],
+            ),
+            Column(
+              children: <Widget>[
+                Text(
+                  "TAKİP \n EDEN",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: MyColors().blueTextColor,
+                    fontFamily: "Zona",
+                    fontSize: 17,
+                  ),
+                ),
+                Text(followersText,
+                    style: TextStyle(
+                      color: MyColors().blueTextColor,
+                      fontFamily: "ZonaLight",
+                      fontSize: 25,
+                    )),
+              ],
+            ),
+            Column(
+              children: <Widget>[
+                Text("TAKİP \n EDİLEN",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: MyColors().blueTextColor,
                       fontFamily: "Zona",
                       fontSize: 17,
-                    ),
-                  ),
-                  Text(eventsText,
-                      style: TextStyle(
-                        color: MyColors().blueTextColor,
-                        fontFamily: "ZonaLight",
-                        fontSize: 25,
-                      )),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Text(
-                    "TAKİP \n EDEN",
-                    textAlign: TextAlign.center,
+                    )),
+                Text(
+                    //REVIEW myFollowers text should be here
+                    followersText,
+                    style: TextStyle(
+                      color: MyColors().blueTextColor,
+                      fontFamily: "ZonaLight",
+                      fontSize: 25,
+                    )),
+              ],
+            ),
+            Column(
+              children: <Widget>[
+                Text("GÜVEN",
                     style: TextStyle(
                       color: MyColors().blueTextColor,
                       fontFamily: "Zona",
                       fontSize: 17,
-                    ),
-                  ),
-                  Text(followersText,
-                      style: TextStyle(
-                        color: MyColors().blueTextColor,
-                        fontFamily: "ZonaLight",
-                        fontSize: 25,
-                      )),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Text("TAKİP \n EDİLEN",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: MyColors().blueTextColor,
-                        fontFamily: "Zona",
-                        fontSize: 17,
-                      )),
-                  Text(
-                      //REVIEW myFollowers text should be here
-                      followersText,
-                      style: TextStyle(
-                        color: MyColors().blueTextColor,
-                        fontFamily: "ZonaLight",
-                        fontSize: 25,
-                      )),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Text("GÜVEN",
-                      style: TextStyle(
-                        color: MyColors().blueTextColor,
-                        fontFamily: "Zona",
-                        fontSize: 17,
-                      )),
-                  Text(trustText,
-                      style: TextStyle(
-                        color: MyColors().blueTextColor,
-                        fontFamily: "ZonaLight",
-                        fontSize: 25,
-                      )),
-                ],
-              )
-            ],
-          ),
-        ],
+                    )),
+                Text(trustText,
+                    style: TextStyle(
+                      color: MyColors().blueTextColor,
+                      fontFamily: "ZonaLight",
+                      fontSize: 25,
+                    )),
+              ],
+            )
+          ],
+        ),
       );
 
   Widget followAndMessage() => Column(
@@ -486,9 +471,7 @@ class _ProfilePageState extends State<ProfilePage>
               children: <Widget>[
                 InkWell(
                   onTap: () async {
-                    await userService
-                        .followToggle(userModel.getUserId())
-                        .whenComplete(() {
+                    await userService.followToggle(userModel.getUserId()).whenComplete(() {
                       setState(() {
                         amIFollowing = !amIFollowing;
                       });
@@ -511,9 +494,7 @@ class _ProfilePageState extends State<ProfilePage>
                           children: <Widget>[
                             Container(
                               height: heightSize(5),
-                              child: amIFollowing
-                                  ? Image.asset("assets/icons/unfollow.png")
-                                  : Image.asset("assets/icons/follow.png"),
+                              child: amIFollowing ? Image.asset("assets/icons/unfollow.png") : Image.asset("assets/icons/follow.png"),
                             ),
                             Spacer(),
                             Text(
@@ -536,14 +517,8 @@ class _ProfilePageState extends State<ProfilePage>
                     if (userService.userModel.getUserId() != widget.userID) {
                       //ANCHOR mesajlaşma sayfasında karşıdaki kişinin ismini getirip parametre olarak veriyoruz,
                       //Bu sayede appbarda ismi görünüyor
-                      await userService
-                          .findUserByID(widget.userID)
-                          .then((data) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    Message(widget.userID, data['Name'])));
+                      await userService.findUserByID(widget.userID).then((data) {
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Message(widget.userID, data['Name'])));
                       });
                     }
                   },
@@ -564,8 +539,7 @@ class _ProfilePageState extends State<ProfilePage>
                             children: <Widget>[
                               Container(
                                 height: heightSize(4.2),
-                                child:
-                                    Image.asset("assets/icons/sendMessage.png"),
+                                child: Image.asset("assets/icons/sendMessage.png"),
                               ),
                               Spacer(),
                               Text(

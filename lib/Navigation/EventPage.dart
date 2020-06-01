@@ -634,7 +634,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
         ),
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Text(
           "Kategori | Alt Kategori",
           style: TextStyle(
