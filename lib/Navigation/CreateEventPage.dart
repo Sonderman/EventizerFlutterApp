@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+
 import 'package:eventizer/Models/UserModel.dart';
 import 'package:eventizer/Navigation/ProfilePage.dart';
 import 'package:eventizer/Services/Repository.dart';
@@ -67,6 +68,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
     _pageController = PageController(
       initialPage: 0,
     );
+    participantNumberController.text = "1";
     super.initState();
   }
 
@@ -87,7 +89,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
   @override
   Widget build(BuildContext context) {
     localizations = MaterialLocalizations.of(context);
-    participantNumberController.text = "1";
     return Scaffold(
         backgroundColor: Colors.deepPurpleAccent,
         body: Stack(
@@ -561,17 +562,17 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Widget createEventButton() {
     return InkWell(
       onTap: () async {
-        int participantNumber;
+        int maxParticipantNumber;
         if (participantNumberController.text == null ||
             participantNumberController.text == "")
-          participantNumber = 1;
+          maxParticipantNumber = 2;
         else
-          participantNumber = int.parse(participantNumberController.text);
+          maxParticipantNumber = int.parse(participantNumberController.text);
 
         if (controllerTitle.text != "" &&
             controllerDetail.text != "" &&
-            participantNumber != null &&
-            participantNumber != 0 &&
+            maxParticipantNumber != null &&
+            maxParticipantNumber != 0 &&
             _image != null &&
             subCategory != null &&
             mainCategory != null &&
@@ -599,7 +600,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
             // REVIEW Veri tabanında yazılan yer burası , burası için bir çözüm bul
             "OrganizerID": userID,
             "Title": controllerTitle.text,
-            "ParticipantNumber": participantNumber,
+            "MaxParticipantNumber": maxParticipantNumber,
+            "CurrentParticipantNumber": 0,
             "MainCategory": mainCategory,
             "SubCategory": subCategory,
             "StartDate": eventStartDate,
@@ -725,11 +727,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       enableInteractiveSelection: false,
                       controller: participantNumberController,
                       expands: false,
-                      onChanged: (changed) {
-                        if (changed != null) if (int.parse(changed) < 1 ||
-                            changed == "")
-                          participantNumberController.text = "1";
-                      },
                       inputFormatters: <TextInputFormatter>[
                         WhitelistingTextInputFormatter.digitsOnly
                       ],

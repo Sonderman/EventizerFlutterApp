@@ -519,15 +519,49 @@ class DatabaseWorks {
 
   Future<bool> joinEvent(String userID, String eventID) async {
     try {
-      ref
-          .collection(settings.appName)
-          .document(settings.getServer())
-          .collection('activeEvents')
-          .document(eventID)
-          .collection('Participants')
-          .document(userID)
-          .setData({"ParticipantID": userID});
-      return true;
+      return ref.runTransaction((transaction) async {
+        await transaction.set(
+            ref
+                .collection(settings.appName)
+                .document(settings.getServer())
+                .collection('activeEvents')
+                .document(eventID)
+                .collection('Participants')
+                .document(userID),
+            {"ParticipantID": userID});
+
+        await transaction.update(
+            ref
+                .collection(settings.appName)
+                .document(settings.getServer())
+                .collection("activeEvents")
+                .document(eventID),
+            {"CurrentParticipantNumber": FieldValue.increment(1)});
+      }).then((value) => true);
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> leaveEvent(String userID, String eventID) async {
+    try {
+      return ref.runTransaction((transaction) async {
+        await transaction.update(
+            ref
+                .collection(settings.appName)
+                .document(settings.getServer())
+                .collection("activeEvents")
+                .document(eventID),
+            {"CurrentParticipantNumber": FieldValue.increment(-1)});
+        await transaction.delete(ref
+            .collection(settings.appName)
+            .document(settings.getServer())
+            .collection("activeEvents")
+            .document(eventID)
+            .collection("Participants")
+            .document(userID));
+      }).then((value) => true);
     } catch (e) {
       print(e);
       return false;
@@ -546,25 +580,6 @@ class DatabaseWorks {
           .document(userId)
           .get();
       return doc.exists && doc.data != null ? true : false;
-    } catch (e) {
-      print(e);
-      return false;
-    }
-  }
-
-  Future<bool> leaveEvent(String userID, String eventID) async {
-    try {
-      return await ref
-          .collection(settings.appName)
-          .document(settings.getServer())
-          .collection("activeEvents")
-          .document(eventID)
-          .collection("Participants")
-          .document(userID)
-          .delete()
-          .then((_) {
-        return true;
-      });
     } catch (e) {
       print(e);
       return false;

@@ -48,6 +48,9 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
     //String category = eventDatas['Category'];
     String imageUrl = eventDatas['EventImageUrl'];
     String startDate = eventDatas['StartDate'];
+    String currentParticipantNumber =
+        eventDatas['CurrentParticipantNumber'].toString();
+    String maxParticipantNumber = eventDatas['MaxParticipantNumber'].toString();
     Map<String, dynamic> ownerData;
     return InkWell(
       onTap: () async {
@@ -214,7 +217,6 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         SizedBox(
                           height: heightSize(1),
                         ),*/
-                        //TODO mevcut katılımcı sayısı hesaplanıp  güncellenecek
                         Row(
                           children: <Widget>[
                             Icon(
@@ -225,7 +227,10 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                               width: widthSize(2),
                             ),
                             Text(
-                              "34 Katılımcı",
+                              currentParticipantNumber +
+                                  "/" +
+                                  maxParticipantNumber +
+                                  " Katılımcı",
                               style: TextStyle(
                                 fontFamily: "Zona",
                                 fontSize: heightSize(2),
@@ -305,7 +310,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
       text: TextSpan(
         children: <TextSpan>[
           TextSpan(
-            text: "Popüler",
+            text: "En Yeni",
             style: TextStyle(fontFamily: "Zona", fontSize: heightSize(3)),
           ),
           TextSpan(
