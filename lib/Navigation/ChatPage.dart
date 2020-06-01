@@ -87,9 +87,10 @@ class _ChatPageState extends State<ChatPage> {
                           ),
                       itemCount: itemLength,
                       itemBuilder: (context, index) {
-                        String userID = items[index].data['OtherUserID'];
+                        String otherUserID = items[index].data['OtherUserID'];
+                        String chatID = items[index].documentID;
                         return FutureBuilder(
-                            future: userService.findUserByID(userID),
+                            future: userService.findUserByID(otherUserID),
                             builder: (context, snapshot) {
                               switch (snapshot.connectionState) {
                                 case ConnectionState.done:
@@ -102,14 +103,15 @@ class _ChatPageState extends State<ChatPage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (BuildContext context) =>
-                                                  Message(userID, userName)));
+                                                  Message(
+                                                      otherUserID, userName)));
                                     },
                                     child: Row(
                                       children: <Widget>[
                                         Container(
                                           height: heightSize(7),
                                           width: widthSize(14),
-                                          decoration: new BoxDecoration(
+                                          decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             image: DecorationImage(
                                               fit: BoxFit.cover,
@@ -120,42 +122,99 @@ class _ChatPageState extends State<ChatPage> {
                                         SizedBox(
                                           width: widthSize(3),
                                         ),
-                                        RichText(
-                                          text: TextSpan(
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                text: "$userName\n",
-                                                style: TextStyle(
-                                                  fontFamily: "Zona",
-                                                  fontSize: heightSize(2.5),
-                                                  color:
-                                                      MyColors().loginGreyColor,
-                                                ),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              "$userName\n",
+                                              style: TextStyle(
+                                                fontFamily: "Zona",
+                                                fontSize: heightSize(2.5),
+                                                color:
+                                                    MyColors().loginGreyColor,
                                               ),
-                                              TextSpan(
-                                                text: "Eventizer tutsa bari",
-                                                style: TextStyle(
-                                                  height: heightSize(0.2),
-                                                  fontFamily: "ZonaLight",
-                                                  fontSize: heightSize(2),
-                                                  color:
-                                                      MyColors().greyTextColor,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                            StreamBuilder(
+                                                stream: messageService
+                                                    .getChatPoolSnapshot(
+                                                        chatID),
+                                                builder: (_, lastMessageSnap) {
+                                                  if (lastMessageSnap.hasData) {
+                                                    var lastMessagemap =
+                                                        lastMessageSnap.data;
+                                                    String message =
+                                                        lastMessagemap[
+                                                                "LastMessage"]
+                                                            ["Message"];
+                                                    String hours = DateTime
+                                                            .fromMillisecondsSinceEpoch(
+                                                                lastMessagemap[
+                                                                        "LastMessage"]
+                                                                    [
+                                                                    "createdAt"])
+                                                        .hour
+                                                        .toString();
+                                                    String minutes = DateTime
+                                                            .fromMillisecondsSinceEpoch(
+                                                                lastMessagemap[
+                                                                        "LastMessage"]
+                                                                    [
+                                                                    "createdAt"])
+                                                        .minute
+                                                        .toString();
+                                                    return Row(
+                                                      children: <Widget>[
+                                                        Text(
+                                                          message,
+                                                          style: TextStyle(
+                                                            height:
+                                                                heightSize(0.2),
+                                                            fontFamily:
+                                                                "ZonaLight",
+                                                            fontSize:
+                                                                heightSize(2),
+                                                            color: MyColors()
+                                                                .greyTextColor,
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: widthSize(50),
+                                                        ),
+                                                        Text(
+                                                          hours + ":" + minutes,
+                                                          style: TextStyle(
+                                                            height:
+                                                                heightSize(0.2),
+                                                            fontFamily:
+                                                                "ZonaLight",
+                                                            fontSize:
+                                                                heightSize(2),
+                                                            color: MyColors()
+                                                                .greyTextColor,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  } else
+                                                    return Text("null");
+                                                }),
+                                          ],
                                         ),
                                       ],
                                     ),
                                   );
                                   break;
                                 case ConnectionState.none:
-                                  return Text("Hata");
+                                  return Center(child: Text("Hata"));
                                 case ConnectionState.waiting:
                                   return PageComponents().loadingCustomOverlay(
                                       40, MyColors().blueThemeColor);
                                 default:
-                                  return Text("Beklenmedik durum");
+                                  return Center(
+                                      child: Text("Beklenmedik durum"));
                               }
                             });
                       });
@@ -323,253 +382,3 @@ class _ChatPageState extends State<ChatPage> {
 
   void addNewGroupChatVoid() {}
 }
-
-/*
-
-Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: heightSize(3),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        height: heightSize(7),
-                        width: widthSize(14),
-                        decoration: new BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage("assets/images/avatar_man.png"),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: widthSize(3),
-                      ),
-                      Expanded(
-                        child: RichText(
-                          text: TextSpan(
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: "Murat Altıntaş\n",
-                                style: TextStyle(
-                                  fontFamily: "Zona",
-                                  fontSize: heightSize(2.5),
-                                  color: MyColors().loginGreyColor,
-                                ),
-                              ),
-                              TextSpan(
-                                text:
-                                    "Senin karşında 'Hello World' yazan ben yok artık...",
-                                style: TextStyle(
-                                  height: heightSize(0.2),
-                                  fontFamily: "ZonaLight",
-                                  fontSize: heightSize(2),
-                                  color: MyColors().greyTextColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(
-                    height: heightSize(5),
-                  ),
-                  //ANCHOR another chat row are start here
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        height: heightSize(7),
-                        width: widthSize(14),
-                        decoration: new BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage("assets/images/avatar_man.png"),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: widthSize(3),
-                      ),
-                      RichText(
-                        text: TextSpan(
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: "Ali Bey\n",
-                              style: TextStyle(
-                                fontFamily: "Zona",
-                                fontSize: heightSize(2.5),
-                                color: MyColors().loginGreyColor,
-                              ),
-                            ),
-                            TextSpan(
-                              text: "Eventizer tutsa bari",
-                              style: TextStyle(
-                                height: heightSize(0.2),
-                                fontFamily: "ZonaLight",
-                                fontSize: heightSize(2),
-                                color: MyColors().greyTextColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(
-                    height: heightSize(5),
-                  ),
-                  //ANCHOR another chat row are start here
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        height: heightSize(7),
-                        width: widthSize(14),
-                        decoration: new BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage("assets/images/avatar_women.png"),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: widthSize(3),
-                      ),
-                      RichText(
-                        text: TextSpan(
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: "Şukufe\n",
-                              style: TextStyle(
-                                fontFamily: "Zona",
-                                fontSize: heightSize(2.5),
-                                color: MyColors().loginGreyColor,
-                              ),
-                            ),
-                            TextSpan(
-                              text: "Sarma sarmayı öğretir misiniz?",
-                              style: TextStyle(
-                                height: heightSize(0.2),
-                                fontFamily: "ZonaLight",
-                                fontSize: heightSize(2),
-                                color: MyColors().greyTextColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(
-                    height: heightSize(5),
-                  ),
-                  //ANCHOR another chat row are start here
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        height: heightSize(7),
-                        width: widthSize(14),
-                        decoration: new BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage("assets/images/avatar_man.png"),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: widthSize(3),
-                      ),
-                      Expanded(
-                        child: RichText(
-                          text: TextSpan(
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: "Ramiz Dayı\n",
-                                style: TextStyle(
-                                  fontFamily: "Zona",
-                                  fontSize: heightSize(2.5),
-                                  color: MyColors().loginGreyColor,
-                                ),
-                              ),
-                              TextSpan(
-                                text:
-                                    "Bizim zamanımızda Flutter vardı da biz mi app yapmadık yeğen?",
-                                style: TextStyle(
-                                  height: heightSize(0.2),
-                                  fontFamily: "ZonaLight",
-                                  fontSize: heightSize(2),
-                                  color: MyColors().greyTextColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(
-                    height: heightSize(5),
-                  ),
-                  //ANCHOR another chat row are start here
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        height: heightSize(7),
-                        width: widthSize(14),
-                        decoration: new BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage("assets/images/avatar_man.png"),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: widthSize(3),
-                      ),
-                      Expanded(
-                        child: RichText(
-                          text: TextSpan(
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: "Vehpi Dede\n",
-                                style: TextStyle(
-                                  fontFamily: "Zona",
-                                  fontSize: heightSize(2.5),
-                                  color: MyColors().loginGreyColor,
-                                ),
-                              ),
-                              TextSpan(
-                                text: "Vay benim gençliğim...",
-                                style: TextStyle(
-                                  height: heightSize(0.2),
-                                  fontFamily: "ZonaLight",
-                                  fontSize: heightSize(2),
-                                  color: MyColors().greyTextColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        
-
-*/

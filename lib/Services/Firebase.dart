@@ -356,7 +356,7 @@ class DatabaseWorks {
     }
   }
 
-  Stream<QuerySnapshot> getSnapshot(String chatID) {
+  Stream<QuerySnapshot> getMessagesSnapshot(String chatID) {
     return ref
         .collection(settings.appName)
         .document(settings.getServer())
@@ -366,14 +366,22 @@ class DatabaseWorks {
         .snapshots();
   }
 
+  Stream<DocumentSnapshot> getChatPoolSnapshot(String chatID) {
+    return ref
+        .collection(settings.appName)
+        .document(settings.getServer())
+        .collection('messagePool')
+        .document(chatID)
+        .snapshots();
+  }
+
   Future sendMessage(ChatMessage message, String chatID, String currentUser,
       String otherUser) async {
     if (chatID == "temp") {
       chatID = AutoIdGenerator.autoId();
-
-      await Firestore.instance.runTransaction((transaction) async {
+      await ref.runTransaction((transaction) async {
         await transaction.set(
-            Firestore.instance
+            ref
                 .collection(settings.appName)
                 .document(settings.getServer())
                 .collection('users')
@@ -382,7 +390,7 @@ class DatabaseWorks {
                 .document(chatID),
             {"OtherUserID": otherUser});
         await transaction.set(
-            Firestore.instance
+            ref
                 .collection(settings.appName)
                 .document(settings.getServer())
                 .collection('users')
@@ -392,24 +400,39 @@ class DatabaseWorks {
             {"OtherUserID": currentUser});
       });
     }
-    var messageRef = Firestore.instance
+    var messageRef = ref
         .collection(settings.appName)
         .document(settings.getServer())
         .collection('messagePool')
         .document(chatID)
         .collection('messages')
         .document(DateTime.now().millisecondsSinceEpoch.toString());
-    Firestore.instance.runTransaction((transaction) async {
+    Map<String, dynamic> messageMap = message.toJson();
+    ref.runTransaction((transaction) async {
       await transaction.set(
         messageRef,
-        message.toJson(),
+        messageMap,
+      );
+      await transaction.set(
+        ref
+            .collection(settings.appName)
+            .document(settings.getServer())
+            .collection('messagePool')
+            .document(chatID),
+        {
+          "LastMessage": {
+            "SenderID": currentUser,
+            "Message": messageMap['text'],
+            "createdAt": messageMap['createdAt']
+          }
+        },
       );
     }, timeout: Duration(seconds: 1));
   }
 
   Future<String> checkConversation(String currentUser, String otherUser) async {
     try {
-      return await Firestore.instance
+      return await ref
           .collection(settings.appName)
           .document(settings.getServer())
           .collection('users')
