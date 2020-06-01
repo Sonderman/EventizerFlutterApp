@@ -145,20 +145,61 @@ class _ChatPageState extends State<ChatPage> {
                                                   if (lastMessageSnap.hasData) {
                                                     var lastMessagemap =
                                                         lastMessageSnap.data;
-                                                    return Text(
-                                                      lastMessagemap[
-                                                              "LastMessage"]
-                                                          ["Message"],
-                                                      style: TextStyle(
-                                                        height: heightSize(0.2),
-                                                        fontFamily: "ZonaLight",
-                                                        fontSize: heightSize(2),
-                                                        color: MyColors()
-                                                            .greyTextColor,
-                                                      ),
+                                                    String message =
+                                                        lastMessagemap[
+                                                                "LastMessage"]
+                                                            ["Message"];
+                                                    String hours = DateTime
+                                                            .fromMillisecondsSinceEpoch(
+                                                                lastMessagemap[
+                                                                        "LastMessage"]
+                                                                    [
+                                                                    "createdAt"])
+                                                        .hour
+                                                        .toString();
+                                                    String minutes = DateTime
+                                                            .fromMillisecondsSinceEpoch(
+                                                                lastMessagemap[
+                                                                        "LastMessage"]
+                                                                    [
+                                                                    "createdAt"])
+                                                        .minute
+                                                        .toString();
+                                                    return Row(
+                                                      children: <Widget>[
+                                                        Text(
+                                                          message,
+                                                          style: TextStyle(
+                                                            height:
+                                                                heightSize(0.2),
+                                                            fontFamily:
+                                                                "ZonaLight",
+                                                            fontSize:
+                                                                heightSize(2),
+                                                            color: MyColors()
+                                                                .greyTextColor,
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: widthSize(50),
+                                                        ),
+                                                        Text(
+                                                          hours + ":" + minutes,
+                                                          style: TextStyle(
+                                                            height:
+                                                                heightSize(0.2),
+                                                            fontFamily:
+                                                                "ZonaLight",
+                                                            fontSize:
+                                                                heightSize(2),
+                                                            color: MyColors()
+                                                                .greyTextColor,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     );
                                                   } else
-                                                    return Text("");
+                                                    return Text("null");
                                                 }),
                                           ],
                                         ),

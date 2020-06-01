@@ -6,8 +6,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Navigation/ChatPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ChatPage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Services/Firebase.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Services/Firebase.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Services/Repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Services/Repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Tools/Message.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Tools/Message.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,7 +13,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="emulator-5554" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="emulator-5564" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>

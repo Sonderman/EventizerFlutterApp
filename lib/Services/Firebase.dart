@@ -422,7 +422,8 @@ class DatabaseWorks {
         {
           "LastMessage": {
             "SenderID": currentUser,
-            "Message": messageMap['text']
+            "Message": messageMap['text'],
+            "createdAt": messageMap['createdAt']
           }
         },
       );
