@@ -10,7 +10,6 @@ import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -23,7 +22,8 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
+class _ProfilePageState extends State<ProfilePage>
+    with TickerProviderStateMixin {
   double heightSize(double value) {
     value /= 100;
     return MediaQuery.of(context).size.height * value;
@@ -37,7 +37,13 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
   UserService userService;
   User userModel;
   bool amIFollowing = false, isThisProfileMine;
-  String nameText, surnameText, aboutText, followersText, eventsText, trustText, profilePhotoUrl;
+  String nameText,
+      surnameText,
+      aboutText,
+      followersText,
+      eventsText,
+      trustText,
+      profilePhotoUrl;
 
   TabController _tabController;
 
@@ -71,7 +77,8 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
     if (!isThisProfileMine) {
       return FutureBuilder(
           future: userService.findUserByID(widget.userID),
-          builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> data) {
+          builder:
+              (BuildContext context, AsyncSnapshot<Map<String, dynamic>> data) {
             if (data.connectionState == ConnectionState.done) {
               userModel.parseMap(data.data);
               textUpdaterByUserModel(userModel);
@@ -189,7 +196,8 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                   //replacement: SizedBox(),
                   visible: isThisProfileMine,
                   child: InkWell(
-                    onTap: () => NavigationManager(context).pushPage(SettingsPage()),
+                    onTap: () =>
+                        NavigationManager(context).pushPage(SettingsPage()),
                     child: Container(
                       height: heightSize(6),
                       child: Padding(
@@ -233,7 +241,10 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                     onTap: () {
                       var auth = AuthService.of(context).auth;
                       auth.signOut();
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => AuthCheck()));
                     },
                     child: Container(
                       height: heightSize(6),
@@ -267,7 +278,6 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
               height: heightSize(2),
             ),
             Container(
-              height: heightSize(13.5),
               width: double.infinity,
               child: Padding(
                 padding: const EdgeInsets.all(20),
@@ -471,7 +481,9 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
               children: <Widget>[
                 InkWell(
                   onTap: () async {
-                    await userService.followToggle(userModel.getUserId()).whenComplete(() {
+                    await userService
+                        .followToggle(userModel.getUserId())
+                        .whenComplete(() {
                       setState(() {
                         amIFollowing = !amIFollowing;
                       });
@@ -494,7 +506,9 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                           children: <Widget>[
                             Container(
                               height: heightSize(5),
-                              child: amIFollowing ? Image.asset("assets/icons/unfollow.png") : Image.asset("assets/icons/follow.png"),
+                              child: amIFollowing
+                                  ? Image.asset("assets/icons/unfollow.png")
+                                  : Image.asset("assets/icons/follow.png"),
                             ),
                             Spacer(),
                             Text(
@@ -517,8 +531,14 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                     if (userService.userModel.getUserId() != widget.userID) {
                       //ANCHOR mesajlaşma sayfasında karşıdaki kişinin ismini getirip parametre olarak veriyoruz,
                       //Bu sayede appbarda ismi görünüyor
-                      await userService.findUserByID(widget.userID).then((data) {
-                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Message(widget.userID, data['Name'])));
+                      await userService
+                          .findUserByID(widget.userID)
+                          .then((data) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    Message(widget.userID, data['Name'])));
                       });
                     }
                   },
@@ -539,7 +559,8 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                             children: <Widget>[
                               Container(
                                 height: heightSize(4.2),
-                                child: Image.asset("assets/icons/sendMessage.png"),
+                                child:
+                                    Image.asset("assets/icons/sendMessage.png"),
                               ),
                               Spacer(),
                               Text(

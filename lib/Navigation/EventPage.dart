@@ -33,7 +33,9 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   }
 
   TabController _tabController;
-  bool joinButton;
+  bool joinButton, isThisEventMine;
+  EventService eventService;
+  UserService userService;
   TextEditingController commentController = TextEditingController();
 
   @override
@@ -41,6 +43,17 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     joinButton = widget.amIparticipant;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    eventService = Provider.of<EventService>(context);
+    userService = Provider.of<UserService>(context);
+    if (widget.userData['UserID'] == userService.userModel.getUserId())
+      isThisEventMine = true;
+    else
+      isThisEventMine = false;
   }
 
   @override
@@ -142,8 +155,6 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   }
 
   Widget participantsPage() {
-    var eventService = Provider.of<EventService>(context);
-    var userService = Provider.of<UserService>(context);
     return FutureBuilder(
       future: eventService.getParticipants(widget.eventData['eventID']),
       builder: (BuildContext context,
@@ -775,39 +786,41 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
               ),
             ),
           ] +
-          [
-            InkWell(
-                onTap: () async {
-                  var eventService =
-                      Provider.of<EventService>(context, listen: false);
-                  var userService =
-                      Provider.of<UserService>(context, listen: false);
-                  if (joinButton) {
-                    if (await eventService.leaveEvent(
-                        userService.userModel.getUserId(),
-                        widget.eventData['eventID'])) {
-                      setState(() {
-                        toggleJoinButton();
-                        print("Ayrıldı");
-                      });
-                    } else {
-                      print("Hata");
-                    }
-                  } else {
-                    if (await eventService.joinEvent(
-                        userService.userModel.getUserId(),
-                        widget.eventData['eventID'])) {
-                      setState(() {
-                        toggleJoinButton();
-                        print("Katıldı");
-                      });
-                    } else {
-                      print("Hata");
-                    }
-                  }
-                },
-                child: joinUnjoinButton)
-          ],
+          (!isThisEventMine
+              ? [
+                  InkWell(
+                      onTap: () async {
+                        var eventService =
+                            Provider.of<EventService>(context, listen: false);
+                        var userService =
+                            Provider.of<UserService>(context, listen: false);
+                        if (joinButton) {
+                          if (await eventService.leaveEvent(
+                              userService.userModel.getUserId(),
+                              widget.eventData['eventID'])) {
+                            setState(() {
+                              toggleJoinButton();
+                              print("Ayrıldı");
+                            });
+                          } else {
+                            print("Hata");
+                          }
+                        } else {
+                          if (await eventService.joinEvent(
+                              userService.userModel.getUserId(),
+                              widget.eventData['eventID'])) {
+                            setState(() {
+                              toggleJoinButton();
+                              print("Katıldı");
+                            });
+                          } else {
+                            print("Hata");
+                          }
+                        }
+                      },
+                      child: joinUnjoinButton)
+                ]
+              : []),
     );
   }
 }

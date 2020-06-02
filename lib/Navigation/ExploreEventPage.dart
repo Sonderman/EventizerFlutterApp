@@ -49,6 +49,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
     //String category = eventDatas['Category'];
     String imageUrl = eventDatas['EventImageUrl'];
     String startDate = eventDatas['StartDate'];
+    String finishDate = eventDatas['FinishDate'];
     String currentParticipantNumber =
         eventDatas['CurrentParticipantNumber'].toString();
     String maxParticipantNumber = eventDatas['MaxParticipantNumber'].toString();
@@ -187,7 +188,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         SizedBox(
                           height: heightSize(1),
                         ),
-                        //TODO mevcut katılımcı sayısı hesaplanıp  güncellenecek
+                        //TODO Katılımcı sayısı Stream ile getirilcek
                         Row(
                           children: <Widget>[
                             Icon(
@@ -198,7 +199,10 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                               width: widthSize(2),
                             ),
                             Text(
-                              "34 Katılımcı",
+                              currentParticipantNumber +
+                                  "/" +
+                                  maxParticipantNumber +
+                                  " Katılımcı",
                               style: TextStyle(
                                 fontFamily: "Zona",
                                 fontSize: heightSize(2),
@@ -229,7 +233,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                               width: widthSize(2),
                             ),
                             Text(
-                              startDate,
+                              finishDate,
                               style: TextStyle(
                                 fontFamily: "Zona",
                                 fontSize: heightSize(2),
@@ -241,7 +245,6 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         SizedBox(
                           height: heightSize(1),
                         ),
-                        //TODO mevcut katılımcı sayısı hesaplanıp  güncellenecek
                         Row(
                           children: <Widget>[
                             Icon(
