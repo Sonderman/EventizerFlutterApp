@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dash_chat/dash_chat.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/Message.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
@@ -106,105 +107,93 @@ class _ChatPageState extends State<ChatPage> {
                                                   Message(
                                                       otherUserID, userName)));
                                     },
-                                    child: Row(
-                                      children: <Widget>[
-                                        Container(
-                                          height: heightSize(7),
-                                          width: widthSize(14),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: NetworkImage(url),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: widthSize(3),
-                                        ),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              "$userName\n",
-                                              style: TextStyle(
-                                                fontFamily: "Zona",
-                                                fontSize: heightSize(2.5),
-                                                color:
-                                                    MyColors().loginGreyColor,
-                                              ),
-                                            ),
-                                            StreamBuilder(
-                                                stream: messageService
-                                                    .getChatPoolSnapshot(
-                                                        chatID),
-                                                builder: (_, lastMessageSnap) {
-                                                  if (lastMessageSnap.hasData) {
-                                                    var lastMessagemap =
-                                                        lastMessageSnap.data;
-                                                    String message =
+                                    child: StreamBuilder(
+                                        stream: messageService
+                                            .getChatPoolSnapshot(chatID),
+                                        builder: (_, lastMessageSnap) {
+                                          if (lastMessageSnap.hasData) {
+                                            var lastMessagemap =
+                                                lastMessageSnap.data;
+                                            String message =
+                                                lastMessagemap["LastMessage"]
+                                                    ["Message"];
+
+                                            String formattedTime = DateFormat(
+                                                    'kk:mm')
+                                                .format(DateTime
+                                                    .fromMillisecondsSinceEpoch(
                                                         lastMessagemap[
                                                                 "LastMessage"]
-                                                            ["Message"];
-                                                    String hours = DateTime
-                                                            .fromMillisecondsSinceEpoch(
-                                                                lastMessagemap[
-                                                                        "LastMessage"]
-                                                                    [
-                                                                    "createdAt"])
-                                                        .hour
-                                                        .toString();
-                                                    String minutes = DateTime
-                                                            .fromMillisecondsSinceEpoch(
-                                                                lastMessagemap[
-                                                                        "LastMessage"]
-                                                                    [
-                                                                    "createdAt"])
-                                                        .minute
-                                                        .toString();
-                                                    return Row(
-                                                      children: <Widget>[
-                                                        Text(
-                                                          message,
-                                                          style: TextStyle(
-                                                            height:
-                                                                heightSize(0.2),
-                                                            fontFamily:
-                                                                "ZonaLight",
-                                                            fontSize:
-                                                                heightSize(2),
-                                                            color: MyColors()
-                                                                .greyTextColor,
-                                                          ),
+                                                            ["createdAt"]));
+
+                                            return Row(
+                                              children: <Widget>[
+                                                Container(
+                                                  height: heightSize(7),
+                                                  width: widthSize(14),
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    image: DecorationImage(
+                                                      fit: BoxFit.cover,
+                                                      image: NetworkImage(url),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: widthSize(3),
+                                                ),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "$userName",
+                                                      style: TextStyle(
+                                                        fontFamily: "Zona",
+                                                        fontSize:
+                                                            heightSize(2.5),
+                                                        color: MyColors()
+                                                            .loginGreyColor,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: widthSize(62),
+                                                      child: Text(
+                                                        message,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                          height:
+                                                              heightSize(0.2),
+                                                          fontFamily:
+                                                              "ZonaLight",
+                                                          fontSize:
+                                                              heightSize(2),
+                                                          color: MyColors()
+                                                              .greyTextColor,
                                                         ),
-                                                        SizedBox(
-                                                          width: widthSize(50),
-                                                        ),
-                                                        Text(
-                                                          hours + ":" + minutes,
-                                                          style: TextStyle(
-                                                            height:
-                                                                heightSize(0.2),
-                                                            fontFamily:
-                                                                "ZonaLight",
-                                                            fontSize:
-                                                                heightSize(2),
-                                                            color: MyColors()
-                                                                .greyTextColor,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    );
-                                                  } else
-                                                    return Text("null");
-                                                }),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Spacer(),
+                                                Text(
+                                                  formattedTime,
+                                                  style: TextStyle(
+                                                    height: heightSize(0.2),
+                                                    fontFamily: "ZonaLight",
+                                                    fontSize: heightSize(2),
+                                                    color: MyColors()
+                                                        .greyTextColor,
+                                                  ),
+                                                )
+                                              ],
+                                            );
+                                          } else
+                                            return Text("null");
+                                        }),
                                   );
                                   break;
                                 case ConnectionState.none:

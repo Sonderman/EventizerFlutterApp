@@ -4,6 +4,7 @@ import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class ExploreEventPage extends StatefulWidget {
@@ -72,14 +73,14 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
         child: Container(
           width: widthSize(100),
           color: Colors.white,
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: heightSize(2),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: heightSize(2),
+                ),
+                Row(
                   children: <Widget>[
                     Row(
                       children: <Widget>[
@@ -135,47 +136,40 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                     ),
                   ],
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Divider(
+                Divider(
                   thickness: 2,
                   color: MyColors().loginGreyColor,
                 ),
-              ),
-              ClipRRect(
+                ClipRRect(
                   borderRadius: BorderRadius.circular(15.0),
                   child: FadeInImage.assetNetwork(
-                      width: widthSize(80),
-                      fit: BoxFit.cover,
-                      placeholder: "assets/images/event_birthday.jpg",
-                      image: imageUrl)),
-              Stack(
-                children: <Widget>[
-                  Positioned(
-                    top: heightSize(-12),
-                    bottom: 0,
-                    left: 10,
-                    right: 10,
-                    child: Divider(
-                      thickness: 2,
-                      color: MyColors().loginGreyColor,
-                    ),
+                    width: widthSize(80),
+                    height: heightSize(40),
+                    fit: BoxFit.cover,
+                    placeholder: "assets/images/event_birthday.jpg",
+                    image: imageUrl,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                ),
+                Divider(
+                  thickness: 2,
+                  color: MyColors().loginGreyColor,
+                ),
+                Row(
+                  children: <Widget>[
+                    //ANCHOR Start Date and Participants icons are here
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         SizedBox(
                           height: heightSize(1),
                         ),
                         Row(
                           children: <Widget>[
-                            Icon(
-                              Icons.date_range,
-                              color: MyColors().greyTextColor,
+                            Container(
+                              child: FaIcon(
+                                FontAwesomeIcons.calendarCheck,
+                                color: MyColors().greyTextColor,
+                              ),
                             ),
                             SizedBox(
                               width: widthSize(2),
@@ -193,30 +187,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         SizedBox(
                           height: heightSize(1),
                         ),
-                        //TODO Konum eklenecek
-                        /*
-                        Row(
-                          children: <Widget>[
-                            Icon(
-                              Icons.location_on,
-                              color: MyColors().greyTextColor,
-                            ),
-                            SizedBox(
-                              width: widthSize(2),
-                            ),
-                            Text(
-                              "Istanbul, Taksim - Dream Cafe",
-                              style: TextStyle(
-                                fontFamily: "Zona",
-                                fontSize: heightSize(2),
-                                color: MyColors().greyTextColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: heightSize(1),
-                        ),*/
+                        //TODO mevcut katılımcı sayısı hesaplanıp  güncellenecek
                         Row(
                           children: <Widget>[
                             Icon(
@@ -227,10 +198,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                               width: widthSize(2),
                             ),
                             Text(
-                              currentParticipantNumber +
-                                  "/" +
-                                  maxParticipantNumber +
-                                  " Katılımcı",
+                              "34 Katılımcı",
                               style: TextStyle(
                                 fontFamily: "Zona",
                                 fontSize: heightSize(2),
@@ -241,10 +209,67 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    Spacer(),
+                    //ANCHOR Finish Date and Locaition icons are here
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          height: heightSize(1),
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Container(
+                              child: FaIcon(
+                                FontAwesomeIcons.calendarTimes,
+                                color: MyColors().greyTextColor,
+                              ),
+                            ),
+                            SizedBox(
+                              width: widthSize(2),
+                            ),
+                            Text(
+                              startDate,
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                fontSize: heightSize(2),
+                                color: MyColors().greyTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: heightSize(1),
+                        ),
+                        //TODO mevcut katılımcı sayısı hesaplanıp  güncellenecek
+                        Row(
+                          children: <Widget>[
+                            Icon(
+                              Icons.location_on,
+                              color: MyColors().greyTextColor,
+                            ),
+                            SizedBox(
+                              width: widthSize(1),
+                            ),
+                            Text(
+                              "Diyarbakır",
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                fontSize: heightSize(2),
+                                color: MyColors().greyTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: heightSize(2.5),
+                ),
+              ],
+            ),
           ),
         ),
       ),
