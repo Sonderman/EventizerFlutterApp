@@ -667,16 +667,18 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
           Radius.circular(20),
         ),
       ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Text(
-          widget.eventData['MainCategory'] +
-              " | " +
-              widget.eventData['SubCategory'],
-          style: TextStyle(
-            fontFamily: "Zona",
-            fontSize: heightSize(2),
-            color: MyColors().whiteTextColor,
+      child: Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Text(
+            widget.eventData['MainCategory'] +
+                " | " +
+                widget.eventData['SubCategory'],
+            style: TextStyle(
+              fontFamily: "Zona",
+              fontSize: heightSize(2),
+              color: MyColors().whiteTextColor,
+            ),
           ),
         ),
       ),
@@ -696,14 +698,18 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
           Radius.circular(20),
         ),
       ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Text(
-          (location + " / " + city + " / " + country),
-          style: TextStyle(
-            fontFamily: "Zona",
-            fontSize: heightSize(2),
-            color: MyColors().whiteTextColor,
+      child: Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Text(
+            (location + " / " + city
+            //+ " / " + country
+            ),
+            style: TextStyle(
+              fontFamily: "Zona",
+              fontSize: heightSize(2),
+              color: MyColors().whiteTextColor,
+            ),
           ),
         ),
       ),

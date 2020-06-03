@@ -204,8 +204,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                             Text(
                               currentParticipantNumber +
                                   "/" +
-                                  maxParticipantNumber +
-                                  " Katılımcı",
+                                  maxParticipantNumber,
                               style: TextStyle(
                                 fontFamily: "Zona",
                                 fontSize: heightSize(2),

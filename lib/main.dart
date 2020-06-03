@@ -72,6 +72,7 @@ class _MyAppState extends State<MyApp> {
                         SizedBox(
                           height: 200.0,
                         ),
+                        // ANCHOR bu nedir çok kullanım görünüyor bunun için "Flutter Performance" ekranında?
                         // ANCHOR  spinkit package kullanildi https://pub.dev/packages/flutter_spinkit
                         SpinKitFoldingCube(
                           color: Colors.white,

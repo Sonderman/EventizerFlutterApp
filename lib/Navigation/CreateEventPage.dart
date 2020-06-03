@@ -584,7 +584,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
             subCategory != null &&
             mainCategory != null &&
             city != null &&
-            country != null &&
+            //country != null &&
             eventStartDate != null &&
             eventStartTime != null &&
             eventFinishDate != null &&
@@ -614,7 +614,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
             "MainCategory": mainCategory,
             "SubCategory": subCategory,
             "City": city,
-            "Country": country,
+            //"Country": country,
             "StartDate": eventStartDate,
             "FinishDate": eventFinishDate,
             "StartTime": eventStartTime,
@@ -1031,6 +1031,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
+          /*
           Container(
             width: widthSize(43),
             height: heightSize(8),
@@ -1082,42 +1083,32 @@ class _CreateEventPageState extends State<CreateEventPage> {
               ),
             ),
           ),
+*/
           Container(
-            width: widthSize(43),
             height: heightSize(8),
-            decoration: new BoxDecoration(
-              color: MyColors().blackOpacityContainer,
-              borderRadius: new BorderRadius.all(
+            //TODO responsive yap
+            width: widthSize(91),
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(
                 Radius.circular(20),
               ),
-            ),
-            child: Container(
-              width: widthSize(43),
-              height: heightSize(8),
-              decoration: BoxDecoration(
+              child: FlutterSearchPanel<int>(
+                //padding: EdgeInsets.symmetric(horizontal: 130, vertical: 10),
+                selected: 0,
+                title: "Şehir",
+                data: sehirler,
                 color: MyColors().yellowContainer,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-              child: Center(
-                child: FlutterSearchPanel<int>(
-                  selected: 0,
-                  title: "Şehir Seçiniz",
-                  data: sehirler,
-                  color: Colors.red,
-                  icon: Icon(Icons.check_circle, color: Colors.white),
-                  textStyle: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12.0,
-                      decorationStyle: TextDecorationStyle.dotted),
-                  onChanged: (int item) {
-                    if (item != 0) {
-                      city = Sehirler().sehirler[item - 1];
-                    }
-                  },
-                ),
+                icon: Icon(Icons.check_circle, color: Colors.white),
+                textStyle: TextStyle(
+                    color: Colors.white,
+                    fontFamily: "Zona",
+                    fontSize: heightSize(2),
+                    decorationStyle: TextDecorationStyle.dotted),
+                onChanged: (int item) {
+                  if (item != 0) {
+                    city = Sehirler().sehirler[item - 1];
+                  }
+                },
               ),
             ),
           ),

@@ -29,6 +29,12 @@ class _SettingsPageState extends State<SettingsPage> {
   bool loading = false;
   String _name, _surname, _phoneNumber, _country, _city;
 
+  get city => _city;
+
+  set city(value) {
+    _city = value;
+  }
+
   bool showPassword = true;
 
   @override
@@ -411,13 +417,14 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget countryAndCity() {
     List<SearchItem<int>> sehirler = [];
-    sehirler.add(SearchItem(0, "Şehir Seçin"));
+    sehirler.add(SearchItem(0, "Şehir"));
     for (int i = 1; i <= 81; i++) {
       sehirler.add(SearchItem(i, Sehirler().sehirler[i - 1]));
     }
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
+        /*
         Container(
           width: widthSize(43),
           height: heightSize(8),
@@ -459,32 +466,34 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
         ),
-        Container(
-          width: widthSize(43),
-          height: heightSize(8),
-          decoration: BoxDecoration(
-            color: MyColors().yellowContainer,
-            borderRadius: BorderRadius.all(
-              Radius.circular(20),
-            ),
-          ),
-          child: Center(
-            child: FlutterSearchPanel<int>(
-              selected: 0,
-              title: "Şehir Seçiniz",
-              data: sehirler,
-              color: Colors.red,
-              icon: Icon(Icons.check_circle, color: Colors.white),
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12.0,
-                  decorationStyle: TextDecorationStyle.dotted),
-              onChanged: (int item) {
-                if (item != 0) {
-                  _city = Sehirler().sehirler[item - 1];
-                }
-              },
+         */
+
+        Center(
+          child: Container(
+            height: heightSize(8),
+            width: widthSize(75),
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(
+                Radius.circular(20),
+              ),
+              child: FlutterSearchPanel<int>(
+                //padding: EdgeInsets.symmetric(horizontal: 130, vertical: 10),
+                selected: 0,
+                title: "Şehir",
+                data: sehirler,
+                color: MyColors().yellowContainer,
+                icon: Icon(Icons.check_circle, color: Colors.white),
+                textStyle: TextStyle(
+                    color: Colors.white,
+                    fontFamily: "Zona",
+                    fontSize: heightSize(2),
+                    decorationStyle: TextDecorationStyle.dotted),
+                onChanged: (int item) {
+                  if (item != 0) {
+                    _city = Sehirler().sehirler[item - 1];
+                  }
+                },
+              ),
             ),
           ),
         ),
