@@ -44,12 +44,15 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
     UserService userWorker = Provider.of<UserService>(context);
     var eventService = Provider.of<EventService>(context);
     String eventID = eventDatas['eventID'];
-    String title = eventDatas['Title'];
+    String title = eventDatas['Title'] ?? "null";
     String ownerID = eventDatas['OrganizerID'];
     //String category = eventDatas['Category'];
     String imageUrl = eventDatas['EventImageUrl'];
-    String startDate = eventDatas['StartDate'];
-    String finishDate = eventDatas['FinishDate'];
+    String startDate = eventDatas['StartDate'] ?? "null";
+    String finishDate = eventDatas['FinishDate'] ?? "null";
+    String location = eventDatas['Location'] ?? "null";
+    String city = eventDatas['City'] ?? "null";
+    String country = eventDatas['Country'] ?? "null";
     String currentParticipantNumber =
         eventDatas['CurrentParticipantNumber'].toString();
     String maxParticipantNumber = eventDatas['MaxParticipantNumber'].toString();
@@ -255,7 +258,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                               width: widthSize(1),
                             ),
                             Text(
-                              "Diyarbakır",
+                              location + "/$city/$country",
                               style: TextStyle(
                                 fontFamily: "Zona",
                                 fontSize: heightSize(2),

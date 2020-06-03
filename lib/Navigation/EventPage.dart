@@ -122,6 +122,10 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                         SizedBox(
                           height: heightSize(2),
                         ),
+                        locationCityCountryColumn(),
+                        SizedBox(
+                          height: heightSize(2),
+                        ),
                         dateAndDetails(),
                         SizedBox(
                           height: heightSize(2),
@@ -679,80 +683,38 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
     );
   }
 
+  Widget locationCityCountryColumn() {
+    var location = widget.eventData['Location'] ?? "null";
+    var city = widget.eventData['City'] ?? "null";
+    var country = widget.eventData['Country'] ?? "null";
+    return Container(
+      width: widthSize(100),
+      height: heightSize(6),
+      decoration: new BoxDecoration(
+        color: MyColors().purpleContainer,
+        borderRadius: new BorderRadius.all(
+          Radius.circular(20),
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Text(
+          (location + " / " + city + " / " + country),
+          style: TextStyle(
+            fontFamily: "Zona",
+            fontSize: heightSize(2),
+            color: MyColors().whiteTextColor,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget mapAndJoin() {
-    Widget joinUnjoinButton;
-
-    if (joinButton) {
-      joinUnjoinButton = Container(
-        width: widthSize(43),
-        height: heightSize(8),
-        decoration: new BoxDecoration(
-          color: MyColors().darkblueText,
-          borderRadius: new BorderRadius.all(
-            Radius.circular(20),
-          ),
-        ),
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 35),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Container(
-                  height: heightSize(4),
-                  child: Image.asset("assets/icons/unjoin.png"),
-                ),
-                Text(
-                  "AYRIL",
-                  style: TextStyle(
-                    fontFamily: "Zona",
-                    fontSize: heightSize(2),
-                    color: MyColors().whiteTextColor,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    } else {
-      joinUnjoinButton = Container(
-        width: widthSize(43),
-        height: heightSize(8),
-        decoration: new BoxDecoration(
-          color: MyColors().darkblueText,
-          borderRadius: new BorderRadius.all(
-            Radius.circular(20),
-          ),
-        ),
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 35),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Container(
-                  height: heightSize(4.5),
-                  child: Image.asset("assets/icons/joinEvent.png"),
-                ),
-                Text(
-                  "KATIL",
-                  style: TextStyle(
-                    fontFamily: "Zona",
-                    fontSize: heightSize(2),
-                    color: MyColors().whiteTextColor,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
+            /*
             Container(
               width: widthSize(43),
               height: heightSize(8),
@@ -785,6 +747,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                 ),
               ),
             ),
+            */
           ] +
           (!isThisEventMine
               ? [
@@ -818,7 +781,41 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                           }
                         }
                       },
-                      child: joinUnjoinButton)
+                      child: Container(
+                        width: widthSize(43),
+                        height: heightSize(8),
+                        decoration: new BoxDecoration(
+                          color: MyColors().darkblueText,
+                          borderRadius: new BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                        ),
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 35),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Container(
+                                  height: heightSize(4.5),
+                                  child: joinButton
+                                      ? Image.asset("assets/icons/unjoin.png")
+                                      : Image.asset(
+                                          "assets/icons/joinEvent.png"),
+                                ),
+                                Text(
+                                  joinButton ? "AYRIL" : "KATIL",
+                                  style: TextStyle(
+                                    fontFamily: "Zona",
+                                    fontSize: heightSize(2),
+                                    color: MyColors().whiteTextColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ))
                 ]
               : []),
     );

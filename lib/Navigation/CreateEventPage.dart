@@ -8,9 +8,12 @@ import 'package:eventizer/Tools/ImageEditor.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
+import 'package:eventizer/assets/Sehirler.dart';
 import 'package:eventizer/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_search_panel/flutter_search_panel.dart';
+import 'package:flutter_search_panel/search_item.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +42,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Color myBlueColor = MyColors().blueThemeColor;
   TextEditingController controllerTitle = TextEditingController();
   TextEditingController controllerDetail = TextEditingController();
+  TextEditingController controllerLocation = TextEditingController();
   TextEditingController participantNumberController = TextEditingController();
   List<String> categoryItems = locator<EventSettings>().categoryItems ?? [];
   List<List<String>> subCategoryItems =
@@ -49,7 +53,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
       eventStartDate,
       eventStartTime,
       eventFinishDate,
-      eventFinishTime;
+      eventFinishTime,
+      country,
+      city;
   TimeOfDay eventStartTimeOfDay, eventFinishTimeOfDay;
   DateTime eventStartDateTime;
   bool isStartDateSelected = false,
@@ -571,11 +577,14 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
         if (controllerTitle.text != "" &&
             controllerDetail.text != "" &&
+            controllerLocation.text != "" &&
             maxParticipantNumber != null &&
             maxParticipantNumber != 0 &&
             _image != null &&
             subCategory != null &&
             mainCategory != null &&
+            city != null &&
+            country != null &&
             eventStartDate != null &&
             eventStartTime != null &&
             eventFinishDate != null &&
@@ -604,11 +613,14 @@ class _CreateEventPageState extends State<CreateEventPage> {
             "CurrentParticipantNumber": 0,
             "MainCategory": mainCategory,
             "SubCategory": subCategory,
+            "City": city,
+            "Country": country,
             "StartDate": eventStartDate,
             "FinishDate": eventFinishDate,
             "StartTime": eventStartTime,
             "FinishTime": eventFinishTime,
             "Detail": controllerDetail.text,
+            "Location": controllerLocation.text,
             //ANCHOR Erkek izin verildiyse "10", kadın izin verildiyse "01" , ikiside izin verildiyse "11"
             "AllowedGenders": allowedGenders(),
             "Status": "New"
@@ -974,6 +986,146 @@ class _CreateEventPageState extends State<CreateEventPage> {
     });
   }
 
+  Widget location() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: ClipRRect(
+        borderRadius: new BorderRadius.all(
+          Radius.circular(20),
+        ),
+        child: Container(
+          color: MyColors().blackOpacityContainer,
+          width: widthSize(100),
+          height: heightSize(8),
+          child: Center(
+            child: TextFormField(
+              validator: (value) => value.isEmpty ? 'boş olamaz' : null,
+              controller: controllerLocation,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "Etkinlik yeri/mekanı...",
+                hintStyle: TextStyle(
+                  color: MyColors().whiteTextColor,
+                ),
+              ),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: "Zona",
+                color: MyColors().whiteTextColor,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget cityAndCountry() {
+    List<SearchItem<int>> sehirler = [];
+    sehirler.add(SearchItem(0, "Şehir Seçin"));
+    for (int i = 1; i <= 81; i++) {
+      sehirler.add(SearchItem(i, Sehirler().sehirler[i - 1]));
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Container(
+            width: widthSize(43),
+            height: heightSize(8),
+            decoration: new BoxDecoration(
+              color: MyColors().blackOpacityContainer,
+              borderRadius: new BorderRadius.all(
+                Radius.circular(20),
+              ),
+            ),
+            child: Container(
+              width: widthSize(43),
+              height: heightSize(8),
+              decoration: new BoxDecoration(
+                color: MyColors().yellowContainer,
+                borderRadius: new BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
+              child: Center(
+                child: DropdownButton<String>(
+                  hint: Text(
+                    country != null ? country : ("Ülke Seçin"),
+                    style: TextStyle(
+                      fontFamily: "Zona",
+                      fontSize: heightSize(2),
+                      color: MyColors().whiteTextColor,
+                    ),
+                  ),
+                  items: [
+                    DropdownMenuItem(
+                      child: Text("Türkiye"),
+                      value: "TR",
+                    ),
+                    DropdownMenuItem(
+                      child: Text("United States"),
+                      value: "US",
+                    ),
+                    DropdownMenuItem(
+                      child: Text("United Kingdom"),
+                      value: "UK",
+                    ),
+                  ],
+                  onChanged: (con) {
+                    setState(() {
+                      country = con;
+                    });
+                  },
+                ),
+              ),
+            ),
+          ),
+          Container(
+            width: widthSize(43),
+            height: heightSize(8),
+            decoration: new BoxDecoration(
+              color: MyColors().blackOpacityContainer,
+              borderRadius: new BorderRadius.all(
+                Radius.circular(20),
+              ),
+            ),
+            child: Container(
+              width: widthSize(43),
+              height: heightSize(8),
+              decoration: BoxDecoration(
+                color: MyColors().yellowContainer,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
+              child: Center(
+                child: FlutterSearchPanel<int>(
+                  selected: 0,
+                  title: "Şehir Seçiniz",
+                  data: sehirler,
+                  color: Colors.red,
+                  icon: Icon(Icons.check_circle, color: Colors.white),
+                  textStyle: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12.0,
+                      decorationStyle: TextDecorationStyle.dotted),
+                  onChanged: (int item) {
+                    if (item != 0) {
+                      city = Sehirler().sehirler[item - 1];
+                    }
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   List<Widget> pages() {
     return [
       //ANCHOR 1. sayfa
@@ -993,6 +1145,14 @@ class _CreateEventPageState extends State<CreateEventPage> {
               height: heightSize(3),
             ),
             eventTitleAndDetails(),
+            SizedBox(
+              height: heightSize(3),
+            ),
+            cityAndCountry(),
+            SizedBox(
+              height: heightSize(3),
+            ),
+            location(),
             SizedBox(
               height: heightSize(3),
             ),
