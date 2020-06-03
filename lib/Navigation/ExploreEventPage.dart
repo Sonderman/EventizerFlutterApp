@@ -257,7 +257,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                               width: widthSize(1),
                             ),
                             Text(
-                              location + "/$city/$country",
+                              location + "/$city",
                               style: TextStyle(
                                 fontFamily: "Zona",
                                 fontSize: heightSize(2),

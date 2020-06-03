@@ -9,6 +9,9 @@ class AppSettings with ChangeNotifier {
   String getServer() => _server;
 
   int _bottomNavIndex = 2;
+  PageController _createEventPageController = PageController(
+    initialPage: 0,
+  );
 
   List<Widget> _pageStack = [];
 
@@ -19,6 +22,7 @@ class AppSettings with ChangeNotifier {
   //ANCHOR Getters Here
   int getBottomNavIndex() => _bottomNavIndex;
   List<Widget> getPageStack() => _pageStack;
+  PageController getCreateEventPageController() => _createEventPageController;
 
   //ANCHOR Setters Here
   void setBottomNavIndex(int index) {

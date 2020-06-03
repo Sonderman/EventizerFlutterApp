@@ -42,18 +42,17 @@ class BottomNavWidget extends StatelessWidget {
             ));
 
     //ANCHOR burada stack de widget varmı kontrol eder, eğer widget varsa pop eder
-    Future<bool> checkStack() async {
-      if (NavigationManager(context).isEmpty()) {
-        return await askForQuit();
-      } else {
-        NavigationManager(context).popPage();
+    Future<bool> onBackButtonPressed() async {
+      if (NavigationManager(context).onBackButtonPressed()) {
         return Future.value(false);
+      } else {
+        return await askForQuit();
       }
     }
 
     //ANCHOR willpopscope geri tusunu kontrol eder
     return WillPopScope(
-        onWillPop: checkStack,
+        onWillPop: onBackButtonPressed,
         child: Scaffold(
             body: Consumer<AppSettings>(
               builder: (con, settings, w) => getNavigatedPage(context),

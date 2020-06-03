@@ -71,9 +71,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
   @override
   void initState() {
-    _pageController = PageController(
-      initialPage: 0,
-    );
     participantNumberController.text = "1";
     super.initState();
   }
@@ -83,6 +80,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
     userService = Provider.of<UserService>(context);
     userModel = userService.userModel;
     userGender = userModel.getUserGender() == "Man" ? true : false;
+    _pageController = NavigationManager(context).getCreateEventPageController();
     super.didChangeDependencies();
   }
 

@@ -14,6 +14,23 @@ class NavigationManager {
     settings = Provider.of<AppSettings>(context, listen: false);
   }
 
+  bool onBackButtonPressed() {
+    if (settings.getBottomNavIndex() == 1 &&
+        settings.getCreateEventPageController().page == 1) {
+      settings.getCreateEventPageController().previousPage(
+          duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
+      return true;
+    } else if (isEmpty()) {
+      return false;
+    } else {
+      popPage();
+      return true;
+    }
+  }
+
+  PageController getCreateEventPageController() =>
+      settings.getCreateEventPageController();
+
   bool isEmpty() {
     return settings.getPageStack().isEmpty;
   }
