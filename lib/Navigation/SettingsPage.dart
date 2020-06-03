@@ -29,6 +29,12 @@ class _SettingsPageState extends State<SettingsPage> {
   bool loading = false;
   String _name, _surname, _phoneNumber, _country, _city;
 
+  get city => _city;
+
+  set city(value) {
+    _city = value;
+  }
+
   bool showPassword = true;
 
   @override
@@ -184,30 +190,15 @@ class _SettingsPageState extends State<SettingsPage> {
     });
     userService.userModelUpdater(userModel).then((value) async {
       if (value) {
-        if (await Provider.of<UserService>(context, listen: false)
-            .userModelSync(userModel.getUserId())) {
+        if (await Provider.of<UserService>(context, listen: false).userModelSync(userModel.getUserId())) {
           NavigationManager(context).popPage();
         }
 
-        Fluttertoast.showToast(
-            msg: "Bilgileriniz Güncellenmiştir",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.green,
-            textColor: Colors.white,
-            fontSize: 18.0);
+        Fluttertoast.showToast(msg: "Bilgileriniz Güncellenmiştir", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 2, backgroundColor: Colors.green, textColor: Colors.white, fontSize: 18.0);
       } else {
         setState(() {
           loading = false;
-          Fluttertoast.showToast(
-              msg: "İnternet bağlantınızı kontrol ediniz!",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 18.0);
+          Fluttertoast.showToast(msg: "İnternet bağlantınızı kontrol ediniz!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 2, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 18.0);
           NavigationManager(context).popPage();
         });
       }
@@ -223,13 +214,7 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Container(
           height: widthSize(50),
           width: widthSize(50),
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: _image == null
-                      ? NetworkImage(userModel.getUserProfilePhotoUrl())
-                      : FileImage(_image))),
+          decoration: BoxDecoration(shape: BoxShape.circle, image: DecorationImage(fit: BoxFit.cover, image: _image == null ? NetworkImage(userModel.getUserProfilePhotoUrl()) : FileImage(_image))),
         ),
       ),
     );
@@ -378,9 +363,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget telephoneNumber() {
     return TextFormField(
-      initialValue: userModel.getUserTelNo() == 0
-          ? null
-          : userModel.getUserTelNo().toString(),
+      initialValue: userModel.getUserTelNo() == 0 ? null : userModel.getUserTelNo().toString(),
       onChanged: (phone) => _phoneNumber = phone,
       textAlign: TextAlign.left,
       keyboardType: TextInputType.number,
@@ -464,9 +447,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
         Center(
           child: Container(
-            height: double.infinity,
+            height: heightSize(8),
+            width: widthSize(75),
             child: ClipRRect(
-
               borderRadius: BorderRadius.all(
                 Radius.circular(20),
               ),
@@ -477,11 +460,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 data: sehirler,
                 color: MyColors().yellowContainer,
                 icon: Icon(Icons.check_circle, color: Colors.white),
-                textStyle: TextStyle(
-                    color: Colors.white,
-                    fontFamily: "Zona",
-                    fontSize: heightSize(2),
-                    decorationStyle: TextDecorationStyle.dotted),
+                textStyle: TextStyle(color: Colors.white, fontFamily: "Zona", fontSize: heightSize(2), decorationStyle: TextDecorationStyle.dotted),
                 onChanged: (int item) {
                   if (item != 0) {
                     _city = Sehirler().sehirler[item - 1];
@@ -533,28 +512,13 @@ class _SettingsPageState extends State<SettingsPage> {
             loading = true;
           });
           if (!await userService.updateProfilePhoto(_image)) {
-            Fluttertoast.showToast(
-                msg:
-                    " Resim Güncellenemedi,İnternet bağlantınızı kontrol ediniz!",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 2,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 18.0);
+            Fluttertoast.showToast(msg: " Resim Güncellenemedi,İnternet bağlantınızı kontrol ediniz!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 2, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 18.0);
           }
         }
         if (isChanged) {
           saveChanges();
         } else {
-          Fluttertoast.showToast(
-              msg: "Güncellemek için değişiklik yapmalısınız",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 3,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 18.0);
+          Fluttertoast.showToast(msg: "Güncellemek için değişiklik yapmalısınız", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 3, backgroundColor: Colors.green, textColor: Colors.white, fontSize: 18.0);
         }
       },
       child: Container(
