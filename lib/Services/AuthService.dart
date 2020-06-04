@@ -26,7 +26,7 @@ class LoginAndRegister {
   AppSettings settings = AppSettings();
 
   //TODO kayıt olma işlemi repository e taşınacak
-  Future<void> registerUser(BuildContext context, String eposta, String sifre,
+  Future<bool> registerUser(BuildContext context, String eposta, String sifre,
       List<String> datalist, File image) async {
     var auth = AuthService.of(context).auth;
     String url;
@@ -34,60 +34,67 @@ class LoginAndRegister {
       "Name": datalist[0],
       "Surname": datalist[1],
       "Email": datalist[2],
-      "PhoneNumber": datalist[3],
+      "PhoneNumber": int.parse(datalist[3]),
       "Gender": datalist[4],
       "Country": datalist[5],
       "BirthDay": datalist[6],
+      "NickName": datalist[7],
+      'Nof_follower': 0,
+      'Nof_following': 0,
+      'Nof_events': 0,
+      'Nof_trustPoint': 0,
       "RegisteredAt": FieldValue.serverTimestamp()
     };
+    try {
+      await auth.signUp(eposta, sifre).then((userId) async {
+        if (userId != null) {
+          data['UserID'] = userId;
+          await Firestore.instance
+              .collection(settings.appName)
+              .document(settings.getServer())
+              .collection('users')
+              .document(userId)
+              .setData(data)
+              .whenComplete(() {
+            StorageReference storageReference = FirebaseStorage()
+                .ref()
+                .child('users')
+                .child(userId)
+                .child('images')
+                .child('profile')
+                .child('ProfileImage');
+            StorageUploadTask uploadTask = storageReference.putFile(image);
 
-    await auth.signUp(eposta, sifre).then((userId) {
-      if (userId != null) {
-        data['UserID'] = userId;
-        Firestore.instance
-            .collection("EventizerApp")
-            .document(settings.getServer())
-            .collection('users')
-            .document(userId)
-            .setData(data)
-            .whenComplete(() {
-          StorageReference storageReference = FirebaseStorage()
-              .ref()
-              .child('users')
-              .child(userId)
-              .child('images')
-              .child('profile')
-              .child('ProfileImage');
-          StorageUploadTask uploadTask = storageReference.putFile(image);
-
-          StreamSubscription<StorageTaskEvent> streamSubscription =
-              uploadTask.events.listen((event) {
-            print('UploadingProfile Image :${event.type}');
-          });
-
-          uploadTask.onComplete.then((onValue) {
-            onValue.ref.getDownloadURL().then((value) {
-              url = value.toString();
-              print("Url:" + url);
-            }).whenComplete(() {
-              Firestore.instance
-                  .collection("EventizerApp")
-                  .document(settings.getServer())
-                  .collection('users')
-                  .document(userId)
-                  .updateData({"ProfilePhotoUrl": url});
+            StreamSubscription<StorageTaskEvent> streamSubscription =
+                uploadTask.events.listen((event) {
+              print('UploadingProfile Image :${event.type}');
             });
-          }).whenComplete(() {
-            streamSubscription.cancel();
-          });
-        }).catchError((e) {
-          print(e);
-        });
-        //auth.sendEmailVerification();
 
-      }
-    }, onError: (e) {
-      print('ERROR:Kayıt olurken hata!: $e');
-    });
+            uploadTask.onComplete.then((onValue) {
+              onValue.ref.getDownloadURL().then((value) {
+                url = value.toString();
+                print("Url:" + url);
+              }).whenComplete(() {
+                Firestore.instance
+                    .collection(settings.appName)
+                    .document(settings.getServer())
+                    .collection('users')
+                    .document(userId)
+                    .updateData({"ProfilePhotoUrl": url});
+              });
+            }).whenComplete(() {
+              streamSubscription.cancel();
+            });
+          });
+
+          //TODO -  release yaparken bunu açmayı unutma
+          //auth.sendEmailVerification();
+        }
+      });
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 }

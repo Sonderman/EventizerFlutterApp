@@ -14,6 +14,7 @@ class User {
   String _about;
   String _profilePhotoUrl;
   int _numberOfFollowers;
+  int _numberOfFollowings;
   int _numberOfEvents;
   int _numberOfTrustPoints;
 
@@ -43,6 +44,8 @@ class User {
   String getUserBirthday() => _birthday;
 
   int getUserFollowNumber() => _numberOfFollowers;
+
+  int getUserFollowingNumber() => _numberOfFollowings;
 
   int getUserEventsNumber() => _numberOfEvents;
 
@@ -102,7 +105,7 @@ class User {
       'Surname': _surname ?? 'null',
       'NickName': _nickname ?? 'null',
       'Email': _email ?? 'null',
-      'Birthday': _birthday ?? 'null',
+      'BirthDay': _birthday ?? 'null',
       'Gender': _gender ?? 'null',
       'Country': _country ?? 'null',
       'City': _city ?? 'null',
@@ -110,6 +113,7 @@ class User {
       'About': _about ?? 'null',
       'PhoneNumber': _telNo ?? 0,
       'Nof_follower': _numberOfFollowers ?? 0,
+      'Nof_following': _numberOfFollowings ?? 0,
       'Nof_events': _numberOfEvents ?? 0,
       'Nof_trustPoint': _numberOfTrustPoints ?? 0,
     };
@@ -122,12 +126,13 @@ class User {
     _email = map["Email"] ?? "null";
     _country = map["Country"] ?? "null";
     _city = map["City"] ?? "null";
-    _birthday = map["Birthday"] ?? "null";
+    _birthday = map["BirthDay"] ?? "null";
     _gender = map["Gender"] ?? "null";
     _profilePhotoUrl = map["ProfilePhotoUrl"];
     _about = map['About'] ?? "Henüz Detay Girilmedi.";
     _telNo = map["PhoneNumber"] ?? 0;
     _numberOfFollowers = map['Nof_follower'] ?? 0;
+    _numberOfFollowings = map['Nof_following'] ?? 0;
     _numberOfEvents = map['Nof_events'] ?? 0;
     _numberOfTrustPoints = map['Nof_trustPoint'] ?? 0;
   }

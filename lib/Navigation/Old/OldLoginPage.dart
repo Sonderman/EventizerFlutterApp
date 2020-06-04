@@ -1,11 +1,11 @@
 import 'package:eventizer/Navigation/ForgetPassPage.dart';
+import 'package:eventizer/Navigation/Old/OldRegisterPage.dart';
 import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../RegisterPage.dart';
 import 'package:eventizer/animations/FadeAnimation.dart';
 
 class OldLoginPage extends StatefulWidget {

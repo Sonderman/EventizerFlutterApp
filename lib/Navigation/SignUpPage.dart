@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Tools/loading.dart';
@@ -6,6 +7,7 @@ import 'package:eventizer/assets/Colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -159,6 +161,10 @@ class _SignUpPageState extends State<SignUpPage> {
         });
   }
 
+  String generateNickName(String name) {
+    return name + (1 + Random().nextInt(9998)).toString();
+  }
+
   void signUp() async {
     // ANCHOR Kullanici kayit olana kadar loading kismini gosterecek
     setState(() {
@@ -172,38 +178,42 @@ class _SignUpPageState extends State<SignUpPage> {
       _phoneNumber,
       _gender ? "Man" : "Woman",
       _country,
-      _birthday
+      _birthday,
+      generateNickName(_name)
     ];
     print(datalist);
     await loginAndRegister
         .registerUser(context, mailController.text, passwordController.text,
             datalist, _image)
-        .whenComplete(() {
-      Fluttertoast.showToast(
-          msg: "Doğrulama maili gönderildi.Lütfen mailinizi doğrulayınız!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.cyan,
-          textColor: Colors.white,
-          fontSize: 18.0);
-      Future.delayed(const Duration(milliseconds: 200), () {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
-      });
-    }).catchError((error) {
-      print(error);
-      Fluttertoast.showToast(
-          msg: "Girdileri gözden geçiriniz!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 18.0);
-      setState(() {
-        loading = false;
-      });
+        .then((value) {
+      if (value) {
+        Fluttertoast.showToast(
+            msg: "Doğrulama maili gönderildi.Lütfen mailinizi doğrulayınız!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.cyan,
+            textColor: Colors.white,
+            fontSize: 18.0);
+        Future.delayed(const Duration(milliseconds: 200), () {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => AuthCheck()));
+        });
+      } else {
+        Fluttertoast.showToast(
+            msg: "Girdileri gözden geçiriniz!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 18.0);
+        setState(() {
+          loading = false;
+        });
+      }
     });
   }
 
@@ -422,6 +432,8 @@ class _SignUpPageState extends State<SignUpPage> {
       onChanged: (phone) => _phoneNumber = phone,
       textAlign: TextAlign.left,
       keyboardType: TextInputType.number,
+      inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+      maxLength: 10,
       decoration: InputDecoration(
         border: InputBorder.none,
         hintText: "Telefon Numarası",

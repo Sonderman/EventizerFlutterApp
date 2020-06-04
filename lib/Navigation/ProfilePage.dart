@@ -39,8 +39,10 @@ class _ProfilePageState extends State<ProfilePage>
   bool amIFollowing = false, isThisProfileMine;
   String nameText,
       surnameText,
+      nickNameText,
       aboutText,
       followersText,
+      followingsText,
       eventsText,
       trustText,
       profilePhotoUrl;
@@ -165,8 +167,10 @@ class _ProfilePageState extends State<ProfilePage>
   void textUpdaterByUserModel(User model) {
     nameText = model.getUserName() ?? "Loading";
     surnameText = model.getUserSurname() ?? "Loading";
+    nickNameText = model.getUserNickName() ?? "Loading";
     aboutText = model.getUserAbout() ?? "Loading";
     followersText = model.getUserFollowNumber().toString();
+    followingsText = model.getUserFollowingNumber().toString();
     eventsText = model.getUserEventsNumber().toString();
     trustText = model.getUserTrustPointNumber().toString();
     profilePhotoUrl = model.getUserProfilePhotoUrl();
@@ -226,7 +230,7 @@ class _ProfilePageState extends State<ProfilePage>
                       ),
                     ),
                     Text(
-                      "@nickname",
+                      "@" + nickNameText,
                       style: TextStyle(
                         fontFamily: "ZonaLight",
                         fontSize: heightSize(2),
@@ -441,7 +445,7 @@ class _ProfilePageState extends State<ProfilePage>
                     )),
                 Text(
                     //REVIEW myFollowers text should be here
-                    followersText,
+                    followingsText,
                     style: TextStyle(
                       color: MyColors().blueTextColor,
                       fontFamily: "ZonaLight",
