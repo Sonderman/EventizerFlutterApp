@@ -310,9 +310,7 @@ class _OldCreateEventState extends State<OldCreateEvent> {
               ),
             ] +
             (loadingOverLay
-                ? <Widget>[
-                    PageComponents().loadingOverlay(context, Colors.white)
-                  ]
+                ? <Widget>[PageComponents(context).loadingOverlay(Colors.white)]
                 : <Widget>[]),
       ),
     );

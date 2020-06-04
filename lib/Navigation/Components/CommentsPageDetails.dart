@@ -27,7 +27,7 @@ class _ProfileListItemState extends State<ProfileListItem> {
         if (user.connectionState == ConnectionState.done) {
           return buildItem(user.data);
         } else {
-          return PageComponents().loadingCustomOverlay(32, Colors.white);
+          return PageComponents(context).loadingCustomOverlay(32, Colors.white);
         }
       },
     );

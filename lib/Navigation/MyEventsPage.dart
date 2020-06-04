@@ -1,9 +1,11 @@
+import 'package:eventizer/Navigation/Components/Event_Item.dart';
 import 'package:eventizer/Navigation/EventPage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class MyEventsPage extends StatefulWidget {
@@ -51,149 +53,6 @@ class _MyEventsPageState extends State<MyEventsPage> {
     );
   }
 
-  Widget eventItem(Map<String, dynamic> eventDatas) {
-    UserService userWorker = Provider.of<UserService>(context);
-    var eventService = Provider.of<EventService>(context);
-    String eventID = eventDatas['eventID'];
-    String title = eventDatas['Title'];
-    String ownerID = eventDatas['OrganizerID'];
-    String category = eventDatas['Category'];
-    String imageUrl = eventDatas['EventImageUrl'];
-    String startDate = eventDatas['StartDate'];
-    Map<String, dynamic> ownerData;
-    return InkWell(
-      onTap: () async {
-        eventService
-            .amIparticipant(userWorker.userModel.getUserId(), eventID)
-            .then((amIparticipant) {
-          print("Kullanıcı bu etkinliğe katılmış:" + amIparticipant.toString());
-          NavigationManager(context).pushPage(EventPage(
-            eventData: eventDatas,
-            userData: ownerData,
-            amIparticipant: amIparticipant,
-          ));
-        });
-      },
-      child: ClipRRect(
-        borderRadius: new BorderRadius.all(
-          Radius.circular(20),
-        ),
-        child: Container(
-          width: widthSize(100),
-          height: heightSize(33),
-          color: Colors.white,
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: heightSize(2),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      height: heightSize(5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(20),
-                        ),
-                      ),
-                      child: FutureBuilder(
-                          future: userWorker.findUserByID(ownerID),
-                          builder: (BuildContext _,
-                              AsyncSnapshot<dynamic> userData) {
-                            if (userData.connectionState ==
-                                ConnectionState.done) {
-                              ownerData = userData.data;
-                              //ANCHOR user profil resmi burada
-                              return Container(
-                                height: heightSize(5),
-                                width: widthSize(10),
-                                decoration: new BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: NetworkImage(
-                                          userData.data['ProfilePhotoUrl'])),
-                                ),
-                              );
-                            } else
-                              return Image.asset(
-                                  "assets/images/avatar_man.png");
-                          }),
-                    ),
-                    SizedBox(
-                      width: widthSize(2),
-                    ),
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontFamily: "Zona",
-                        fontSize: heightSize(2),
-                        color: MyColors().greyTextColor,
-                      ),
-                    ),
-                    Spacer(),
-                    DropdownButton<String>(
-                      items: [
-                        DropdownMenuItem<String>(
-                          value: "share",
-                          child: Row(
-                            children: <Widget>[
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.share,
-                                    color: MyColors().purpleContainer),
-                              ),
-                              Text("Paylaş")
-                            ],
-                          ),
-                        ),
-                        DropdownMenuItem<String>(
-                          value: "delete",
-                          child: Row(
-                            children: <Widget>[
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.delete,
-                                    color: MyColors().purpleContainer),
-                              ),
-                              Text("Sil")
-                            ],
-                          ),
-                        ),
-                      ],
-                      onChanged: (String selected) {},
-                      hint: Row(
-                        children: <Widget>[
-                          Icon(Icons.menu, color: MyColors().purpleContainer),
-                          Text("Seçenekler")
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Divider(
-                  thickness: 2,
-                  color: MyColors().loginGreyColor,
-                ),
-              ),
-              Container(
-                height: heightSize(22),
-                child: FadeInImage.assetNetwork(
-                    placeholder: "assets/images/event_birthday.jpg",
-                    image: imageUrl),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget eventList() {
     var _eventManager = Provider.of<EventService>(context);
 
@@ -215,7 +74,7 @@ class _MyEventsPageState extends State<MyEventsPage> {
           ),
           //ANCHOR event list start are here---------------------------------------------
           Container(
-              height: heightSize(70),
+              height: heightSize(75),
               child: FutureBuilder(
                   future: _eventManager.fetchEventListsForUser(
                       userID, widget.isOld),
@@ -233,11 +92,12 @@ class _MyEventsPageState extends State<MyEventsPage> {
                                     ),
                             itemCount: listofMaps.length,
                             itemBuilder: (context, index) {
-                              return eventItem(listofMaps[index]);
+                              return eventItem(
+                                  context, listofMaps[index], false);
                             });
                       }
                     } else
-                      return PageComponents()
+                      return PageComponents(context)
                           .loadingCustomOverlay(500, Colors.white);
                   })),
         ],

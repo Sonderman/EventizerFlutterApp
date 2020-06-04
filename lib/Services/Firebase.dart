@@ -185,7 +185,7 @@ class DatabaseWorks {
       await ref
           .collection(settings.appName)
           .document(settings.getServer())
-          .collection("activeEvents")
+          .collection("Events")
           .document(generatedID)
           .setData(eventData);
       return generatedID;
@@ -202,7 +202,7 @@ class DatabaseWorks {
       return await ref
           .collection(settings.appName)
           .document(settings.getServer())
-          .collection("activeEvents")
+          .collection("Events")
           .where("OrganizerID", isEqualTo: userID)
           .where("Status", isEqualTo: "Accepted")
           .getDocuments()
@@ -232,7 +232,7 @@ class DatabaseWorks {
             .then((docs) {
           // print("gelen verinin uzunluğu:" + docs.documents.length.toString());
           docs.documents.forEach((event) {
-            eventList.add(event.data);
+            if (event.data["Status"] != "Deleted") eventList.add(event.data);
           });
           return eventList;
         });
@@ -240,13 +240,13 @@ class DatabaseWorks {
         return await ref
             .collection(settings.appName)
             .document(settings.getServer())
-            .collection("activeEvents")
+            .collection("Events")
             .where("OrganizerID", isEqualTo: organizerID)
             .getDocuments()
             .then((docs) {
           // print("gelen verinin uzunluğu:" + docs.documents.length.toString());
           docs.documents.forEach((event) {
-            eventList.add(event.data);
+            if (event.data["Status"] != "Deleted") eventList.add(event.data);
           });
           return eventList;
         });
@@ -263,7 +263,7 @@ class DatabaseWorks {
       return await ref
           .collection(settings.appName)
           .document(settings.getServer())
-          .collection("activeEvents")
+          .collection("Events")
           .where("Status", isEqualTo: "Accepted")
           .getDocuments()
           .then((docs) {
@@ -286,7 +286,7 @@ class DatabaseWorks {
       return await ref
           .collection(settings.appName)
           .document(settings.getServer())
-          .collection("activeEvents")
+          .collection("Events")
           .where("Category", isEqualTo: category)
           .where("Status", isEqualTo: "Accepted")
           .getDocuments()
@@ -524,7 +524,7 @@ class DatabaseWorks {
             ref
                 .collection(settings.appName)
                 .document(settings.getServer())
-                .collection('activeEvents')
+                .collection('Events')
                 .document(eventID)
                 .collection('Participants')
                 .document(userID),
@@ -534,7 +534,7 @@ class DatabaseWorks {
             ref
                 .collection(settings.appName)
                 .document(settings.getServer())
-                .collection("activeEvents")
+                .collection("Events")
                 .document(eventID),
             {"CurrentParticipantNumber": FieldValue.increment(1)});
       }).then((value) => true);
@@ -551,13 +551,13 @@ class DatabaseWorks {
             ref
                 .collection(settings.appName)
                 .document(settings.getServer())
-                .collection("activeEvents")
+                .collection("Events")
                 .document(eventID),
             {"CurrentParticipantNumber": FieldValue.increment(-1)});
         await transaction.delete(ref
             .collection(settings.appName)
             .document(settings.getServer())
-            .collection("activeEvents")
+            .collection("Events")
             .document(eventID)
             .collection("Participants")
             .document(userID));
@@ -574,7 +574,7 @@ class DatabaseWorks {
       var doc = await ref
           .collection(settings.appName)
           .document(settings.getServer())
-          .collection('activeEvents')
+          .collection('Events')
           .document(eventID)
           .collection('Participants')
           .document(userId)
@@ -592,7 +592,7 @@ class DatabaseWorks {
       return await ref
           .collection(settings.appName)
           .document(settings.getServer())
-          .collection("activeEvents")
+          .collection("Events")
           .document(eventID)
           .collection("Comments")
           .document(DateTime.now().millisecondsSinceEpoch.toString())
@@ -611,7 +611,7 @@ class DatabaseWorks {
       return await ref
           .collection(settings.appName)
           .document(settings.getServer())
-          .collection("activeEvents")
+          .collection("Events")
           .document(eventID)
           .collection("Comments")
           .getDocuments()
@@ -634,7 +634,7 @@ class DatabaseWorks {
       return await ref
           .collection(settings.appName)
           .document(settings.getServer())
-          .collection("activeEvents")
+          .collection("Events")
           .document(eventID)
           .collection("Participants")
           .getDocuments()
@@ -648,6 +648,20 @@ class DatabaseWorks {
     } catch (e) {
       print(e);
       return null;
+    }
+  }
+
+  Future<bool> deleteEvent(String eventID) async {
+    try {
+      return await ref
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .collection("Events")
+          .document(eventID)
+          .updateData({"Status": "Deleted"}).then((value) => true);
+    } catch (e) {
+      print(e);
+      return false;
     }
   }
 }

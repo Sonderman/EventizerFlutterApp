@@ -1,10 +1,8 @@
-import 'package:eventizer/Navigation/EventPage.dart';
+import 'package:eventizer/Navigation/Components/Event_Item.dart';
 import 'package:eventizer/Services/Repository.dart';
-import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class ExploreEventPage extends StatefulWidget {
@@ -35,247 +33,6 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
             categoryList(),
             Expanded(child: eventList()),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget eventItem(Map<String, dynamic> eventDatas) {
-    UserService userWorker = Provider.of<UserService>(context);
-    var eventService = Provider.of<EventService>(context);
-    String eventID = eventDatas['eventID'];
-    String title = eventDatas['Title'] ?? "null";
-    String ownerID = eventDatas['OrganizerID'];
-    //String category = eventDatas['Category'];
-    String imageUrl = eventDatas['EventImageUrl'];
-    String startDate = eventDatas['StartDate'] ?? "null";
-    String finishDate = eventDatas['FinishDate'] ?? "null";
-    String location = eventDatas['Location'] ?? "null";
-    String city = eventDatas['City'] ?? "null";
-    String country = eventDatas['Country'] ?? "null";
-    String currentParticipantNumber =
-        eventDatas['CurrentParticipantNumber'].toString();
-    String maxParticipantNumber = eventDatas['MaxParticipantNumber'].toString();
-    Map<String, dynamic> ownerData;
-    return InkWell(
-      onTap: () async {
-        eventService
-            .amIparticipant(userWorker.userModel.getUserId(), eventID)
-            .then((amIparticipant) {
-          print("Kullanıcı bu etkinliğe katılmış:" + amIparticipant.toString());
-          NavigationManager(context).pushPage(EventPage(
-            eventData: eventDatas,
-            userData: ownerData,
-            amIparticipant: amIparticipant,
-          ));
-        });
-      },
-      child: ClipRRect(
-        borderRadius: BorderRadius.all(
-          Radius.circular(20),
-        ),
-        child: Container(
-          width: widthSize(100),
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: heightSize(2),
-                ),
-                Row(
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          height: heightSize(5),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(20),
-                            ),
-                          ),
-                          child: FutureBuilder(
-                              future: userWorker.findUserByID(ownerID),
-                              builder: (BuildContext _,
-                                  AsyncSnapshot<dynamic> userData) {
-                                if (userData.connectionState ==
-                                    ConnectionState.done) {
-                                  ownerData = userData.data;
-                                  //ANCHOR user profil resmi burada
-                                  return Container(
-                                    height: heightSize(5),
-                                    width: widthSize(10),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: NetworkImage(userData
-                                              .data['ProfilePhotoUrl'])),
-                                    ),
-                                  );
-                                } else
-                                  return Image.asset(
-                                      "assets/images/avatar_man.png");
-                              }),
-                        ),
-                        SizedBox(
-                          width: widthSize(2),
-                        ),
-                        Text(
-                          title,
-                          style: TextStyle(
-                            fontFamily: "Zona",
-                            fontSize: heightSize(2),
-                            color: MyColors().greyTextColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Spacer(),
-                    IconButton(
-                      onPressed: () {},
-                      icon:
-                          Icon(Icons.share, color: MyColors().purpleContainer),
-                    ),
-                  ],
-                ),
-                Divider(
-                  thickness: 2,
-                  color: MyColors().loginGreyColor,
-                ),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(15.0),
-                  child: FadeInImage.assetNetwork(
-                    width: widthSize(80),
-                    height: heightSize(40),
-                    fit: BoxFit.cover,
-                    placeholder: "assets/images/event_birthday.jpg",
-                    image: imageUrl,
-                  ),
-                ),
-                Divider(
-                  thickness: 2,
-                  color: MyColors().loginGreyColor,
-                ),
-                Row(
-                  children: <Widget>[
-                    //ANCHOR Start Date and Participants icons are here
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        SizedBox(
-                          height: heightSize(1),
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Container(
-                              child: FaIcon(
-                                FontAwesomeIcons.calendarCheck,
-                                color: MyColors().greyTextColor,
-                              ),
-                            ),
-                            SizedBox(
-                              width: widthSize(2),
-                            ),
-                            Text(
-                              startDate,
-                              style: TextStyle(
-                                fontFamily: "Zona",
-                                fontSize: heightSize(2),
-                                color: MyColors().greyTextColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: heightSize(1),
-                        ),
-                        //TODO Katılımcı sayısı Stream ile getirilcek
-                        Row(
-                          children: <Widget>[
-                            Icon(
-                              Icons.people,
-                              color: MyColors().greyTextColor,
-                            ),
-                            SizedBox(
-                              width: widthSize(2),
-                            ),
-                            Text(
-                              currentParticipantNumber +
-                                  "/" +
-                                  maxParticipantNumber,
-                              style: TextStyle(
-                                fontFamily: "Zona",
-                                fontSize: heightSize(2),
-                                color: MyColors().greyTextColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Spacer(),
-                    //ANCHOR Finish Date and Locaition icons are here
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        SizedBox(
-                          height: heightSize(1),
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Container(
-                              child: FaIcon(
-                                FontAwesomeIcons.calendarTimes,
-                                color: MyColors().greyTextColor,
-                              ),
-                            ),
-                            SizedBox(
-                              width: widthSize(2),
-                            ),
-                            Text(
-                              finishDate,
-                              style: TextStyle(
-                                fontFamily: "Zona",
-                                fontSize: heightSize(2),
-                                color: MyColors().greyTextColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: heightSize(1),
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Icon(
-                              Icons.location_on,
-                              color: MyColors().greyTextColor,
-                            ),
-                            SizedBox(
-                              width: widthSize(1),
-                            ),
-                            Text(
-                              location + "/$city",
-                              style: TextStyle(
-                                fontFamily: "Zona",
-                                fontSize: heightSize(2),
-                                color: MyColors().greyTextColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: heightSize(2.5),
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );
@@ -319,11 +76,12 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                                       ),
                               itemCount: listofMaps.length,
                               itemBuilder: (context, index) {
-                                return eventItem(listofMaps[index]);
+                                return eventItem(
+                                    context, listofMaps[index], true);
                               });
                         }
                       } else
-                        return PageComponents()
+                        return PageComponents(context)
                             .loadingCustomOverlay(500, Colors.white);
                     })),
           ),

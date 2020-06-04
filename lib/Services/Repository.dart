@@ -103,6 +103,10 @@ class EventService with ChangeNotifier {
     return await firebaseDatabaseWorks.joinEvent(userID, eventID);
   }
 
+  Future<bool> deleteEvent(String eventID) {
+    return firebaseDatabaseWorks.deleteEvent(eventID);
+  }
+
   //ANCHOR Etkinlik oluşturur
   Future<bool> createEvent(
       String userId, Map<String, dynamic> eventData, Uint8List image) async {

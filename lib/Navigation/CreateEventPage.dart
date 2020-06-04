@@ -85,12 +85,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
   }
 
   @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     localizations = MaterialLocalizations.of(context);
     return Scaffold(
@@ -101,7 +95,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
               ] +
               (loadingOverLay
                   ? <Widget>[
-                      PageComponents().loadingOverlay(context, Colors.white)
+                      PageComponents(context).loadingOverlay(Colors.white)
                     ]
                   : <Widget>[]),
         ));

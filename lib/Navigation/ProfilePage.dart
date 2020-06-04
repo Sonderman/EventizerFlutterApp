@@ -105,7 +105,7 @@ class _ProfilePageState extends State<ProfilePage>
               );
             } else
               return Center(
-                child: PageComponents().loadingOverlay(context, Colors.white),
+                child: PageComponents(context).loadingOverlay(Colors.white),
               );
           });
     } else {

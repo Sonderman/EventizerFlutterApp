@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class PageComponents {
-  double heightSize(BuildContext context, double value) {
+  final BuildContext context;
+  PageComponents(this.context);
+
+  double heightSize(double value) {
     value /= 100;
     return MediaQuery.of(context).size.height * value;
   }
 
-  double widthSize(BuildContext context, double value) {
+  double widthSize(double value) {
     value /= 100;
     return MediaQuery.of(context).size.width * value;
   }
@@ -21,7 +24,7 @@ class PageComponents {
     );
   }
 
-  Widget loadingOverlay(BuildContext context, Color backgroundColor) {
+  Widget loadingOverlay(Color backgroundColor) {
     return Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -29,7 +32,7 @@ class PageComponents {
         child: SpinKitRing(size: 75, color: MyColors().blueThemeColor));
   }
 
-  Widget underConstruction(BuildContext context) {
+  Widget underConstruction() {
     return Padding(
       padding: const EdgeInsets.all(20),
       child: ClipRRect(
@@ -37,7 +40,7 @@ class PageComponents {
           Radius.circular(20),
         ),
         child: Container(
-          height: heightSize(context, 70),
+          height: heightSize(70),
           child: Image.asset("assets/images/underConstruction.jpg"),
         ),
       ),

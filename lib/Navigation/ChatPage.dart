@@ -77,7 +77,7 @@ class _ChatPageState extends State<ChatPage> {
                   .getUserChatsSnapshot(userService.userModel.getUserId()),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return PageComponents().loadingOverlay(context, Colors.white);
+                  return PageComponents(context).loadingOverlay(Colors.white);
                 } else {
                   List<DocumentSnapshot> items = snapshot.data.documents;
                   int itemLength = items.length;
@@ -199,8 +199,9 @@ class _ChatPageState extends State<ChatPage> {
                                 case ConnectionState.none:
                                   return Center(child: Text("Hata"));
                                 case ConnectionState.waiting:
-                                  return PageComponents().loadingCustomOverlay(
-                                      40, MyColors().blueThemeColor);
+                                  return PageComponents(context)
+                                      .loadingCustomOverlay(
+                                          40, MyColors().blueThemeColor);
                                 default:
                                   return Center(
                                       child: Text("Beklenmedik durum"));

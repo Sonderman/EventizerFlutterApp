@@ -29,7 +29,7 @@ class _OldChatsPageState extends State<OldChatsPage> {
             .getUserChatsSnapshot(userService.userModel.getUserId()),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return PageComponents().loadingOverlay(context, Colors.white);
+            return PageComponents(context).loadingOverlay(Colors.white);
           } else {
             List<DocumentSnapshot> items = snapshot.data.documents;
             int itemLength = items.length;
@@ -79,8 +79,8 @@ class _OldChatsPageState extends State<OldChatsPage> {
                       case ConnectionState.none:
                         return Text("Hata");
                       case ConnectionState.waiting:
-                        return PageComponents()
-                            .loadingOverlay(context, Colors.white);
+                        return PageComponents(context)
+                            .loadingOverlay(Colors.white);
                       default:
                         return Text("Beklenmedik durum");
                     }

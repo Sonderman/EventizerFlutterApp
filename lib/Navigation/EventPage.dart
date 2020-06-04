@@ -1,4 +1,4 @@
-import 'package:eventizer/Navigation/CommentsPageDetails/CommentsPageDetails.dart';
+import 'package:eventizer/Navigation/Components/CommentsPageDetails.dart';
 import 'package:eventizer/Navigation/ProfilePage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
@@ -269,7 +269,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                               jsonData: snapshot.data[index]);
                         });
                 } else
-                  return PageComponents().loadingOverlay(context, Colors.white);
+                  return PageComponents(context).loadingOverlay(Colors.white);
               }),
         ),
         SizedBox(
