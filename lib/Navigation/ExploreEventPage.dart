@@ -1,7 +1,9 @@
 import 'package:eventizer/Navigation/Components/Event_Item.dart';
 import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/Settings/EventSettings.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
+import 'package:eventizer/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +23,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
     return MediaQuery.of(context).size.width * value;
   }
 
+  String category;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +33,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             // textField(),
-            categoryList(),
+            subCategoryList(),
             Expanded(child: eventList()),
           ],
         ),
@@ -40,7 +43,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
 
   Widget eventList() {
     var _eventManager = Provider.of<EventService>(context);
-    String category;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -49,7 +52,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
           SizedBox(
             height: heightSize(5),
           ),
-          popularEventsText(),
+          displayedCategoryTitle(),
           SizedBox(
             height: heightSize(2),
           ),
@@ -93,16 +96,16 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
     );
   }
 
-  Widget popularEventsText() {
+  Widget displayedCategoryTitle() {
     return RichText(
       text: TextSpan(
         children: <TextSpan>[
           TextSpan(
-            text: "En Yeni",
+            text: category != null ? category : "En Yeni ",
             style: TextStyle(fontFamily: "Zona", fontSize: heightSize(3)),
           ),
           TextSpan(
-            text: " Etkinlikler",
+            text: category != null ? "Etkinlikleri" : "Etkinlikler",
             style: TextStyle(fontFamily: "ZonaLight", fontSize: heightSize(3)),
           ),
         ],
@@ -110,7 +113,8 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
     );
   }
 
-  Widget categoryList() {
+  Widget subCategoryList() {
+    print(locator<EventSettings>().subCategoryItems);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -123,21 +127,28 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: <Widget>[
-                Container(
-                  width: widthSize(20),
-                  height: heightSize(8),
-                  decoration: new BoxDecoration(
-                    color: MyColors().lightBlueContainer,
-                    borderRadius: new BorderRadius.all(
-                      Radius.circular(20),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      category = null;
+                    });
+                  },
+                  child: Container(
+                    width: widthSize(20),
+                    height: heightSize(8),
+                    decoration: new BoxDecoration(
+                      color: MyColors().lightBlueContainer,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
                     ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Hepsi",
-                      style: TextStyle(
-                        fontFamily: "Zona",
-                        color: MyColors().whiteTextColor,
+                    child: Center(
+                      child: Text(
+                        "Hepsi",
+                        style: TextStyle(
+                          fontFamily: "Zona",
+                          color: MyColors().whiteTextColor,
+                        ),
                       ),
                     ),
                   ),
@@ -145,34 +156,42 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                 SizedBox(
                   width: widthSize(2),
                 ),
-                Container(
-                  width: widthSize(40),
-                  height: heightSize(8),
-                  decoration: new BoxDecoration(
-                    color: MyColors().purpleContainer,
-                    borderRadius: new BorderRadius.all(
-                      Radius.circular(20),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      category =
+                          locator<EventSettings>().subCategoryItems[1][0];
+                    });
+                  },
+                  child: Container(
+                    width: widthSize(40),
+                    height: heightSize(8),
+                    decoration: new BoxDecoration(
+                      color: MyColors().purpleContainer,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
                     ),
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Container(
-                            height: heightSize(4),
-                            child: Image.asset(
-                                "assets/icons/birthdayCategory.png"),
-                          ),
-                          Text(
-                            "Doğum Günü",
-                            style: TextStyle(
-                              fontFamily: "Zona",
-                              color: MyColors().whiteTextColor,
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Container(
+                              height: heightSize(4),
+                              child: Image.asset(
+                                  "assets/icons/birthdayCategory.png"),
                             ),
-                          ),
-                        ],
+                            Text(
+                              "Doğum Günü",
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                color: MyColors().whiteTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -180,28 +199,119 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                 SizedBox(
                   width: widthSize(2),
                 ),
-                Container(
-                  width: widthSize(40),
-                  height: heightSize(8),
-                  decoration: new BoxDecoration(
-                    color: MyColors().purpleContainer,
-                    borderRadius: new BorderRadius.all(
-                      Radius.circular(20),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      category =
+                          locator<EventSettings>().subCategoryItems[2][0];
+                    });
+                  },
+                  child: Container(
+                    width: widthSize(40),
+                    height: heightSize(8),
+                    decoration: new BoxDecoration(
+                      color: MyColors().purpleContainer,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Container(
+                              height: heightSize(4),
+                              child: Image.asset(
+                                  "assets/icons/travelCategory.png"),
+                            ),
+                            Text(
+                              "Yurt İçi Gezi",
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                color: MyColors().whiteTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                ),
+                SizedBox(
+                  width: widthSize(2),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      category =
+                          locator<EventSettings>().subCategoryItems[2][1];
+                    });
+                  },
+                  child: Container(
+                    width: widthSize(40),
+                    height: heightSize(8),
+                    decoration: new BoxDecoration(
+                      color: MyColors().purpleContainer,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Container(
+                              height: heightSize(4),
+                              child: Image.asset(
+                                  "assets/icons/worldtravelCategory.png"),
+                            ),
+                            Text(
+                              "Yurtdışı Gezisi",
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                color: MyColors().whiteTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: widthSize(2),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      category =
+                          locator<EventSettings>().subCategoryItems[3][1];
+                    });
+                  },
+                  child: Container(
+                    width: widthSize(50),
+                    height: heightSize(8),
+                    decoration: new BoxDecoration(
+                      color: MyColors().purpleContainer,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                    child: Center(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Container(
                             height: heightSize(4),
                             child:
-                                Image.asset("assets/icons/travelCategory.png"),
+                                Image.asset("assets/icons/cameraCategory.png"),
                           ),
                           Text(
-                            "Gezi Turu",
+                            "Doğa Fotoğraflama",
                             style: TextStyle(
                               fontFamily: "Zona",
                               color: MyColors().whiteTextColor,
@@ -215,100 +325,42 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                 SizedBox(
                   width: widthSize(2),
                 ),
-                Container(
-                  width: widthSize(40),
-                  height: heightSize(8),
-                  decoration: new BoxDecoration(
-                    color: MyColors().purpleContainer,
-                    borderRadius: new BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Container(
-                            height: heightSize(4),
-                            child: Image.asset(
-                                "assets/icons/worldtravelCategory.png"),
-                          ),
-                          Text(
-                            "Dünya Turu",
-                            style: TextStyle(
-                              fontFamily: "Zona",
-                              color: MyColors().whiteTextColor,
-                            ),
-                          ),
-                        ],
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      category =
+                          locator<EventSettings>().subCategoryItems[1][2];
+                    });
+                  },
+                  child: Container(
+                    width: widthSize(40),
+                    height: heightSize(8),
+                    decoration: new BoxDecoration(
+                      color: MyColors().purpleContainer,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
                       ),
                     ),
-                  ),
-                ),
-                SizedBox(
-                  width: widthSize(2),
-                ),
-                Container(
-                  width: widthSize(50),
-                  height: heightSize(8),
-                  decoration: new BoxDecoration(
-                    color: MyColors().purpleContainer,
-                    borderRadius: new BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Container(
-                          height: heightSize(4),
-                          child: Image.asset("assets/icons/cameraCategory.png"),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Container(
+                              height: heightSize(4),
+                              child: Image.asset(
+                                  "assets/icons/conferenceCategory.png"),
+                            ),
+                            Text(
+                              "Konferans",
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                color: MyColors().whiteTextColor,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          "Doğa Fotoğrafçılığı",
-                          style: TextStyle(
-                            fontFamily: "Zona",
-                            color: MyColors().whiteTextColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: widthSize(2),
-                ),
-                Container(
-                  width: widthSize(40),
-                  height: heightSize(8),
-                  decoration: new BoxDecoration(
-                    color: MyColors().purpleContainer,
-                    borderRadius: new BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Container(
-                            height: heightSize(4),
-                            child: Image.asset(
-                                "assets/icons/conferenceCategory.png"),
-                          ),
-                          Text(
-                            "Konferans",
-                            style: TextStyle(
-                              fontFamily: "Zona",
-                              color: MyColors().whiteTextColor,
-                            ),
-                          ),
-                        ],
                       ),
                     ),
                   ),
@@ -316,33 +368,42 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                 SizedBox(
                   width: widthSize(2),
                 ),
-                Container(
-                  width: widthSize(30),
-                  height: heightSize(8),
-                  decoration: new BoxDecoration(
-                    color: MyColors().purpleContainer,
-                    borderRadius: new BorderRadius.all(
-                      Radius.circular(20),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      category =
+                          locator<EventSettings>().subCategoryItems[1][3];
+                    });
+                  },
+                  child: Container(
+                    width: widthSize(30),
+                    height: heightSize(8),
+                    decoration: new BoxDecoration(
+                      color: MyColors().purpleContainer,
+                      borderRadius: new BorderRadius.all(
+                        Radius.circular(20),
+                      ),
                     ),
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Container(
-                            height: heightSize(4),
-                            child: Image.asset("assets/icons/campCategory.png"),
-                          ),
-                          Text(
-                            "Kamp",
-                            style: TextStyle(
-                              fontFamily: "Zona",
-                              color: MyColors().whiteTextColor,
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Container(
+                              height: heightSize(4),
+                              child:
+                                  Image.asset("assets/icons/campCategory.png"),
                             ),
-                          ),
-                        ],
+                            Text(
+                              "Kamp",
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                color: MyColors().whiteTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -358,7 +419,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
     );
   }
 
-  Widget textField() {
+  Widget searchField() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15),
       child: Container(

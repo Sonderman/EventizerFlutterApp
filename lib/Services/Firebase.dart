@@ -281,14 +281,14 @@ class DatabaseWorks {
   }
 
   Future<List<Map<String, dynamic>>> fetchActiveEventListsByCategory(
-      String category) async {
+      String subCategory) async {
     try {
       List<Map<String, dynamic>> eventList = [];
       return await ref
           .collection(settings.appName)
           .document(settings.getServer())
           .collection("Events")
-          .where("Category", isEqualTo: category)
+          .where("SubCategory", isEqualTo: subCategory)
           .where("Status", isEqualTo: "Accepted")
           .getDocuments()
           .then((docs) {
