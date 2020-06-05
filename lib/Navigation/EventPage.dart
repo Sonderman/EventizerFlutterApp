@@ -377,6 +377,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
       onPressed: () {
         //ANCHOR kullanıcı profiline buradan gidiyor
         NavigationManager(context).pushPage(ProfilePage(
+          key: UniqueKey(),
           userID: widget.eventData["OrganizerID"],
           isFromEvent: true,
         ));

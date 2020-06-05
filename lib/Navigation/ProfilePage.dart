@@ -64,7 +64,7 @@ class _ProfilePageState extends State<ProfilePage>
     } else {
       isThisProfileMine = true;
       _tabController = TabController(length: 1, vsync: this);
-      userModel = User(userID: widget.userID);
+      userModel = userService.userModel;
     }
   }
 
@@ -311,7 +311,7 @@ class _ProfilePageState extends State<ProfilePage>
                   onTap: () {
                     NavigationManager(context).pushPage(MyEventsPage(
                       isOld: false,
-                      userID: null,
+                      userID: widget.isFromEvent ? widget.userID : null,
                     ));
                   },
                   child: Container(
@@ -350,7 +350,7 @@ class _ProfilePageState extends State<ProfilePage>
                   onTap: () {
                     NavigationManager(context).pushPage(MyEventsPage(
                       isOld: true,
-                      userID: null,
+                      userID: widget.isFromEvent ? widget.userID : null,
                     ));
                   },
                   child: Container(
@@ -418,7 +418,7 @@ class _ProfilePageState extends State<ProfilePage>
             Column(
               children: <Widget>[
                 Text(
-                  "TAKİP \n EDEN",
+                  "TAKİPÇİ",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: MyColors().blueTextColor,
@@ -436,7 +436,7 @@ class _ProfilePageState extends State<ProfilePage>
             ),
             Column(
               children: <Widget>[
-                Text("TAKİP \n EDİLEN",
+                Text("TAKİP",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: MyColors().blueTextColor,
@@ -516,10 +516,10 @@ class _ProfilePageState extends State<ProfilePage>
                             ),
                             Spacer(),
                             Text(
-                              amIFollowing ? "Takibi \nBırak" : "Takip \nEt",
+                              amIFollowing ? "Takibi Bırak" : "Takip Et",
                               style: TextStyle(
                                 fontFamily: "Zona",
-                                fontSize: heightSize(2),
+                                fontSize: widthSize(3),
                                 color: MyColors().whiteTextColor,
                               ),
                             ),

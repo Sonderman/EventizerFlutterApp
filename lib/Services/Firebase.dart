@@ -76,18 +76,7 @@ class DatabaseWorks {
 
   Future<bool> followToggle(String userID, String otherUserID) async {
     bool issuccesfull = false;
-    int followerCounter = 0;
     try {
-      await ref
-          .collection(settings.appName)
-          .document(settings.getServer())
-          .collection("users")
-          .document(otherUserID)
-          .get()
-          .then((value) {
-        followerCounter = value.data["Nof_follower"] ?? 0;
-      });
-
       return await ref
           .collection(settings.appName)
           .document(settings.getServer())
@@ -113,15 +102,20 @@ class DatabaseWorks {
                 .document(otherUserID)
                 .collection('followers')
                 .document(userID));
-
-            if (followerCounter > 0)
-              await transaction.update(
-                  ref
-                      .collection(settings.appName)
-                      .document(settings.getServer())
-                      .collection('users')
-                      .document(otherUserID),
-                  {"Nof_follower": followerCounter - 1});
+            await transaction.update(
+                ref
+                    .collection(settings.appName)
+                    .document(settings.getServer())
+                    .collection('users')
+                    .document(otherUserID),
+                {"Nof_follower": FieldValue.increment(-1)});
+            await transaction.update(
+                ref
+                    .collection(settings.appName)
+                    .document(settings.getServer())
+                    .collection('users')
+                    .document(userID),
+                {"Nof_following": FieldValue.increment(-1)});
           }).whenComplete(() {
             print("Takipten çıkıldı");
             issuccesfull = true;
@@ -154,7 +148,14 @@ class DatabaseWorks {
                     .document(settings.getServer())
                     .collection('users')
                     .document(otherUserID),
-                {"Nof_follower": followerCounter + 1});
+                {"Nof_follower": FieldValue.increment(1)});
+            await transaction.update(
+                ref
+                    .collection(settings.appName)
+                    .document(settings.getServer())
+                    .collection('users')
+                    .document(userID),
+                {"Nof_following": FieldValue.increment(1)});
           }).whenComplete(() {
             print("Takip Ediliyor");
             issuccesfull = true;
