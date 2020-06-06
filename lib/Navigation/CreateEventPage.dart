@@ -119,7 +119,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
               width: widthSize(100),
               height: heightSize(25),
               child: _image == null
-                  //NOTE Default "Event Image" must will be change.
                   ? Image.asset('assets/images/etkinlik.png', fit: BoxFit.fill)
                   : Image.memory(
                       _image,

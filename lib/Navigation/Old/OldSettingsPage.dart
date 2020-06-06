@@ -690,10 +690,11 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                         padding: const EdgeInsets.all(8.0),
                         child: MaterialButton(
                           onPressed: () async {
+/*
                             if (await userWorker.updateProfilePhoto(_image)) {
                               print("foto güncellendi");
                               triggerToast = true;
-                            }
+                            }*/
                             if (controllerAd.text !=
                                 userWorker.userModel.getUserName()) {
                               userWorker.updateSingleInfo(

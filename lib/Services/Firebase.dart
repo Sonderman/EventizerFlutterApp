@@ -690,7 +690,7 @@ class StorageWorks {
     print("StorageWorks locator running");
   }
 
-  Future<bool> updateProfilePhoto(String userId, File image) async {
+  Future<bool> updateProfilePhoto(String userId, Uint8List image) async {
     if (image == null) {
       print("image null");
     }
@@ -700,7 +700,7 @@ class StorageWorks {
         .child('images')
         .child('profile')
         .child('ProfileImage')
-        .putFile(image);
+        .putData(image);
 
     try {
       return await uploadTask.onComplete.then((value) async {

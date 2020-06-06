@@ -25,7 +25,7 @@ class _ImageEditorState extends State<ImageEditorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("image editor"),
+        title: Text("Image Editor"),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.done),

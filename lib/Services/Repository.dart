@@ -41,7 +41,7 @@ class UserService with ChangeNotifier {
     return firebaseDatabaseWorks.findUserbyID(userID);
   }
 
-  Future<bool> updateProfilePhoto(File image) async {
+  Future<bool> updateProfilePhoto(Uint8List image) async {
     if (image == null) return false;
     return await firebaseStorageWorks.updateProfilePhoto(
             userModel.userID, image) ??
@@ -73,8 +73,8 @@ class UserService with ChangeNotifier {
         userModel.userID, otherUserID);
   }
 
-  Future<String> registerUser(
-      String eposta, String sifre, List<String> datalist, File image) async {
+  Future<String> registerUser(String eposta, String sifre,
+      List<String> datalist, Uint8List image) async {
     Map<String, dynamic> data = {
       "Name": datalist[0],
       "Surname": datalist[1],

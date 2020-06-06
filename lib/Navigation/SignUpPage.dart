@@ -1,12 +1,11 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 import 'package:eventizer/Navigation/HomePage.dart';
-import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/Tools/ImageEditor.dart';
 import 'package:eventizer/Tools/loading.dart';
 import 'package:eventizer/assets/Colors.dart';
-import 'package:eventizer/locator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,7 +27,7 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController mailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController password2Controller = TextEditingController();
-  File _image;
+  Uint8List _image;
   bool loading = false;
   String _name, _surname, _phoneNumber, _country, _birthday;
   bool _gender;
@@ -45,21 +44,29 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   // ANCHOR kameradan foto almaya yarar
-  Future _getImageFromCamera() async {
-    var image = await ImagePicker.pickImage(
-      source: ImageSource.camera,
-    );
-    setState(() {
-      _image = image;
-    });
+  Future<Uint8List> _getImageFromCamera() async {
+    File image = await ImagePicker.pickImage(source: ImageSource.camera);
+    if (image != null)
+      return Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => ImageEditorPage(image)))
+          .then((value) => value);
+    else
+      return null;
   }
 
 // ANCHOR galeriden foto almaya yarar
-  Future _getImageFromGalery() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _image = image;
-    });
+  Future<Uint8List> _getImageFromGallery() async {
+    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (image != null)
+      return Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => ImageEditorPage(image)))
+          .then((value) => value);
+    else
+      return null;
   }
 
   @override
@@ -134,8 +141,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                       onTap: () {
-                        _getImageFromGalery().whenComplete(() {
-                          Navigator.pop(context);
+                        _getImageFromGallery().then((value) {
+                          setState(() {
+                            _image = value;
+                            Navigator.pop(context);
+                          });
                         });
                       }),
                   Padding(
@@ -151,8 +161,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                       onTap: () {
-                        _getImageFromCamera().whenComplete(() {
-                          Navigator.pop(context);
+                        _getImageFromCamera().then((value) {
+                          setState(() {
+                            _image = value;
+                            Navigator.pop(context);
+                          });
                         });
                       }),
                 ],
@@ -244,7 +257,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   height: heightSize(5),
                 )
               : ClipOval(
-                  child: Image.file(
+                  child: Image.memory(
                     _image,
                     width: widthSize(30),
                     height: widthSize(30),

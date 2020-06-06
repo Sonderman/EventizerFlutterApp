@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:eventizer/Models/UserModel.dart';
 import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/Tools/ImageEditor.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/Tools/loading.dart';
 import 'package:eventizer/assets/Colors.dart';
@@ -25,7 +27,7 @@ class _SettingsPageState extends State<SettingsPage> {
   TextEditingController mailController = TextEditingController();
   TextEditingController detailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  File _image;
+  Uint8List _image;
   bool loading = false;
   String _name, _surname, _phoneNumber, _country, _city;
 
@@ -54,22 +56,6 @@ class _SettingsPageState extends State<SettingsPage> {
   double widthSize(double value) {
     value /= 100;
     return MediaQuery.of(context).size.width * value;
-  }
-
-  // ANCHOR kameradan foto almaya yarar
-  Future _getImageFromCamera() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
-    setState(() {
-      _image = image;
-    });
-  }
-
-// ANCHOR galeriden foto almaya yarar
-  Future _getImageFromGallery() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _image = image;
-    });
   }
 
   @override
@@ -151,6 +137,32 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+// ANCHOR kameradan foto almaya yarar
+  Future<Uint8List> _getImageFromCamera() async {
+    File image = await ImagePicker.pickImage(source: ImageSource.camera);
+    if (image != null)
+      return Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => ImageEditorPage(image)))
+          .then((value) => value);
+    else
+      return null;
+  }
+
+// ANCHOR galeriden foto almaya yarar
+  Future<Uint8List> _getImageFromGallery() async {
+    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (image != null)
+      return Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => ImageEditorPage(image)))
+          .then((value) => value);
+    else
+      return null;
+  }
+
   Future<void> _showChoiceDialog(BuildContext context) {
     return showDialog(
         context: context,
@@ -163,8 +175,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   GestureDetector(
                       child: Text('Galeri'),
                       onTap: () {
-                        _getImageFromGallery().whenComplete(() {
-                          Navigator.pop(context);
+                        _getImageFromGallery().then((value) {
+                          setState(() {
+                            _image = value;
+                            Navigator.pop(context);
+                          });
                         });
                       }),
                   Padding(
@@ -173,8 +188,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   GestureDetector(
                       child: Text('Kamera'),
                       onTap: () {
-                        _getImageFromCamera().whenComplete(() {
-                          Navigator.pop(context);
+                        _getImageFromCamera().then((value) {
+                          setState(() {
+                            _image = value;
+                            Navigator.pop(context);
+                          });
                         });
                       }),
                 ],
@@ -235,7 +253,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   fit: BoxFit.cover,
                   image: _image == null
                       ? NetworkImage(userModel.getUserProfilePhotoUrl())
-                      : FileImage(_image))),
+                      : MemoryImage(_image))),
         ),
       ),
     );
