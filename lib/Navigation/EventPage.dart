@@ -1,4 +1,5 @@
 import 'package:eventizer/Navigation/Components/CommentsPageDetails.dart';
+import 'package:eventizer/Navigation/Components/CustomScroll.dart';
 import 'package:eventizer/Navigation/ProfilePage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/ImageViewer.dart';
@@ -108,42 +109,45 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
               ),
               Expanded(
                 child: TabBarView(controller: _tabController, children: [
-                  SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: heightSize(2),
-                        ),
-                        userPhotoAndName(),
-                        divider(),
-                        SizedBox(
-                          height: heightSize(2),
-                        ),
-                        eventPhotoAndTitle(),
-                        SizedBox(
-                          height: heightSize(2),
-                        ),
-                        locationCityCountryColumn(),
-                        SizedBox(
-                          height: heightSize(2),
-                        ),
-                        dateAndDetails(),
-                        SizedBox(
-                          height: heightSize(2),
-                        ),
-                        genderAndParticipantsBoxes(),
-                        SizedBox(
-                          height: heightSize(2),
-                        ),
-                        categoryColumn(),
-                        SizedBox(
-                          height: heightSize(2),
-                        ),
-                        mapAndJoin(),
-                        SizedBox(
-                          height: heightSize(5),
-                        ),
-                      ],
+                  ScrollConfiguration(
+                    behavior: NoScrollEffectBehavior(),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: heightSize(2),
+                          ),
+                          userPhotoAndName(),
+                          divider(),
+                          SizedBox(
+                            height: heightSize(2),
+                          ),
+                          eventPhotoAndTitle(),
+                          SizedBox(
+                            height: heightSize(2),
+                          ),
+                          locationCityCountryColumn(),
+                          SizedBox(
+                            height: heightSize(2),
+                          ),
+                          dateAndDetails(),
+                          SizedBox(
+                            height: heightSize(2),
+                          ),
+                          genderAndParticipantsBoxes(),
+                          SizedBox(
+                            height: heightSize(2),
+                          ),
+                          categoryColumn(),
+                          SizedBox(
+                            height: heightSize(2),
+                          ),
+                          mapAndJoin(),
+                          SizedBox(
+                            height: heightSize(5),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   //ANCHOR Comments page
@@ -204,7 +208,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                                 Container(
                                   height: heightSize(7),
                                   width: widthSize(14),
-                                  decoration: new BoxDecoration(
+                                  decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     image: DecorationImage(
                                       fit: BoxFit.cover,
@@ -231,7 +235,8 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                         ),
                       );
                     } else {
-                      return CircularProgressIndicator();
+                      return PageComponents(context)
+                          .loadingCustomOverlay(spinSize: 40);
                     }
                   },
                 );
@@ -239,7 +244,8 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             );
           }
         } else {
-          return CircularProgressIndicator();
+          return PageComponents(context)
+              .loadingOverlay(backgroundColor: Colors.white);
         }
       },
     );
@@ -270,7 +276,8 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                               jsonData: snapshot.data[index]);
                         });
                 } else
-                  return PageComponents(context).loadingOverlay(Colors.white);
+                  return PageComponents(context)
+                      .loadingOverlay(backgroundColor: Colors.white);
               }),
         ),
         SizedBox(
@@ -467,11 +474,11 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             child: Container(
               color: MyColors().blackOpacityContainer,
               width: widthSize(100),
-              height: heightSize(25),
+              height: widthSize(100) * (9 / 16),
               child: Hero(
                 tag: widget.eventData['EventImageUrl'],
                 child: FadeInImage.assetNetwork(
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                     placeholder: 'assets/images/etkinlik.jpg',
                     image: widget.eventData['EventImageUrl']),
               ),

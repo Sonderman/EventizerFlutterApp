@@ -95,7 +95,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
               ] +
               (loadingOverLay
                   ? <Widget>[
-                      PageComponents(context).loadingOverlay(Colors.white)
+                      PageComponents(context)
+                          .loadingOverlay(backgroundColor: Colors.white)
                     ]
                   : <Widget>[]),
         ));
@@ -117,9 +118,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
             child: Container(
               color: MyColors().blackOpacityContainer,
               width: widthSize(100),
-              height: heightSize(25),
+              height: widthSize(100) * (9 / 16),
               child: _image == null
-                  ? Image.asset('assets/images/etkinlik.png', fit: BoxFit.fill)
+                  ? Image.asset('assets/images/etkinlik.png', fit: BoxFit.cover)
                   : Image.memory(
                       _image,
                       fit: BoxFit.fill,
@@ -949,10 +950,12 @@ class _CreateEventPageState extends State<CreateEventPage> {
     await ImagePicker.pickImage(source: ImageSource.camera).then((image) {
       if (image != null) {
         Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => ImageEditorPage(image)))
-            .then((editedImage) {
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => ImageEditorPage(
+                      image: image,
+                      forCreateEvent: true,
+                    ))).then((editedImage) {
           setState(() {
             _image = editedImage;
           });
@@ -965,10 +968,12 @@ class _CreateEventPageState extends State<CreateEventPage> {
     await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {
       if (image != null) {
         Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => ImageEditorPage(image)))
-            .then((editedImage) {
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => ImageEditorPage(
+                      image: image,
+                      forCreateEvent: true,
+                    ))).then((editedImage) {
           setState(() {
             _image = editedImage;
           });

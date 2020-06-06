@@ -108,7 +108,8 @@ class _ProfilePageState extends State<ProfilePage>
               );
             } else
               return Center(
-                child: PageComponents(context).loadingOverlay(Colors.white),
+                child: PageComponents(context)
+                    .loadingOverlay(backgroundColor: Colors.white),
               );
           });
     } else {

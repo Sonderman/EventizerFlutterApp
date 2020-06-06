@@ -142,10 +142,12 @@ class _SettingsPageState extends State<SettingsPage> {
     File image = await ImagePicker.pickImage(source: ImageSource.camera);
     if (image != null)
       return Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => ImageEditorPage(image)))
-          .then((value) => value);
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => ImageEditorPage(
+                    image: image,
+                    forCreateEvent: false,
+                  ))).then((value) => value);
     else
       return null;
   }
@@ -155,10 +157,12 @@ class _SettingsPageState extends State<SettingsPage> {
     File image = await ImagePicker.pickImage(source: ImageSource.gallery);
     if (image != null)
       return Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => ImageEditorPage(image)))
-          .then((value) => value);
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => ImageEditorPage(
+                    image: image,
+                    forCreateEvent: false,
+                  ))).then((value) => value);
     else
       return null;
   }

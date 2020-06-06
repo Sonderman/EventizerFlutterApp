@@ -48,10 +48,12 @@ class _SignUpPageState extends State<SignUpPage> {
     File image = await ImagePicker.pickImage(source: ImageSource.camera);
     if (image != null)
       return Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => ImageEditorPage(image)))
-          .then((value) => value);
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => ImageEditorPage(
+                    image: image,
+                    forCreateEvent: false,
+                  ))).then((value) => value);
     else
       return null;
   }
@@ -61,10 +63,12 @@ class _SignUpPageState extends State<SignUpPage> {
     File image = await ImagePicker.pickImage(source: ImageSource.gallery);
     if (image != null)
       return Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => ImageEditorPage(image)))
-          .then((value) => value);
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => ImageEditorPage(
+                    image: image,
+                    forCreateEvent: false,
+                  ))).then((value) => value);
     else
       return null;
   }
@@ -134,11 +138,6 @@ class _SignUpPageState extends State<SignUpPage> {
                   GestureDetector(
                       child: Text(
                         'Galeri',
-                        style: TextStyle(
-                          fontSize: heightSize(2),
-                          fontFamily: "ZonaLight",
-                          color: MyColors().loginGreyColor,
-                        ),
                       ),
                       onTap: () {
                         _getImageFromGallery().then((value) {
@@ -154,11 +153,6 @@ class _SignUpPageState extends State<SignUpPage> {
                   GestureDetector(
                       child: Text(
                         'Kamera',
-                        style: TextStyle(
-                          fontSize: heightSize(2),
-                          fontFamily: "ZonaLight",
-                          color: MyColors().loginGreyColor,
-                        ),
                       ),
                       onTap: () {
                         _getImageFromCamera().then((value) {
@@ -706,7 +700,6 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  //ANCHOR cinsiyet seçildikten sonra container'lar siyah olsun mu?
   menColor() {
     return MyColors().blueContainer;
   }

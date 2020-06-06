@@ -73,7 +73,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                           return Center(child: Text("Etkinlik Yok"));
                         } else {
                           return ScrollConfiguration(
-                            behavior: MyBehavior(),
+                            behavior: NoScrollEffectBehavior(),
                             child: ListView.separated(
                                 separatorBuilder:
                                     //ANCHOR ayıraç burada
@@ -89,8 +89,9 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                           );
                         }
                       } else
-                        return PageComponents(context)
-                            .loadingCustomOverlay(500, Colors.white);
+                        return Center(
+                            child: PageComponents(context)
+                                .loadingCustomOverlay(spinColor: Colors.white));
                     })),
           ),
           SizedBox(

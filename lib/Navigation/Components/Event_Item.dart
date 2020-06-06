@@ -214,9 +214,9 @@ Widget eventItem(BuildContext context, Map<String, dynamic> eventDatas,
               ClipRRect(
                 borderRadius: BorderRadius.circular(15.0),
                 child: FadeInImage.assetNetwork(
-                  width: responsive.widthSize(80),
-                  height: responsive.heightSize(40),
-                  fit: BoxFit.cover,
+                  width: responsive.widthSize(100),
+                  height: responsive.widthSize(100) * (9 / 16),
+                  fit: BoxFit.fill,
                   placeholder: "assets/images/event_birthday.jpg",
                   image: imageUrl,
                 ),

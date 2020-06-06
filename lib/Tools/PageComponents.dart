@@ -16,20 +16,29 @@ class PageComponents {
     return MediaQuery.of(context).size.width * value;
   }
 
-  Widget loadingCustomOverlay(double size, Color color) {
+  Widget loadingCustomOverlay(
+      {double spinSize = 50,
+      double containerWidth = 50,
+      double containerHeight = 50,
+      Color spinColor = Colors.blue,
+      Color containerColor = Colors.transparent}) {
     return Container(
-      height: size,
-      width: size,
-      child: SpinKitRing(size: 75, color: color),
+      color: containerColor,
+      height: containerHeight,
+      width: containerWidth,
+      child: SpinKitRing(size: spinSize, color: spinColor),
     );
   }
 
-  Widget loadingOverlay(Color backgroundColor) {
+  Widget loadingOverlay(
+      {Color backgroundColor = Colors.transparent,
+      Color spinColor = Colors.blue,
+      double spinSize = 75}) {
     return Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         color: backgroundColor,
-        child: SpinKitRing(size: 75, color: MyColors().blueThemeColor));
+        child: SpinKitRing(size: spinSize, color: spinColor));
   }
 
   Widget underConstruction() {

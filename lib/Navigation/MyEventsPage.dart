@@ -1,3 +1,4 @@
+import 'package:eventizer/Navigation/Components/CustomScroll.dart';
 import 'package:eventizer/Navigation/Components/Event_Item.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
@@ -81,21 +82,23 @@ class _MyEventsPageState extends State<MyEventsPage> {
                       if (listofMaps.length == 0) {
                         return Center(child: Card(child: Text("Etkinlik Yok")));
                       } else {
-                        return ListView.separated(
-                            separatorBuilder:
-                                //ANCHOR ayıraç burada
-                                (BuildContext context, int index) => SizedBox(
-                                      height: heightSize(3),
-                                    ),
-                            itemCount: listofMaps.length,
-                            itemBuilder: (context, index) {
-                              return eventItem(
-                                  context, listofMaps[index], false);
-                            });
+                        return ScrollConfiguration(
+                          behavior: NoScrollEffectBehavior(),
+                          child: ListView.separated(
+                              separatorBuilder:
+                                  //ANCHOR ayıraç burada
+                                  (BuildContext context, int index) => SizedBox(
+                                        height: heightSize(3),
+                                      ),
+                              itemCount: listofMaps.length,
+                              itemBuilder: (context, index) {
+                                return eventItem(
+                                    context, listofMaps[index], false);
+                              }),
+                        );
                       }
                     } else
-                      return PageComponents(context)
-                          .loadingCustomOverlay(500, Colors.white);
+                      return PageComponents(context).loadingOverlay();
                   })),
         ],
       ),

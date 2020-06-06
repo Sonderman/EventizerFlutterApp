@@ -310,7 +310,10 @@ class _OldCreateEventState extends State<OldCreateEvent> {
               ),
             ] +
             (loadingOverLay
-                ? <Widget>[PageComponents(context).loadingOverlay(Colors.white)]
+                ? <Widget>[
+                    PageComponents(context)
+                        .loadingOverlay(backgroundColor: Colors.white)
+                  ]
                 : <Widget>[]),
       ),
     );
@@ -320,10 +323,12 @@ class _OldCreateEventState extends State<OldCreateEvent> {
     await ImagePicker.pickImage(source: ImageSource.camera).then((image) {
       if (image != null) {
         Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => ImageEditorPage(image)))
-            .then((editedImage) {
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => ImageEditorPage(
+                      image: image,
+                      forCreateEvent: true,
+                    ))).then((editedImage) {
           setState(() {
             _image = editedImage;
           });
@@ -336,10 +341,12 @@ class _OldCreateEventState extends State<OldCreateEvent> {
     await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {
       if (image != null) {
         Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => ImageEditorPage(image)))
-            .then((editedImage) {
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => ImageEditorPage(
+                      image: image,
+                      forCreateEvent: true,
+                    ))).then((editedImage) {
           setState(() {
             _image = editedImage;
           });

@@ -366,7 +366,10 @@ class _LoginPageState extends State<LoginPage> {
                 )
               ] +
               (_loading
-                  ? [PageComponents(context).loadingOverlay(Colors.white)]
+                  ? [
+                      PageComponents(context)
+                          .loadingOverlay(backgroundColor: Colors.white)
+                    ]
                   : [])),
     );
   }
