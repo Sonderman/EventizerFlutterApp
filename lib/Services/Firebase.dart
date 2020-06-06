@@ -38,6 +38,21 @@ class DatabaseWorks {
     print("DatabaseWorks locator running");
   }
 
+  Future<bool> newUser(Map<String, dynamic> data) async {
+    try {
+      return await ref
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .collection('users')
+          .document(data['UserID'])
+          .setData(data)
+          .then((value) => true);
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   Future<bool> userModelUpdater(User model) async {
     try {
       return await ref
@@ -679,9 +694,6 @@ class StorageWorks {
     if (image == null) {
       print("image null");
     }
-
-    String url;
-
     StorageUploadTask uploadTask = ref
         .child('users')
         .child(userId)
@@ -690,29 +702,21 @@ class StorageWorks {
         .child('ProfileImage')
         .putFile(image);
 
-    StreamSubscription<StorageTaskEvent> streamSubscription =
-        uploadTask.events.listen((event) {
-      print('UpdatingProfile Image :${event.type}');
-    });
-
-    return (await uploadTask.onComplete.then((onValue) {
-      onValue.ref.getDownloadURL().then((value) {
-        url = value.toString();
-        print("Url:" + url);
-      }).whenComplete(() {
-        Firestore.instance
-            .collection(settings.appName)
-            .document(settings.getServer())
-            .collection('users')
-            .document(userId)
-            .updateData({"ProfilePhotoUrl": url});
+    try {
+      return await uploadTask.onComplete.then((value) async {
+        return await value.ref.getDownloadURL().then((url) async {
+          return await Firestore.instance
+              .collection(settings.appName)
+              .document(settings.getServer())
+              .collection('users')
+              .document(userId)
+              .updateData({"ProfilePhotoUrl": url}).then((value) => true);
+        });
       });
-      return true;
-    }).whenComplete(() {
-      streamSubscription.cancel();
-    }).catchError((e) {
+    } catch (e) {
       print(e);
-    }));
+      return false;
+    }
   }
 
   Future sendImageMessage(File image, ChatUser user, String currentUser,

@@ -1,12 +1,13 @@
 import 'package:eventizer/Navigation/ForgetPassPage.dart';
 import 'package:eventizer/Navigation/Old/OldRegisterPage.dart';
-import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:eventizer/animations/FadeAnimation.dart';
+
+import '../../locator.dart';
 
 class OldLoginPage extends StatefulWidget {
   @override
@@ -33,8 +34,8 @@ class _OldLoginPageState extends State<OldLoginPage> {
   Future<void> validateAndSubmit(BuildContext context) async {
     if (validateAndSave()) {
       setState(() => _loading = true);
-      var auth = AuthService.of(context).auth;
-      userId = await auth.signIn(_email, _password);
+      var auth = locator<AuthService>().getUserUid();
+      userId = await locator<AuthService>().signIn(_email, _password);
       if (userId == null) {
         setState(() => _loading = false);
         Fluttertoast.showToast(
@@ -46,11 +47,11 @@ class _OldLoginPageState extends State<OldLoginPage> {
             textColor: Colors.white,
             fontSize: 18.0);
       } else {
-        UserService(userId).updateSingleInfo("LastLoggedIn", "timeStamp");
+        UserService().updateSingleInfo("LastLoggedIn", "timeStamp");
         print('Signed in: $userId');
 
         Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
+            MaterialPageRoute(builder: (BuildContext context) => null));
       }
     }
   }

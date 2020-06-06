@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
+enum AppState { running, waiting }
+
 class AppSettings with ChangeNotifier {
   String appName = "EventizerApp";
 
   // String _server = "Release";
   String _server = "Development";
   //String _server = "OpenTest";
+  AppState state = AppState.running;
   String getServer() => _server;
 
   int _bottomNavIndex = 2;

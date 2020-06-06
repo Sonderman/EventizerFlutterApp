@@ -1,3 +1,4 @@
+import 'package:eventizer/Navigation/Components/CustomScroll.dart';
 import 'package:eventizer/Navigation/Components/Event_Item.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Settings/EventSettings.dart';
@@ -71,17 +72,21 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         if (listofMaps.length == 0) {
                           return Center(child: Text("Etkinlik Yok"));
                         } else {
-                          return ListView.separated(
-                              separatorBuilder:
-                                  //ANCHOR ayıraç burada
-                                  (BuildContext context, int index) => SizedBox(
-                                        height: heightSize(3),
-                                      ),
-                              itemCount: listofMaps.length,
-                              itemBuilder: (context, index) {
-                                return eventItem(
-                                    context, listofMaps[index], true);
-                              });
+                          return ScrollConfiguration(
+                            behavior: MyBehavior(),
+                            child: ListView.separated(
+                                separatorBuilder:
+                                    //ANCHOR ayıraç burada
+                                    (BuildContext context, int index) =>
+                                        SizedBox(
+                                          height: heightSize(3),
+                                        ),
+                                itemCount: listofMaps.length,
+                                itemBuilder: (context, index) {
+                                  return eventItem(
+                                      context, listofMaps[index], true);
+                                }),
+                          );
                         }
                       } else
                         return PageComponents(context)

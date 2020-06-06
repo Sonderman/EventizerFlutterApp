@@ -10,6 +10,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:provider/provider.dart';
 
+import '../../locator.dart';
+
 class OldProfilePage extends StatefulWidget {
   final userID;
   final isFromEvent;
@@ -39,8 +41,8 @@ class _ProfilePageState extends State<OldProfilePage> {
   */
 
   Future<String> getUserEmail(BuildContext context) async {
-    var auth = AuthService.of(context).auth;
-    String userEmail = await auth.getUserEmail();
+    var auth = locator<AuthService>().getUserUid();
+    String userEmail = await locator<AuthService>().getUserEmail();
     return userEmail;
     //setState(() {});
   }

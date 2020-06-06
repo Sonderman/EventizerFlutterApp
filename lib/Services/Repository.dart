@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat/dash_chat.dart';
 import 'package:eventizer/Models/UserModel.dart';
+import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/Firebase.dart';
 import 'package:eventizer/locator.dart';
 import 'package:flutter/material.dart';
@@ -14,22 +14,17 @@ class UserService with ChangeNotifier {
   final DatabaseWorks firebaseDatabaseWorks = locator<DatabaseWorks>();
   final StorageWorks firebaseStorageWorks = locator<StorageWorks>();
 
-  //ANCHOR buradaki userId login işleminden sonraki authcheck de provider olusturulurken geliyor
-  UserService(String userId) {
-    userInitializer(userId);
-  }
-
-  void userInitializer(String userId) {
+  Future<bool> userInitializer(String userId) async {
     if (userId == null || userId == "") {
       userId = "0000000000000000";
       userModel = User(userID: userId);
+      return Future.value(false);
     } else {
       userModel = User(userID: userId);
-      userModelSync(userId);
+      return await userModelSync(userId);
     }
   }
 
-  //TODO - tüm veriler gelene kadar navigation işlemini bekletecek bir mekanizma yap
   Future<bool> userModelSync(String userId) async {
     try {
       return await firebaseDatabaseWorks.findUserbyID(userId).then((map) {
@@ -76,6 +71,48 @@ class UserService with ChangeNotifier {
   Future<bool> amIFollowing(String otherUserID) async {
     return await firebaseDatabaseWorks.amIFollowing(
         userModel.userID, otherUserID);
+  }
+
+  Future<String> registerUser(
+      String eposta, String sifre, List<String> datalist, File image) async {
+    Map<String, dynamic> data = {
+      "Name": datalist[0],
+      "Surname": datalist[1],
+      "Email": datalist[2],
+      "PhoneNumber": int.parse(datalist[3]),
+      "Gender": datalist[4],
+      "Country": datalist[5],
+      "BirthDay": datalist[6],
+      "NickName": datalist[7],
+      'Nof_follower': 0,
+      'Nof_following': 0,
+      'Nof_events': 0,
+      'Nof_trustPoint': 0,
+      //"ProfilePhotoUrl": "",
+      "RegisteredAt": FieldValue.serverTimestamp()
+    };
+    try {
+      AuthService auth = locator<AuthService>();
+      return await auth.signUp(eposta, sifre).then((userId) async {
+        if (userId != null) {
+          data['UserID'] = userId;
+
+          await firebaseDatabaseWorks.newUser(data).then((value) async {
+            if (value)
+              await firebaseStorageWorks.updateProfilePhoto(userId, image);
+          });
+
+          return userId;
+
+          //TODO -  release yaparken bunu açmayı unutma
+          //auth.sendEmailVerification();
+        } else
+          return null;
+      });
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 
   void refresh() {

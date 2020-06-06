@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:eventizer/Navigation/LoginPage.dart';
-import 'package:eventizer/Services/AuthCheck.dart';
-import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Tools/loading.dart';
 import 'package:eventizer/animations/FadeAnimation.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +23,7 @@ class _RegisterPageState extends State<RegisterPage2> {
   String _eposta;
   String _sifre;
 
-  LoginAndRegister loginAndRegister = LoginAndRegister();
+  // LoginAndRegister loginAndRegister = LoginAndRegister();
 
   void _validationToastMessage(String message) {
     Fluttertoast.showToast(
@@ -121,6 +119,7 @@ class _RegisterPageState extends State<RegisterPage2> {
       _eposta,
     ];
     print(datalist);
+/*
     await loginAndRegister
         .registerUser(context, _eposta, _sifre, datalist, _image)
         .whenComplete(() {
@@ -143,6 +142,7 @@ class _RegisterPageState extends State<RegisterPage2> {
         loading = false;
       });
     });
+*/
   }
 
   void emailVerifyToastMessage() {

@@ -1,12 +1,8 @@
 import 'dart:io';
-import 'package:eventizer/Services/AuthCheck.dart';
-import 'package:eventizer/Services/AuthService.dart';
-import 'package:eventizer/Services/BaseAuth.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:eventizer/assets/Sehirler.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_search_panel/flutter_search_panel.dart';
@@ -30,10 +26,10 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
   bool triggerToast = false;
 
   void _signedOut() {
-    var auth = AuthService.of(context).auth;
-    auth.signOut();
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
+    // var auth = AuthService.of(context).auth;
+    // auth.signOut();
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (BuildContext context) => null));
   }
 
   @override
@@ -103,10 +99,11 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                     onPressed: () {
                       triggerToast = false;
                       showDialog(
-                          context: context,
-                          builder: (context) {
-                            return myChangeEmailDialog(userWorker);
-                          }).whenComplete(() {
+                              context: context,
+                              builder: (context) {
+                                //   return myChangeEmailDialog(userWorker);
+                              })
+                          .whenComplete(() {
                         if (triggerToast) {
                           userWorker
                               .userModelSync(userWorker.userModel.getUserId());
@@ -133,10 +130,11 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                     onPressed: () {
                       triggerToast = false;
                       showDialog(
-                          context: context,
-                          builder: (newcontext) {
-                            return myUpdatePasswordDialog(userWorker);
-                          }).whenComplete(() {
+                              context: context,
+                              builder: (newcontext) {
+                                //     return myUpdatePasswordDialog(userWorker);
+                              })
+                          .whenComplete(() {
                         if (triggerToast) {
                           userWorker
                               .userModelSync(userWorker.userModel.getUserId());
@@ -161,6 +159,7 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
     );
   }
 
+/*
   AlertDialog myChangeEmailDialog(UserService userWorker) {
     final BaseAuth auth = AuthService.of(context).auth;
     FirebaseUser user;
@@ -284,9 +283,11 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
       );
     }));
   }
-
+*/
+/*
   AlertDialog myUpdatePasswordDialog(UserService userWorker) {
-    final BaseAuth auth = AuthService.of(context).auth;
+    final var auth ;
+   // = AuthService.of(context).auth;
     FirebaseUser user;
     TextEditingController controllerYeni2Password = TextEditingController();
     TextEditingController controllerYeniPassword = TextEditingController();
@@ -474,7 +475,7 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
       );
     }));
   }
-
+*/
   Widget updateMyPersonalInfoDialog(UserService userWorker) {
     File _image;
 

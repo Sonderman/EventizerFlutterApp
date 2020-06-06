@@ -1,11 +1,13 @@
+import 'package:eventizer/Navigation/HomePage.dart';
 import 'package:eventizer/Navigation/SignUpPage.dart';
-import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
+import 'package:eventizer/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -21,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   bool visiblePassword = true;
   bool showLogin = false;
   String sendPasswordMailText = "Giriş Yap";
-
+  UserService userService;
   PageController _pageController;
 
   @override
@@ -30,6 +32,12 @@ class _LoginPageState extends State<LoginPage> {
       initialPage: 0,
     );
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    userService = Provider.of<UserService>(context, listen: false);
+    super.didChangeDependencies();
   }
 
   @override
@@ -296,7 +304,6 @@ class _LoginPageState extends State<LoginPage> {
                 });
                 loginButton(context);
               } else {
-                debugPrint("mail gönderildi");
                 passwordReset(context);
               }
             },
@@ -364,9 +371,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  //ANCHOR All Gestures are start here
   Future<void> loginButton(BuildContext context) async {
-    var auth = AuthService.of(context).auth;
+    var auth = locator<AuthService>();
     userId = await auth.signIn(email.text, password.text);
     if (userId == null) {
       setState(() => _loading = false);
@@ -379,12 +385,14 @@ class _LoginPageState extends State<LoginPage> {
           textColor: Colors.white,
           fontSize: 18.0);
     } else {
-      if (await UserService(userId)
-          .updateSingleInfo("LastLoggedIn", "timeStamp")) {
-        print('Signed in: $userId');
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext context) => AuthCheck()));
-      }
+      userService.userInitializer(userId).whenComplete(() async {
+        await userService
+            .updateSingleInfo("LastLoggedIn", "timeStamp")
+            .whenComplete(() {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (BuildContext context) => HomePage()));
+        });
+      });
     }
   }
 
@@ -397,7 +405,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> passwordReset(BuildContext context) async {
-    var auth = AuthService.of(context).auth;
+    var auth = locator<AuthService>().getUserUid();
     //ANCHOR release yaparken açılacak
     //auth.sendPasswordResetEmail(email.text);
     debugPrint("şifre sıfırlama maili gönderildi");

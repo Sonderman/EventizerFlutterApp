@@ -1,15 +1,18 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:eventizer/Services/AuthCheck.dart';
+import 'package:eventizer/Navigation/HomePage.dart';
 import 'package:eventizer/Services/AuthService.dart';
+import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/loading.dart';
 import 'package:eventizer/assets/Colors.dart';
+import 'package:eventizer/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget {
   final PageController pageController;
@@ -22,11 +25,9 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final FirebaseAuth auth = FirebaseAuth.instance;
   TextEditingController mailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController password2Controller = TextEditingController();
-  LoginAndRegister loginAndRegister = LoginAndRegister();
   File _image;
   bool loading = false;
   String _name, _surname, _phoneNumber, _country, _birthday;
@@ -166,10 +167,6 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void signUp() async {
-    // ANCHOR Kullanici kayit olana kadar loading kismini gosterecek
-    setState(() {
-      loading = true;
-    });
     //ANCHOR Veritabanına kaydetmek için
     List<String> datalist = [
       _name,
@@ -182,39 +179,47 @@ class _SignUpPageState extends State<SignUpPage> {
       generateNickName(_name)
     ];
     print(datalist);
-    await loginAndRegister
-        .registerUser(context, mailController.text, passwordController.text,
-            datalist, _image)
-        .then((value) {
-      if (value) {
-        Fluttertoast.showToast(
-            msg: "Doğrulama maili gönderildi.Lütfen mailinizi doğrulayınız!",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.cyan,
-            textColor: Colors.white,
-            fontSize: 18.0);
-        Future.delayed(const Duration(milliseconds: 200), () {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => AuthCheck()));
-        });
-      } else {
-        Fluttertoast.showToast(
-            msg: "Girdileri gözden geçiriniz!",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 18.0);
-        setState(() {
-          loading = false;
-        });
-      }
-    });
+    try {
+      await Provider.of<UserService>(context, listen: false)
+          .registerUser(
+              mailController.text, passwordController.text, datalist, _image)
+          .then((userID) {
+        if (userID != null) {
+          print("Upload işlemi bitti");
+
+          Fluttertoast.showToast(
+              msg: "Hesabınız başarıyla oluşturuldu.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 18.0);
+
+          Provider.of<UserService>(context, listen: false)
+              .userInitializer(userID)
+              .then((value) {
+            if (value)
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => HomePage()));
+          });
+        } else {
+          setState(() {
+            loading = false;
+            print("Sign Up Failed!");
+          });
+        }
+      });
+    } catch (e) {
+      print(e);
+
+      setState(() {
+        loading = false;
+        print("Sign Up Failed!");
+      });
+    }
   }
 
   Widget addPhoto() {
@@ -637,7 +642,7 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
         ),
         InkWell(
-          onTap: () {
+          onTap: () async {
             //ANCHOR veri kontrolleri burda
             if (_image != null &&
                 _name != null &&
@@ -648,10 +653,10 @@ class _SignUpPageState extends State<SignUpPage> {
                 _gender != null &&
                 _birthday != null &&
                 _country != null) {
-              signUp();
               setState(() {
                 loading = true;
               });
+              signUp();
             } else {
               Fluttertoast.showToast(
                   msg: "Lütfen Girdileri Kontrol Ediniz!",

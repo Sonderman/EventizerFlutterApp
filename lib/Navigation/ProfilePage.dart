@@ -1,13 +1,14 @@
 import 'package:eventizer/Models/UserModel.dart';
+import 'package:eventizer/Navigation/LoginPage.dart';
 import 'package:eventizer/Navigation/MyEventsPage.dart';
 import 'package:eventizer/Navigation/SettingsPage.dart';
-import 'package:eventizer/Services/AuthCheck.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/Message.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
+import 'package:eventizer/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
@@ -178,7 +179,7 @@ class _ProfilePageState extends State<ProfilePage>
 
 //ANCHOR "isThisProfileMine" screen should be redesign.
   Widget avatarAndName() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: <Widget>[
             ClipRRect(
@@ -191,7 +192,7 @@ class _ProfilePageState extends State<ProfilePage>
               ),
             ),
             SizedBox(
-              height: heightSize(1),
+              height: heightSize(2),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -243,12 +244,12 @@ class _ProfilePageState extends State<ProfilePage>
                   visible: isThisProfileMine,
                   child: InkWell(
                     onTap: () {
-                      var auth = AuthService.of(context).auth;
+                      var auth = locator<AuthService>();
                       auth.signOut();
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (BuildContext context) => AuthCheck()));
+                              builder: (BuildContext context) => LoginPage()));
                     },
                     child: Container(
                       height: heightSize(6),
@@ -274,7 +275,7 @@ class _ProfilePageState extends State<ProfilePage>
       );
 
   Widget threeBoxes() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: <Widget>[
             //ANCHOR About myself box are here
@@ -392,7 +393,7 @@ class _ProfilePageState extends State<ProfilePage>
       );
 
   Widget numberDatas() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.all(20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
