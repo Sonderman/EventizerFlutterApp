@@ -1,6 +1,7 @@
 import 'package:eventizer/Navigation/Components/CommentsPageDetails.dart';
 import 'package:eventizer/Navigation/ProfilePage.dart';
 import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/Tools/ImageViewer.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
@@ -410,7 +411,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                   ),
                 ),
                 TextSpan(
-                  text: "\n@nickname",
+                  text: "\n@" + widget.userData['NickName'],
                   style: TextStyle(
                     height: heightSize(0.2),
                     fontFamily: "ZonaLight",
@@ -449,18 +450,32 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
         SizedBox(
           height: heightSize(1),
         ),
-        ClipRRect(
-          borderRadius: new BorderRadius.all(
-            Radius.circular(20),
-          ),
-          child: Container(
-            color: MyColors().blackOpacityContainer,
-            width: widthSize(100),
-            height: heightSize(25),
-            child: FadeInImage.assetNetwork(
-                fit: BoxFit.cover,
-                placeholder: 'assets/images/etkinlik.jpg',
-                image: widget.eventData['EventImageUrl']),
+        InkWell(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => ImageViewer(
+                          tag: widget.eventData['EventImageUrl'],
+                          url: widget.eventData['EventImageUrl'],
+                        )));
+          },
+          child: ClipRRect(
+            borderRadius: BorderRadius.all(
+              Radius.circular(20),
+            ),
+            child: Container(
+              color: MyColors().blackOpacityContainer,
+              width: widthSize(100),
+              height: heightSize(25),
+              child: Hero(
+                tag: widget.eventData['EventImageUrl'],
+                child: FadeInImage.assetNetwork(
+                    fit: BoxFit.cover,
+                    placeholder: 'assets/images/etkinlik.jpg',
+                    image: widget.eventData['EventImageUrl']),
+              ),
+            ),
           ),
         ),
         SizedBox(
@@ -756,7 +771,10 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             ),
             */
           ] +
-          (!isThisEventMine
+          (!isThisEventMine &&
+                  (widget.eventData['CurrentParticipantNumber'] <
+                          widget.eventData['MaxParticipantNumber'] ||
+                      joinButton)
               ? [
                   InkWell(
                       onTap: () async {

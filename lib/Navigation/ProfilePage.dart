@@ -4,6 +4,7 @@ import 'package:eventizer/Navigation/MyEventsPage.dart';
 import 'package:eventizer/Navigation/SettingsPage.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/Tools/ImageViewer.dart';
 import 'package:eventizer/Tools/Message.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
@@ -47,7 +48,6 @@ class _ProfilePageState extends State<ProfilePage>
       eventsText,
       trustText,
       profilePhotoUrl;
-
   TabController _tabController;
 
   @override
@@ -182,13 +182,32 @@ class _ProfilePageState extends State<ProfilePage>
         padding: const EdgeInsets.all(20),
         child: Column(
           children: <Widget>[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(15.0),
-              child: FadeInImage.assetNetwork(
-                height: heightSize(30),
-                fit: BoxFit.cover,
-                placeholder: "assets/images/avatar_man.png",
-                image: profilePhotoUrl,
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => ImageViewer(
+                              tag: profilePhotoUrl,
+                              url: profilePhotoUrl,
+                            )));
+                /*
+                NavigationManager(context).pushPage(ImageViewer(
+                  tag: profilePhotoUrl,
+                  url: profilePhotoUrl,
+                ));*/
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15.0),
+                child: Hero(
+                  tag: profilePhotoUrl,
+                  child: FadeInImage.assetNetwork(
+                    height: heightSize(30),
+                    fit: BoxFit.cover,
+                    placeholder: "assets/images/avatar_man.png",
+                    image: profilePhotoUrl,
+                  ),
+                ),
               ),
             ),
             SizedBox(
@@ -493,6 +512,9 @@ class _ProfilePageState extends State<ProfilePage>
                         amIFollowing = !amIFollowing;
                       });
                     });
+                    await userService.userModelSync(
+                      userService.userModel.getUserId(),
+                    );
                   },
                   child: Container(
                     width: widthSize(43),

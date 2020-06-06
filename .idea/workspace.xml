@@ -4,20 +4,8 @@
     <list default="true" id="8d58333c-f598-489f-a19f-18eb267e38a9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldLoginPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/Old/OldLoginPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldRegisterPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/Old/OldRegisterPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldSettingsPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/Old/OldSettingsPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/EventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/EventPage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/SignUpPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/SignUpPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Services/AuthCheck.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Services/AuthCheck.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Services/AuthService.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Services/AuthService.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Services/BaseAuth.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Services/BaseAuth.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Services/Firebase.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Services/Firebase.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Services/Repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Services/Repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Settings/AppSettings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Settings/AppSettings.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -25,7 +13,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="emulator-5554" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="emulator-5564" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
