@@ -39,7 +39,6 @@ class AppSettings with ChangeNotifier {
 
   void pushPage(Widget page) {
     _pageStack.add(page);
-    refresh();
   }
 
   void popPage() {

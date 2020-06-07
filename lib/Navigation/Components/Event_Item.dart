@@ -111,98 +111,101 @@ Widget eventItem(BuildContext context, Map<String, dynamic> eventDatas,
                             color: MyColors().purpleContainer,
                           ),
                         )
-                      : DropdownButton<String>(
-                          items: [
-                            DropdownMenuItem<String>(
-                              value: "share",
-                              child: Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    child: Icon(
-                                      Icons.share,
-                                      color: MyColors().purpleContainer,
-                                      size: 30,
+                      : Visibility(
+                          visible: ownerID == userService.userModel.getUserId(),
+                          child: DropdownButton<String>(
+                            items: [
+                              DropdownMenuItem<String>(
+                                value: "share",
+                                child: Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      child: Icon(
+                                        Icons.share,
+                                        color: MyColors().purpleContainer,
+                                        size: 30,
+                                      ),
                                     ),
-                                  ),
-                                  Text("Paylaş")
-                                ],
+                                    Text("Paylaş")
+                                  ],
+                                ),
                               ),
-                            ),
-                            DropdownMenuItem<String>(
-                              value: "edit",
-                              child: Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    child: Icon(
-                                      Icons.edit,
-                                      color: MyColors().purpleContainer,
-                                      size: 30,
+                              DropdownMenuItem<String>(
+                                value: "edit",
+                                child: Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      child: Icon(
+                                        Icons.edit,
+                                        color: MyColors().purpleContainer,
+                                        size: 30,
+                                      ),
                                     ),
-                                  ),
-                                  Text("Düzenle")
-                                ],
+                                    Text("Düzenle")
+                                  ],
+                                ),
                               ),
-                            ),
-                            DropdownMenuItem<String>(
-                              value: "finish",
-                              child: Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    child: Icon(
-                                      Icons.stop,
-                                      color: Colors.red,
-                                      size: 30,
+                              DropdownMenuItem<String>(
+                                value: "finish",
+                                child: Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      child: Icon(
+                                        Icons.stop,
+                                        color: Colors.red,
+                                        size: 30,
+                                      ),
                                     ),
-                                  ),
-                                  Text("Bitir")
-                                ],
+                                    Text("Bitir")
+                                  ],
+                                ),
                               ),
-                            ),
-                            DropdownMenuItem<String>(
-                              value: "delete",
-                              child: Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    child: Icon(
-                                      Icons.delete,
-                                      color: Colors.red,
-                                      size: 30,
+                              DropdownMenuItem<String>(
+                                value: "delete",
+                                child: Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      child: Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                        size: 30,
+                                      ),
                                     ),
-                                  ),
-                                  Text("Sil")
-                                ],
+                                    Text("Sil")
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                          onChanged: (String selected) {
-                            //TODO Paylaş bitir ve düzenle seçenekleri için kod yazılacak
-                            if (selected == "delete")
-                              askingDialog(
-                                      context,
-                                      "Silmek istediğinize eminmisiniz?",
-                                      Colors.red)
-                                  .then((value) {
-                                if (value) {
-                                  eventService.deleteEvent(eventID).then(
-                                      (value) =>
-                                          print("Silindi:" + value.toString()));
-                                }
-                              });
-                          },
-                          hint: Row(
-                            children: <Widget>[
-                              Icon(Icons.menu,
-                                  color: MyColors().purpleContainer),
-                              Text("Seçenekler")
                             ],
+                            onChanged: (String selected) {
+                              //TODO Paylaş bitir ve düzenle seçenekleri için kod yazılacak
+                              if (selected == "delete")
+                                askingDialog(
+                                        context,
+                                        "Silmek istediğinize eminmisiniz?",
+                                        Colors.red)
+                                    .then((value) {
+                                  if (value) {
+                                    eventService.deleteEvent(eventID).then(
+                                        (value) => print(
+                                            "Silindi:" + value.toString()));
+                                  }
+                                });
+                            },
+                            hint: Row(
+                              children: <Widget>[
+                                Icon(Icons.menu,
+                                    color: MyColors().purpleContainer),
+                                Text("Seçenekler")
+                              ],
+                            ),
                           ),
                         ),
                 ],

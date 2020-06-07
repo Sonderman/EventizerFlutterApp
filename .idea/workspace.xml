@@ -3,9 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="8d58333c-f598-489f-a19f-18eb267e38a9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/EventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/EventPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/local.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/Components/Event_Item.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/Components/Event_Item.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/CreateEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/CreateEventPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Settings/AppSettings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Settings/AppSettings.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Tools/NavigationManager.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Tools/NavigationManager.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

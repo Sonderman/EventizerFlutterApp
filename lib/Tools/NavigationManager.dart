@@ -48,8 +48,9 @@ class NavigationManager {
     }
   }
 
-  void pushPage(Widget page) {
+  void pushPage(Widget page, {bool refresh = true}) {
     settings.pushPage(page);
+    if (refresh) settings.refresh();
   }
 
   int getBottomNavIndex() {

@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:eventizer/Models/UserModel.dart';
+import 'package:eventizer/Navigation/MyEventsPage.dart';
 import 'package:eventizer/Navigation/ProfilePage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Settings/EventSettings.dart';
@@ -619,11 +620,16 @@ class _CreateEventPageState extends State<CreateEventPage> {
           };
           if (await eventManager.createEvent(userID, eventData, _image)) {
             print("Event oluşturma başarılı");
-            UserService userWorker =
-                Provider.of<UserService>(context, listen: false);
             //ANCHOR Event oluşturma başarılıysa profilepage e gidiyor.
-            NavigationManager(context).pushPage(ProfilePage(
-                userID: userWorker.userModel.getUserId(), isFromEvent: false));
+            NavigationManager(context).pushPage(
+                ProfilePage(
+                    userID: userService.userModel.getUserId(),
+                    isFromEvent: false),
+                refresh: false);
+            NavigationManager(context).pushPage(MyEventsPage(
+              userID: userService.userModel.getUserId(),
+              isOld: false,
+            ));
 
             Fluttertoast.showToast(
                 msg: "Etkinlik Oluşturuldu",
