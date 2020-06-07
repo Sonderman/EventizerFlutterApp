@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat/dash_chat.dart';
 import 'package:eventizer/Models/UserModel.dart';
@@ -204,9 +205,9 @@ class MessagingService with ChangeNotifier {
   final DatabaseWorks firebaseDatabaseWorks = locator<DatabaseWorks>();
   final StorageWorks firebaseStorageWorks = locator<StorageWorks>();
 
-  sendMessage(String chatID, ChatMessage message, String currentUser,
-      String otherUser) async {
-    await firebaseDatabaseWorks.sendMessage(
+  Future<String> sendMessage(String chatID, ChatMessage message,
+      String currentUser, String otherUser) async {
+    return await firebaseDatabaseWorks.sendMessage(
         message, chatID, currentUser, otherUser);
   }
 
@@ -219,8 +220,10 @@ class MessagingService with ChangeNotifier {
         chatID);
   }
 
-  checkConversation(String currentUserID, String otherUserID) {
-    return firebaseDatabaseWorks.checkConversation(currentUserID, otherUserID);
+  Future<String> checkConversation(
+      String currentUserID, String otherUserID) async {
+    return await firebaseDatabaseWorks.checkConversation(
+        currentUserID, otherUserID);
   }
 
   Stream<QuerySnapshot> getMessagesSnapshot(String chatID) {

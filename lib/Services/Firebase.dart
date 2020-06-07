@@ -391,8 +391,8 @@ class DatabaseWorks {
         .snapshots();
   }
 
-  Future sendMessage(ChatMessage message, String chatID, String currentUser,
-      String otherUser) async {
+  Future<String> sendMessage(ChatMessage message, String chatID,
+      String currentUser, String otherUser) async {
     if (chatID == "temp") {
       chatID = AutoIdGenerator.autoId();
       await ref.runTransaction((transaction) async {
@@ -444,6 +444,7 @@ class DatabaseWorks {
         },
       );
     }, timeout: Duration(seconds: 1));
+    return chatID;
   }
 
   Future<String> checkConversation(String currentUser, String otherUser) async {
