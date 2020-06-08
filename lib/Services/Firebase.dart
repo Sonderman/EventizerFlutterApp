@@ -89,6 +89,21 @@ class DatabaseWorks {
     }
   }
 
+  Future<bool> increaseNofEvents(String userID) async {
+    try {
+      await ref
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .collection('users')
+          .document(userID)
+          .updateData({"Nof_events": FieldValue.increment(1)});
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   Future<bool> followToggle(String userID, String otherUserID) async {
     bool issuccesfull = false;
     try {
@@ -189,6 +204,8 @@ class DatabaseWorks {
     String generatedID = AutoIdGenerator.autoId();
     //print("2.url:" + eventData['EventImageUrl'].toString());
     eventData['eventID'] = generatedID;
+    //TODO - Release alırken bunu kaldır!!
+    eventData['Status'] = "Accepted";
     try {
       await ref
           .collection(settings.appName)
@@ -242,13 +259,13 @@ class DatabaseWorks {
         return await ref
             .collection(settings.appName)
             .document(settings.getServer())
-            .collection("finishedEvents")
+            .collection("Events")
             .where("OrganizerID", isEqualTo: organizerID)
             .getDocuments()
             .then((docs) {
-          // print("gelen verinin uzunluğu:" + docs.documents.length.toString());
           docs.documents.forEach((event) {
-            if (event.data["Status"] != "Deleted") eventList.add(event.data);
+            if (event.data["Status"] != "Deleted" &&
+                event.data["Status"] == "Finished") eventList.add(event.data);
           });
           return eventList;
         });
@@ -260,9 +277,9 @@ class DatabaseWorks {
             .where("OrganizerID", isEqualTo: organizerID)
             .getDocuments()
             .then((docs) {
-          // print("gelen verinin uzunluğu:" + docs.documents.length.toString());
           docs.documents.forEach((event) {
-            if (event.data["Status"] != "Deleted") eventList.add(event.data);
+            if (event.data["Status"] != "Deleted" &&
+                event.data["Status"] != "Finished") eventList.add(event.data);
           });
           return eventList;
         });
@@ -676,6 +693,40 @@ class DatabaseWorks {
           .collection("Events")
           .document(eventID)
           .updateData({"Status": "Deleted"}).then((value) => true);
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> finishEvent(String eventID) async {
+    try {
+      return await ref
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .collection("Events")
+          .document(eventID)
+          .updateData({"Status": "Finished"}).then((value) => true);
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> sendFeedback(String text, String userID) async {
+    try {
+      return await ref
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .collection("Feedbacks")
+          .document(DateTime.now().millisecondsSinceEpoch.toString())
+          .setData({
+        "Feedback": text,
+        "FeedbackOwnerID": userID,
+        "Created At:": FieldValue.serverTimestamp()
+      }).then((_) {
+        return true;
+      });
     } catch (e) {
       print(e);
       return false;

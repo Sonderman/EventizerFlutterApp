@@ -213,7 +213,7 @@ class _SettingsPageState extends State<SettingsPage> {
     userService.userModelUpdater(userModel).then((value) async {
       if (value) {
         if (await Provider.of<UserService>(context, listen: false)
-            .userModelSync(userModel.getUserId())) {
+            .userModelSync()) {
           NavigationManager(context).popPage();
         }
 

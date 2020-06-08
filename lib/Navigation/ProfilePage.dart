@@ -118,8 +118,9 @@ class _ProfilePageState extends State<ProfilePage>
         body: Column(
           children: <Widget>[
             SizedBox(
-              height: 25,
+              height: widthSize(3),
             ),
+
             //TODO bildirim sayfası yaparken açılacak
             /*
             Container(
@@ -513,9 +514,7 @@ class _ProfilePageState extends State<ProfilePage>
                         amIFollowing = !amIFollowing;
                       });
                     });
-                    await userService.userModelSync(
-                      userService.userModel.getUserId(),
-                    );
+                    await userService.userModelSync();
                   },
                   child: Container(
                     width: widthSize(43),

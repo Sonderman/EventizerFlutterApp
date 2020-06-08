@@ -74,8 +74,7 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                             return updateMyPersonalInfoDialog(userWorker);
                           }).whenComplete(() {
                         if (triggerToast) {
-                          userWorker
-                              .userModelSync(userWorker.userModel.getUserId());
+                          userWorker.userModelSync();
                           Fluttertoast.showToast(
                               msg: "Kişisel bilgileriniz Güncellendi",
                               toastLength: Toast.LENGTH_SHORT,
@@ -105,8 +104,7 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                               })
                           .whenComplete(() {
                         if (triggerToast) {
-                          userWorker
-                              .userModelSync(userWorker.userModel.getUserId());
+                          userWorker.userModelSync();
                           Fluttertoast.showToast(
                               msg: "Email adresiniz Güncellendi",
                               toastLength: Toast.LENGTH_SHORT,
@@ -136,8 +134,7 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                               })
                           .whenComplete(() {
                         if (triggerToast) {
-                          userWorker
-                              .userModelSync(userWorker.userModel.getUserId());
+                          userWorker.userModelSync();
                           Fluttertoast.showToast(
                               msg: "Şifreniz Güncellendi",
                               toastLength: Toast.LENGTH_SHORT,

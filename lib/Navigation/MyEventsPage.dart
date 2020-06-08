@@ -93,7 +93,8 @@ class _MyEventsPageState extends State<MyEventsPage> {
                               itemCount: listofMaps.length,
                               itemBuilder: (context, index) {
                                 return eventItem(
-                                    context, listofMaps[index], false);
+                                    context, listofMaps[index], false,
+                                    parentState: this);
                               }),
                         );
                       }

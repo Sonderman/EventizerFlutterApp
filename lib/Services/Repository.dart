@@ -22,20 +22,28 @@ class UserService with ChangeNotifier {
       return Future.value(false);
     } else {
       userModel = User(userID: userId);
-      return await userModelSync(userId);
+      return await userModelSync();
     }
   }
 
-  Future<bool> userModelSync(String userId) async {
+  Future<bool> userModelSync() async {
     try {
-      return await firebaseDatabaseWorks.findUserbyID(userId).then((map) {
+      return await firebaseDatabaseWorks
+          .findUserbyID(userModel.getUserId())
+          .then((map) {
         userModel.parseMap(map);
+        //refresh();
         return true;
       });
     } catch (e) {
       print(e);
       return false;
     }
+  }
+
+  Future<bool> sendFeedback(String text) async {
+    return await firebaseDatabaseWorks.sendFeedback(
+        text, userModel.getUserId());
   }
 
   Future<Map<String, dynamic>> findUserByID(String userID) {
@@ -62,6 +70,18 @@ class UserService with ChangeNotifier {
       print(e);
     });
     return isCompleted;
+  }
+
+  Future<bool> increaseNofEvents() async {
+    return await firebaseDatabaseWorks
+        .increaseNofEvents(userModel.getUserId())
+        .then((value) {
+      if (value) {
+        userModelSync();
+        return true;
+      } else
+        return false;
+    });
   }
 
   Future<bool> followToggle(String otherUserID) async {
@@ -143,6 +163,10 @@ class EventService with ChangeNotifier {
 
   Future<bool> deleteEvent(String eventID) {
     return firebaseDatabaseWorks.deleteEvent(eventID);
+  }
+
+  Future<bool> finishEvent(String eventID) {
+    return firebaseDatabaseWorks.finishEvent(eventID);
   }
 
   //ANCHOR Etkinlik oluşturur

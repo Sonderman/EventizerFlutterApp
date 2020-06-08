@@ -778,7 +778,8 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             ),
             */
           ] +
-          (!isThisEventMine &&
+          (widget.eventData["Status"] != "Finished" &&
+                  !isThisEventMine &&
                   (widget.eventData['CurrentParticipantNumber'] <
                           widget.eventData['MaxParticipantNumber'] ||
                       joinButton)

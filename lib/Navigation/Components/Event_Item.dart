@@ -8,13 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-Widget eventItem(BuildContext context, Map<String, dynamic> eventDatas,
-    bool fromExplorePage) {
+Widget eventItem(
+    BuildContext context, Map<String, dynamic> eventDatas, bool fromExplorePage,
+    {State parentState}) {
   UserService userService = Provider.of<UserService>(context);
   EventService eventService = Provider.of<EventService>(context);
   var responsive = PageComponents(context);
   String eventID = eventDatas['eventID'];
   String title = eventDatas['Title'] ?? "null";
+  String status = eventDatas['Status'] ?? "null";
   String ownerID = eventDatas['OrganizerID'];
   //String category = eventDatas['Category'];
   String imageUrl = eventDatas['EventImageUrl'];
@@ -112,7 +114,9 @@ Widget eventItem(BuildContext context, Map<String, dynamic> eventDatas,
                           ),
                         )
                       : Visibility(
-                          visible: ownerID == userService.userModel.getUserId(),
+                          visible:
+                              ownerID == userService.userModel.getUserId() &&
+                                  status != "Finished",
                           child: DropdownButton<String>(
                             items: [
                               DropdownMenuItem<String>(
@@ -198,6 +202,19 @@ Widget eventItem(BuildContext context, Map<String, dynamic> eventDatas,
                                             "Silindi:" + value.toString()));
                                   }
                                 });
+
+                              if (selected == "finish")
+                                askingDialog(
+                                        context,
+                                        "Bitirmek istediğinize eminmisiniz?",
+                                        Colors.deepOrange)
+                                    .then((value) async {
+                                  await eventService.finishEvent(eventID).then(
+                                      (value) => print(
+                                          "Bitirildi:" + value.toString()));
+                                  await userService.increaseNofEvents();
+                                }).whenComplete(
+                                        () => parentState.setState(() {}));
                             },
                             hint: Row(
                               children: <Widget>[
