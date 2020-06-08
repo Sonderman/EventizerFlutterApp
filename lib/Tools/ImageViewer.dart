@@ -1,29 +1,38 @@
 import 'dart:io';
-
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
-
-class ImageViewer extends StatelessWidget {
-  final String tag;
+class ImageViewer extends StatefulWidget {
+  final String tag, url;
   final File image;
 
-  const ImageViewer({Key key, this.tag, this.image}) : super(key: key);
-  
+  const ImageViewer({Key key, this.tag, this.image, this.url})
+      : super(key: key);
 
+  @override
+  _ImageViewerState createState() => _ImageViewerState();
+}
+
+class _ImageViewerState extends State<ImageViewer> {
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
-        backgroundColor: Color(0XFF001970),
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          automaticallyImplyLeading: true,
+        ),
+        backgroundColor: Colors.black,
         body: Container(
           child: Center(
             child: Hero(
-              tag: tag,
-              child: image == null ? Image(
-              image: AssetImage('assets/images/etkinlik.jpg'),
-              width: MediaQuery.of(context).size.width)
-             : Image.file(image, width: MediaQuery.of(context).size.width)
-            ),
+                tag: widget.tag,
+                child: ExtendedImage.network(
+                  widget.url,
+                  cache: true,
+                  fit: BoxFit.contain,
+                  mode: ExtendedImageMode.gesture,
+                )),
           ),
         ),
       ),

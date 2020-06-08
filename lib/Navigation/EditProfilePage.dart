@@ -14,7 +14,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Scaffold(
       appBar: AppBar(),
       body: Container(
-        child: Center(child: PageComponents().underConstruction(context)),
+        child: Center(child: PageComponents(context).underConstruction()),
       ),
     );
   }

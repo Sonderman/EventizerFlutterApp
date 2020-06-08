@@ -1,14 +1,14 @@
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'package:eventizer/assets/Colors.dart';
 import 'package:extended_image/extended_image.dart';
-
 import 'package:flutter/material.dart';
 import 'package:image_editor/image_editor.dart';
 
 class ImageEditorPage extends StatefulWidget {
   final File image;
-  ImageEditorPage(this.image);
+  final bool forCreateEvent;
+  ImageEditorPage({@required this.image, @required this.forCreateEvent});
   @override
   _ImageEditorState createState() => _ImageEditorState(image);
 }
@@ -25,13 +25,17 @@ class _ImageEditorState extends State<ImageEditorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("image editor"),
+        title: Text("Image Editor"),
+        backgroundColor: MyColors().loginGreyColor,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.done),
             onPressed: () {
               _cropImage().whenComplete(() {
-                if (_image != null) Navigator.pop(context, _image);
+                if (_image != null) {
+                  Navigator.pop(context);
+                  Navigator.pop(context, _image);
+                }
               });
             },
           ),
@@ -46,70 +50,27 @@ class _ImageEditorState extends State<ImageEditorPage> {
           extendedImageEditorKey: editorKey,
           initEditorConfigHandler: (state) {
             return EditorConfig(
-                maxScale: 8.0,
+                // lineColor: Colors.blue,
+                // lineHeight: 2,
+                maxScale: 2.0,
+                cornerColor: Colors.red,
+                //cornerSize: Size(25, 5),
                 cropRectPadding: EdgeInsets.all(20.0),
                 hitTestSize: 20.0,
                 initCropRectType: InitCropRectType.imageRect,
-                cropAspectRatio: CropAspectRatios.ratio4_3);
+                cropAspectRatio: CropAspectRatios.ratio16_9);
           },
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.lightBlue,
+        color: MyColors().loginGreyColor,
         shape: CircularNotchedRectangle(),
-        child: ButtonTheme(
-          minWidth: 0.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              /*FlatButton.icon(
-                icon: Icon(Icons.crop),
-                label: Text(
-                  "Crop",
-                  style: TextStyle(fontSize: 10.0),
-                ),
-                textColor: Colors.white,
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Column(
-                          children: <Widget>[
-                            Expanded(
-                              child: SizedBox(),
-                            ),
-                            SizedBox(
-                              height: 200,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                padding: EdgeInsets.all(20.0),
-                                itemBuilder: (_, index) {
-                                  var item = _aspectRatios[index];
-                                  return GestureDetector(
-                                    child: AspectRatioWidget(
-                                      aspectRatio: item.value,
-                                      aspectRatioS: item.text,
-                                      isSelected: item == _aspectRatio,
-                                    ),
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                      setState(() {
-                                        _aspectRatio = item;
-                                      });
-                                    },
-                                  );
-                                },
-                                itemCount: _aspectRatios.length,
-                              ),
-                            ),
-                          ],
-                        );
-                      });
-                },
-              ),*/
-              FlatButton.icon(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Expanded(
+              child: FlatButton.icon(
                 icon: Icon(Icons.flip),
                 label: Text(
                   "Flip",
@@ -120,29 +81,41 @@ class _ImageEditorState extends State<ImageEditorPage> {
                   editorKey.currentState.flip();
                 },
               ),
-              FlatButton.icon(
-                icon: Icon(Icons.rotate_left),
-                label: Text(
-                  "Rotate Left",
-                  style: TextStyle(fontSize: 8.0),
+            ),
+            Visibility(
+              visible: !widget.forCreateEvent,
+              child: Expanded(
+                child: FlatButton.icon(
+                  icon: Icon(Icons.rotate_left),
+                  label: Text(
+                    "Rotate Left",
+                    style: TextStyle(fontSize: 8.0),
+                  ),
+                  textColor: Colors.white,
+                  onPressed: () {
+                    editorKey.currentState.rotate(right: false);
+                  },
                 ),
-                textColor: Colors.white,
-                onPressed: () {
-                  editorKey.currentState.rotate(right: false);
-                },
               ),
-              FlatButton.icon(
-                icon: Icon(Icons.rotate_right),
-                label: Text(
-                  "Rotate Right",
-                  style: TextStyle(fontSize: 8.0),
+            ),
+            Visibility(
+              visible: !widget.forCreateEvent,
+              child: Expanded(
+                child: FlatButton.icon(
+                  icon: Icon(Icons.rotate_right),
+                  label: Text(
+                    "Rotate Right",
+                    style: TextStyle(fontSize: 8.0),
+                  ),
+                  textColor: Colors.white,
+                  onPressed: () {
+                    editorKey.currentState.rotate(right: true);
+                  },
                 ),
-                textColor: Colors.white,
-                onPressed: () {
-                  editorKey.currentState.rotate(right: true);
-                },
               ),
-              FlatButton.icon(
+            ),
+            Expanded(
+              child: FlatButton.icon(
                 icon: Icon(Icons.restore),
                 label: Text(
                   "Reset",
@@ -153,8 +126,20 @@ class _ImageEditorState extends State<ImageEditorPage> {
                   editorKey.currentState.reset();
                 },
               ),
-            ],
-          ),
+            ),
+/*
+            FlatButton.icon(
+              icon: Icon(Icons.aspect_ratio),
+              label: Text(
+                "Aspect",
+                style: TextStyle(fontSize: 10.0),
+              ),
+              textColor: Colors.white,
+              onPressed: () {
+                print(editorKey.currentState.getCropRect());
+              },
+            ),*/
+          ],
         ),
       ),
     );
@@ -162,7 +147,7 @@ class _ImageEditorState extends State<ImageEditorPage> {
 
   Future<void> _cropImage() async {
     try {
-      //showBusyingDialog();
+      showBusyingDialog();
       _image =
           await cropImageDataWithNativeLibrary(state: editorKey.currentState);
     } catch (e) {
@@ -170,7 +155,7 @@ class _ImageEditorState extends State<ImageEditorPage> {
     }
   }
 
-  Future<List<int>> cropImageDataWithNativeLibrary(
+  Future<Uint8List> cropImageDataWithNativeLibrary(
       {ExtendedImageEditorState state}) async {
     print("native library start cropping");
 
@@ -201,14 +186,14 @@ class _ImageEditorState extends State<ImageEditorPage> {
     return result;
   }
 
-  Future showBusyingDialog() async {
+  void showBusyingDialog() async {
     var primaryColor = Theme.of(context).primaryColor;
     return showDialog(
         useRootNavigator: true,
         context: context,
         barrierDismissible: false,
         child: Material(
-          color: Colors.transparent,
+          color: Colors.transparent.withOpacity(0.2),
           child: Container(
             height: double.infinity,
             width: double.infinity,
@@ -216,7 +201,7 @@ class _ImageEditorState extends State<ImageEditorPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 CircularProgressIndicator(
-                  strokeWidth: 2.0,
+                  strokeWidth: 5.0,
                   valueColor: AlwaysStoppedAnimation(primaryColor),
                 ),
                 SizedBox(

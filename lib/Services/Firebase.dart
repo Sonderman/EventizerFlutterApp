@@ -2,8 +2,12 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat/dash_chat.dart';
+import 'package:eventizer/Models/UserModel.dart';
+import 'package:eventizer/Settings/AppSettings.dart';
+import 'package:eventizer/locator.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class AutoIdGenerator {
@@ -29,19 +33,47 @@ class AutoIdGenerator {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class DatabaseWorks {
   final Firestore ref = Firestore.instance;
-  // String _server = "Release";
-  String _server = "Development";
-  //String _server = "OpenTest";
-  String getServer() => _server;
+  AppSettings settings = locator<AppSettings>();
+
   DatabaseWorks() {
     print("DatabaseWorks locator running");
+  }
+
+  Future<bool> newUser(Map<String, dynamic> data) async {
+    try {
+      return await ref
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .collection('users')
+          .document(data['UserID'])
+          .setData(data)
+          .then((value) => true);
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> userModelUpdater(User model) async {
+    try {
+      return await ref
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .collection("users")
+          .document(model.getUserId())
+          .updateData(model.toMap())
+          .then((value) => true);
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   Future<bool> amIFollowing(String userID, String otherUserID) async {
     try {
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection("users")
           .document(userID)
           .collection("following")
@@ -58,23 +90,27 @@ class DatabaseWorks {
     }
   }
 
-  Future<bool> followToggle(String userID, String otherUserID) async {
-    bool issuccesfull = false;
-    int followerCounter = 0;
+  Future<bool> increaseNofEvents(String userID) async {
     try {
       await ref
-          .collection("EventizerApp")
-          .document(_server)
-          .collection("users")
-          .document(otherUserID)
-          .get()
-          .then((value) {
-        followerCounter = value.data["Nof_follower"] ?? 0;
-      });
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .collection('users')
+          .document(userID)
+          .updateData({"Nof_events": FieldValue.increment(1)});
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 
+  Future<bool> followToggle(String userID, String otherUserID) async {
+    bool issuccesfull = false;
+    try {
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection("users")
           .document(userID)
           .collection("following")
@@ -83,29 +119,34 @@ class DatabaseWorks {
         if (onValue.documents.isNotEmpty) {
           await ref.runTransaction((transaction) async {
             await transaction.delete(ref
-                .collection("EventizerApp")
-                .document(_server)
+                .collection(settings.appName)
+                .document(settings.getServer())
                 .collection('users')
                 .document(userID)
                 .collection('following')
                 .document(otherUserID));
 
             await transaction.delete(ref
-                .collection("EventizerApp")
-                .document(_server)
+                .collection(settings.appName)
+                .document(settings.getServer())
                 .collection('users')
                 .document(otherUserID)
                 .collection('followers')
                 .document(userID));
-
-            if (followerCounter > 0)
-              await transaction.update(
-                  ref
-                      .collection("EventizerApp")
-                      .document(_server)
-                      .collection('users')
-                      .document(otherUserID),
-                  {"Nof_follower": followerCounter - 1});
+            await transaction.update(
+                ref
+                    .collection(settings.appName)
+                    .document(settings.getServer())
+                    .collection('users')
+                    .document(otherUserID),
+                {"Nof_follower": FieldValue.increment(-1)});
+            await transaction.update(
+                ref
+                    .collection(settings.appName)
+                    .document(settings.getServer())
+                    .collection('users')
+                    .document(userID),
+                {"Nof_following": FieldValue.increment(-1)});
           }).whenComplete(() {
             print("Takipten çıkıldı");
             issuccesfull = true;
@@ -114,8 +155,8 @@ class DatabaseWorks {
           await ref.runTransaction((transaction) async {
             await transaction.set(
                 ref
-                    .collection("EventizerApp")
-                    .document(_server)
+                    .collection(settings.appName)
+                    .document(settings.getServer())
                     .collection('users')
                     .document(userID)
                     .collection('following')
@@ -124,8 +165,8 @@ class DatabaseWorks {
 
             await transaction.set(
                 ref
-                    .collection("EventizerApp")
-                    .document(_server)
+                    .collection(settings.appName)
+                    .document(settings.getServer())
                     .collection('users')
                     .document(otherUserID)
                     .collection('followers')
@@ -134,11 +175,18 @@ class DatabaseWorks {
 
             await transaction.update(
                 ref
-                    .collection("EventizerApp")
-                    .document(_server)
+                    .collection(settings.appName)
+                    .document(settings.getServer())
                     .collection('users')
                     .document(otherUserID),
-                {"Nof_follower": followerCounter + 1});
+                {"Nof_follower": FieldValue.increment(1)});
+            await transaction.update(
+                ref
+                    .collection(settings.appName)
+                    .document(settings.getServer())
+                    .collection('users')
+                    .document(userID),
+                {"Nof_following": FieldValue.increment(1)});
           }).whenComplete(() {
             print("Takip Ediliyor");
             issuccesfull = true;
@@ -157,19 +205,21 @@ class DatabaseWorks {
     String generatedID = AutoIdGenerator.autoId();
     //print("2.url:" + eventData['EventImageUrl'].toString());
     eventData['eventID'] = generatedID;
+    //TODO - Release alırken bunu kaldır!!
+    eventData['Status'] = "Accepted";
     try {
       await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection("users")
           .document(userId)
           .collection("events")
           .document(generatedID)
           .setData(eventData);
       await ref
-          .collection("EventizerApp")
-          .document(_server)
-          .collection("activeEvents")
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .collection("Events")
           .document(generatedID)
           .setData(eventData);
       return generatedID;
@@ -184,9 +234,9 @@ class DatabaseWorks {
     try {
       List<Map<String, dynamic>> eventList = [];
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
-          .collection("activeEvents")
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .collection("Events")
           .where("OrganizerID", isEqualTo: userID)
           .where("Status", isEqualTo: "Accepted")
           .getDocuments()
@@ -202,13 +252,52 @@ class DatabaseWorks {
     }
   }
 
+  Future<List<Map<String, dynamic>>> fetchEventListsForUser(
+      String organizerID, bool isOld) async {
+    try {
+      List<Map<String, dynamic>> eventList = [];
+      if (isOld) {
+        return await ref
+            .collection(settings.appName)
+            .document(settings.getServer())
+            .collection("Events")
+            .where("OrganizerID", isEqualTo: organizerID)
+            .getDocuments()
+            .then((docs) {
+          docs.documents.forEach((event) {
+            if (event.data["Status"] != "Deleted" &&
+                event.data["Status"] == "Finished") eventList.add(event.data);
+          });
+          return eventList;
+        });
+      } else {
+        return await ref
+            .collection(settings.appName)
+            .document(settings.getServer())
+            .collection("Events")
+            .where("OrganizerID", isEqualTo: organizerID)
+            .getDocuments()
+            .then((docs) {
+          docs.documents.forEach((event) {
+            if (event.data["Status"] != "Deleted" &&
+                event.data["Status"] != "Finished") eventList.add(event.data);
+          });
+          return eventList;
+        });
+      }
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   Future<List<Map<String, dynamic>>> fetchActiveEventLists() async {
     try {
       List<Map<String, dynamic>> eventList = [];
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
-          .collection("activeEvents")
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .collection("Events")
           .where("Status", isEqualTo: "Accepted")
           .getDocuments()
           .then((docs) {
@@ -225,14 +314,14 @@ class DatabaseWorks {
   }
 
   Future<List<Map<String, dynamic>>> fetchActiveEventListsByCategory(
-      String category) async {
+      String subCategory) async {
     try {
       List<Map<String, dynamic>> eventList = [];
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
-          .collection("activeEvents")
-          .where("Category", isEqualTo: category)
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .collection("Events")
+          .where("SubCategory", isEqualTo: subCategory)
           .where("Status", isEqualTo: "Accepted")
           .getDocuments()
           .then((docs) {
@@ -250,8 +339,8 @@ class DatabaseWorks {
   Future<String> getUserProfilePhotoUrl(String userId) async {
     try {
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection("users")
           .document(userId)
           .get()
@@ -265,18 +354,19 @@ class DatabaseWorks {
   }
 
   //ANCHOR burada sadece 1 veride değişiklik yapar
-  void updateSingleInfo(String userId, String maptext, String changedtext) {
+  Future<void> updateSingleInfo(
+      String userId, String maptext, String changedtext) async {
     if (changedtext == "timeStamp") {
-      ref
-          .collection("EventizerApp")
-          .document(_server)
+      await ref
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection('users')
           .document(userId)
           .updateData({maptext: FieldValue.serverTimestamp()});
     } else {
-      ref
-          .collection("EventizerApp")
-          .document(_server)
+      await ref
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection('users')
           .document(userId)
           .updateData({maptext: changedtext});
@@ -286,8 +376,8 @@ class DatabaseWorks {
   Future<Map<String, dynamic>> findUserbyID(String userID) async {
     try {
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection("users")
           .document(userID)
           .get()
@@ -300,35 +390,43 @@ class DatabaseWorks {
     }
   }
 
-  Stream<QuerySnapshot> getSnapshot(String chatID) {
+  Stream<QuerySnapshot> getMessagesSnapshot(String chatID) {
     return ref
-        .collection("EventizerApp")
-        .document(_server)
+        .collection(settings.appName)
+        .document(settings.getServer())
         .collection('messagePool')
         .document(chatID)
         .collection('messages')
         .snapshots();
   }
 
-  Future sendMessage(ChatMessage message, String chatID, String currentUser,
-      String otherUser) async {
+  Stream<DocumentSnapshot> getChatPoolSnapshot(String chatID) {
+    return ref
+        .collection(settings.appName)
+        .document(settings.getServer())
+        .collection('messagePool')
+        .document(chatID)
+        .snapshots();
+  }
+
+  Future<String> sendMessage(ChatMessage message, String chatID,
+      String currentUser, String otherUser) async {
     if (chatID == "temp") {
       chatID = AutoIdGenerator.autoId();
-
-      await Firestore.instance.runTransaction((transaction) async {
+      await ref.runTransaction((transaction) async {
         await transaction.set(
-            Firestore.instance
-                .collection("EventizerApp")
-                .document(_server)
+            ref
+                .collection(settings.appName)
+                .document(settings.getServer())
                 .collection('users')
                 .document(currentUser)
                 .collection('messages')
                 .document(chatID),
             {"OtherUserID": otherUser});
         await transaction.set(
-            Firestore.instance
-                .collection("EventizerApp")
-                .document(_server)
+            ref
+                .collection(settings.appName)
+                .document(settings.getServer())
                 .collection('users')
                 .document(otherUser)
                 .collection('messages')
@@ -336,26 +434,42 @@ class DatabaseWorks {
             {"OtherUserID": currentUser});
       });
     }
-    var messageRef = Firestore.instance
-        .collection("EventizerApp")
-        .document(_server)
+    var messageRef = ref
+        .collection(settings.appName)
+        .document(settings.getServer())
         .collection('messagePool')
         .document(chatID)
         .collection('messages')
         .document(DateTime.now().millisecondsSinceEpoch.toString());
-    Firestore.instance.runTransaction((transaction) async {
+    Map<String, dynamic> messageMap = message.toJson();
+    ref.runTransaction((transaction) async {
       await transaction.set(
         messageRef,
-        message.toJson(),
+        messageMap,
+      );
+      await transaction.set(
+        ref
+            .collection(settings.appName)
+            .document(settings.getServer())
+            .collection('messagePool')
+            .document(chatID),
+        {
+          "LastMessage": {
+            "SenderID": currentUser,
+            "Message": messageMap['text'],
+            "createdAt": messageMap['createdAt']
+          }
+        },
       );
     }, timeout: Duration(seconds: 1));
+    return chatID;
   }
 
   Future<String> checkConversation(String currentUser, String otherUser) async {
     try {
-      return await Firestore.instance
-          .collection("EventizerApp")
-          .document(_server)
+      return await ref
+          .collection(settings.appName)
+          .document(settings.getServer())
           .collection('users')
           .document(currentUser)
           .collection('messages')
@@ -374,8 +488,8 @@ class DatabaseWorks {
   Future sendImageMessage(
       ChatMessage message, String time, String chatID) async {
     var messageRef = ref
-        .collection("EventizerApp")
-        .document(_server)
+        .collection(settings.appName)
+        .document(settings.getServer())
         .collection('messagePool')
         .document(chatID)
         .collection('messages')
@@ -391,41 +505,98 @@ class DatabaseWorks {
 
   Stream<QuerySnapshot> getUserChatsSnapshots(String currentUser) {
     return ref
-        .collection("EventizerApp")
-        .document(_server)
+        .collection(settings.appName)
+        .document(settings.getServer())
         .collection('users')
         .document(currentUser)
         .collection('messages')
         .snapshots();
   }
 
-//NOTE Burası Settings
-  Future<List<String>> getEventCategories() {
-    List<String> categories;
-    return ref
-        .collection("EventizerApp")
-        .document(_server)
+//NOTE Burası EventSettings
+  Future<List<String>> getEventCategories() async {
+    List<String> categories = [];
+    return await ref
+        .collection(settings.appName)
+        .document(settings.getServer())
         .collection('Settings')
         .document('Event')
         .get()
         .then((eventSettings) {
-      categories = List.from(eventSettings.data['Categories']);
+      Map<String, dynamic> temp;
+      temp = eventSettings.data['Category'];
+      temp.forEach((key, value) {
+        categories.add(key);
+      });
       print(categories);
       return categories;
     });
   }
 
+  //NOTE Burası EventSettings
+  Future<List<List<String>>> getEventSubCategories() async {
+    List<List<String>> subCategories = [];
+    return await ref
+        .collection(settings.appName)
+        .document(settings.getServer())
+        .collection('Settings')
+        .document('Event')
+        .get()
+        .then((eventSettings) {
+      Map<String, dynamic> temp;
+      temp = eventSettings.data['Category'];
+      temp.forEach((key, value) {
+        subCategories.add(List<String>.from(value));
+      });
+      return subCategories;
+    });
+  }
+
   Future<bool> joinEvent(String userID, String eventID) async {
     try {
-      ref
-          .collection("EventizerApp")
-          .document(_server)
-          .collection('activeEvents')
-          .document(eventID)
-          .collection('Participants')
-          .document(userID)
-          .setData({"ParticipantID": userID});
-      return true;
+      return ref.runTransaction((transaction) async {
+        await transaction.set(
+            ref
+                .collection(settings.appName)
+                .document(settings.getServer())
+                .collection('Events')
+                .document(eventID)
+                .collection('Participants')
+                .document(userID),
+            {"ParticipantID": userID});
+
+        await transaction.update(
+            ref
+                .collection(settings.appName)
+                .document(settings.getServer())
+                .collection("Events")
+                .document(eventID),
+            {"CurrentParticipantNumber": FieldValue.increment(1)});
+      }).then((value) => true);
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> leaveEvent(String userID, String eventID) async {
+    try {
+      return ref.runTransaction((transaction) async {
+        await transaction.update(
+            ref
+                .collection(settings.appName)
+                .document(settings.getServer())
+                .collection("Events")
+                .document(eventID),
+            {"CurrentParticipantNumber": FieldValue.increment(-1)});
+        await transaction.delete(ref
+            .collection(settings.appName)
+            .document(settings.getServer())
+            .collection("Events")
+            .document(eventID)
+            .collection("Participants")
+            .document(userID));
+      }).then((value) => true);
     } catch (e) {
       print(e);
       return false;
@@ -436,9 +607,9 @@ class DatabaseWorks {
   Future<bool> amIparticipant(String userId, String eventID) async {
     try {
       var doc = await ref
-          .collection("EventizerApp")
-          .document(_server)
-          .collection('activeEvents')
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .collection('Events')
           .document(eventID)
           .collection('Participants')
           .document(userId)
@@ -450,32 +621,13 @@ class DatabaseWorks {
     }
   }
 
-  Future<bool> leaveEvent(String userID, String eventID) async {
-    try {
-      return await ref
-          .collection("EventizerApp")
-          .document(_server)
-          .collection("activeEvents")
-          .document(eventID)
-          .collection("Participants")
-          .document(userID)
-          .delete()
-          .then((_) {
-        return true;
-      });
-    } catch (e) {
-      print(e);
-      return false;
-    }
-  }
-
   Future<bool> sendComment(
       String eventID, String userID, String comment) async {
     try {
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
-          .collection("activeEvents")
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .collection("Events")
           .document(eventID)
           .collection("Comments")
           .document(DateTime.now().millisecondsSinceEpoch.toString())
@@ -492,9 +644,9 @@ class DatabaseWorks {
     List<Map<String, dynamic>> commmentList = [];
     try {
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
-          .collection("activeEvents")
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .collection("Events")
           .document(eventID)
           .collection("Comments")
           .getDocuments()
@@ -515,9 +667,9 @@ class DatabaseWorks {
     List<Map<String, dynamic>> participants = [];
     try {
       return await ref
-          .collection("EventizerApp")
-          .document(_server)
-          .collection("activeEvents")
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .collection("Events")
           .document(eventID)
           .collection("Participants")
           .getDocuments()
@@ -533,52 +685,106 @@ class DatabaseWorks {
       return null;
     }
   }
+
+  Future<bool> deleteEvent(String eventID) async {
+    try {
+      return await ref
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .collection("Events")
+          .document(eventID)
+          .updateData({"Status": "Deleted"}).then((value) => true);
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> finishEvent(String eventID) async {
+    try {
+      return await ref
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .collection("Events")
+          .document(eventID)
+          .updateData({"Status": "Finished"}).then((value) => true);
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> sendFeedback(String text, String userID) async {
+    try {
+      return await ref
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .collection("Feedbacks")
+          .document(DateTime.now().millisecondsSinceEpoch.toString())
+          .setData({
+        "Feedback": text,
+        "FeedbackOwnerID": userID,
+        "Created At:": FieldValue.serverTimestamp()
+      }).then((_) {
+        return true;
+      });
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<String> getServerVersion() async {
+    try {
+      return await ref
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .get()
+          .then((value) {
+        return value.data["Version"];
+      });
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 class StorageWorks {
   final StorageReference ref = FirebaseStorage().ref();
-
+  AppSettings settings = locator<AppSettings>();
   StorageWorks() {
     print("StorageWorks locator running");
   }
 
-  Future<bool> updateProfilePhoto(String userId, File image) async {
+  Future<bool> updateProfilePhoto(String userId, Uint8List image) async {
     if (image == null) {
       print("image null");
     }
-
-    String url;
-
     StorageUploadTask uploadTask = ref
         .child('users')
         .child(userId)
         .child('images')
         .child('profile')
         .child('ProfileImage')
-        .putFile(image);
+        .putData(image);
 
-    StreamSubscription<StorageTaskEvent> streamSubscription =
-        uploadTask.events.listen((event) {
-      print('UpdatingProfile Image :${event.type}');
-    });
-
-    return (await uploadTask.onComplete.then((onValue) {
-      onValue.ref.getDownloadURL().then((value) {
-        url = value.toString();
-        print("Url:" + url);
-      }).whenComplete(() {
-        Firestore.instance
-            .collection('users')
-            .document(userId)
-            .updateData({"ProfilePhotoUrl": url});
+    try {
+      return await uploadTask.onComplete.then((value) async {
+        return await value.ref.getDownloadURL().then((url) async {
+          return await Firestore.instance
+              .collection(settings.appName)
+              .document(settings.getServer())
+              .collection('users')
+              .document(userId)
+              .updateData({"ProfilePhotoUrl": url}).then((value) => true);
+        });
       });
-      return true;
-    }).whenComplete(() {
-      streamSubscription.cancel();
-    }).catchError((e) {
+    } catch (e) {
       print(e);
-    }));
+      return false;
+    }
   }
 
   Future sendImageMessage(File image, ChatUser user, String currentUser,

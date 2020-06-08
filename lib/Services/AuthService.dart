@@ -1,90 +1,87 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eventizer/Services/BaseAuth.dart';
-import 'package:eventizer/Services/Firebase.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/widgets.dart';
+class AuthService {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-class AuthService extends InheritedWidget {
-  AuthService({Key key, this.auth, Widget child})
-      : super(key: key, child: child);
-  final BaseAuth auth;
-
-  @override
-  bool updateShouldNotify(InheritedWidget oldWidget) {
-    return true;
+  Stream<String> get onAuthStateChanged {
+    return _firebaseAuth.onAuthStateChanged
+        .map((FirebaseUser user) => user?.uid);
   }
 
-  static AuthService of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<AuthService>();
+  Future<String> signIn(String email, String password) async {
+    FirebaseUser user;
+    try {
+      user = (await _firebaseAuth.signInWithEmailAndPassword(
+              email: email, password: password))
+          .user;
+    } catch (e) {
+      print('Error: Giriş işleminde Hata!: $e');
+    }
+    return user?.uid;
   }
-}
 
-//REVIEW Repositorye taşınacak
-class LoginAndRegister {
-  String _server = DatabaseWorks().getServer();
+  Future<String> signUp(String email, String password) async {
+    FirebaseUser user = (await _firebaseAuth.createUserWithEmailAndPassword(
+            email: email, password: password))
+        .user;
+    return user.uid;
+  }
 
-  Future<void> registerUser(BuildContext context, String eposta, String sifre,
-      List<String> datalist, File image) async {
-    var auth = AuthService.of(context).auth;
-    String url;
-    Map<String, dynamic> data = {
-      "Name": datalist[0],
-      "Surname": datalist[1],
-      "Email": datalist[2],
-      //"ProfilePhotoUrl": "null",
-      "RegisteredAt": FieldValue.serverTimestamp()
-    };
+  Future<FirebaseUser> getCurrentUser() async {
+    FirebaseUser user = await _firebaseAuth.currentUser();
+    return user;
+  }
 
-    await auth.signUp(eposta, sifre).then((userId) {
-      if (userId != null) {
-        data['UserID'] = userId;
-        Firestore.instance
-            .collection("EventizerApp")
-            .document(_server)
-            .collection('users')
-            .document(userId)
-            .setData(data)
-            .whenComplete(() {
-          StorageReference storageReference = FirebaseStorage()
-              .ref()
-              .child('users')
-              .child(userId)
-              .child('images')
-              .child('profile')
-              .child('ProfileImage');
-          StorageUploadTask uploadTask = storageReference.putFile(image);
+  void signOut() async {
+    return _firebaseAuth.signOut();
+  }
 
-          StreamSubscription<StorageTaskEvent> streamSubscription =
-              uploadTask.events.listen((event) {
-            print('UploadingProfile Image :${event.type}');
-          });
+  Future<void> sendEmailVerification() async {
+    FirebaseUser user = await _firebaseAuth.currentUser();
+    user.sendEmailVerification();
+  }
 
-          uploadTask.onComplete.then((onValue) {
-            onValue.ref.getDownloadURL().then((value) {
-              url = value.toString();
-              print("Url:" + url);
-            }).whenComplete(() {
-              Firestore.instance
-                  .collection("EventizerApp")
-                  .document(_server)
-                  .collection('users')
-                  .document(userId)
-                  .updateData({"ProfilePhotoUrl": url});
-            });
-          }).whenComplete(() {
-            streamSubscription.cancel();
-          });
-        }).catchError((e) {
-          print(e);
-        });
-        //auth.sendEmailVerification();
+  Future<bool> isEmailVerified() async {
+    FirebaseUser user = await _firebaseAuth.currentUser();
+    return user.isEmailVerified;
+  }
 
-      }
-    }, onError: (e) {
-      print('ERROR:Kayıt olurken hata!: $e');
-    });
+  Future<String> getUserEmail() async {
+    FirebaseUser user = await _firebaseAuth.currentUser();
+    return user.email;
+  }
+
+  Future<String> getUserUid() async {
+    FirebaseUser user = await _firebaseAuth.currentUser();
+    if (user != null)
+      return user.uid;
+    else
+      return null;
+  }
+
+  Future<bool> checkPassword(String email, String password) async {
+    String userId;
+    try {
+      userId = (await _firebaseAuth.signInWithEmailAndPassword(
+              email: email, password: password))
+          .user
+          .uid;
+    } catch (e) {
+      return false;
+    }
+    if (userId != null) {
+      //print("UserId: " + userId);
+      return true;
+    } else
+      return false;
+  }
+
+  void sendPasswordResetEmail(String email) {
+    try {
+      _firebaseAuth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      print(e);
+    }
   }
 }
