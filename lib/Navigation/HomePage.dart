@@ -1,4 +1,4 @@
-import 'package:eventizer/Settings/AppSettings.dart';
+import 'package:eventizer/Services/NavigationProvider.dart';
 import 'package:eventizer/Tools/BottomNavigation.dart';
 import 'package:eventizer/Tools/Dialogs.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
@@ -66,8 +66,8 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            body: Consumer<AppSettings>(
-              builder: (con, settings, w) => getNavigatedPage(context),
+            body: Consumer<NavigationProvider>(
+              builder: (con, nav, w) => getNavigatedPage(context),
             ),
             bottomNavigationBar: bottomNavigationBar(context)));
   }

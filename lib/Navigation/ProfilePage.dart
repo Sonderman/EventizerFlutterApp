@@ -475,6 +475,7 @@ class _ProfilePageState extends State<ProfilePage>
                     )),
               ],
             ),
+/*
             Column(
               children: <Widget>[
                 Text("GÜVEN",
@@ -490,7 +491,7 @@ class _ProfilePageState extends State<ProfilePage>
                       fontSize: 25,
                     )),
               ],
-            )
+            )*/
           ],
         ),
       );

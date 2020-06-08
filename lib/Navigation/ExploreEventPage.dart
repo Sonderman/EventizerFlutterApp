@@ -70,7 +70,14 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         List<Map<String, dynamic>> listofMaps =
                             fetchedlist.data;
                         if (listofMaps.length == 0) {
-                          return Center(child: Text("Etkinlik Yok"));
+                          return Center(
+                              child: Text(
+                            "Etkinlik Yok",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: widthSize(5)),
+                          ));
                         } else {
                           return ScrollConfiguration(
                             behavior: NoScrollEffectBehavior(),
@@ -121,6 +128,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
 
   Widget subCategoryList() {
     print(locator<EventSettings>().subCategoryItems);
+    print(category);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -165,8 +173,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                 InkWell(
                   onTap: () {
                     setState(() {
-                      category =
-                          locator<EventSettings>().subCategoryItems[1][0];
+                      category = "Doğum Günü";
                     });
                   },
                   child: Container(
@@ -208,8 +215,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                 InkWell(
                   onTap: () {
                     setState(() {
-                      category =
-                          locator<EventSettings>().subCategoryItems[2][0];
+                      category = "Yurt İçi Gezisi";
                     });
                   },
                   child: Container(
@@ -251,8 +257,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                 InkWell(
                   onTap: () {
                     setState(() {
-                      category =
-                          locator<EventSettings>().subCategoryItems[2][1];
+                      category = "Yurt Dışı Gezisi";
                     });
                   },
                   child: Container(
@@ -294,8 +299,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                 InkWell(
                   onTap: () {
                     setState(() {
-                      category =
-                          locator<EventSettings>().subCategoryItems[3][1];
+                      category = "Doğa Fotoğraflama";
                     });
                   },
                   child: Container(
@@ -334,8 +338,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                 InkWell(
                   onTap: () {
                     setState(() {
-                      category =
-                          locator<EventSettings>().subCategoryItems[1][2];
+                      category = "Konferans";
                     });
                   },
                   child: Container(
@@ -377,8 +380,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                 InkWell(
                   onTap: () {
                     setState(() {
-                      category =
-                          locator<EventSettings>().subCategoryItems[1][3];
+                      category = "Kamp";
                     });
                   },
                   child: Container(

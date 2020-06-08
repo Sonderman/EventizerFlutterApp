@@ -24,6 +24,7 @@ public final class GeneratedPluginRegistrant {
       io.github.ponnamkarthik.toast.fluttertoast.FluttertoastPlugin.registerWith(shimPluginRegistry.registrarFor("io.github.ponnamkarthik.toast.fluttertoast.FluttertoastPlugin"));
       top.kikt.flutter_image_editor.FlutterImageEditorPlugin.registerWith(shimPluginRegistry.registrarFor("top.kikt.flutter_image_editor.FlutterImageEditorPlugin"));
     flutterEngine.getPlugins().add(new io.flutter.plugins.imagepicker.ImagePickerPlugin());
+    flutterEngine.getPlugins().add(new io.flutter.plugins.packageinfo.PackageInfoPlugin());
     flutterEngine.getPlugins().add(new io.flutter.plugins.pathprovider.PathProviderPlugin());
   }
 }

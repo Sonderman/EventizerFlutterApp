@@ -538,7 +538,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
           width: widthSize(50),
           height: heightSize(8),
           decoration: new BoxDecoration(
-            color: MyColors().blackOpacityContainer,
+            color: MyColors().purpleContainer,
             borderRadius: new BorderRadius.all(
               Radius.circular(20),
             ),
@@ -1090,16 +1090,16 @@ class _CreateEventPageState extends State<CreateEventPage> {
             height: heightSize(8),
             //TODO responsive yap
             width: widthSize(91),
+
             child: ClipRRect(
               borderRadius: BorderRadius.all(
                 Radius.circular(20),
               ),
               child: FlutterSearchPanel<int>(
-                //padding: EdgeInsets.symmetric(horizontal: 130, vertical: 10),
                 selected: 0,
                 title: "Şehir",
                 data: sehirler,
-                color: MyColors().yellowContainer,
+                color: Colors.blue,
                 icon: Icon(Icons.check_circle, color: Colors.white),
                 textStyle: TextStyle(
                     color: Colors.white,

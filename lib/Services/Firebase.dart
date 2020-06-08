@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat/dash_chat.dart';
 import 'package:eventizer/Models/UserModel.dart';
 import 'package:eventizer/Settings/AppSettings.dart';
+import 'package:eventizer/locator.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class AutoIdGenerator {
@@ -32,7 +33,7 @@ class AutoIdGenerator {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class DatabaseWorks {
   final Firestore ref = Firestore.instance;
-  AppSettings settings = AppSettings();
+  AppSettings settings = locator<AppSettings>();
 
   DatabaseWorks() {
     print("DatabaseWorks locator running");
@@ -732,12 +733,27 @@ class DatabaseWorks {
       return false;
     }
   }
+
+  Future<String> getServerVersion() async {
+    try {
+      return await ref
+          .collection(settings.appName)
+          .document(settings.getServer())
+          .get()
+          .then((value) {
+        return value.data["Version"];
+      });
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 class StorageWorks {
   final StorageReference ref = FirebaseStorage().ref();
-  AppSettings settings = AppSettings();
+  AppSettings settings = locator<AppSettings>();
   StorageWorks() {
     print("StorageWorks locator running");
   }

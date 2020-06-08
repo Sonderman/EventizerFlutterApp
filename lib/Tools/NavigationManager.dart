@@ -1,9 +1,9 @@
-import 'package:eventizer/Settings/AppSettings.dart';
+import 'package:eventizer/Services/NavigationProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class NavigationManager {
-  AppSettings settings;
+  NavigationProvider nav;
 
   /*
   NOTE stackPage e sayfa eklemek için istediğin yerde bunu çağır :: NavigationManager(context).pushPage(Widget)
@@ -11,13 +11,13 @@ class NavigationManager {
   */
 
   NavigationManager(BuildContext context) {
-    settings = Provider.of<AppSettings>(context, listen: false);
+    nav = Provider.of<NavigationProvider>(context, listen: false);
   }
 
   bool onBackButtonPressed() {
-    if (settings.getBottomNavIndex() == 1 &&
-        settings.getCreateEventPageController().page == 1) {
-      settings.getCreateEventPageController().previousPage(
+    if (nav.getBottomNavIndex() == 1 &&
+        nav.getCreateEventPageController().page == 1) {
+      nav.getCreateEventPageController().previousPage(
           duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
       return true;
     } else if (isEmpty()) {
@@ -29,42 +29,42 @@ class NavigationManager {
   }
 
   PageController getCreateEventPageController() =>
-      settings.getCreateEventPageController();
+      nav.getCreateEventPageController();
 
   bool isEmpty() {
-    return settings.getPageStack().isEmpty;
+    return nav.getPageStack().isEmpty;
   }
 
   Widget getLastPage() {
     if (isEmpty()) {
       return null;
     } else
-      return settings.getPageStack().last;
+      return nav.getPageStack().last;
   }
 
   void popPage() {
     if (!isEmpty()) {
-      settings.popPage();
+      nav.popPage();
     }
   }
 
   void pushPage(Widget page, {bool refresh = true}) {
-    settings.pushPage(page);
-    if (refresh) settings.refresh();
+    nav.pushPage(page);
+    if (refresh) nav.refresh();
   }
 
   int getBottomNavIndex() {
-    return settings.getBottomNavIndex();
+    return nav.getBottomNavIndex();
   }
 
   void setBottomNavIndex(int newIndex) {
-    if (settings.getBottomNavIndex() != newIndex) {
-      settings.setBottomNavIndex(newIndex);
-      settings.flushStack(); //Only clever boys can do this:D
+    if (nav.getBottomNavIndex() != newIndex) {
+      nav.setBottomNavIndex(newIndex);
+      nav.flushStack(); //Only clever boys can do this:D
 
     } else if (!isEmpty()) {
-      settings.setBottomNavIndex(newIndex);
-      settings.flushStack(); //Only clever boys can do this:D
+      nav.setBottomNavIndex(newIndex);
+      nav.flushStack(); //Only clever boys can do this:D
     }
   }
 }
