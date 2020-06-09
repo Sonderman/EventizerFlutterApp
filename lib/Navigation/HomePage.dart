@@ -4,7 +4,6 @@ import 'package:eventizer/Tools/Dialogs.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -72,31 +71,12 @@ class _HomePageState extends State<HomePage> {
             bottomNavigationBar: bottomNavigationBar(context)));
   }
 
-  Future<bool> askForQuit() => showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-            title: Text("Uygulamadan Çıkmak istiyormusunuz?"),
-            actions: <Widget>[
-              FlatButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text("Hayır")),
-              FlatButton(
-                  onPressed: () {
-                    SystemNavigator.pop();
-                    //Navigator.pop(context);
-                  },
-                  child: Text("Evet"))
-            ],
-          ));
-
   //ANCHOR burada stack de widget varmı kontrol eder, eğer widget varsa pop eder
   Future<bool> onBackButtonPressed() async {
     if (NavigationManager(context).onBackButtonPressed()) {
       return Future.value(false);
     } else {
-      return await askForQuit();
+      return await askForQuit(context);
     }
   }
 }

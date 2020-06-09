@@ -2,8 +2,28 @@ import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+
+Future<bool> askForQuit(BuildContext context) => showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+          title: Text("Uygulamadan Çıkmak istiyormusunuz?"),
+          actions: <Widget>[
+            FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text("Hayır")),
+            FlatButton(
+                onPressed: () {
+                  SystemNavigator.pop();
+                  //Navigator.pop(context);
+                },
+                child: Text("Evet"))
+          ],
+        ));
 
 Future<bool> askingDialog(
     BuildContext context, String title, Color backgroundColor) {

@@ -343,6 +343,7 @@ Widget eventItem(
                           SizedBox(
                             width: responsive.widthSize(1),
                           ),
+                          //TODO Konum çift satır olmalı
                           Text(
                             location + "/$city",
                             style: TextStyle(

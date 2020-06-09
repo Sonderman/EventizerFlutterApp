@@ -1,24 +1,25 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
+
 import 'package:eventizer/Navigation/HomePage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/ImageEditor.dart';
 import 'package:eventizer/Tools/loading.dart';
 import 'package:eventizer/assets/Colors.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import 'Components/CustomScroll.dart';
+
 class SignUpPage extends StatefulWidget {
   final PageController pageController;
 
   SignUpPage(this.pageController);
 
-  //NOTE We should be just use the button of "Create Account" for navigation to "Create Account Page". Not with slide.
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
@@ -80,40 +81,45 @@ class _SignUpPageState extends State<SignUpPage> {
         : Scaffold(
             body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: heightSize(5),
+              child: ScrollConfiguration(
+                behavior: NoScrollEffectBehavior(),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: heightSize(5),
+                      ),
+                      addPhoto(),
+                      SizedBox(
+                        height: heightSize(1),
+                      ),
+                      nameSurname(),
+                      SizedBox(
+                        height: heightSize(1),
+                      ),
+                      emailAndPasswordFields(),
+                      SizedBox(
+                        height: heightSize(1),
+                      ),
+                      telephoneNumber(),
+                      SizedBox(
+                        height: heightSize(2),
+                      ),
+                      countryAndBirthDate(),
+                      SizedBox(
+                        height: heightSize(2),
+                      ),
+                      selectGender(),
+                      SizedBox(
+                        height: heightSize(2),
+                      ),
+                      signUpButton(),
+                      SizedBox(
+                        height: heightSize(2),
+                      ),
+                    ],
                   ),
-                  addPhoto(),
-                  SizedBox(
-                    height: heightSize(1),
-                  ),
-                  nameSurname(),
-                  SizedBox(
-                    height: heightSize(1),
-                  ),
-                  emailAndPasswordFields(),
-                  SizedBox(
-                    height: heightSize(1),
-                  ),
-                  telephoneNumber(),
-                  SizedBox(
-                    height: heightSize(2),
-                  ),
-                  countryAndBirthDate(),
-                  SizedBox(
-                    height: heightSize(2),
-                  ),
-                  selectGender(),
-                  SizedBox(
-                    height: heightSize(2),
-                  ),
-                  signUpButton(),
-                  SizedBox(
-                    height: heightSize(2),
-                  ),
-                ],
+                ),
               ),
             ),
           );

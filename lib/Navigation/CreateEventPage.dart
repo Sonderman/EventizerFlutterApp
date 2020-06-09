@@ -1089,7 +1089,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
           Container(
             height: heightSize(8),
             //TODO responsive yap
-            width: widthSize(91),
+            width: widthSize(100) - 40,
 
             child: ClipRRect(
               borderRadius: BorderRadius.all(
