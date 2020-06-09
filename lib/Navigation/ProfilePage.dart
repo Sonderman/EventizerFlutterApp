@@ -143,6 +143,9 @@ class _ProfilePageState extends State<ProfilePage>
                     child: Column(
                       children: <Widget>[
                         avatarAndName(),
+                        SizedBox(
+                          height: heightSize(3),
+                        ),
                         numberDatas(),
                         threeBoxes(),
                       ],
@@ -199,7 +202,7 @@ class _ProfilePageState extends State<ProfilePage>
                     onTap: () =>
                         NavigationManager(context).pushPage(SettingsPage()),
                     child: Container(
-                      height: heightSize(6),
+                      height: heightSize(7),
                       child: Padding(
                         padding: const EdgeInsets.all(10),
                         child: Image.asset(
@@ -222,14 +225,14 @@ class _ProfilePageState extends State<ProfilePage>
                       nameText.toUpperCase() + ' ' + surnameText.toUpperCase(),
                       style: TextStyle(
                         fontFamily: "Zona",
-                        fontSize: widthSize(4),
+                        fontSize: heightSize(3),
                       ),
                     ),
                     Text(
                       "@nickname",
                       style: TextStyle(
                         fontFamily: "ZonaLight",
-                        fontSize: heightSize(2),
+                        fontSize: heightSize(2.5),
                       ),
                     ),
                   ],
@@ -247,7 +250,7 @@ class _ProfilePageState extends State<ProfilePage>
                               builder: (BuildContext context) => AuthCheck()));
                     },
                     child: Container(
-                      height: heightSize(6),
+                      height: heightSize(7),
                       child: Padding(
                         padding: const EdgeInsets.all(10),
                         child: Image.asset(

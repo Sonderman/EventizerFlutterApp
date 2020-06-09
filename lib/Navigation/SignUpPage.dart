@@ -64,42 +64,42 @@ class _SignUpPageState extends State<SignUpPage> {
     return loading
         ? Loading()
         : Scaffold(
+      resizeToAvoidBottomPadding: false,
             body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: heightSize(5),
-                  ),
-                  addPhoto(),
-                  SizedBox(
-                    height: heightSize(1),
-                  ),
-                  nameSurname(),
-                  SizedBox(
-                    height: heightSize(1),
-                  ),
-                  emailAndPasswordFields(),
-                  SizedBox(
-                    height: heightSize(1),
-                  ),
-                  telephoneNumber(),
-                  SizedBox(
-                    height: heightSize(2),
-                  ),
-                  countryAndBirthDate(),
-                  SizedBox(
-                    height: heightSize(2),
-                  ),
-                  selectGender(),
-                  SizedBox(
-                    height: heightSize(2),
-                  ),
-                  signUpButton(),
-                  SizedBox(
-                    height: heightSize(2),
-                  ),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: heightSize(3),
+                    ),
+                    addPhoto(),
+                    SizedBox(
+                      height: heightSize(1),
+                    ),
+                    nameSurname(),
+                    SizedBox(
+                      height: heightSize(1),
+                    ),
+                    emailAndPasswordFields(),
+                    telephoneNumber(),
+                    SizedBox(
+                      height: heightSize(2),
+                    ),
+                    countryAndBirthDate(),
+                    SizedBox(
+                      height: heightSize(2),
+                    ),
+                    selectGender(),
+                    SizedBox(
+                      height: heightSize(2),
+                    ),
+                    signUpButton(),
+                    SizedBox(
+                      height: heightSize(2),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -451,7 +451,7 @@ class _SignUpPageState extends State<SignUpPage> {
       children: <Widget>[
         Container(
           width: widthSize(43),
-          height: heightSize(8),
+          height: heightSize(5),
           decoration: new BoxDecoration(
             color: MyColors().yellowContainer,
             borderRadius: new BorderRadius.all(
@@ -506,7 +506,7 @@ class _SignUpPageState extends State<SignUpPage> {
           },
           child: Container(
             width: widthSize(43),
-            height: heightSize(8),
+            height: heightSize(5),
             decoration: new BoxDecoration(
               color: MyColors().yellowContainer,
               borderRadius: new BorderRadius.all(

@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8d58333c-f598-489f-a19f-18eb267e38a9" name="Default Changelist" comment="">
+    <list default="true" id="7ffb4625-ef32-46d1-9347-761528366708" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/local.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/GeneratedPluginRegistrant.h" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner/GeneratedPluginRegistrant.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/GeneratedPluginRegistrant.m" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner/GeneratedPluginRegistrant.m" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Navigation/CreateEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/CreateEventPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/ExploreEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ExploreEventPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Settings/AppSettings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Settings/AppSettings.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Tools/NavigationManager.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Tools/NavigationManager.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/SignUpPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/SignUpPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Tools/BottomNavigation.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Tools/BottomNavigation.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -23,11 +20,11 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="emulator-5554" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="Nexus_4_API_28" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectId" id="1cp8rXLRZhW8zlWe6cXcprdofTY" />
+  <component name="ProjectId" id="1d4QgAS0qdaDtE1idknQDyLhRF5" />
   <component name="PropertiesComponent">
     <property name="dart.analysis.tool.window.force.activate" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
@@ -56,11 +53,11 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="8d58333c-f598-489f-a19f-18eb267e38a9" name="Default Changelist" comment="" />
-      <created>1591214373715</created>
+      <changelist id="7ffb4625-ef32-46d1-9347-761528366708" name="Default Changelist" comment="" />
+      <created>1591681993324</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1591214373715</updated>
+      <updated>1591681993324</updated>
     </task>
     <servers />
   </component>

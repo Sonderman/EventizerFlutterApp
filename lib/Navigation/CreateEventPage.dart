@@ -553,7 +553,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
               "Devam Et",
               style: TextStyle(
                 fontFamily: "Zona",
-                fontSize: heightSize(2),
+                fontSize: heightSize(3),
                 color: MyColors().whiteTextColor,
               ),
             ),
@@ -754,7 +754,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         ),
                         focusedBorder: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: MyColors().whiteTextColor),
+                              BorderSide(color: Colors.transparent),
                         ),
                       ),
                       style: TextStyle(
@@ -1009,6 +1009,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: "Zona",
+                fontSize: heightSize(3),
                 color: MyColors().whiteTextColor,
               ),
             ),
@@ -1024,93 +1025,32 @@ class _CreateEventPageState extends State<CreateEventPage> {
     for (int i = 1; i <= 81; i++) {
       sehirler.add(SearchItem(i, Sehirler().sehirler[i - 1]));
     }
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          /*
-          Container(
-            width: widthSize(43),
-            height: heightSize(8),
-            decoration: new BoxDecoration(
-              color: MyColors().blackOpacityContainer,
-              borderRadius: new BorderRadius.all(
-                Radius.circular(20),
-              ),
-            ),
-            child: Container(
-              width: widthSize(43),
-              height: heightSize(8),
-              decoration: new BoxDecoration(
-                color: MyColors().yellowContainer,
-                borderRadius: new BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-              child: Center(
-                child: DropdownButton<String>(
-                  hint: Text(
-                    country != null ? country : ("Ülke Seçin"),
-                    style: TextStyle(
-                      fontFamily: "Zona",
-                      fontSize: heightSize(2),
-                      color: MyColors().whiteTextColor,
-                    ),
-                  ),
-                  items: [
-                    DropdownMenuItem(
-                      child: Text("Türkiye"),
-                      value: "TR",
-                    ),
-                    DropdownMenuItem(
-                      child: Text("United States"),
-                      value: "US",
-                    ),
-                    DropdownMenuItem(
-                      child: Text("United Kingdom"),
-                      value: "UK",
-                    ),
-                  ],
-                  onChanged: (con) {
-                    setState(() {
-                      country = con;
-                    });
-                  },
-                ),
-              ),
-            ),
-          ),
-*/
-          Container(
-            height: heightSize(8),
-            //TODO responsive yap
-            width: widthSize(91),
-            child: ClipRRect(
-              borderRadius: BorderRadius.all(
-                Radius.circular(20),
-              ),
-              child: FlutterSearchPanel<int>(
-                //padding: EdgeInsets.symmetric(horizontal: 130, vertical: 10),
-                selected: 0,
-                title: "Şehir",
-                data: sehirler,
-                color: MyColors().yellowContainer,
-                icon: Icon(Icons.check_circle, color: Colors.white),
-                textStyle: TextStyle(
-                    color: Colors.white,
-                    fontFamily: "Zona",
-                    fontSize: heightSize(2),
-                    decorationStyle: TextDecorationStyle.dotted),
-                onChanged: (int item) {
-                  if (item != 0) {
-                    city = Sehirler().sehirler[item - 1];
-                  }
-                },
-              ),
-            ),
-          ),
-        ],
+    return Container(
+      height: heightSize(8),
+      //TODO responsive yap
+      width: widthSize(91),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(
+          Radius.circular(20),
+        ),
+        child: FlutterSearchPanel<int>(
+          //padding: EdgeInsets.symmetric(horizontal: 130, vertical: 10),
+          selected: 0,
+          title: "Şehir",
+          data: sehirler,
+          color: MyColors().yellowContainer,
+          icon: Icon(Icons.check_circle, color: Colors.white),
+          textStyle: TextStyle(
+              color: Colors.white,
+              fontFamily: "Zona",
+              fontSize: heightSize(3),
+              decorationStyle: TextDecorationStyle.dotted),
+          onChanged: (int item) {
+            if (item != 0) {
+              city = Sehirler().sehirler[item - 1];
+            }
+          },
+        ),
       ),
     );
   }
