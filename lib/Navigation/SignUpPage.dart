@@ -78,51 +78,60 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return loading
         ? Loading()
-        : Scaffold(
-            body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: ScrollConfiguration(
-                behavior: NoScrollEffectBehavior(),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: heightSize(5),
-                      ),
-                      addPhoto(),
-                      SizedBox(
-                        height: heightSize(1),
-                      ),
-                      nameSurname(),
-                      SizedBox(
-                        height: heightSize(1),
-                      ),
-                      emailAndPasswordFields(),
-                      SizedBox(
-                        height: heightSize(1),
-                      ),
-                      telephoneNumber(),
-                      SizedBox(
-                        height: heightSize(2),
-                      ),
-                      countryAndBirthDate(),
-                      SizedBox(
-                        height: heightSize(2),
-                      ),
-                      selectGender(),
-                      SizedBox(
-                        height: heightSize(2),
-                      ),
-                      signUpButton(),
-                      SizedBox(
-                        height: heightSize(2),
-                      ),
-                    ],
+        : LayoutBuilder(builder: (context, constraints) {
+            return Scaffold(
+              body: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: ScrollConfiguration(
+                  behavior: NoScrollEffectBehavior(),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: heightSize(5),
+                        ),
+                        addPhoto(),
+                        SizedBox(
+                          height: heightSize(1),
+                        ),
+                        nameSurname(),
+                        SizedBox(
+                          height: heightSize(1),
+                        ),
+                        emailAndPasswordFields(),
+                        SizedBox(
+                          height: heightSize(1),
+                        ),
+                        telephoneNumber(),
+                        SizedBox(
+                          height: heightSize(2),
+                        ),
+                        constraints.maxWidth < 400 ?
+                        countryAndBirthDateLittle() :
+                        countryAndBirthDate(),
+                        SizedBox(
+                          height: heightSize(2),
+                        ),
+                        constraints.maxWidth < 400 ?
+                        selectGenderLittle()
+                        :
+                        selectGender(),
+                        SizedBox(
+                          height: heightSize(2),
+                        ),
+                        constraints.maxWidth < 400
+                            ? signUpButtonLittle()
+                            : signUpButton(),
+                        SizedBox(
+                          height: heightSize(2),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
+            );
+          });
   }
 
   Future<void> _showChoiceDialog(BuildContext context) {
@@ -488,35 +497,38 @@ class _SignUpPageState extends State<SignUpPage> {
               Radius.circular(20),
             ),
           ),
-          child: Center(
-            child: DropdownButton<String>(
-              hint: Text(
-                _country != null ? _country : ("Ülke Seçin"),
-                style: TextStyle(
-                  fontFamily: "Zona",
-                  fontSize: heightSize(2),
-                  color: MyColors().whiteTextColor,
+          child: Padding(
+            padding: const EdgeInsets.all(5),
+            child: Center(
+              child: DropdownButton<String>(
+                hint: Text(
+                  _country != null ? _country : ("Ülke Seçin"),
+                  style: TextStyle(
+                    fontFamily: "Zona",
+                    fontSize: heightSize(2),
+                    color: MyColors().whiteTextColor,
+                  ),
                 ),
+                items: [
+                  DropdownMenuItem(
+                    child: Text("Türkiye"),
+                    value: "TR",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("United States"),
+                    value: "US",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("United Kingdom"),
+                    value: "UK",
+                  ),
+                ],
+                onChanged: (country) {
+                  setState(() {
+                    _country = country;
+                  });
+                },
               ),
-              items: [
-                DropdownMenuItem(
-                  child: Text("Türkiye"),
-                  value: "TR",
-                ),
-                DropdownMenuItem(
-                  child: Text("United States"),
-                  value: "US",
-                ),
-                DropdownMenuItem(
-                  child: Text("United Kingdom"),
-                  value: "UK",
-                ),
-              ],
-              onChanged: (country) {
-                setState(() {
-                  _country = country;
-                });
-              },
             ),
           ),
         ),
@@ -530,7 +542,7 @@ class _SignUpPageState extends State<SignUpPage> {
             if (datePick != null) {
               setState(() {
                 _birthday =
-                    "${datePick.day}/${datePick.month}/${datePick.year}";
+                "${datePick.day}/${datePick.month}/${datePick.year}";
               });
             }
           },
@@ -558,6 +570,97 @@ class _SignUpPageState extends State<SignUpPage> {
       ],
     );
   }
+
+  Widget countryAndBirthDateLittle() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Container(
+          width: widthSize(48),
+          height: heightSize(8),
+          decoration: new BoxDecoration(
+            color: MyColors().yellowContainer,
+            borderRadius: new BorderRadius.all(
+              Radius.circular(20),
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(5),
+            child: Center(
+              child: DropdownButton<String>(
+                hint: Text(
+                  _country != null ? _country : ("Ülke Seçin"),
+                  style: TextStyle(
+                    fontFamily: "Zona",
+                    fontSize: heightSize(2),
+                    color: MyColors().whiteTextColor,
+                  ),
+                ),
+                items: [
+                  DropdownMenuItem(
+                    child: Text("Türkiye"),
+                    value: "TR",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("United States"),
+                    value: "US",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("United Kingdom"),
+                    value: "UK",
+                  ),
+                ],
+                onChanged: (country) {
+                  setState(() {
+                    _country = country;
+                  });
+                },
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: heightSize(2),
+        ),
+        InkWell(
+          onTap: () async {
+            final datePick = await showDatePicker(
+                context: context,
+                initialDate: DateTime(DateTime.now().year - 18),
+                firstDate: DateTime(DateTime.now().year - 70),
+                lastDate: DateTime(DateTime.now().year - 18));
+            if (datePick != null) {
+              setState(() {
+                _birthday =
+                "${datePick.day}/${datePick.month}/${datePick.year}";
+              });
+            }
+          },
+          child: Container(
+            width: widthSize(48),
+            height: heightSize(8),
+            decoration: new BoxDecoration(
+              color: MyColors().yellowContainer,
+              borderRadius: new BorderRadius.all(
+                Radius.circular(20),
+              ),
+            ),
+            child: Center(
+              child: Text(
+                _birthday != null ? _birthday : "Doğum Tarihiniz",
+                style: TextStyle(
+                  fontFamily: "Zona",
+                  fontSize: heightSize(2),
+                  color: MyColors().whiteTextColor,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
 
   Widget selectGender() {
     return Row(
@@ -600,6 +703,74 @@ class _SignUpPageState extends State<SignUpPage> {
           },
           child: Container(
             width: widthSize(43),
+            height: heightSize(5),
+            decoration: new BoxDecoration(
+              color: _gender != null
+                  ? _gender ? womenColor() : Colors.black
+                  : womenColor(),
+              borderRadius: new BorderRadius.all(
+                Radius.circular(20),
+              ),
+            ),
+            child: Center(
+              child: Text(
+                "Kadın",
+                style: TextStyle(
+                  fontFamily: "Zona",
+                  fontSize: heightSize(2),
+                  color: MyColors().whiteTextColor,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget selectGenderLittle() {
+    return Column(
+      children: <Widget>[
+        InkWell(
+          onTap: () {
+            setState(() {
+              _gender = true;
+            });
+          },
+          child: Container(
+            width: widthSize(48),
+            height: heightSize(5),
+            decoration: new BoxDecoration(
+              color: _gender != null
+                  ? _gender ? Colors.black : menColor()
+                  : menColor(),
+              borderRadius: new BorderRadius.all(
+                Radius.circular(20),
+              ),
+            ),
+            child: Center(
+              child: Text(
+                ("Erkek"),
+                style: TextStyle(
+                  fontFamily: "Zona",
+                  fontSize: heightSize(2),
+                  color: MyColors().whiteTextColor,
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: heightSize(1),
+        ),
+        InkWell(
+          onTap: () {
+            setState(() {
+              _gender = false;
+            });
+          },
+          child: Container(
+            width: widthSize(48),
             height: heightSize(5),
             decoration: new BoxDecoration(
               color: _gender != null
@@ -682,7 +853,88 @@ class _SignUpPageState extends State<SignUpPage> {
             }
           },
           child: Container(
-            width: widthSize(43),
+            width: widthSize(42),
+            height: heightSize(8),
+            decoration: new BoxDecoration(
+              color: MyColors().purpleContainer,
+              borderRadius: new BorderRadius.all(
+                Radius.circular(20),
+              ),
+            ),
+            child: Center(
+              child: Text(
+                "Hesabı Oluştur",
+                style: TextStyle(
+                  fontFamily: "Zona",
+                  fontSize: heightSize(2),
+                  color: MyColors().whiteTextColor,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget signUpButtonLittle() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(30)),
+          child: FlatButton(
+            color: MyColors().purpleContainer,
+            highlightColor: MyColors().purpleContainerSplash,
+            splashColor: MyColors().purpleContainerSplash,
+            onPressed: () {
+              widget.pageController.previousPage(
+                  duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
+            },
+            child: Container(
+              height: heightSize(8),
+              width: widthSize(40),
+              alignment: Alignment.center,
+              child: Text(
+                "Hesabım Var",
+                style: TextStyle(
+                  fontFamily: "Zona",
+                  fontSize: heightSize(2),
+                  color: MyColors().whiteTextColor,
+                ),
+              ),
+            ),
+          ),
+        ),
+        InkWell(
+          onTap: () async {
+            //ANCHOR veri kontrolleri burda
+            if (_image != null &&
+                _name != null &&
+                _surname != null &&
+                mailController.text != null &&
+                passwordController.text != null &&
+                passwordController.text == password2Controller.text &&
+                _gender != null &&
+                _birthday != null &&
+                _country != null) {
+              setState(() {
+                loading = true;
+              });
+              signUp();
+            } else {
+              Fluttertoast.showToast(
+                  msg: "Lütfen Girdileri Kontrol Ediniz!",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 3,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 18.0);
+            }
+          },
+          child: Container(
+            width: widthSize(48),
             height: heightSize(8),
             decoration: new BoxDecoration(
               color: MyColors().purpleContainer,
