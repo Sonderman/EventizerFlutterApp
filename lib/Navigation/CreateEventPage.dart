@@ -476,6 +476,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     border: InputBorder.none,
                     hintText: "Etkinlik başlığı...",
                     hintStyle: TextStyle(
+                      fontSize: heightSize(2.5),
                       color: MyColors().whiteTextColor,
                     ),
                   ),
@@ -510,6 +511,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     border: InputBorder.none,
                     hintText: "Etkinlik detayı...",
                     hintStyle: TextStyle(
+                      fontSize: heightSize(2.5),
                       color: MyColors().whiteTextColor,
                     ),
                   ),
@@ -548,7 +550,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
               "Devam Et",
               style: TextStyle(
                 fontFamily: "Zona",
-                fontSize: heightSize(2),
+                fontSize: heightSize(2.5),
                 color: MyColors().whiteTextColor,
               ),
             ),
@@ -749,13 +751,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
                           color: MyColors().whiteTextColor,
                         ),
                         alignLabelWithHint: true,
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.transparent),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(color: MyColors().whiteTextColor),
-                        ),
                       ),
                       style: TextStyle(
                         fontSize: heightSize(2.5),
@@ -1013,6 +1008,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: "Zona",
+                fontSize: heightSize(2.5),
                 color: MyColors().whiteTextColor,
               ),
             ),
@@ -1024,7 +1020,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
   Widget cityAndCountry() {
     List<SearchItem<int>> sehirler = [];
-    sehirler.add(SearchItem(0, "Şehir Seçin"));
+    sehirler.add(SearchItem(0, "Şehir Seçin" ));
     for (int i = 1; i <= 81; i++) {
       sehirler.add(SearchItem(i, Sehirler().sehirler[i - 1]));
     }

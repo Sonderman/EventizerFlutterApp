@@ -296,13 +296,10 @@ class _ProfilePageState extends State<ProfilePage>
       );
 
   Widget threeBoxes() => Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: <Widget>[
             //ANCHOR About myself box are here
-            SizedBox(
-              height: heightSize(2),
-            ),
             Container(
               width: double.infinity,
               child: Padding(
@@ -426,14 +423,14 @@ class _ProfilePageState extends State<ProfilePage>
                   style: TextStyle(
                     color: MyColors().blueTextColor,
                     fontFamily: "Zona",
-                    fontSize: 17,
+                    height: heightSize(2),
                   ),
                 ),
                 Text(eventsText,
                     style: TextStyle(
                       color: MyColors().blueTextColor,
                       fontFamily: "ZonaLight",
-                      fontSize: 25,
+                      height: heightSize(2),
                     )),
               ],
             ),
@@ -445,7 +442,7 @@ class _ProfilePageState extends State<ProfilePage>
                   style: TextStyle(
                     color: MyColors().blueTextColor,
                     fontFamily: "Zona",
-                    fontSize: 17,
+                    height: heightSize(2),
                   ),
                 ),
                 Text(followersText,
@@ -463,7 +460,7 @@ class _ProfilePageState extends State<ProfilePage>
                     style: TextStyle(
                       color: MyColors().blueTextColor,
                       fontFamily: "Zona",
-                      fontSize: 17,
+                      height: heightSize(2),
                     )),
                 Text(
                     //REVIEW myFollowers text should be here
@@ -471,7 +468,7 @@ class _ProfilePageState extends State<ProfilePage>
                     style: TextStyle(
                       color: MyColors().blueTextColor,
                       fontFamily: "ZonaLight",
-                      fontSize: 25,
+                      height: heightSize(2),
                     )),
               ],
             ),

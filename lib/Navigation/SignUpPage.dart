@@ -243,7 +243,10 @@ class _SignUpPageState extends State<SignUpPage> {
       });
     }
   }
-
+//FIX Photo from camera is not working on 3.7" Nexus One phone.
+  //And Image Edıtor is photo crop are not working.
+  //We get this error and i think
+  //Error -32000 received from application: There are no running service protocol handlers.
   Widget addPhoto() {
     return GestureDetector(
       onTap: () {
