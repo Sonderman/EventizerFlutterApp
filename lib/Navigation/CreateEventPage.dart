@@ -677,25 +677,25 @@ class _CreateEventPageState extends State<CreateEventPage> {
             ),
           ),
           child: Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 90),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Container(
-                    height: heightSize(4),
-                    child: Image.asset("assets/icons/addEvent.png"),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  height: heightSize(4),
+                  child: Image.asset("assets/icons/addEvent.png"),
+                ),
+                SizedBox(
+                  width: widthSize(3),
+                ),
+                Text(
+                  "ETKİNLİK OLUŞTUR",
+                  style: TextStyle(
+                    fontFamily: "Zona",
+                    fontSize: heightSize(2),
+                    color: MyColors().whiteTextColor,
                   ),
-                  Text(
-                    "ETKİNLİK OLUŞTUR",
-                    style: TextStyle(
-                      fontFamily: "Zona",
-                      fontSize: heightSize(2),
-                      color: MyColors().whiteTextColor,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -1020,7 +1020,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
   Widget cityAndCountry() {
     List<SearchItem<int>> sehirler = [];
-    sehirler.add(SearchItem(0, "Şehir Seçin" ));
+    sehirler.add(SearchItem(0, "Şehir Seçin"));
     for (int i = 1; i <= 81; i++) {
       sehirler.add(SearchItem(i, Sehirler().sehirler[i - 1]));
     }
@@ -1118,38 +1118,44 @@ class _CreateEventPageState extends State<CreateEventPage> {
   List<Widget> pages() {
     return [
       //ANCHOR 1. sayfa
-      SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            eventPhotoAndButtons(),
-            SizedBox(
-              height: heightSize(3),
-            ),
-            dateButtons(),
-            SizedBox(
-              height: heightSize(3),
-            ),
-            timeButtons(),
-            SizedBox(
-              height: heightSize(3),
-            ),
-            eventTitleAndDetails(),
-            SizedBox(
-              height: heightSize(3),
-            ),
-            cityAndCountry(),
-            SizedBox(
-              height: heightSize(3),
-            ),
-            location(),
-            SizedBox(
-              height: heightSize(3),
-            ),
-            nextPageButton(),
-            SizedBox(
-              height: heightSize(5),
-            ),
-          ],
+      LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              eventPhotoAndButtons(),
+              SizedBox(
+                height: heightSize(3),
+              ),
+              dateButtons(),
+              SizedBox(
+                height: heightSize(3),
+              ),
+              timeButtons(),
+              SizedBox(
+                height: heightSize(3),
+              ),
+              eventTitleAndDetails(),
+              SizedBox(
+                height: heightSize(3),
+              ),
+              cityAndCountry(),
+              SizedBox(
+                height: heightSize(3),
+              ),
+              location(),
+              SizedBox(
+                height: heightSize(3),
+              ),
+              nextPageButton(),
+              constraints.maxWidth < 400
+                  ? SizedBox(
+                      height: heightSize(10),
+                    )
+                  : SizedBox(
+                      height: heightSize(5),
+                    ),
+            ],
+          ),
         ),
       ),
       //ANCHOR 2. sayfa
