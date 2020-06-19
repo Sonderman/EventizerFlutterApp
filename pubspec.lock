@@ -267,7 +267,7 @@ packages:
       name: image_editor
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.1"
+    version: "0.7.0"
   image_picker:
     dependency: "direct main"
     description:

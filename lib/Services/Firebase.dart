@@ -77,6 +77,7 @@ class DatabaseWorks {
           .collection("users")
           .document(userID)
           .collection("following")
+          .where("OtherUserID", isEqualTo: otherUserID)
           .getDocuments()
           .then((onValue) {
         if (onValue.documents.isNotEmpty)
@@ -114,6 +115,7 @@ class DatabaseWorks {
           .collection("users")
           .document(userID)
           .collection("following")
+          .where("OtherUserID", isEqualTo: otherUserID)
           .getDocuments()
           .then((onValue) async {
         if (onValue.documents.isNotEmpty) {

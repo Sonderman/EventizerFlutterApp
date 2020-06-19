@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat/dash_chat.dart';
 import 'package:eventizer/Models/UserModel.dart';
@@ -101,9 +102,9 @@ class UserService with ChangeNotifier {
       "Email": datalist[2],
       "PhoneNumber": int.parse(datalist[3]),
       "Gender": datalist[4],
-      "Country": datalist[5],
-      "BirthDay": datalist[6],
-      "NickName": datalist[7],
+      //"Country": datalist[5],
+      "BirthDay": datalist[5],
+      "NickName": datalist[6],
       'Nof_follower': 0,
       'Nof_following': 0,
       'Nof_events': 0,

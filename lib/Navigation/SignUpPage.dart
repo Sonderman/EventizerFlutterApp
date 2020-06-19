@@ -187,7 +187,7 @@ class _SignUpPageState extends State<SignUpPage> {
       mailController.text,
       _phoneNumber,
       _gender ? "Man" : "Woman",
-      _country,
+      // _country,
       _birthday,
       generateNickName(_name)
     ];
@@ -479,6 +479,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
+        /*
         Container(
           width: widthSize(43),
           height: heightSize(8),
@@ -520,6 +521,7 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
           ),
         ),
+        */
         InkWell(
           onTap: () async {
             final datePick = await showDatePicker(
@@ -535,7 +537,7 @@ class _SignUpPageState extends State<SignUpPage> {
             }
           },
           child: Container(
-            width: widthSize(43),
+            width: widthSize(90),
             height: heightSize(8),
             decoration: new BoxDecoration(
               color: MyColors().yellowContainer,
@@ -658,14 +660,15 @@ class _SignUpPageState extends State<SignUpPage> {
           onTap: () async {
             //ANCHOR veri kontrolleri burda
             if (_image != null &&
-                _name != null &&
-                _surname != null &&
-                mailController.text != null &&
-                passwordController.text != null &&
-                passwordController.text == password2Controller.text &&
-                _gender != null &&
-                _birthday != null &&
-                _country != null) {
+                    _name != null &&
+                    _surname != null &&
+                    mailController.text != null &&
+                    passwordController.text != null &&
+                    passwordController.text == password2Controller.text &&
+                    _gender != null &&
+                    _birthday != null
+                // && _country != null
+                ) {
               setState(() {
                 loading = true;
               });

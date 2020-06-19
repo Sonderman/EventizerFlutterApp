@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:eventizer/assets/Colors.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +59,9 @@ class _ImageEditorState extends State<ImageEditorPage> {
                 cropRectPadding: EdgeInsets.all(20.0),
                 hitTestSize: 20.0,
                 initCropRectType: InitCropRectType.imageRect,
-                cropAspectRatio: CropAspectRatios.ratio16_9);
+                cropAspectRatio: widget.forCreateEvent
+                    ? CropAspectRatios.ratio16_9
+                    : CropAspectRatios.ratio1_1);
           },
         ),
       ),

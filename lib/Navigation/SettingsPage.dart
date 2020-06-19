@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:eventizer/Models/UserModel.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/ImageEditor.dart';
@@ -76,10 +77,12 @@ class _SettingsPageState extends State<SettingsPage> {
                       height: heightSize(1),
                     ),
                     nameSurname(),
+                    /*
                     SizedBox(
                       height: heightSize(1),
                     ),
                     emailField(),
+                     */
                     SizedBox(
                       height: heightSize(1),
                     ),
@@ -88,10 +91,12 @@ class _SettingsPageState extends State<SettingsPage> {
                       height: heightSize(2),
                     ),
                     telephoneNumber(),
+                    /*
                     SizedBox(
                       height: heightSize(2),
                     ),
                     countryAndCity(),
+                    */
                     SizedBox(
                       height: heightSize(2),
                     ),
@@ -536,10 +541,11 @@ class _SettingsPageState extends State<SettingsPage> {
           isChanged = true;
           userModel.setUserSurname(_surname);
         }
+        /*
         if (mailController.text != null) {
           isChanged = true;
           userModel.setUserEmail(mailController.text);
-        }
+        }*/
         if (detailController.text != null) {
           isChanged = true;
           userModel.setUserAbout(detailController.text);
@@ -548,10 +554,11 @@ class _SettingsPageState extends State<SettingsPage> {
           isChanged = true;
           userModel.setUserCountry(_country);
         }
+        /*
         if (_city != null) {
           isChanged = true;
           userModel.setUserCity(_city);
-        }
+        }*/
         if (_phoneNumber != null) {
           isChanged = true;
           userModel.setUserTelNo(int.parse(_phoneNumber));

@@ -114,11 +114,11 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
       text: TextSpan(
         children: <TextSpan>[
           TextSpan(
-            text: category != null ? category : "En Yeni ",
+            text: category != null ? category : "En Yeni",
             style: TextStyle(fontFamily: "Zona", fontSize: heightSize(3)),
           ),
           TextSpan(
-            text: category != null ? "Etkinlikleri" : "Etkinlikler",
+            text: category != null ? " Etkinlikleri" : " Etkinlikler",
             style: TextStyle(fontFamily: "ZonaLight", fontSize: heightSize(3)),
           ),
         ],
@@ -215,7 +215,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                 InkWell(
                   onTap: () {
                     setState(() {
-                      category = "Yurt İçi Gezisi";
+                      category = "Yurtiçi Gezisi";
                     });
                   },
                   child: Container(
@@ -239,7 +239,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                                   "assets/icons/travelCategory.png"),
                             ),
                             Text(
-                              "Yurt İçi Gezi",
+                              "Yurtiçi Gezi",
                               style: TextStyle(
                                 fontFamily: "Zona",
                                 color: MyColors().whiteTextColor,
@@ -257,7 +257,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                 InkWell(
                   onTap: () {
                     setState(() {
-                      category = "Yurt Dışı Gezisi";
+                      category = "Yurtdışı Gezisi";
                     });
                   },
                   child: Container(
@@ -338,7 +338,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                 InkWell(
                   onTap: () {
                     setState(() {
-                      category = "Konferans";
+                      category = "Konferans&Seminer";
                     });
                   },
                   child: Container(
