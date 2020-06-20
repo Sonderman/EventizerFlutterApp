@@ -345,7 +345,7 @@ Widget eventItem(
                           ),
                           //TODO Konum çift satır olmalı
                           Text(
-                            location + "/$city",
+                            location + "\n" + "$city",
                             style: TextStyle(
                               fontFamily: "Zona",
                               fontSize: responsive.heightSize(2),

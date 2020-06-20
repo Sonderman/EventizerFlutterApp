@@ -86,24 +86,15 @@ class _ProfilePageState extends State<ProfilePage>
               userModel.parseMap(data.data);
               textUpdaterByUserModel(userModel);
               return Scaffold(
-                body: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: 25,
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: <Widget>[
-                            avatarAndName(),
-                            numberDatas(),
-                            followAndMessage(),
-                            threeBoxes(),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                body: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      avatarAndName(),
+                      numberDatas(),
+                      followAndMessage(),
+                      threeBoxes(),
+                    ],
+                  ),
                 ),
               );
             } else
@@ -120,7 +111,6 @@ class _ProfilePageState extends State<ProfilePage>
             SizedBox(
               height: widthSize(3),
             ),
-
             //TODO bildirim sayfası yaparken açılacak
             /*
             Container(
@@ -148,7 +138,15 @@ class _ProfilePageState extends State<ProfilePage>
                     child: Column(
                       children: <Widget>[
                         avatarAndName(),
+
+                        SizedBox(
+                          height: heightSize(2),
+                        ),
                         numberDatas(),
+
+                        SizedBox(
+                          height: heightSize(2),
+                        ),
                         threeBoxes(),
                       ],
                     ),
@@ -181,7 +179,7 @@ class _ProfilePageState extends State<ProfilePage>
 
 //ANCHOR "isThisProfileMine" screen should be redesign.
   Widget avatarAndName() => Padding(
-        padding: const EdgeInsets.all(20),
+    padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: <Widget>[
             InkWell(
@@ -213,7 +211,7 @@ class _ProfilePageState extends State<ProfilePage>
               ),
             ),
             SizedBox(
-              height: heightSize(2),
+                height: heightSize(2),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -227,7 +225,7 @@ class _ProfilePageState extends State<ProfilePage>
                     child: Container(
                       height: heightSize(6),
                       child: Padding(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(7),
                         child: Image.asset(
                           "assets/icons/options.png",
                         ),
@@ -248,14 +246,14 @@ class _ProfilePageState extends State<ProfilePage>
                       nameText.toUpperCase() + ' ' + surnameText.toUpperCase(),
                       style: TextStyle(
                         fontFamily: "Zona",
-                        fontSize: widthSize(4),
+                        fontSize: heightSize(3),
                       ),
                     ),
                     Text(
                       "@" + nickNameText,
                       style: TextStyle(
                         fontFamily: "ZonaLight",
-                        fontSize: heightSize(2),
+                        fontSize: heightSize(2.5),
                       ),
                     ),
                   ],
@@ -275,7 +273,7 @@ class _ProfilePageState extends State<ProfilePage>
                     child: Container(
                       height: heightSize(6),
                       child: Padding(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(7),
                         child: Image.asset(
                           "assets/icons/logout.png",
                         ),
@@ -296,13 +294,10 @@ class _ProfilePageState extends State<ProfilePage>
       );
 
   Widget threeBoxes() => Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: <Widget>[
             //ANCHOR About myself box are here
-            SizedBox(
-              height: heightSize(2),
-            ),
             Container(
               width: double.infinity,
               child: Padding(
@@ -414,7 +409,7 @@ class _ProfilePageState extends State<ProfilePage>
       );
 
   Widget numberDatas() => Padding(
-        padding: const EdgeInsets.all(20),
+    padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -426,14 +421,14 @@ class _ProfilePageState extends State<ProfilePage>
                   style: TextStyle(
                     color: MyColors().blueTextColor,
                     fontFamily: "Zona",
-                    fontSize: 17,
+                    fontSize: heightSize(3),
                   ),
                 ),
                 Text(eventsText,
                     style: TextStyle(
                       color: MyColors().blueTextColor,
                       fontFamily: "ZonaLight",
-                      fontSize: 25,
+                        fontSize: heightSize(3),
                     )),
               ],
             ),
@@ -445,14 +440,14 @@ class _ProfilePageState extends State<ProfilePage>
                   style: TextStyle(
                     color: MyColors().blueTextColor,
                     fontFamily: "Zona",
-                    fontSize: 17,
+                      fontSize: heightSize(3),
                   ),
                 ),
                 Text(followersText,
                     style: TextStyle(
                       color: MyColors().blueTextColor,
                       fontFamily: "ZonaLight",
-                      fontSize: 25,
+                        fontSize: heightSize(3),
                     )),
               ],
             ),
@@ -463,7 +458,7 @@ class _ProfilePageState extends State<ProfilePage>
                     style: TextStyle(
                       color: MyColors().blueTextColor,
                       fontFamily: "Zona",
-                      fontSize: 17,
+                        fontSize: heightSize(3),
                     )),
                 Text(
                     //REVIEW myFollowers text should be here
@@ -471,7 +466,7 @@ class _ProfilePageState extends State<ProfilePage>
                     style: TextStyle(
                       color: MyColors().blueTextColor,
                       fontFamily: "ZonaLight",
-                      fontSize: 25,
+                        fontSize: heightSize(3),
                     )),
               ],
             ),

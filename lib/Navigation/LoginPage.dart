@@ -277,7 +277,6 @@ class _LoginPageState extends State<LoginPage> {
             },
             child: Container(
               height: heightSize(8),
-              width: widthSize(35),
               alignment: Alignment.center,
               child: Text(
                 "Hesabım Yok",
@@ -309,7 +308,7 @@ class _LoginPageState extends State<LoginPage> {
             },
             child: Container(
               height: heightSize(8),
-              width: widthSize(35),
+              width: widthSize(30),
               alignment: Alignment.center,
               child: Text(
                 sendPasswordMailText,
@@ -329,6 +328,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       body: Stack(
           children: <Widget>[
                 PageView(

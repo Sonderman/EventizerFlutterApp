@@ -4,23 +4,17 @@
     <list default="true" id="8d58333c-f598-489f-a19f-18eb267e38a9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/local.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/Components/Event_Item.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/Components/Event_Item.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/CreateEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/CreateEventPage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Navigation/ExploreEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ExploreEventPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/SettingsPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/SettingsPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Navigation/SignUpPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/SignUpPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Services/Firebase.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Services/Firebase.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Services/Repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Services/Repository.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Settings/AppSettings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Settings/AppSettings.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Tools/ImageEditor.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Tools/ImageEditor.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -30,24 +24,20 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectId" id="1cp8rXLRZhW8zlWe6cXcprdofTY" />
+  <component name="ProjectId" id="1daFvS0i1NpJOodIwYdi3nOou3n" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="android.sdk.path" value="D:/SDKs/AndroidSdk" />
     <property name="dart.analysis.tool.window.force.activate" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="preferences.general" />
     <property name="show.migrate.to.gradle.popup" value="false" />
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager">
     <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter">
@@ -60,25 +50,38 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="8d58333c-f598-489f-a19f-18eb267e38a9" name="Default Changelist" comment="" />
-      <created>1591214373715</created>
+      <changelist id="479099c0-4444-4f36-871a-66d7bea2fcf9" name="Default Changelist" comment="" />
+      <created>1592655527588</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1591214373715</updated>
+      <updated>1592655527588</updated>
     </task>
     <servers />
   </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
-          </value>
-        </entry>
-      </map>
-    </option>
+  <component name="WindowStateProjectService">
+    <state width="1248" height="219" key="GridCell.Tab.0.bottom" timestamp="1592683768304">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1248" height="219" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1592683768304" />
+    <state width="1248" height="219" key="GridCell.Tab.0.center" timestamp="1592683768304">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1248" height="219" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1592683768304" />
+    <state width="1248" height="219" key="GridCell.Tab.0.left" timestamp="1592683768304">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1248" height="219" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1592683768304" />
+    <state width="1248" height="219" key="GridCell.Tab.0.right" timestamp="1592683768304">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1248" height="219" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1592683768304" />
+    <state x="461" y="162" key="SettingsEditor" timestamp="1592656670959">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="461" y="162" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1592656670959" />
+    <state x="656" y="344" key="com.intellij.ide.util.TipDialog" timestamp="1592680107553">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="656" y="344" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1592680107553" />
   </component>
 </project>

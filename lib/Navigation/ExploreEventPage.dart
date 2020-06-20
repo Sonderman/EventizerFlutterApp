@@ -25,6 +25,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
   }
 
   String category;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,7 +119,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
             style: TextStyle(fontFamily: "Zona", fontSize: heightSize(3)),
           ),
           TextSpan(
-            text: category != null ? " Etkinlikleri" : " Etkinlikler",
+            text: category != null ? " Etkinlikleri" : "Etkinlikler",
             style: TextStyle(fontFamily: "ZonaLight", fontSize: heightSize(3)),
           ),
         ],
@@ -161,6 +162,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         "Hepsi",
                         style: TextStyle(
                           fontFamily: "Zona",
+                          fontSize: heightSize(2),
                           color: MyColors().whiteTextColor,
                         ),
                       ),
@@ -177,7 +179,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                     });
                   },
                   child: Container(
-                    width: widthSize(40),
+                    width: widthSize(42),
                     height: heightSize(8),
                     decoration: new BoxDecoration(
                       color: MyColors().purpleContainer,
@@ -200,6 +202,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                               "Doğum Günü",
                               style: TextStyle(
                                 fontFamily: "Zona",
+                                fontSize: heightSize(2),
                                 color: MyColors().whiteTextColor,
                               ),
                             ),
@@ -219,7 +222,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                     });
                   },
                   child: Container(
-                    width: widthSize(40),
+                    width: widthSize(42),
                     height: heightSize(8),
                     decoration: new BoxDecoration(
                       color: MyColors().purpleContainer,
@@ -242,6 +245,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                               "Yurtiçi Gezi",
                               style: TextStyle(
                                 fontFamily: "Zona",
+                                fontSize: heightSize(2),
                                 color: MyColors().whiteTextColor,
                               ),
                             ),
@@ -261,7 +265,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                     });
                   },
                   child: Container(
-                    width: widthSize(40),
+                    width: widthSize(45),
                     height: heightSize(8),
                     decoration: new BoxDecoration(
                       color: MyColors().purpleContainer,
@@ -284,6 +288,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                               "Yurtdışı Gezisi",
                               style: TextStyle(
                                 fontFamily: "Zona",
+                                fontSize: heightSize(2),
                                 color: MyColors().whiteTextColor,
                               ),
                             ),
@@ -303,7 +308,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                     });
                   },
                   child: Container(
-                    width: widthSize(50),
+                    width: widthSize(58),
                     height: heightSize(8),
                     decoration: new BoxDecoration(
                       color: MyColors().purpleContainer,
@@ -312,22 +317,27 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                       ),
                     ),
                     child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Container(
-                            height: heightSize(4),
-                            child:
-                                Image.asset("assets/icons/cameraCategory.png"),
-                          ),
-                          Text(
-                            "Doğa Fotoğraflama",
-                            style: TextStyle(
-                              fontFamily: "Zona",
-                              color: MyColors().whiteTextColor,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Container(
+                              height: heightSize(4),
+                              child:
+                                  Image.asset("assets/icons/cameraCategory.png"),
                             ),
-                          ),
-                        ],
+                            Text(
+                              "Doğa Fotoğraflama",
+                              style: TextStyle(
+                                fontFamily: "Zona",
+                                fontSize: heightSize(2),
+                                color: MyColors().whiteTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -342,7 +352,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                     });
                   },
                   child: Container(
-                    width: widthSize(40),
+                    width: widthSize(45),
                     height: heightSize(8),
                     decoration: new BoxDecoration(
                       color: MyColors().purpleContainer,
@@ -365,6 +375,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                               "Konferans",
                               style: TextStyle(
                                 fontFamily: "Zona",
+                                fontSize: heightSize(2),
                                 color: MyColors().whiteTextColor,
                               ),
                             ),
@@ -407,6 +418,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                               "Kamp",
                               style: TextStyle(
                                 fontFamily: "Zona",
+                                fontSize: heightSize(2),
                                 color: MyColors().whiteTextColor,
                               ),
                             ),
