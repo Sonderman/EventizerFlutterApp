@@ -119,7 +119,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
             style: TextStyle(fontFamily: "Zona", fontSize: heightSize(3)),
           ),
           TextSpan(
-            text: category != null ? " Etkinlikleri" : "Etkinlikler",
+            text: category != null ? " Etkinlikleri" : " Etkinlikler",
             style: TextStyle(fontFamily: "ZonaLight", fontSize: heightSize(3)),
           ),
         ],
@@ -319,14 +319,13 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                     child: Center(
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
-
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             Container(
                               height: heightSize(4),
-                              child:
-                                  Image.asset("assets/icons/cameraCategory.png"),
+                              child: Image.asset(
+                                  "assets/icons/cameraCategory.png"),
                             ),
                             Text(
                               "Doğa Fotoğraflama",

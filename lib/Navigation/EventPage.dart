@@ -743,6 +743,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
+            //TODO konum için harita butonu gelecek
             /*
             Container(
               width: widthSize(43),
@@ -778,6 +779,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             ),
             */
           ] +
+          //ANCHOR katılımcı sayısına göre kontrol yapılıyor
           (widget.eventData["Status"] != "Finished" &&
                   !isThisEventMine &&
                   (widget.eventData['CurrentParticipantNumber'] <
@@ -815,7 +817,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                         }
                       },
                       child: Container(
-                        width: widthSize(43),
+                        width: widthSize(90),
                         height: heightSize(8),
                         decoration: new BoxDecoration(
                           color: MyColors().darkblueText,
@@ -827,7 +829,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 35),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Container(
                                   height: heightSize(4.5),
@@ -835,6 +837,9 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                                       ? Image.asset("assets/icons/unjoin.png")
                                       : Image.asset(
                                           "assets/icons/joinEvent.png"),
+                                ),
+                                SizedBox(
+                                  width: widthSize(3),
                                 ),
                                 Text(
                                   joinButton ? "AYRIL" : "KATIL",

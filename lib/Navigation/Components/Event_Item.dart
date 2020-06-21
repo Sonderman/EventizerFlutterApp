@@ -1,4 +1,5 @@
 import 'package:eventizer/Navigation/EventPage.dart';
+import 'package:eventizer/Navigation/ProfilePage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/Dialogs.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
@@ -58,51 +59,61 @@ Widget eventItem(
               ),
               Row(
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        height: responsive.heightSize(5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
+                  GestureDetector(
+                    onTap: () {
+                      //ANCHOR kullanıcı profiline buradan gidiyor
+                      NavigationManager(context).pushPage(ProfilePage(
+                        key: UniqueKey(),
+                        userID: ownerID,
+                        isFromEvent: true,
+                      ));
+                    },
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          height: responsive.heightSize(5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(20),
+                            ),
+                          ),
+                          child: FutureBuilder(
+                              future: userService.findUserByID(ownerID),
+                              builder: (BuildContext _,
+                                  AsyncSnapshot<dynamic> userData) {
+                                if (userData.connectionState ==
+                                    ConnectionState.done) {
+                                  ownerData = userData.data;
+                                  //ANCHOR user profil resmi burada
+                                  return Container(
+                                    height: responsive.heightSize(5),
+                                    width: responsive.widthSize(10),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: NetworkImage(userData
+                                              .data['ProfilePhotoUrl'])),
+                                    ),
+                                  );
+                                } else
+                                  return Image.asset(
+                                      "assets/images/avatar_man.png");
+                              }),
+                        ),
+                        SizedBox(
+                          width: responsive.widthSize(2),
+                        ),
+                        Text(
+                          title,
+                          style: TextStyle(
+                            fontFamily: "Zona",
+                            fontSize: responsive.heightSize(2),
+                            color: MyColors().greyTextColor,
                           ),
                         ),
-                        child: FutureBuilder(
-                            future: userService.findUserByID(ownerID),
-                            builder: (BuildContext _,
-                                AsyncSnapshot<dynamic> userData) {
-                              if (userData.connectionState ==
-                                  ConnectionState.done) {
-                                ownerData = userData.data;
-                                //ANCHOR user profil resmi burada
-                                return Container(
-                                  height: responsive.heightSize(5),
-                                  width: responsive.widthSize(10),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: NetworkImage(
-                                            userData.data['ProfilePhotoUrl'])),
-                                  ),
-                                );
-                              } else
-                                return Image.asset(
-                                    "assets/images/avatar_man.png");
-                            }),
-                      ),
-                      SizedBox(
-                        width: responsive.widthSize(2),
-                      ),
-                      Text(
-                        title,
-                        style: TextStyle(
-                          fontFamily: "Zona",
-                          fontSize: responsive.heightSize(2),
-                          color: MyColors().greyTextColor,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   Spacer(),
                   fromExplorePage
