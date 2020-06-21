@@ -439,12 +439,11 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget countryAndCity() {
-    List<DropdownMenuItem<int>> sehirler = [];
-    sehirler.add(DropdownMenuItem(value: 0, child: Text("Sehir Seçin")));
-    for (int i = 1; i <= 81; i++) {
+    List<DropdownMenuItem<String>> sehirler = [];
+    for (int i = 0; i < 81; i++) {
       sehirler.add(DropdownMenuItem(
-        value: i,
-        child: Text(Sehirler().sehirler[i - 1]),
+        value: Sehirler().sehirler[i],
+        child: Text(Sehirler().sehirler[i]),
       ));
     }
     return Row(
@@ -462,12 +461,12 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: (value) {
                 if (value != 0 && value != null) {
                   setState(() {
-                    _city = Sehirler().sehirler[value - 1];
+                    _city = value;
                     print("CITY:" + _city);
                   });
                 }
               },
-              displayClearIcon: true,
+              displayClearIcon: false,
               isExpanded: true,
             ),
           ),

@@ -1017,12 +1017,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
   }
 
   Widget cityAndCountry() {
-    List<DropdownMenuItem<int>> sehirler = [];
-    sehirler.add(DropdownMenuItem(value: 0, child: Text("Sehir Seçin")));
-    for (int i = 1; i <= 81; i++) {
+    List<DropdownMenuItem<String>> sehirler = [];
+    for (int i = 0; i < 81; i++) {
       sehirler.add(DropdownMenuItem(
-        value: i,
-        child: Text(Sehirler().sehirler[i - 1]),
+        value: Sehirler().sehirler[i],
+        child: Text(Sehirler().sehirler[i]),
       ));
     }
     return Padding(
@@ -1105,7 +1104,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     onChanged: (value) {
                       if (value != 0 && value != null) {
                         setState(() {
-                          city = Sehirler().sehirler[value - 1];
+                          city = value;
                           print("CITY:" + city);
                         });
                       }
