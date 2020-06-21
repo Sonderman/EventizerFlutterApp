@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
+import 'package:store_redirect/store_redirect.dart';
 
 class SplashScreen extends StatefulWidget {
   SplashScreen({Key key}) : super(key: key);
@@ -77,7 +78,23 @@ class _SplashScreenState extends State<SplashScreen> {
             MaterialPageRoute(
                 builder: (BuildContext context) => Scaffold(
                       body: Center(
-                        child: Text("Lütfen Uygulamayı Güncelleyin!"),
+                        child: Container(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text("Lütfen Uygulamayı Güncelleyin!"),
+                              SizedBox(
+                                height: 50,
+                              ),
+                              MaterialButton(
+                                  child: Text("Güncelle"),
+                                  color: Colors.green,
+                                  onPressed: () {
+                                    StoreRedirect.redirect();
+                                  })
+                            ],
+                          ),
+                        ),
                       ),
                     )));
     });
