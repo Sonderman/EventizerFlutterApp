@@ -17,8 +17,9 @@ Widget getNavigatedPage(BuildContext context) {
     UserService userWorker = Provider.of<UserService>(context);
     List<Widget> pages = [
       ChatPage(),
-      CreateEventPage(),
       ExploreEventPage(),
+
+      CreateEventPage(),
       ProfilePage(
           key: UniqueKey(),
           userID: userWorker.userModel.getUserId(),
