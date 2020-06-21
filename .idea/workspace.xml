@@ -4,16 +4,46 @@
     <list default="true" id="8d58333c-f598-489f-a19f-18eb267e38a9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/Components/Event_Item.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/Components/Event_Item.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-hdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-hdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-mdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-mdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/values/ic_launcher_background.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/values/ic_launcher_background.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/local.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/GeneratedPluginRegistrant.m" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner/GeneratedPluginRegistrant.m" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Navigation/CreateEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/CreateEventPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/ExploreEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ExploreEventPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldChatsPage.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldCreateEvent.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldEventPage.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldExplorePage.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldLoginPage.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldProfilePage.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldProfilePage2.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldRegisterPage.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/Old/OldSettingsPage.dart" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/ProfilePage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/SettingsPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/SettingsPage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Navigation/SignUpPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/SignUpPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Services/Repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Services/Repository.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Settings/AppSettings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Settings/AppSettings.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +80,7 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="479099c0-4444-4f36-871a-66d7bea2fcf9" name="Default Changelist" comment="" />
+      <changelist id="8d58333c-f598-489f-a19f-18eb267e38a9" name="Default Changelist" comment="" />
       <created>1592655527588</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -59,22 +89,22 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1248" height="219" key="GridCell.Tab.0.bottom" timestamp="1592683768304">
+    <state width="1251" height="218" key="GridCell.Tab.0.bottom" timestamp="1592745640275">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1248" height="219" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1592683768304" />
-    <state width="1248" height="219" key="GridCell.Tab.0.center" timestamp="1592683768304">
+    <state width="1251" height="218" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1592745640275" />
+    <state width="1251" height="218" key="GridCell.Tab.0.center" timestamp="1592745640275">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1248" height="219" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1592683768304" />
-    <state width="1248" height="219" key="GridCell.Tab.0.left" timestamp="1592683768304">
+    <state width="1251" height="218" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1592745640275" />
+    <state width="1251" height="218" key="GridCell.Tab.0.left" timestamp="1592745640275">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1248" height="219" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1592683768304" />
-    <state width="1248" height="219" key="GridCell.Tab.0.right" timestamp="1592683768304">
+    <state width="1251" height="218" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1592745640275" />
+    <state width="1251" height="218" key="GridCell.Tab.0.right" timestamp="1592745640275">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1248" height="219" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1592683768304" />
+    <state width="1251" height="218" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1592745640275" />
     <state x="461" y="162" key="SettingsEditor" timestamp="1592656670959">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

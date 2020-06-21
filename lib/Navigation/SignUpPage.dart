@@ -194,7 +194,7 @@ class _SignUpPageState extends State<SignUpPage> {
       mailController.text,
       _phoneNumber,
       _gender ? "Man" : "Woman",
-      // _country,
+      _country,
       _birthday,
       generateNickName(_name)
     ];
@@ -489,7 +489,6 @@ class _SignUpPageState extends State<SignUpPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-
         Container(
           width: widthSize(43),
           height: heightSize(8),
@@ -663,7 +662,6 @@ class _SignUpPageState extends State<SignUpPage> {
       ],
     );
   }
-
 
   Widget selectGender() {
     return Row(

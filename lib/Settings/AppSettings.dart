@@ -1,5 +1,4 @@
 class AppSettings {
-  //final DatabaseWorks firebaseDatabaseWorks = locator<DatabaseWorks>();
   final String appName = "EventizerApp";
   final int defaultNavIndex = 2;
   //final String _server = "Release";

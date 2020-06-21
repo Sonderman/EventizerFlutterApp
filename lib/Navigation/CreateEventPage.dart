@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:eventizer/Models/UserModel.dart';
 import 'package:eventizer/Navigation/MyEventsPage.dart';
 import 'package:eventizer/Navigation/ProfilePage.dart';
@@ -13,11 +12,10 @@ import 'package:eventizer/assets/Sehirler.dart';
 import 'package:eventizer/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_search_panel/flutter_search_panel.dart';
-import 'package:flutter_search_panel/search_item.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 class CreateEventPage extends StatefulWidget {
   @override
@@ -1019,10 +1017,13 @@ class _CreateEventPageState extends State<CreateEventPage> {
   }
 
   Widget cityAndCountry() {
-    List<SearchItem<int>> sehirler = [];
-    sehirler.add(SearchItem(0, "Şehir Seçin"));
+    List<DropdownMenuItem<int>> sehirler = [];
+    sehirler.add(DropdownMenuItem(value: 0, child: Text("Sehir Seçin")));
     for (int i = 1; i <= 81; i++) {
-      sehirler.add(SearchItem(i, Sehirler().sehirler[i - 1]));
+      sehirler.add(DropdownMenuItem(
+        value: i,
+        child: Text(Sehirler().sehirler[i - 1]),
+      ));
     }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -1086,27 +1087,35 @@ class _CreateEventPageState extends State<CreateEventPage> {
             height: heightSize(8),
             //TODO responsive yap
             width: widthSize(100) - 40,
-
             child: ClipRRect(
               borderRadius: BorderRadius.all(
                 Radius.circular(20),
               ),
-              child: FlutterSearchPanel<int>(
-                selected: 0,
-                title: "Şehir",
-                data: sehirler,
-                color: Colors.blue,
-                icon: Icon(Icons.check_circle, color: Colors.white),
-                textStyle: TextStyle(
-                    color: Colors.white,
-                    fontFamily: "Zona",
-                    fontSize: heightSize(2),
-                    decorationStyle: TextDecorationStyle.dotted),
-                onChanged: (int item) {
-                  if (item != 0) {
-                    city = Sehirler().sehirler[item - 1];
-                  }
-                },
+              child: Container(
+                color: MyColors().blackOpacityContainer,
+                child: Center(
+                  child: SearchableDropdown.single(
+                    items: sehirler,
+                    hint: Text(
+                      "Şehir Seçin",
+                      style: TextStyle(
+                          color: Colors.white, fontSize: widthSize(4)),
+                    ),
+                    searchHint: "Şehir Seçin",
+                    onChanged: (value) {
+                      if (value != 0 && value != null) {
+                        setState(() {
+                          city = Sehirler().sehirler[value - 1];
+                          print("CITY:" + city);
+                        });
+                      }
+                    },
+                    style:
+                        TextStyle(color: Colors.white, fontSize: widthSize(4)),
+                    displayClearIcon: true,
+                    isExpanded: true,
+                  ),
+                ),
               ),
             ),
           ),

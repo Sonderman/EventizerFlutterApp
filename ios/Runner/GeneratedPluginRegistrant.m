@@ -28,12 +28,6 @@
 @import firebase_storage;
 #endif
 
-#if __has_include(<flutter_search_panel/FlutterSearchPanelPlugin.h>)
-#import <flutter_search_panel/FlutterSearchPanelPlugin.h>
-#else
-@import flutter_search_panel;
-#endif
-
 #if __has_include(<fluttertoast/FluttertoastPlugin.h>)
 #import <fluttertoast/FluttertoastPlugin.h>
 #else
@@ -64,6 +58,12 @@
 @import path_provider;
 #endif
 
+#if __has_include(<searchable_dropdown/SearchableDropdownPlugin.h>)
+#import <searchable_dropdown/SearchableDropdownPlugin.h>
+#else
+@import searchable_dropdown;
+#endif
+
 @implementation GeneratedPluginRegistrant
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
@@ -71,12 +71,12 @@
   [FLTFirebaseAuthPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseAuthPlugin"]];
   [FLTFirebaseCorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseCorePlugin"]];
   [FLTFirebaseStoragePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseStoragePlugin"]];
-  [FlutterSearchPanelPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterSearchPanelPlugin"]];
   [FluttertoastPlugin registerWithRegistrar:[registry registrarForPlugin:@"FluttertoastPlugin"]];
   [FlutterImageEditorPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterImageEditorPlugin"]];
   [FLTImagePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTImagePickerPlugin"]];
   [FLTPackageInfoPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPackageInfoPlugin"]];
   [FLTPathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPathProviderPlugin"]];
+  [SearchableDropdownPlugin registerWithRegistrar:[registry registrarForPlugin:@"SearchableDropdownPlugin"]];
 }
 
 @end

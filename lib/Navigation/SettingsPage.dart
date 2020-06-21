@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:eventizer/Models/UserModel.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/ImageEditor.dart';
@@ -10,11 +9,10 @@ import 'package:eventizer/assets/Colors.dart';
 import 'package:eventizer/assets/Sehirler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_search_panel/flutter_search_panel.dart';
-import 'package:flutter_search_panel/search_item.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -91,12 +89,10 @@ class _SettingsPageState extends State<SettingsPage> {
                       height: heightSize(2),
                     ),
                     telephoneNumber(),
-                    /*
                     SizedBox(
                       height: heightSize(2),
                     ),
                     countryAndCity(),
-                    */
                     SizedBox(
                       height: heightSize(2),
                     ),
@@ -443,84 +439,36 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget countryAndCity() {
-    List<SearchItem<int>> sehirler = [];
-    sehirler.add(SearchItem(0, "Şehir"));
+    List<DropdownMenuItem<int>> sehirler = [];
+    sehirler.add(DropdownMenuItem(value: 0, child: Text("Sehir Seçin")));
     for (int i = 1; i <= 81; i++) {
-      sehirler.add(SearchItem(i, Sehirler().sehirler[i - 1]));
+      sehirler.add(DropdownMenuItem(
+        value: i,
+        child: Text(Sehirler().sehirler[i - 1]),
+      ));
     }
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        /*
-        Container(
-          width: widthSize(43),
-          height: heightSize(8),
-          decoration: new BoxDecoration(
-            color: MyColors().yellowContainer,
-            borderRadius: new BorderRadius.all(
-              Radius.circular(20),
-            ),
-          ),
-          child: Center(
-            child: DropdownButton<String>(
-              hint: Text(
-                _country != null ? _country : ("Ülke Seçin"),
-                style: TextStyle(
-                  fontFamily: "Zona",
-                  fontSize: heightSize(2),
-                  color: MyColors().whiteTextColor,
-                ),
-              ),
-              items: [
-                DropdownMenuItem(
-                  child: Text("Türkiye"),
-                  value: "TR",
-                ),
-                DropdownMenuItem(
-                  child: Text("United States"),
-                  value: "US",
-                ),
-                DropdownMenuItem(
-                  child: Text("United Kingdom"),
-                  value: "UK",
-                ),
-              ],
-              onChanged: (country) {
-                setState(() {
-                  _country = country;
-                });
-              },
-            ),
-          ),
-        ),
-         */
-
         Center(
           child: Container(
-            height: heightSize(8),
-            width: widthSize(75),
-            child: ClipRRect(
-              borderRadius: BorderRadius.all(
-                Radius.circular(20),
-              ),
-              child: FlutterSearchPanel<int>(
-                //padding: EdgeInsets.symmetric(horizontal: 130, vertical: 10),
-                selected: 0,
-                title: "Şehir",
-                data: sehirler,
-                color: MyColors().yellowContainer,
-                icon: Icon(Icons.check_circle, color: Colors.white),
-                textStyle: TextStyle(
-                    color: Colors.white,
-                    fontFamily: "Zona",
-                    fontSize: heightSize(2),
-                    decorationStyle: TextDecorationStyle.dotted),
-                onChanged: (int item) {
-                  if (item != 0) {
-                    _city = Sehirler().sehirler[item - 1];
-                  }
-                },
-              ),
+            height: heightSize(10),
+            width: widthSize(90),
+            child: SearchableDropdown.single(
+              label: "Sehir Seçin",
+              items: sehirler,
+              hint: userModel.getUserCity() ?? "Şehir Seçin",
+              searchHint: "Şehir Seçin",
+              onChanged: (value) {
+                if (value != 0 && value != null) {
+                  setState(() {
+                    _city = Sehirler().sehirler[value - 1];
+                    print("CITY:" + _city);
+                  });
+                }
+              },
+              displayClearIcon: true,
+              isExpanded: true,
             ),
           ),
         ),
@@ -554,11 +502,11 @@ class _SettingsPageState extends State<SettingsPage> {
           isChanged = true;
           userModel.setUserCountry(_country);
         }
-        /*
+
         if (_city != null) {
           isChanged = true;
           userModel.setUserCity(_city);
-        }*/
+        }
         if (_phoneNumber != null) {
           isChanged = true;
           userModel.setUserTelNo(int.parse(_phoneNumber));
