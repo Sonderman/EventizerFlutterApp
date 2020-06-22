@@ -1,46 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
-  </component>
   <component name="ChangeListManager">
-    <list default="true" id="c7f9d452-a831-4e1d-ab41-b9e6b93b1869" name="Default Changelist" comment="">
+    <list default="true" id="92e7a1f8-a100-4dd0-b6fd-a89db77abcb7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/local.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/GeneratedPluginRegistrant.m" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner/GeneratedPluginRegistrant.m" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Navigation/CreateEventPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/CreateEventPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Tools/BottomNavigation.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Tools/BottomNavigation.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Navigation/SettingsPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/SettingsPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Tools/ImageEditor.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Tools/ImageEditor.dart" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="Pixel_3a_XL_API_29" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="Nexus_One_API_29_3.7inc" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectId" id="1ddjLXVMEY5BDaTHYXHJRaWr6RE" />
+  <component name="ProjectId" id="1dgq2rPR7UZa2HvToQCpcDFT9BT" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
     <property name="dart.analysis.tool.window.force.activate" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
+    <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
     <property name="show.migrate.to.gradle.popup" value="false" />
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager">
     <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter">
@@ -53,23 +47,34 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="c7f9d452-a831-4e1d-ab41-b9e6b93b1869" name="Default Changelist" comment="" />
-      <created>1592761808130</created>
+      <changelist id="92e7a1f8-a100-4dd0-b6fd-a89db77abcb7" name="Default Changelist" comment="" />
+      <created>1592856880046</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1592761808130</updated>
+      <updated>1592856880046</updated>
     </task>
     <servers />
   </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
+  <component name="WindowStateProjectService">
+    <state width="1064" height="209" key="GridCell.Tab.0.bottom" timestamp="1592861467675">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1064" height="209" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1592861467675" />
+    <state width="1064" height="209" key="GridCell.Tab.0.center" timestamp="1592861467674">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1064" height="209" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1592861467674" />
+    <state width="1064" height="209" key="GridCell.Tab.0.left" timestamp="1592861467674">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1064" height="209" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1592861467674" />
+    <state width="1064" height="209" key="GridCell.Tab.0.right" timestamp="1592861467675">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1064" height="209" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1592861467675" />
+    <state x="91" y="100" width="924" height="630" key="com.android.tools.idea.avdmanager.AvdListDialog" timestamp="1592861451936">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="91" y="100" width="924" height="630" key="com.android.tools.idea.avdmanager.AvdListDialog/0.0.1536.824@0.0.1536.824" timestamp="1592861451936" />
   </component>
 </project>

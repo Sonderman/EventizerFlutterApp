@@ -44,9 +44,17 @@ class _CreateEventPageState extends State<CreateEventPage> {
   TextEditingController controllerLocation = TextEditingController();
   TextEditingController participantNumberController = TextEditingController();
   List<String> categoryItems = locator<EventSettings>().categoryItems ?? [];
-  List<List<String>> subCategoryItems = locator<EventSettings>().subCategoryItems ?? [];
+  List<List<String>> subCategoryItems =
+      locator<EventSettings>().subCategoryItems ?? [];
   MaterialLocalizations localizations;
-  String subCategory, mainCategory, eventStartDate, eventStartTime, eventFinishDate, eventFinishTime, country, city;
+  String subCategory,
+      mainCategory,
+      eventStartDate,
+      eventStartTime,
+      eventFinishDate,
+      eventFinishTime,
+      country,
+      city;
   TimeOfDay eventStartTimeOfDay, eventFinishTimeOfDay;
   DateTime eventStartDateTime;
   bool isStartDateSelected = false,
@@ -81,7 +89,15 @@ class _CreateEventPageState extends State<CreateEventPage> {
     return Scaffold(
         backgroundColor: Colors.deepPurpleAccent,
         body: Stack(
-          children: <Widget>[PageView(controller: _pageController, children: pages())] + (loadingOverLay ? <Widget>[PageComponents(context).loadingOverlay(backgroundColor: Colors.white)] : <Widget>[]),
+          children: <Widget>[
+                PageView(controller: _pageController, children: pages())
+              ] +
+              (loadingOverLay
+                  ? <Widget>[
+                      PageComponents(context)
+                          .loadingOverlay(backgroundColor: Colors.white)
+                    ]
+                  : <Widget>[]),
         ));
   }
 
@@ -216,9 +232,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     firstDate: DateTime(DateTime.now().year),
                     lastDate: DateTime(DateTime.now().year + 2),
                     selectableDayPredicate: (DateTime currentDate) {
-                      if (currentDate.month > DateTime.now().month && currentDate.year >= DateTime.now().year) {
+                      if (currentDate.month > DateTime.now().month &&
+                          currentDate.year >= DateTime.now().year) {
                         return true;
-                      } else if (currentDate.day >= DateTime.now().day && currentDate.month >= DateTime.now().month) {
+                      } else if (currentDate.day >= DateTime.now().day &&
+                          currentDate.month >= DateTime.now().month) {
                         return true;
                       } else if (currentDate.year > DateTime.now().year)
                         return true;
@@ -231,7 +249,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     isStartDateSelected = true;
                     eventFinishDate = null;
                     isFinishDateSelected = false;
-                    eventStartDate = "${datePick.day}/${datePick.month}/${datePick.year}";
+                    eventStartDate =
+                        "${datePick.day}/${datePick.month}/${datePick.year}";
                   });
                 }
               },
@@ -246,7 +265,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         child: Image.asset("assets/icons/startDate.png"),
                       ),
                       Text(
-                        eventStartDate == null ? "Başlangıç" : "$eventStartDate",
+                        eventStartDate == null
+                            ? "Başlangıç"
+                            : "$eventStartDate",
                         style: TextStyle(
                           fontFamily: "Zona",
                           fontSize: heightSize(2),
@@ -279,13 +300,16 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 if (datePick != null) {
                   setState(() {
                     isFinishDateSelected = true;
-                    eventFinishDate = "${datePick.day}/${datePick.month}/${datePick.year}";
+                    eventFinishDate =
+                        "${datePick.day}/${datePick.month}/${datePick.year}";
                   });
                 }
               },
               child: Center(
                 child: Padding(
-                  padding: eventFinishDate == null ? EdgeInsets.symmetric(horizontal: 40) : EdgeInsets.symmetric(horizontal: 15),
+                  padding: eventFinishDate == null
+                      ? EdgeInsets.symmetric(horizontal: 40)
+                      : EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
@@ -339,7 +363,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       isStartTimeSelected = true;
                       eventFinishTime = null;
                       isFinishTimeSelected = false;
-                      eventStartTime = localizations.formatTimeOfDay(eventStartTimeOfDay);
+                      eventStartTime =
+                          localizations.formatTimeOfDay(eventStartTimeOfDay);
                     });
                   }
                 });
@@ -355,7 +380,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         child: Image.asset("assets/icons/startTime.png"),
                       ),
                       Text(
-                        eventStartTime == null ? "Başlangıç" : "$eventStartTime",
+                        eventStartTime == null
+                            ? "Başlangıç"
+                            : "$eventStartTime",
                         style: TextStyle(
                           fontFamily: "Zona",
                           fontSize: heightSize(2),
@@ -388,7 +415,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       eventFinishTimeOfDay = timePick;
                       setState(() {
                         isFinishTimeSelected = true;
-                        eventFinishTime = localizations.formatTimeOfDay(eventFinishTimeOfDay);
+                        eventFinishTime =
+                            localizations.formatTimeOfDay(eventFinishTimeOfDay);
                       });
                     }
                   });
@@ -396,7 +424,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
               },
               child: Center(
                 child: Padding(
-                  padding: eventFinishTime == null ? EdgeInsets.symmetric(horizontal: 40) : EdgeInsets.symmetric(horizontal: 20),
+                  padding: eventFinishTime == null
+                      ? EdgeInsets.symmetric(horizontal: 40)
+                      : EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
@@ -499,7 +529,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Widget nextPageButton() {
     return InkWell(
       onTap: () {
-        _pageController.nextPage(duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
+        _pageController.nextPage(
+            duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -531,7 +562,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
     return InkWell(
       onTap: () async {
         int maxParticipantNumber;
-        if (participantNumberController.text == null || participantNumberController.text == "")
+        if (participantNumberController.text == null ||
+            participantNumberController.text == "")
           maxParticipantNumber = 2;
         else
           maxParticipantNumber = int.parse(participantNumberController.text);
@@ -561,8 +593,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
             return null;
           }
 
-          final eventManager = Provider.of<EventService>(context, listen: false);
-          final userID = Provider.of<UserService>(context, listen: false).userModel.getUserId();
+          final eventManager =
+              Provider.of<EventService>(context, listen: false);
+          final userID = Provider.of<UserService>(context, listen: false)
+              .userModel
+              .getUserId();
           Map<String, dynamic> eventData = {
             // REVIEW Veri tabanında yazılan yer burası , burası için bir çözüm bul
             "OrganizerID": userID,
@@ -586,21 +621,46 @@ class _CreateEventPageState extends State<CreateEventPage> {
           if (await eventManager.createEvent(userID, eventData, _image)) {
             print("Event oluşturma başarılı");
             //ANCHOR Event oluşturma başarılıysa profilepage e gidiyor.
-            NavigationManager(context).pushPage(ProfilePage(userID: userService.userModel.getUserId(), isFromEvent: false), refresh: false);
+            NavigationManager(context).pushPage(
+                ProfilePage(
+                    userID: userService.userModel.getUserId(),
+                    isFromEvent: false),
+                refresh: false);
             NavigationManager(context).pushPage(MyEventsPage(
               userID: userService.userModel.getUserId(),
               isOld: false,
             ));
 
-            Fluttertoast.showToast(msg: "Etkinlik Oluşturuldu", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 4, backgroundColor: Colors.green, textColor: Colors.white, fontSize: 18.0);
+            Fluttertoast.showToast(
+                msg: "Etkinlik Oluşturuldu",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 4,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 18.0);
           } else {
             setState(() {
               loadingOverLay = false;
             });
-            Fluttertoast.showToast(msg: "İnternet Bağlantınızı kontrol ediniz!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 3, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 18.0);
+            Fluttertoast.showToast(
+                msg: "İnternet Bağlantınızı kontrol ediniz!",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 3,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 18.0);
           }
         } else {
-          Fluttertoast.showToast(msg: "Eksik Alanları Doldurunuz!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 3, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 18.0);
+          Fluttertoast.showToast(
+              msg: "Eksik Alanları Doldurunuz!",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 3,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 18.0);
         }
       },
       child: Padding(
@@ -677,7 +737,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       enableInteractiveSelection: false,
                       controller: participantNumberController,
                       expands: false,
-                      inputFormatters: <TextInputFormatter>[WhitelistingTextInputFormatter.digitsOnly],
+                      inputFormatters: <TextInputFormatter>[
+                        WhitelistingTextInputFormatter.digitsOnly
+                      ],
                       decoration: InputDecoration(
                         counterText: "",
                         border: InputBorder.none,
@@ -792,7 +854,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     ),
                   ),
                   value: mainCategory != null ? mainCategory : null,
-                  items: categoryItems.map<DropdownMenuItem<String>>((String value) {
+                  items: categoryItems
+                      .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(
@@ -825,7 +888,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
   }
 
   Widget selectSubCategory() {
-    int selectedMainCategoryIndex = categoryItems.indexWhere((element) => element == mainCategory);
+    int selectedMainCategoryIndex =
+        categoryItems.indexWhere((element) => element == mainCategory);
     return Column(
       children: <Widget>[
         Padding(
@@ -852,7 +916,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     ),
                   ),
                   value: subCategory != null ? subCategory : null,
-                  items: subCategoryItems[selectedMainCategoryIndex].map<DropdownMenuItem<String>>((String value) {
+                  items: subCategoryItems[selectedMainCategoryIndex]
+                      .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(
@@ -959,7 +1024,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
         child: Text(Sehirler().sehirler[i]),
       ));
     }
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: ClipRRect(
@@ -981,12 +1045,75 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   underline: SizedBox(),
                   clearIcon: Icon(Icons.delete),
                   menuBackgroundColor: MyColors().yellowContainer,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: heightSize(2.5),
+                      fontFamily: "Zona"),
+                  hint: Text("Şehir Seçin",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: heightSize(2.5),
+                          fontFamily: "Zona")),
                   items: sehirler,
-                  style: TextStyle(color: Colors.white, fontSize: heightSize(2.5), fontFamily: "Zona"),
-                  hint: Text(
-                    "Şehir Seçin",
-                    style: TextStyle(color: Colors.white, fontSize: heightSize(2.5), fontFamily: "Zona"),
-                  ),
+                  searchHint: "Şehir Seçin",
+                  onChanged: (value) {
+                    if (value != 0 && value != null) {
+                      setState(() {
+                        city = value;
+                        print("CITY:" + city);
+                      });
+                    }
+                  },
+                  displayClearIcon: true,
+                  isExpanded: true,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget cityAndCountryLittle() {
+    List<DropdownMenuItem<String>> sehirler = [];
+    for (int i = 0; i < 81; i++) {
+      sehirler.add(DropdownMenuItem(
+        value: Sehirler().sehirler[i],
+        child: Text(Sehirler().sehirler[i]),
+      ));
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(
+          Radius.circular(20),
+        ),
+        child: Container(
+          height: heightSize(13),
+          //TODO responsive yap
+          color: MyColors().blackOpacityContainer,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SearchableDropdown.single(
+                  iconEnabledColor: MyColors().whiteTextColor,
+                  underline: SizedBox(),
+                  clearIcon: Icon(Icons.delete),
+                  menuBackgroundColor: MyColors().yellowContainer,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: heightSize(2.5),
+                      fontFamily: "Zona"),
+                  hint: Text("Şehir Seçin",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: heightSize(2.5),
+                          fontFamily: "Zona")),
+                  items: sehirler,
                   searchHint: "Şehir Seçin",
                   onChanged: (value) {
                     if (value != 0 && value != null) {
@@ -1030,7 +1157,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
               SizedBox(
                 height: heightSize(3),
               ),
-              cityAndCountry(),
+              constraints.maxWidth < 400
+                  ? cityAndCountryLittle()
+                  : cityAndCountry(),
               SizedBox(
                 height: heightSize(3),
               ),

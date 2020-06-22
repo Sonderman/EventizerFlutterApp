@@ -9,18 +9,31 @@ import 'package:image_editor/image_editor.dart';
 class ImageEditorPage extends StatefulWidget {
   final File image;
   final bool forCreateEvent;
+
   ImageEditorPage({@required this.image, @required this.forCreateEvent});
+
   @override
   _ImageEditorState createState() => _ImageEditorState(image);
 }
 
 class _ImageEditorState extends State<ImageEditorPage> {
   final GlobalKey<ExtendedImageEditorState> editorKey =
-      GlobalKey<ExtendedImageEditorState>();
+  GlobalKey<ExtendedImageEditorState>();
 
   Uint8List _image;
   final File rawImage;
+
   _ImageEditorState(this.rawImage);
+
+  double heightSize(double value) {
+    value /= 100;
+    return MediaQuery.of(context).size.height * value;
+  }
+
+  double widthSize(double value) {
+    value /= 100;
+    return MediaQuery.of(context).size.width * value;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +64,8 @@ class _ImageEditorState extends State<ImageEditorPage> {
           extendedImageEditorKey: editorKey,
           initEditorConfigHandler: (state) {
             return EditorConfig(
-                // lineColor: Colors.blue,
-                // lineHeight: 2,
+              // lineColor: Colors.blue,
+              // lineHeight: 2,
                 maxScale: 2.0,
                 cornerColor: Colors.red,
                 //cornerSize: Size(25, 5),
@@ -76,8 +89,10 @@ class _ImageEditorState extends State<ImageEditorPage> {
               child: FlatButton.icon(
                 icon: Icon(Icons.flip),
                 label: Text(
-                  "Flip",
-                  style: TextStyle(fontSize: 10.0),
+                  "Yansıt",
+                  style: TextStyle(
+                    fontSize: heightSize(1.7),
+                  ),
                 ),
                 textColor: Colors.white,
                 onPressed: () {
@@ -91,8 +106,10 @@ class _ImageEditorState extends State<ImageEditorPage> {
                 child: FlatButton.icon(
                   icon: Icon(Icons.rotate_left),
                   label: Text(
-                    "Rotate Left",
-                    style: TextStyle(fontSize: 8.0),
+                    "Sola\nDöndür",
+                    style: TextStyle(
+                      fontSize: heightSize(1.7),
+                    ),
                   ),
                   textColor: Colors.white,
                   onPressed: () {
@@ -107,8 +124,10 @@ class _ImageEditorState extends State<ImageEditorPage> {
                 child: FlatButton.icon(
                   icon: Icon(Icons.rotate_right),
                   label: Text(
-                    "Rotate Right",
-                    style: TextStyle(fontSize: 8.0),
+                    "Sağa\nDöndür",
+                    style: TextStyle(
+                      fontSize: heightSize(1.7),
+                    ),
                   ),
                   textColor: Colors.white,
                   onPressed: () {
@@ -122,7 +141,9 @@ class _ImageEditorState extends State<ImageEditorPage> {
                 icon: Icon(Icons.restore),
                 label: Text(
                   "Reset",
-                  style: TextStyle(fontSize: 10.0),
+                  style: TextStyle(
+                    fontSize: heightSize(1.7),
+                  ),
                 ),
                 textColor: Colors.white,
                 onPressed: () {
@@ -152,7 +173,7 @@ class _ImageEditorState extends State<ImageEditorPage> {
     try {
       showBusyingDialog();
       _image =
-          await cropImageDataWithNativeLibrary(state: editorKey.currentState);
+      await cropImageDataWithNativeLibrary(state: editorKey.currentState);
     } catch (e) {
       print(e);
     }
