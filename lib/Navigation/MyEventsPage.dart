@@ -17,12 +17,16 @@ class MyEventsPage extends StatefulWidget {
 }
 
 class _MyEventsPageState extends State<MyEventsPage> {
-  bool isMine;
-
+  bool isMine, isOld;
+  PageController _pageController;
   @override
   void initState() {
     super.initState();
     widget.userID == null ? isMine = false : isMine = true;
+    widget.isOld ? isOld = true : isOld = false;
+    _pageController = PageController(
+      initialPage: isOld ? 1 : 0,
+    );
   }
 
   double heightSize(double value) {
@@ -40,18 +44,18 @@ class _MyEventsPageState extends State<MyEventsPage> {
     return Scaffold(
       backgroundColor: Colors.deepPurpleAccent,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: PageView(
+          controller: _pageController,
           children: <Widget>[
-            //categoryList(),
-            eventList(),
+            eventList(false),
+            eventList(true),
           ],
         ),
       ),
     );
   }
 
-  Widget eventList() {
+  Widget eventList(bool isOld) {
     var _eventManager = Provider.of<EventService>(context);
 
     String userID = widget.userID == null
@@ -66,7 +70,7 @@ class _MyEventsPageState extends State<MyEventsPage> {
           SizedBox(
             height: heightSize(5),
           ),
-          titleText(),
+          titleText(isOld),
           SizedBox(
             height: heightSize(2),
           ),
@@ -74,8 +78,7 @@ class _MyEventsPageState extends State<MyEventsPage> {
           Container(
               height: heightSize(75),
               child: FutureBuilder(
-                  future: _eventManager.fetchEventListsForUser(
-                      userID, widget.isOld),
+                  future: _eventManager.fetchEventListsForUser(userID, isOld),
                   builder: (BuildContext context, AsyncSnapshot fetchedlist) {
                     if (fetchedlist.connectionState == ConnectionState.done) {
                       List<Map<String, dynamic>> listofMaps = fetchedlist.data;
@@ -99,19 +102,20 @@ class _MyEventsPageState extends State<MyEventsPage> {
                         );
                       }
                     } else
-                      return PageComponents(context).loadingOverlay();
+                      return PageComponents(context)
+                          .loadingOverlay(spinColor: Colors.white);
                   })),
         ],
       ),
     );
   }
 
-  Widget titleText() {
+  Widget titleText(bool isOld) {
     return RichText(
       text: TextSpan(
         children: <TextSpan>[
           TextSpan(
-            text: widget.isOld ? "Geçmiş" : "Gelecek",
+            text: isOld ? "Geçmiş" : "Gelecek",
             style: TextStyle(fontFamily: "Zona", fontSize: heightSize(3)),
           ),
           TextSpan(
