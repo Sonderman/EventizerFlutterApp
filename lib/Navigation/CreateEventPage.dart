@@ -1026,10 +1026,182 @@ class _CreateEventPageState extends State<CreateEventPage> {
     }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(
+          Radius.circular(20),
+        ),
+        child: Container(
+          height: heightSize(10),
+          //TODO responsive yap
+          color: MyColors().blackOpacityContainer,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SearchableDropdown.single(
+                  iconEnabledColor: MyColors().whiteTextColor,
+                  underline: SizedBox(),
+                  clearIcon: Icon(Icons.delete),
+                  menuBackgroundColor: MyColors().yellowContainer,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: heightSize(2.5),
+                      fontFamily: "Zona"),
+                  hint: Text("Şehir Seçin",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: heightSize(2.5),
+                          fontFamily: "Zona")),
+                  items: sehirler,
+                  searchHint: "Şehir Seçin",
+                  onChanged: (value) {
+                    if (value != 0 && value != null) {
+                      setState(() {
+                        city = value;
+                        print("CITY:" + city);
+                      });
+                    }
+                  },
+                  displayClearIcon: true,
+                  isExpanded: true,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget cityAndCountryLittle() {
+    List<DropdownMenuItem<String>> sehirler = [];
+    for (int i = 0; i < 81; i++) {
+      sehirler.add(DropdownMenuItem(
+        value: Sehirler().sehirler[i],
+        child: Text(Sehirler().sehirler[i]),
+      ));
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(
+          Radius.circular(20),
+        ),
+        child: Container(
+          height: heightSize(13),
+          //TODO responsive yap
+          color: MyColors().blackOpacityContainer,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SearchableDropdown.single(
+                  iconEnabledColor: MyColors().whiteTextColor,
+                  underline: SizedBox(),
+                  clearIcon: Icon(Icons.delete),
+                  menuBackgroundColor: MyColors().yellowContainer,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: heightSize(2.5),
+                      fontFamily: "Zona"),
+                  hint: Text("Şehir Seçin",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: heightSize(2.5),
+                          fontFamily: "Zona")),
+                  items: sehirler,
+                  searchHint: "Şehir Seçin",
+                  onChanged: (value) {
+                    if (value != 0 && value != null) {
+                      setState(() {
+                        city = value;
+                        print("CITY:" + city);
+                      });
+                    }
+                  },
+                  displayClearIcon: true,
+                  isExpanded: true,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> pages() {
+    return [
+      //ANCHOR 1. sayfa
+      LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              eventPhotoAndButtons(),
+              SizedBox(
+                height: heightSize(3),
+              ),
+              dateButtons(),
+              SizedBox(
+                height: heightSize(3),
+              ),
+              timeButtons(),
+              SizedBox(
+                height: heightSize(3),
+              ),
+              eventTitleAndDetails(),
+              SizedBox(
+                height: heightSize(3),
+              ),
+              constraints.maxWidth < 400
+                  ? cityAndCountryLittle()
+                  : cityAndCountry(),
+              SizedBox(
+                height: heightSize(3),
+              ),
+              location(),
+              SizedBox(
+                height: heightSize(3),
+              ),
+              nextPageButton(),
+              constraints.maxWidth < 400
+                  ? SizedBox(
+                      height: heightSize(10),
+                    )
+                  : SizedBox(
+                      height: heightSize(5),
+                    ),
+            ],
+          ),
+        ),
+      ),
+      //ANCHOR 2. sayfa
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          /*
+              numberOfParticipants(),
+              selectGender(),
+              selectMainCategory(),
+            ] +
+            (isMainCategorySelected
+                ? <Widget>[
+                    selectSubCategory(),
+                  ]
+                : <Widget>[]) +
+            <Widget>[
+              createEventButton(),
+            ],
+      ),
+    ];
+  }
+}
+
+//NOTE old country select are here;
+/*
           Container(
             width: widthSize(43),
             height: heightSize(8),
@@ -1082,107 +1254,3 @@ class _CreateEventPageState extends State<CreateEventPage> {
             ),
           ),
 */
-          Container(
-            height: heightSize(8),
-            //TODO responsive yap
-            width: widthSize(100) - 40,
-            child: ClipRRect(
-              borderRadius: BorderRadius.all(
-                Radius.circular(20),
-              ),
-              child: Container(
-                color: MyColors().blackOpacityContainer,
-                child: Center(
-                  child: SearchableDropdown.single(
-                    items: sehirler,
-                    hint: Text(
-                      "Şehir Seçin",
-                      style: TextStyle(
-                          color: Colors.white, fontSize: widthSize(4)),
-                    ),
-                    searchHint: "Şehir Seçin",
-                    onChanged: (value) {
-                      if (value != 0 && value != null) {
-                        setState(() {
-                          city = value;
-                          print("CITY:" + city);
-                        });
-                      }
-                    },
-                    style:
-                        TextStyle(color: Colors.white, fontSize: widthSize(4)),
-                    displayClearIcon: true,
-                    isExpanded: true,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  List<Widget> pages() {
-    return [
-      //ANCHOR 1. sayfa
-      LayoutBuilder(
-        builder: (context, constraints) => SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              eventPhotoAndButtons(),
-              SizedBox(
-                height: heightSize(3),
-              ),
-              dateButtons(),
-              SizedBox(
-                height: heightSize(3),
-              ),
-              timeButtons(),
-              SizedBox(
-                height: heightSize(3),
-              ),
-              eventTitleAndDetails(),
-              SizedBox(
-                height: heightSize(3),
-              ),
-              cityAndCountry(),
-              SizedBox(
-                height: heightSize(3),
-              ),
-              location(),
-              SizedBox(
-                height: heightSize(3),
-              ),
-              nextPageButton(),
-              constraints.maxWidth < 400
-                  ? SizedBox(
-                      height: heightSize(10),
-                    )
-                  : SizedBox(
-                      height: heightSize(5),
-                    ),
-            ],
-          ),
-        ),
-      ),
-      //ANCHOR 2. sayfa
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-              numberOfParticipants(),
-              selectGender(),
-              selectMainCategory(),
-            ] +
-            (isMainCategorySelected
-                ? <Widget>[
-                    selectSubCategory(),
-                  ]
-                : <Widget>[]) +
-            <Widget>[
-              createEventButton(),
-            ],
-      ),
-    ];
-  }
-}

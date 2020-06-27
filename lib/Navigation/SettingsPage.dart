@@ -446,32 +446,43 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Text(Sehirler().sehirler[i]),
       ));
     }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Center(
-          child: Container(
-            height: heightSize(10),
-            width: widthSize(90),
-            child: SearchableDropdown.single(
-              label: "Sehir Seçin",
-              items: sehirler,
-              hint: userModel.getUserCity() ?? "Şehir Seçin",
-              searchHint: "Şehir Seçin",
-              onChanged: (value) {
-                if (value != 0 && value != null) {
-                  setState(() {
-                    _city = value;
-                    print("CITY:" + _city);
-                  });
-                }
-              },
-              displayClearIcon: false,
-              isExpanded: true,
-            ),
+    return Container(
+      height: heightSize(10),
+      width: widthSize(90),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          SearchableDropdown.single(
+            items: sehirler,
+            hint: userModel.getUserCity() ??
+                Text("Şehir Seçin",
+                    style: TextStyle(
+                        color: MyColors().greyTextColor,
+                        fontSize: heightSize(2.5),
+                        fontFamily: "Zona")),
+            displayClearIcon: true,
+            isExpanded: true,
+            searchHint: "Şehir Seçin",
+            iconEnabledColor: MyColors().greyTextColor,
+            underline: SizedBox(),
+            clearIcon: Icon(null),
+            menuBackgroundColor: MyColors().yellowContainer,
+            style: TextStyle(
+                color: MyColors().greyTextColor,
+                fontSize: heightSize(2.5),
+                fontFamily: "Zona"),
+            onChanged: (value) {
+              if (value != 0 && value != null) {
+                setState(() {
+                  _city = value;
+                  print("CITY:" + _city);
+                });
+              }
+            },
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
