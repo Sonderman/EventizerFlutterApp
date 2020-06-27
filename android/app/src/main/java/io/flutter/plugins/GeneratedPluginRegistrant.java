@@ -27,5 +27,6 @@ public final class GeneratedPluginRegistrant {
     flutterEngine.getPlugins().add(new io.flutter.plugins.pathprovider.PathProviderPlugin());
     flutterEngine.getPlugins().add(new bsi.iceman.searchable_dropdown.SearchableDropdownPlugin());
       com.danieldallos.storeredirect.StoreRedirectPlugin.registerWith(shimPluginRegistry.registrarFor("com.danieldallos.storeredirect.StoreRedirectPlugin"));
+    flutterEngine.getPlugins().add(new io.flutter.plugins.urllauncher.UrlLauncherPlugin());
   }
 }

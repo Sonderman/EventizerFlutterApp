@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:eventizer/Navigation/HomePage.dart';
+import 'package:eventizer/Navigation/LoginPage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/ImageEditor.dart';
 import 'package:eventizer/Tools/loading.dart';
@@ -104,16 +105,15 @@ class _SignUpPageState extends State<SignUpPage> {
                         SizedBox(
                           height: heightSize(2),
                         ),
-                        constraints.maxWidth < 400 ?
-                        countryAndBirthDateLittle() :
-                        countryAndBirthDate(),
+                        constraints.maxWidth < 400
+                            ? countryAndBirthDateLittle()
+                            : countryAndBirthDate(),
                         SizedBox(
                           height: heightSize(2),
                         ),
-                        constraints.maxWidth < 400 ?
-                        selectGenderLittle()
-                        :
-                        selectGender(),
+                        constraints.maxWidth < 400
+                            ? selectGenderLittle()
+                            : selectGender(),
                         SizedBox(
                           height: heightSize(2),
                         ),
@@ -208,23 +208,16 @@ class _SignUpPageState extends State<SignUpPage> {
           print("Upload işlemi bitti");
 
           Fluttertoast.showToast(
-              msg: "Hesabınız başarıyla oluşturuldu.",
+              msg:
+                  "Hesabınız başarıyla oluşturuldu.lütfen mailinizi doğrulayınız.",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
               backgroundColor: Colors.green,
               textColor: Colors.white,
               fontSize: 18.0);
-
-          Provider.of<UserService>(context, listen: false)
-              .userInitializer(userID)
-              .then((value) {
-            if (value)
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => HomePage()));
-          });
+          widget.pageController.previousPage(
+              duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
         } else {
           setState(() {
             loading = false;
@@ -241,10 +234,7 @@ class _SignUpPageState extends State<SignUpPage> {
       });
     }
   }
-//FIX Photo from camera is not working on 3.7" Nexus One phone.
-  //And Image Edıtor is photo crop are not working.
-  //We get this error and i think
-  //Error -32000 received from application: There are no running service protocol handlers.
+
   Widget addPhoto() {
     return GestureDetector(
       onTap: () {
@@ -543,7 +533,7 @@ class _SignUpPageState extends State<SignUpPage> {
             if (datePick != null) {
               setState(() {
                 _birthday =
-                "${datePick.day}/${datePick.month}/${datePick.year}";
+                    "${datePick.day}/${datePick.month}/${datePick.year}";
               });
             }
           },
@@ -620,7 +610,6 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
           ),
         ),
-
         SizedBox(
           height: heightSize(2),
         ),
@@ -634,7 +623,7 @@ class _SignUpPageState extends State<SignUpPage> {
             if (datePick != null) {
               setState(() {
                 _birthday =
-                "${datePick.day}/${datePick.month}/${datePick.year}";
+                    "${datePick.day}/${datePick.month}/${datePick.year}";
               });
             }
           },

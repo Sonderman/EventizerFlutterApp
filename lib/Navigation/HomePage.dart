@@ -3,8 +3,11 @@ import 'package:eventizer/Tools/BottomNavigation.dart';
 import 'package:eventizer/Tools/Dialogs.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:store_redirect/store_redirect.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
@@ -25,21 +28,76 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(
-                    height: responsive.heightSize(30),
+                    height: responsive.heightSize(20),
                   ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.info_outline,
-                          size: 40,
-                        ),
+                  Container(
+                      child: Center(
+                    child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(children: [
+                          TextSpan(
+                              text: "Bu uygulama\n",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: responsive.widthSize(4))),
+                          TextSpan(
+                              text: "Ali Haydar AYAR\n",
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline,
+                                  fontSize: responsive.widthSize(4)),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () async {
+                                  const url =
+                                      'https://www.linkedin.com/in/alihaydar-ayar-b45a4315b/';
+                                  if (await canLaunch(url)) {
+                                    await launch(url);
+                                  }
+                                }),
+                          TextSpan(
+                              text: " Ve\n",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: responsive.widthSize(4))),
+                          TextSpan(
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline,
+                                  fontSize: responsive.widthSize(4)),
+                              text: "Murat ALTINTAŞ\n",
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () async {
+                                  const url =
+                                      'https://www.linkedin.com/in/murat-alt%C4%B1nta%C5%9F-bb58b4145/';
+                                  if (await canLaunch(url)) {
+                                    await launch(url);
+                                  }
+                                }),
+                          TextSpan(
+                              text: "tarafından geliştirilmiştir.\n\n",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: responsive.widthSize(4))),
+                          TextSpan(
+                              text:
+                                  "Her türlü görüş ve önerileriniz için eventizer.official@gmail.com adresine mail gönderebilirsiniz. Uygulamayı beğenip paylaşmanızı rica ederiz.\n",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: responsive.widthSize(4))),
+                        ])),
+                  )),
+                  MaterialButton(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Icon(Icons.play_arrow),
+                          Text("Play Store"),
+                        ],
                       ),
-                      Text("Hakkımızda"),
-                    ],
-                  ),
+                      color: Colors.green,
+                      onPressed: () {
+                        StoreRedirect.redirect();
+                      }),
                   Spacer(),
                   GestureDetector(
                     onTap: () {

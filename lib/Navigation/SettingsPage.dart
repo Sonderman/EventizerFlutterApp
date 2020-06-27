@@ -455,12 +455,13 @@ class _SettingsPageState extends State<SettingsPage> {
         children: <Widget>[
           SearchableDropdown.single(
             items: sehirler,
-            hint: userModel.getUserCity() ??
-                Text("Şehir Seçin",
+            hint: userModel.getUserCity() == "null"
+                ? Text("Şehir Seçin",
                     style: TextStyle(
                         color: MyColors().greyTextColor,
                         fontSize: heightSize(2.5),
-                        fontFamily: "Zona")),
+                        fontFamily: "Zona"))
+                : userModel.getUserCity(),
             displayClearIcon: true,
             isExpanded: true,
             searchHint: "Şehir Seçin",

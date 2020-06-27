@@ -388,14 +388,27 @@ class _LoginPageState extends State<LoginPage> {
           textColor: Colors.white,
           fontSize: 18.0);
     } else {
-      userService.userInitializer(userId).whenComplete(() async {
-        await userService
-            .updateSingleInfo("LastLoggedIn", "timeStamp")
-            .whenComplete(() {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (BuildContext context) => HomePage()));
+      if (await auth.isEmailVerified()) {
+        userService.userInitializer(userId).whenComplete(() async {
+          await userService
+              .updateSingleInfo("LastLoggedIn", "timeStamp")
+              .whenComplete(() {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (BuildContext context) => HomePage()));
+          });
         });
-      });
+      } else {
+        setState(() => _loading = false);
+        auth.signOut();
+        Fluttertoast.showToast(
+            msg: "Lütfen Mailinizi doğrulayın!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 18.0);
+      }
     }
   }
 

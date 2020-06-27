@@ -122,11 +122,8 @@ class UserService with ChangeNotifier {
             if (value)
               await firebaseStorageWorks.updateProfilePhoto(userId, image);
           });
-
+          auth.sendEmailVerification();
           return userId;
-
-          //TODO -  release yaparken bunu açmayı unutma
-          //auth.sendEmailVerification();
         } else
           return null;
       });

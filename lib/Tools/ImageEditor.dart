@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:eventizer/assets/Colors.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +17,7 @@ class ImageEditorPage extends StatefulWidget {
 
 class _ImageEditorState extends State<ImageEditorPage> {
   final GlobalKey<ExtendedImageEditorState> editorKey =
-  GlobalKey<ExtendedImageEditorState>();
+      GlobalKey<ExtendedImageEditorState>();
 
   Uint8List _image;
   final File rawImage;
@@ -64,8 +63,8 @@ class _ImageEditorState extends State<ImageEditorPage> {
           extendedImageEditorKey: editorKey,
           initEditorConfigHandler: (state) {
             return EditorConfig(
-              // lineColor: Colors.blue,
-              // lineHeight: 2,
+                // lineColor: Colors.blue,
+                // lineHeight: 2,
                 maxScale: 2.0,
                 cornerColor: Colors.red,
                 //cornerSize: Size(25, 5),
@@ -140,7 +139,7 @@ class _ImageEditorState extends State<ImageEditorPage> {
               child: FlatButton.icon(
                 icon: Icon(Icons.restore),
                 label: Text(
-                  "Reset",
+                  "Sıfırla",
                   style: TextStyle(
                     fontSize: heightSize(1.7),
                   ),
@@ -173,7 +172,7 @@ class _ImageEditorState extends State<ImageEditorPage> {
     try {
       showBusyingDialog();
       _image =
-      await cropImageDataWithNativeLibrary(state: editorKey.currentState);
+          await cropImageDataWithNativeLibrary(state: editorKey.currentState);
     } catch (e) {
       print(e);
     }
