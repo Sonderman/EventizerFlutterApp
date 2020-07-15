@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
-import 'package:eventizer/Navigation/HomePage.dart';
-import 'package:eventizer/Navigation/LoginPage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/ImageEditor.dart';
 import 'package:eventizer/Tools/loading.dart';
@@ -209,7 +207,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
           Fluttertoast.showToast(
               msg:
-                  "Hesabınız başarıyla oluşturuldu.lütfen mailinizi doğrulayınız.",
+                  "Hesabınız başarıyla oluşturuldu. Lütfen mailinizi doğrulayınız.",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,

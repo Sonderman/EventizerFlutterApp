@@ -1,9 +1,9 @@
 name: eventizer
-description: A social App
+description: Create or join an event.
 
 publish_to: 'none'
 
-version: 0.1.4+5
+version: 0.1.4+0
 
 environment:
   sdk: ">=2.7.0 <3.0.0"

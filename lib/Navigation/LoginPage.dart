@@ -388,7 +388,7 @@ class _LoginPageState extends State<LoginPage> {
           textColor: Colors.white,
           fontSize: 18.0);
     } else {
-      if (await auth.isEmailVerified()) {
+      //if (await auth.isEmailVerified()) {
         userService.userInitializer(userId).whenComplete(() async {
           await userService
               .updateSingleInfo("LastLoggedIn", "timeStamp")
@@ -397,6 +397,7 @@ class _LoginPageState extends State<LoginPage> {
                 builder: (BuildContext context) => HomePage()));
           });
         });
+        /*
       } else {
         setState(() => _loading = false);
         auth.signOut();
@@ -409,6 +410,7 @@ class _LoginPageState extends State<LoginPage> {
             textColor: Colors.white,
             fontSize: 18.0);
       }
+      */
     }
   }
 

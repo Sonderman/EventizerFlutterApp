@@ -77,13 +77,13 @@ class _HomePageState extends State<HomePage> {
                               text: "tarafından geliştirilmiştir.\n\n",
                               style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: responsive.widthSize(4))),
+                                  fontSize: responsive.widthSize(4))),/*
                           TextSpan(
                               text:
                                   "Her türlü görüş ve önerileriniz için eventizer.official@gmail.com adresine mail gönderebilirsiniz. Uygulamayı beğenip paylaşmanızı rica ederiz.\n",
                               style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: responsive.widthSize(4))),
+                                  fontSize: responsive.widthSize(4))),*/
                         ])),
                   )),
                   MaterialButton(
