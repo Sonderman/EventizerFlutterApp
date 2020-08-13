@@ -7,13 +7,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/local.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/GeneratedPluginRegistrant.h" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner/GeneratedPluginRegistrant.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/GeneratedPluginRegistrant.m" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner/GeneratedPluginRegistrant.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/HomePage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/LoginPage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Navigation/SignUpPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Navigation/SignUpPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Services/Repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Services/Repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Settings/AppSettings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Settings/AppSettings.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
@@ -61,22 +55,22 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1251" height="217" key="GridCell.Tab.0.bottom" timestamp="1594830689917">
+    <state width="1251" height="218" key="GridCell.Tab.0.bottom" timestamp="1597251313923">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1251" height="217" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1594830689917" />
-    <state width="1251" height="217" key="GridCell.Tab.0.center" timestamp="1594830689917">
+    <state width="1251" height="218" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1597251313923" />
+    <state width="1251" height="218" key="GridCell.Tab.0.center" timestamp="1597251313923">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1251" height="217" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1594830689917" />
-    <state width="1251" height="217" key="GridCell.Tab.0.left" timestamp="1594830689917">
+    <state width="1251" height="218" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1597251313923" />
+    <state width="1251" height="218" key="GridCell.Tab.0.left" timestamp="1597251313923">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1251" height="217" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1594830689917" />
-    <state width="1251" height="217" key="GridCell.Tab.0.right" timestamp="1594830689917">
+    <state width="1251" height="218" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1597251313923" />
+    <state width="1251" height="218" key="GridCell.Tab.0.right" timestamp="1597251313923">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1251" height="217" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1594830689917" />
+    <state width="1251" height="218" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1597251313923" />
     <state x="461" y="162" key="SettingsEditor" timestamp="1592656670959">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

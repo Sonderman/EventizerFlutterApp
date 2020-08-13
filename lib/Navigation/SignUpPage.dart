@@ -73,61 +73,61 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    double width= MediaQuery.of(context).size.width;
+    double height= MediaQuery.of(context).size.height;
     return loading
         ? Loading()
-        : LayoutBuilder(builder: (context, constraints) {
-            return Scaffold(
-              body: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: ScrollConfiguration(
-                  behavior: NoScrollEffectBehavior(),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: heightSize(5),
-                        ),
-                        addPhoto(),
-                        SizedBox(
-                          height: heightSize(1),
-                        ),
-                        nameSurname(),
-                        SizedBox(
-                          height: heightSize(1),
-                        ),
-                        emailAndPasswordFields(),
-                        SizedBox(
-                          height: heightSize(1),
-                        ),
-                        telephoneNumber(),
-                        SizedBox(
-                          height: heightSize(2),
-                        ),
-                        constraints.maxWidth < 400
-                            ? countryAndBirthDateLittle()
-                            : countryAndBirthDate(),
-                        SizedBox(
-                          height: heightSize(2),
-                        ),
-                        constraints.maxWidth < 400
-                            ? selectGenderLittle()
-                            : selectGender(),
-                        SizedBox(
-                          height: heightSize(2),
-                        ),
-                        constraints.maxWidth < 400
-                            ? signUpButtonLittle()
-                            : signUpButton(),
-                        SizedBox(
-                          height: heightSize(2),
-                        ),
-                      ],
-                    ),
-                  ),
+        : Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: ScrollConfiguration(
+          behavior: NoScrollEffectBehavior(),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: heightSize(5),
                 ),
-              ),
-            );
-          });
+                addPhoto(),
+                SizedBox(
+                  height: heightSize(1),
+                ),
+                nameSurname(),
+                SizedBox(
+                  height: heightSize(1),
+                ),
+                emailAndPasswordFields(),
+                SizedBox(
+                  height: heightSize(1),
+                ),
+                telephoneNumber(),
+                SizedBox(
+                  height: heightSize(2),
+                ),
+                width < 400
+                    ? countryAndBirthDateLittle()
+                    : countryAndBirthDate(),
+                SizedBox(
+                  height: heightSize(2),
+                ),
+                width < 400
+                    ? selectGenderLittle()
+                    : selectGender(),
+                SizedBox(
+                  height: heightSize(2),
+                ),
+                width < 400
+                    ? signUpButtonLittle()
+                    : signUpButton(),
+                SizedBox(
+                  height: heightSize(2),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> _showChoiceDialog(BuildContext context) {
