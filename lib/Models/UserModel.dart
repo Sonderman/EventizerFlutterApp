@@ -8,7 +8,6 @@ class User {
   String _email;
   int _telNo;
   String _birthday;
-  String _country;
   String _city;
   String _gender;
   String _about;
@@ -36,8 +35,6 @@ class User {
   String getUserGender() => _gender;
 
   int getUserTelNo() => _telNo;
-
-  String getUserCountry() => _country;
 
   String getUserCity() => _city;
 
@@ -75,10 +72,6 @@ class User {
     _email = email;
   }
 
-  void setUserCountry(String country) {
-    _country = country;
-  }
-
   void setUserAbout(String about) {
     _about = about;
   }
@@ -107,7 +100,6 @@ class User {
       'Email': _email ?? 'null',
       'BirthDay': _birthday ?? 'null',
       'Gender': _gender ?? 'null',
-      'Country': _country ?? 'null',
       'City': _city ?? 'null',
       'ProfilePhotoUrl': _profilePhotoUrl ?? 'null',
       'About': _about ?? 'null',
@@ -124,7 +116,6 @@ class User {
     _surname = map["Surname"] ?? "null";
     _nickname = map["NickName"] ?? "null";
     _email = map["Email"] ?? "null";
-    _country = map["Country"] ?? "null";
     _city = map["City"] ?? "null";
     _birthday = map["BirthDay"] ?? "null";
     _gender = map["Gender"] ?? "null";

@@ -28,7 +28,7 @@ class _SettingsPageState extends State<SettingsPage> {
   TextEditingController passwordController = TextEditingController();
   Uint8List _image;
   bool loading = false;
-  String _name, _surname, _phoneNumber, _country, _city;
+  String _name, _surname, _phoneNumber, _city;
 
   get city => _city;
 
@@ -92,7 +92,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     SizedBox(
                       height: heightSize(2),
                     ),
-                    countryAndCity(),
+                    cityField(),
                     SizedBox(
                       height: heightSize(2),
                     ),
@@ -438,7 +438,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget countryAndCity() {
+  Widget cityField() {
     List<DropdownMenuItem<String>> sehirler = [];
     for (int i = 0; i < 81; i++) {
       sehirler.add(DropdownMenuItem(
@@ -508,10 +508,6 @@ class _SettingsPageState extends State<SettingsPage> {
         if (detailController.text != null) {
           isChanged = true;
           userModel.setUserAbout(detailController.text);
-        }
-        if (_country != null) {
-          isChanged = true;
-          userModel.setUserCountry(_country);
         }
 
         if (_city != null) {
