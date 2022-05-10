@@ -5,55 +5,58 @@ class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   Stream<String> get onAuthStateChanged {
-    return _firebaseAuth.onAuthStateChanged
-        .map((FirebaseUser user) => user?.uid);
+    return _firebaseAuth.authStateChanges().map((User? user) => user!.uid);
   }
 
-  Future<String> signIn(String email, String password) async {
-    FirebaseUser user;
+  Future<String?> signIn(String email, String password) async {
+    User? user;
     try {
       user = (await _firebaseAuth.signInWithEmailAndPassword(
               email: email, password: password))
           .user;
     } catch (e) {
       print('Error: Giriş işleminde Hata!: $e');
+      return null;
     }
-    return user?.uid;
+    return user!.uid;
   }
 
   Future<String> signUp(String email, String password) async {
-    FirebaseUser user = (await _firebaseAuth.createUserWithEmailAndPassword(
+    User? user = (await _firebaseAuth.createUserWithEmailAndPassword(
             email: email, password: password))
         .user;
-    return user.uid;
+    return user!.uid;
   }
 
-  Future<FirebaseUser> getCurrentUser() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
-    return user;
-  }
+  User? getCurrentUser() => _firebaseAuth.currentUser;
 
   void signOut() async {
-    return _firebaseAuth.signOut();
+    return await _firebaseAuth.signOut();
   }
 
   Future<void> sendEmailVerification() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
-    user.sendEmailVerification();
+    User? user = _firebaseAuth.currentUser;
+    if (user != null) await user.sendEmailVerification();
   }
 
-  Future<bool> isEmailVerified() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
-    return user.isEmailVerified;
+  bool? isEmailVerified() {
+    User? user = _firebaseAuth.currentUser;
+    if (user != null)
+      return user.emailVerified;
+    else
+      return null;
   }
 
-  Future<String> getUserEmail() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
-    return user.email;
+  String? getUserEmail() {
+    User? user = _firebaseAuth.currentUser;
+    if (user != null)
+      return user.email;
+    else
+      return null;
   }
 
-  Future<String> getUserUid() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
+  String? getUserUid() {
+    User? user = _firebaseAuth.currentUser;
     if (user != null)
       return user.uid;
     else
@@ -61,20 +64,15 @@ class AuthService {
   }
 
   Future<bool> checkPassword(String email, String password) async {
-    String userId;
     try {
-      userId = (await _firebaseAuth.signInWithEmailAndPassword(
+      (await _firebaseAuth.signInWithEmailAndPassword(
               email: email, password: password))
-          .user
+          .user!
           .uid;
+      return true;
     } catch (e) {
       return false;
     }
-    if (userId != null) {
-      //print("UserId: " + userId);
-      return true;
-    } else
-      return false;
   }
 
   void sendPasswordResetEmail(String email) {

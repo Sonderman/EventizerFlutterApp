@@ -6,16 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ProfileListItem extends StatefulWidget {
-  final Map<String, dynamic> jsonData;
+  final Map<String, dynamic>? jsonData;
 
-  const ProfileListItem({Key key, this.jsonData}) : super(key: key);
+  const ProfileListItem({Key? key, this.jsonData}) : super(key: key);
 
   @override
   _ProfileListItemState createState() => _ProfileListItemState();
 }
 
 class _ProfileListItemState extends State<ProfileListItem> {
-  Map<String, dynamic> get data => widget.jsonData;
+  Map<String, dynamic> get data => widget.jsonData!;
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +44,13 @@ class _ProfileListItemState extends State<ProfileListItem> {
 }
 
 class _ProfileListItemInternal extends StatefulWidget {
-//  final Map<String,dynamic> user;
-  final String name;
-  final String image;
-  final String comment;
+  final String? name;
+  final String? image;
+  final String? comment;
 
-  _ProfileListItemInternal({this.name, this.image, this.comment});
+  const _ProfileListItemInternal(
+      {Key? key, this.name, this.image, this.comment})
+      : super(key: key);
 
   @override
   _ProfileListItemInternalState createState() =>
@@ -98,8 +99,8 @@ class _ProfileListItemInternalState extends State<_ProfileListItemInternal> {
                   shape: BoxShape.circle,
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image:
-                        ExtendedNetworkImageProvider(widget.image, cache: true),
+                    image: ExtendedNetworkImageProvider(widget.image!,
+                        cache: true),
                   ),
                 ),
               ),
@@ -114,7 +115,7 @@ class _ProfileListItemInternalState extends State<_ProfileListItemInternal> {
                 children: <Widget>[
                   //username
                   Text(
-                    widget.name,
+                    widget.name!,
                     style: TextStyle(
                       fontFamily: "Zona",
                       fontSize: heightSize(2.5),
@@ -128,7 +129,7 @@ class _ProfileListItemInternalState extends State<_ProfileListItemInternal> {
                     thickness: 1,
                   ),
                   Text(
-                    widget.comment,
+                    widget.comment!,
                     maxLines: isOpen ? 2000 : 2,
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,

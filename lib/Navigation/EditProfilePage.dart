@@ -2,7 +2,7 @@ import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:flutter/material.dart';
 
 class EditProfilePage extends StatefulWidget {
-  EditProfilePage({Key key}) : super(key: key);
+  EditProfilePage({Key? key}) : super(key: key);
 
   @override
   _EditProfilePageState createState() => _EditProfilePageState();

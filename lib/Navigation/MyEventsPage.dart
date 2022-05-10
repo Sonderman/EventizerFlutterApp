@@ -7,25 +7,26 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MyEventsPage extends StatefulWidget {
-  final String userID;
+  final String? userID;
   final bool isOld;
 
-  const MyEventsPage({Key key, this.userID, this.isOld}) : super(key: key);
+  const MyEventsPage({Key? key, this.userID, required this.isOld})
+      : super(key: key);
 
   @override
   _MyEventsPageState createState() => _MyEventsPageState();
 }
 
 class _MyEventsPageState extends State<MyEventsPage> {
-  bool isMine, isOld;
-  PageController _pageController;
+  bool? isMine, isOld;
+  PageController? _pageController;
   @override
   void initState() {
     super.initState();
     widget.userID == null ? isMine = false : isMine = true;
     widget.isOld ? isOld = true : isOld = false;
     _pageController = PageController(
-      initialPage: isOld ? 1 : 0,
+      initialPage: isOld! ? 1 : 0,
     );
   }
 
@@ -59,8 +60,10 @@ class _MyEventsPageState extends State<MyEventsPage> {
     var _eventManager = Provider.of<EventService>(context);
 
     String userID = widget.userID == null
-        ? Provider.of<UserService>(context, listen: false).userModel.getUserId()
-        : widget.userID;
+        ? Provider.of<UserService>(context, listen: false)
+            .userModel!
+            .getUserId()
+        : widget.userID!;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),

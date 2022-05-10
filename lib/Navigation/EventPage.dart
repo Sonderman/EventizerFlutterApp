@@ -7,16 +7,16 @@ import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class EventPage extends StatefulWidget {
-  final Map<String, dynamic> eventData;
-  final Map<String, dynamic> userData;
-  final bool amIparticipant;
+  final Map<String, dynamic>? eventData;
+  final Map<String, dynamic>? userData;
+  final bool? amIparticipant;
 
-  const EventPage({Key key, this.eventData, this.userData, this.amIparticipant})
+  const EventPage(
+      {Key? key, this.eventData, this.userData, this.amIparticipant})
       : super(key: key);
 
   @override
@@ -34,10 +34,10 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
     return MediaQuery.of(context).size.width * value;
   }
 
-  TabController _tabController;
-  bool joinButton, isThisEventMine;
-  EventService eventService;
-  UserService userService;
+  TabController? _tabController;
+  bool? joinButton, isThisEventMine;
+  EventService? eventService;
+  UserService? userService;
   TextEditingController commentController = TextEditingController();
 
   @override
@@ -52,7 +52,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
     super.didChangeDependencies();
     eventService = Provider.of<EventService>(context);
     userService = Provider.of<UserService>(context);
-    if (widget.userData['UserID'] == userService.userModel.getUserId())
+    if (widget.userData!['UserID'] == userService!.userModel!.getUserId())
       isThisEventMine = true;
     else
       isThisEventMine = false;
@@ -61,11 +61,11 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   @override
   void dispose() {
     super.dispose();
-    _tabController.dispose();
+    _tabController!.dispose();
   }
 
   void toggleJoinButton() {
-    joinButton = !joinButton;
+    joinButton = !joinButton!;
   }
 
   @override
@@ -165,11 +165,11 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
 
   Widget participantsPage() {
     return FutureBuilder(
-      future: eventService.getParticipants(widget.eventData['eventID']),
+      future: eventService!.getParticipants(widget.eventData!['eventID']),
       builder: (BuildContext context,
-          AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+          AsyncSnapshot<List<Map<String, dynamic>>?> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.data.length == 0) {
+          if (snapshot.data!.length == 0) {
             return Center(child: Text("Katılımcı Yok"));
           } else {
             return ListView.separated(
@@ -178,11 +178,11 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                   height: heightSize(3),
                 );
               },
-              itemCount: snapshot.data.length,
+              itemCount: snapshot.data!.length,
               itemBuilder: (BuildContext context, int index) {
                 return FutureBuilder(
-                  future: userService
-                      .findUserByID(snapshot.data[index]['ParticipantID']),
+                  future: userService!
+                      .findUserByID(snapshot.data![index]['ParticipantID']),
                   builder: (BuildContext context, AsyncSnapshot user) {
                     if (user.connectionState == ConnectionState.done) {
                       return InkWell(
@@ -258,22 +258,22 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
       children: <Widget>[
         Expanded(
           child: FutureBuilder(
-              future: eventService.getComments(widget.eventData['eventID']),
+              future: eventService.getComments(widget.eventData!['eventID']),
               builder: (BuildContext context,
-                  AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+                  AsyncSnapshot<List<Map<String, dynamic>>?> snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.data.length == 0) {
+                  if (snapshot.data!.length == 0) {
                     return Center(child: Text("Henüz yorum yapılmadı"));
                   } else
                     return ListView.separated(
                         //physics: ClampingScrollPhysics(),
                         shrinkWrap: true,
-                        itemCount: snapshot.data.length,
+                        itemCount: snapshot.data!.length,
                         separatorBuilder: (ctx, index) =>
                             SizedBox(height: heightSize(3)),
                         itemBuilder: (BuildContext context, int index) {
                           return ProfileListItem(
-                              jsonData: snapshot.data[index]);
+                              jsonData: snapshot.data![index]);
                         });
                 } else
                   return PageComponents(context)
@@ -338,13 +338,13 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                   ),
                   Padding(
                       padding: const EdgeInsets.fromLTRB(5, 3, 5, 1),
-                      child: FlatButton(
+                      child: TextButton(
                         onPressed: () async {
                           //ANCHOR  Yorum gönderme backend işlemleri
                           if (commentController.text != "") {
                             await eventService.sendComment(
-                                widget.eventData['eventID'],
-                                userService.userModel.getUserId(),
+                                widget.eventData!['eventID'],
+                                userService.userModel!.getUserId(),
                                 commentController.text);
                             setState(() {
                               commentController.text = '';
@@ -378,15 +378,15 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   }
 
   Widget userPhotoAndName() {
-    return FlatButton(
-      padding: EdgeInsets.all(0),
-      splashColor: Colors.transparent,
-      highlightColor: Colors.transparent,
+    return TextButton(
+      // padding: EdgeInsets.all(0),
+      // splashColor: Colors.transparent,
+      // highlightColor: Colors.transparent,
       onPressed: () {
         //ANCHOR kullanıcı profiline buradan gidiyor
         NavigationManager(context).pushPage(ProfilePage(
           key: UniqueKey(),
-          userID: widget.eventData["OrganizerID"],
+          userID: widget.eventData!["OrganizerID"],
           isFromEvent: true,
         ));
       },
@@ -399,7 +399,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
               shape: BoxShape.circle,
               image: DecorationImage(
                 fit: BoxFit.cover,
-                image: NetworkImage(widget.userData['ProfilePhotoUrl']),
+                image: NetworkImage(widget.userData!['ProfilePhotoUrl']),
               ),
             ),
           ),
@@ -410,7 +410,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             text: TextSpan(
               children: <TextSpan>[
                 TextSpan(
-                  text: widget.userData['Name'] + widget.userData['Surname'],
+                  text: widget.userData!['Name'] + widget.userData!['Surname'],
                   style: TextStyle(
                     fontFamily: "Zona",
                     fontSize: heightSize(2.5),
@@ -418,7 +418,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                   ),
                 ),
                 TextSpan(
-                  text: "\n@" + widget.userData['NickName'],
+                  text: "\n@" + widget.userData!['NickName'],
                   style: TextStyle(
                     height: heightSize(0.2),
                     fontFamily: "ZonaLight",
@@ -447,7 +447,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          "${widget.eventData['Title']}".toUpperCase(),
+          "${widget.eventData!['Title']}".toUpperCase(),
           style: TextStyle(
             fontFamily: "Zona",
             fontSize: heightSize(3.5),
@@ -463,8 +463,8 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                 context,
                 MaterialPageRoute(
                     builder: (BuildContext context) => ImageViewer(
-                          tag: widget.eventData['EventImageUrl'],
-                          url: widget.eventData['EventImageUrl'],
+                          tag: widget.eventData!['EventImageUrl'],
+                          url: widget.eventData!['EventImageUrl'],
                         )));
           },
           child: ClipRRect(
@@ -476,11 +476,11 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
               width: widthSize(100),
               height: widthSize(100) * (9 / 16),
               child: Hero(
-                tag: widget.eventData['EventImageUrl'],
+                tag: widget.eventData!['EventImageUrl'],
                 child: FadeInImage.assetNetwork(
                     fit: BoxFit.fill,
                     placeholder: 'assets/images/etkinlik.jpg',
-                    image: widget.eventData['EventImageUrl']),
+                    image: widget.eventData!['EventImageUrl']),
               ),
             ),
           ),
@@ -493,8 +493,8 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   }
 
   Widget dateAndDetails() {
-    String startTime = widget.eventData['StartTime'] ?? "null";
-    String finishTime = widget.eventData['FinishTime'] ?? "null";
+    String startTime = widget.eventData!['StartTime'] ?? "null";
+    String finishTime = widget.eventData!['FinishTime'] ?? "null";
     return Column(
       children: <Widget>[
         Row(
@@ -516,7 +516,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                     text: TextSpan(
                       children: <TextSpan>[
                         TextSpan(
-                          text: widget.eventData['StartDate'],
+                          text: widget.eventData!['StartDate'],
                           style: TextStyle(
                             fontFamily: "Zona",
                             fontSize: heightSize(2),
@@ -553,7 +553,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                     text: TextSpan(
                       children: <TextSpan>[
                         TextSpan(
-                          text: widget.eventData['FinishDate'],
+                          text: widget.eventData!['FinishDate'],
                           style: TextStyle(
                             fontFamily: "Zona",
                             fontSize: heightSize(2),
@@ -591,7 +591,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Text(
-                widget.eventData['Detail'],
+                widget.eventData!['Detail'],
                 style: TextStyle(
                   fontFamily: "Zona",
                   color: MyColors().whiteTextColor,
@@ -606,9 +606,9 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   }
 
   Widget genderAndParticipantsBoxes() {
-    String gender;
+    String? gender;
     //ANCHOR cinsiyetlere göre durumları
-    switch (widget.eventData['AllowedGenders']) {
+    switch (widget.eventData!['AllowedGenders']) {
       case "10":
         gender = "Erkek";
         break;
@@ -620,9 +620,9 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
         break;
     }
     String currentParticipantNumber =
-        widget.eventData['CurrentParticipantNumber'].toString();
+        widget.eventData!['CurrentParticipantNumber'].toString();
     String maxParticipantNumber =
-        widget.eventData['MaxParticipantNumber'].toString();
+        widget.eventData!['MaxParticipantNumber'].toString();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -640,7 +640,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                gender,
+                gender!,
                 style: TextStyle(
                   fontFamily: "Zona",
                   fontSize: heightSize(2),
@@ -694,9 +694,9 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Text(
-            widget.eventData['MainCategory'] +
+            widget.eventData!['MainCategory'] +
                 " | " +
-                widget.eventData['SubCategory'],
+                widget.eventData!['SubCategory'],
             style: TextStyle(
               fontFamily: "Zona",
               fontSize: heightSize(2),
@@ -709,9 +709,9 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
   }
 
   Widget locationCityCountryColumn() {
-    var location = widget.eventData['Location'] ?? "null";
-    var city = widget.eventData['City'] ?? "null";
-    var country = widget.eventData['Country'] ?? "null";
+    var location = widget.eventData!['Location'] ?? "null";
+    var city = widget.eventData!['City'] ?? "null";
+    var country = widget.eventData!['Country'] ?? "null";
     return Container(
       width: widthSize(100),
       height: heightSize(6),
@@ -780,11 +780,11 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             */
           ] +
           //ANCHOR katılımcı sayısına göre kontrol yapılıyor
-          (widget.eventData["Status"] != "Finished" &&
-                  !isThisEventMine &&
-                  (widget.eventData['CurrentParticipantNumber'] <
-                          widget.eventData['MaxParticipantNumber'] ||
-                      joinButton)
+          (widget.eventData!["Status"] != "Finished" &&
+                  !isThisEventMine! &&
+                  (widget.eventData!['CurrentParticipantNumber'] <
+                          widget.eventData!['MaxParticipantNumber'] ||
+                      joinButton!)
               ? [
                   InkWell(
                       onTap: () async {
@@ -792,10 +792,10 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                             Provider.of<EventService>(context, listen: false);
                         var userService =
                             Provider.of<UserService>(context, listen: false);
-                        if (joinButton) {
+                        if (joinButton!) {
                           if (await eventService.leaveEvent(
-                              userService.userModel.getUserId(),
-                              widget.eventData['eventID'])) {
+                              userService.userModel!.getUserId(),
+                              widget.eventData!['eventID'])) {
                             setState(() {
                               toggleJoinButton();
                               print("Ayrıldı");
@@ -805,8 +805,8 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                           }
                         } else {
                           if (await eventService.joinEvent(
-                              userService.userModel.getUserId(),
-                              widget.eventData['eventID'])) {
+                              userService.userModel!.getUserId(),
+                              widget.eventData!['eventID'])) {
                             setState(() {
                               toggleJoinButton();
                               print("Katıldı");
@@ -833,7 +833,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                               children: <Widget>[
                                 Container(
                                   height: heightSize(4.5),
-                                  child: joinButton
+                                  child: joinButton!
                                       ? Image.asset("assets/icons/unjoin.png")
                                       : Image.asset(
                                           "assets/icons/joinEvent.png"),
@@ -842,7 +842,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                                   width: widthSize(3),
                                 ),
                                 Text(
-                                  joinButton ? "AYRIL" : "KATIL",
+                                  joinButton! ? "AYRIL" : "KATIL",
                                   style: TextStyle(
                                     fontFamily: "Zona",
                                     fontSize: heightSize(2),

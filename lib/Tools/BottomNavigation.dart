@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 Widget getNavigatedPage(BuildContext context) {
   //ANCHOR stack de widget varsa o sayfayı döndürür yoksa default veya mevcut indexe göre sayfayı açar
   if (NavigationManager(context).getLastPage() != null) {
-    return NavigationManager(context).getLastPage();
+    return NavigationManager(context).getLastPage()!;
   } else {
     UserService userWorker = Provider.of<UserService>(context);
     List<Widget> pages = [
@@ -21,7 +21,7 @@ Widget getNavigatedPage(BuildContext context) {
       ExploreEventPage(),
       ProfilePage(
           key: UniqueKey(),
-          userID: userWorker.userModel.getUserId(),
+          userID: userWorker.userModel!.getUserId(),
           isFromEvent: false),
     ];
     return pages[NavigationManager(context).getBottomNavIndex()];

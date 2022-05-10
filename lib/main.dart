@@ -2,13 +2,13 @@ import 'package:eventizer/Navigation/Components/SplashScreen.dart';
 import 'package:eventizer/Services/NavigationProvider.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/locator.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setupLocator();
   //ANCHOR burada ekranın dönmesi engellenir, dikey mod
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   //ANCHOR status barı transparent yapıyor
@@ -16,6 +16,9 @@ void main() {
     statusBarColor: Colors.transparent,
     statusBarBrightness: Brightness.light,
   ));
+  await Firebase.initializeApp().then((value) {
+    setupLocator();
+  });
   return runApp(MyApp());
 }
 

@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:store_redirect/store_redirect.dart';
 
 class SplashScreen extends StatefulWidget {
-  SplashScreen({Key key}) : super(key: key);
+  SplashScreen({Key? key}) : super(key: key);
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -19,31 +19,29 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   authChecking(BuildContext context) {
     Future.delayed(Duration(seconds: 2), () {
-      locator<AuthService>().getUserUid().then((userID) {
-        if (userID != null) {
-          print("UserID:" + userID);
-          Provider.of<UserService>(context, listen: false)
-              .userInitializer(userID)
-              .then((value) {
-            if (value)
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => HomePage()));
-          });
-        } else {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => LoginPage()));
-        }
-      });
+      String? userID = locator<AuthService>().getUserUid();
+
+      if (userID != null) {
+        print("UserID:" + userID);
+        Provider.of<UserService>(context, listen: false)
+            .userInitializer(userID)
+            .then((value) {
+          if (value)
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => HomePage()));
+        });
+      } else {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => LoginPage()));
+      }
     });
   }
 
-  Future<bool> checkUpdate() async {
-    String appVersion;
-    String serverVersion;
+  Future<bool?> checkUpdate() async {
+    String? appVersion;
+    String? serverVersion;
     var temp, temp2;
     bool needToUpdate = false;
     try {
@@ -52,8 +50,8 @@ class _SplashScreenState extends State<SplashScreen> {
         appVersion = packageInfo.version;
       });
       serverVersion = await locator<DatabaseWorks>().getServerVersion();
-      print("serverVersion:" + serverVersion);
-      temp = appVersion.split(".");
+      print("serverVersion:" + serverVersion!);
+      temp = appVersion!.split(".");
       temp2 = serverVersion.split(".");
       for (int i = 0; i < 3; i++) {
         if (int.parse(temp2[i]) > int.parse(temp[i])) needToUpdate = true;
@@ -70,7 +68,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.didChangeDependencies();
     checkUpdate().then((value) {
       print(value);
-      if (!value)
+      if (!value!)
         authChecking(context);
       else
         Navigator.pushReplacement(

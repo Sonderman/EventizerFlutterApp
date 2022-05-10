@@ -1,54 +1,52 @@
-import 'package:flutter/material.dart';
-
 class User {
   final String userID;
-  String _name;
-  String _surname;
-  String _nickname;
-  String _email;
-  int _telNo;
-  String _birthday;
-  String _city;
-  String _gender;
-  String _about;
-  String _profilePhotoUrl;
-  int _numberOfFollowers;
-  int _numberOfFollowings;
-  int _numberOfEvents;
-  int _numberOfTrustPoints;
+  String? _name;
+  String? _surname;
+  String? _nickname;
+  String? _email;
+  int? _telNo;
+  String? _birthday;
+  String? _city;
+  String? _gender;
+  String? _about;
+  String? _profilePhotoUrl;
+  int? _numberOfFollowers;
+  int? _numberOfFollowings;
+  int? _numberOfEvents;
+  int? _numberOfTrustPoints;
 
-  User({@required this.userID});
+  User({required this.userID});
 
   //ANCHOR Getters
   String getUserId() => userID;
 
-  String getUserName() => _name;
+  String? getUserName() => _name;
 
-  String getUserNickName() => _nickname;
+  String? getUserNickName() => _nickname;
 
-  String getUserAbout() => _about;
+  String? getUserAbout() => _about;
 
-  String getUserEmail() => _email;
+  String? getUserEmail() => _email;
 
-  String getUserSurname() => _surname;
+  String? getUserSurname() => _surname;
 
-  String getUserGender() => _gender;
+  String? getUserGender() => _gender;
 
-  int getUserTelNo() => _telNo;
+  int? getUserTelNo() => _telNo;
 
-  String getUserCity() => _city;
+  String? getUserCity() => _city;
 
-  String getUserBirthday() => _birthday;
+  String? getUserBirthday() => _birthday;
 
-  int getUserFollowNumber() => _numberOfFollowers;
+  int? getUserFollowNumber() => _numberOfFollowers;
 
-  int getUserFollowingNumber() => _numberOfFollowings;
+  int? getUserFollowingNumber() => _numberOfFollowings;
 
-  int getUserEventsNumber() => _numberOfEvents;
+  int? getUserEventsNumber() => _numberOfEvents;
 
-  int getUserTrustPointNumber() => _numberOfTrustPoints;
+  int? getUserTrustPointNumber() => _numberOfTrustPoints;
 
-  String getUserProfilePhotoUrl() {
+  String? getUserProfilePhotoUrl() {
     if (_profilePhotoUrl == null) {
       return "https://farm5.staticflickr.com/4363/36346283311_74018f6e7d_o.png";
     } else

@@ -22,33 +22,33 @@ class Message extends StatefulWidget {
 
 class _MessageState extends State<Message> {
   final GlobalKey<DashChatState> _chatViewKey = GlobalKey<DashChatState>();
-  List<ChatMessage> messages;
-  StreamSubscription messageStream;
-  UserService userService;
-  MessagingService messageService;
-  var m = List<ChatMessage>();
+  List<ChatMessage>? messages;
+  StreamSubscription? messageStream;
+  late UserService userService;
+  late MessagingService messageService;
+  List<ChatMessage>? m;
   var scrollController = ScrollController();
   String chatID = "temp";
-  String currentUserID;
-  String otherUserID;
-  String currentUserPhotoUrl;
+  String? currentUserID;
+  String? otherUserID;
+  String? currentUserPhotoUrl;
   var i = 0;
   bool runFutureOnce = false;
-  ChatUser user;
+  ChatUser? user;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     //ANCHOR Providerda context e ihtiyacımız olduğundan didchangedependecies ile contexte ulaşabiliyoruz, bu bir nevi initstate işlevi görüyor
     userService = Provider.of<UserService>(context, listen: false);
-    currentUserID = userService.userModel.getUserId();
+    currentUserID = userService.userModel!.getUserId();
     otherUserID = widget.otherUserID;
-    currentUserPhotoUrl = userService.userModel.getUserProfilePhotoUrl();
+    currentUserPhotoUrl = userService.userModel!.getUserProfilePhotoUrl();
     messageService = Provider.of<MessagingService>(context, listen: false);
 
     //ANCHOR Buradaki user sağ tarafta görülen kendimiz
     user = ChatUser(
-      name: userService.userModel.getUserName(),
+      name: userService.userModel!.getUserName(),
       uid: currentUserID,
       avatar: currentUserPhotoUrl, // Kendi url miz
     );
@@ -56,7 +56,7 @@ class _MessageState extends State<Message> {
 
   @override
   void dispose() {
-    if (messageStream != null) messageStream.cancel();
+    if (messageStream != null) messageStream!.cancel();
     super.dispose();
   }
 
@@ -69,7 +69,7 @@ class _MessageState extends State<Message> {
         centerTitle: true,
       ),
       body: FutureBuilder(
-        future: messageService.checkConversation(currentUserID, otherUserID),
+        future: messageService.checkConversation(currentUserID!, otherUserID!),
         builder: (context, AsyncSnapshot snapshot) {
           print("Control Future");
           if (snapshot.connectionState == ConnectionState.done ||
@@ -89,9 +89,12 @@ class _MessageState extends State<Message> {
                 print("Subscribe oldu");
                 if (snapshot != null)
                   setState(() {
-                    messages = snapshot.documents
-                        .map((i) => ChatMessage.fromJson(i.data))
+                    print("Message.dart/ 93. satır kontrol et");
+/*
+                    messages = snapshot.docs
+                        .map((i) => ChatMessage.fromJson(i.data()))
                         .toList();
+                        */
                   });
               });
             }
@@ -102,7 +105,7 @@ class _MessageState extends State<Message> {
               scrollController: scrollController,
               onSend: (ChatMessage message) {
                 messageService
-                    .sendMessage(chatID, message, currentUserID, otherUserID)
+                    .sendMessage(chatID, message, currentUserID!, otherUserID!)
                     .then((id) {
                   if (messages == null) {
                     print("ilkmesaj");
@@ -117,7 +120,7 @@ class _MessageState extends State<Message> {
               onLoadEarlier: () {
                 print("loading...");
               },
-              user: user,
+              user: user!,
               inputDecoration:
                   InputDecoration.collapsed(hintText: "Mesaj gönderin"),
               dateFormat: DateFormat('yyyy-MMM-dd'),
@@ -155,7 +158,7 @@ class _MessageState extends State<Message> {
                 IconButton(
                   icon: Icon(Icons.photo),
                   onPressed: () async {
-                    File result = await ImagePicker.pickImage(
+                    PickedFile? result = await ImagePicker.platform.pickImage(
                       source: ImageSource.gallery,
                       imageQuality: 100,
                       maxHeight: 300,
@@ -164,8 +167,8 @@ class _MessageState extends State<Message> {
                     if (result != null) {
                       String time =
                           DateTime.now().millisecondsSinceEpoch.toString();
-                      await messageService.sendImageMessage(
-                          result, user, currentUserID, chatID, time);
+                      await messageService.sendImageMessage(File(result.path),
+                          user!, currentUserID!, chatID, time);
                     }
                   },
                 )

@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat/dash_chat.dart';
 import 'package:eventizer/Models/UserModel.dart';
@@ -11,11 +10,11 @@ import 'package:flutter/material.dart';
 
 ///UserService*****************************************************************************************************
 class UserService with ChangeNotifier {
-  User userModel;
+  User? userModel;
   final DatabaseWorks firebaseDatabaseWorks = locator<DatabaseWorks>();
   final StorageWorks firebaseStorageWorks = locator<StorageWorks>();
 
-  Future<bool> userInitializer(String userId) async {
+  Future<bool> userInitializer(String? userId) async {
     if (userId == null || userId == "") {
       userId = "0000000000000000";
       userModel = User(userID: userId);
@@ -29,9 +28,9 @@ class UserService with ChangeNotifier {
   Future<bool> userModelSync() async {
     try {
       return await firebaseDatabaseWorks
-          .findUserbyID(userModel.getUserId())
+          .findUserbyID(userModel!.getUserId())
           .then((map) {
-        userModel.parseMap(map);
+        userModel!.parseMap(map!);
         //refresh();
         return true;
       });
@@ -43,18 +42,17 @@ class UserService with ChangeNotifier {
 
   Future<bool> sendFeedback(String text) async {
     return await firebaseDatabaseWorks.sendFeedback(
-        text, userModel.getUserId());
+        text, userModel!.getUserId());
   }
 
-  Future<Map<String, dynamic>> findUserByID(String userID) {
+  Future<Map<String, dynamic>?> findUserByID(String userID) {
     return firebaseDatabaseWorks.findUserbyID(userID);
   }
 
-  Future<bool> updateProfilePhoto(Uint8List image) async {
+  Future<bool> updateProfilePhoto(Uint8List? image) async {
     if (image == null) return false;
     return await firebaseStorageWorks.updateProfilePhoto(
-            userModel.userID, image) ??
-        false;
+        userModel!.userID, image);
   }
 
   Future<bool> userModelUpdater(User model) async {
@@ -64,7 +62,7 @@ class UserService with ChangeNotifier {
   Future<bool> updateSingleInfo(String maptext, String changedtext) async {
     bool isCompleted = false;
     await firebaseDatabaseWorks
-        .updateSingleInfo(userModel.userID, maptext, changedtext)
+        .updateSingleInfo(userModel!.userID, maptext, changedtext)
         .whenComplete(() => isCompleted = true)
         .catchError((e) {
       print(e);
@@ -74,7 +72,7 @@ class UserService with ChangeNotifier {
 
   Future<bool> increaseNofEvents() async {
     return await firebaseDatabaseWorks
-        .increaseNofEvents(userModel.getUserId())
+        .increaseNofEvents(userModel!.getUserId())
         .then((value) {
       if (value) {
         userModelSync();
@@ -84,23 +82,23 @@ class UserService with ChangeNotifier {
     });
   }
 
-  Future<bool> followToggle(String otherUserID) async {
+  Future<bool?> followToggle(String otherUserID) async {
     return await firebaseDatabaseWorks.followToggle(
-        userModel.userID, otherUserID);
+        userModel!.userID, otherUserID);
   }
 
   Future<bool> amIFollowing(String otherUserID) async {
     return await firebaseDatabaseWorks.amIFollowing(
-        userModel.userID, otherUserID);
+        userModel!.userID, otherUserID);
   }
 
-  Future<String> registerUser(String eposta, String sifre,
-      List<String> datalist, Uint8List image) async {
+  Future<String?> registerUser(String eposta, String sifre,
+      List<String?> datalist, Uint8List image) async {
     Map<String, dynamic> data = {
       "Name": datalist[0],
       "Surname": datalist[1],
       "Email": datalist[2],
-      "PhoneNumber": int.parse(datalist[3]),
+      "PhoneNumber": int.parse(datalist[3]!),
       "Gender": datalist[4],
       "BirthDay": datalist[5],
       "NickName": datalist[6],
@@ -168,7 +166,7 @@ class EventService with ChangeNotifier {
   //ANCHOR Etkinlik oluşturur
   Future<bool> createEvent(
       String userId, Map<String, dynamic> eventData, Uint8List image) async {
-    String eventID;
+    String? eventID;
     if (image != null) {
       eventData['EventImageUrl'] =
           await firebaseStorageWorks.sendEventImage(image);
@@ -187,20 +185,20 @@ class EventService with ChangeNotifier {
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchListOfUserEvents(String userID) {
+  Future<List<Map<String, dynamic>>?> fetchListOfUserEvents(String userID) {
     return firebaseDatabaseWorks.fetchListOfUserEvents(userID);
   }
 
-  Future<List<Map<String, dynamic>>> fetchActiveEventLists() {
+  Future<List<Map<String, dynamic>>?> fetchActiveEventLists() {
     return firebaseDatabaseWorks.fetchActiveEventLists();
   }
 
-  Future<List<Map<String, dynamic>>> fetchActiveEventListsByCategory(
+  Future<List<Map<String, dynamic>>?> fetchActiveEventListsByCategory(
       String category) {
     return firebaseDatabaseWorks.fetchActiveEventListsByCategory(category);
   }
 
-  Future<List<Map<String, dynamic>>> fetchEventListsForUser(
+  Future<List<Map<String, dynamic>>?> fetchEventListsForUser(
       String organizerID, bool isOld) {
     return firebaseDatabaseWorks.fetchEventListsForUser(organizerID, isOld);
   }
@@ -211,11 +209,11 @@ class EventService with ChangeNotifier {
     return await firebaseDatabaseWorks.sendComment(eventID, userID, comment);
   }
 
-  Future<List<Map<String, dynamic>>> getComments(String eventID) async {
+  Future<List<Map<String, dynamic>>?> getComments(String eventID) async {
     return await firebaseDatabaseWorks.getComments(eventID);
   }
 
-  Future<List<Map<String, dynamic>>> getParticipants(String eventID) {
+  Future<List<Map<String, dynamic>>?> getParticipants(String eventID) {
     return firebaseDatabaseWorks.getParticipants(eventID);
   }
 }

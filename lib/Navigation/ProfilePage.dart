@@ -18,7 +18,8 @@ class ProfilePage extends StatefulWidget {
   final userID;
   final isFromEvent;
 
-  const ProfilePage({Key key, this.userID, this.isFromEvent}) : super(key: key);
+  const ProfilePage({Key? key, this.userID, this.isFromEvent})
+      : super(key: key);
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -36,10 +37,10 @@ class _ProfilePageState extends State<ProfilePage>
     return MediaQuery.of(context).size.width * value;
   }
 
-  UserService userService;
-  User userModel;
-  bool amIFollowing = false, isThisProfileMine;
-  String nameText,
+  UserService? userService;
+  User? userModel;
+  bool? amIFollowing = false, isThisProfileMine;
+  String? nameText,
       surnameText,
       nickNameText,
       aboutText,
@@ -48,16 +49,16 @@ class _ProfilePageState extends State<ProfilePage>
       eventsText,
       trustText,
       profilePhotoUrl;
-  TabController _tabController;
+  TabController? _tabController;
 
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
     userService = Provider.of<UserService>(context);
-    if (widget.userID != userService.userModel.userID) {
+    if (widget.userID != userService!.userModel!.userID) {
       isThisProfileMine = false;
       userModel = User(userID: widget.userID);
-      if (await userService.amIFollowing(userModel.userID)) {
+      if (await userService!.amIFollowing(userModel!.userID)) {
         amIFollowing = true;
       } else {
         amIFollowing = false;
@@ -65,26 +66,26 @@ class _ProfilePageState extends State<ProfilePage>
     } else {
       isThisProfileMine = true;
       _tabController = TabController(length: 1, vsync: this);
-      userModel = userService.userModel;
+      userModel = userService!.userModel;
     }
   }
 
   @override
   void dispose() {
     super.dispose();
-    if (_tabController != null) _tabController.dispose();
+    if (_tabController != null) _tabController!.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!isThisProfileMine) {
+    if (!isThisProfileMine!) {
       return FutureBuilder(
-          future: userService.findUserByID(widget.userID),
-          builder:
-              (BuildContext context, AsyncSnapshot<Map<String, dynamic>> data) {
+          future: userService!.findUserByID(widget.userID),
+          builder: (BuildContext context,
+              AsyncSnapshot<Map<String, dynamic>?> data) {
             if (data.connectionState == ConnectionState.done) {
-              userModel.parseMap(data.data);
-              textUpdaterByUserModel(userModel);
+              userModel!.parseMap(data.data!);
+              textUpdaterByUserModel(userModel!);
               return Scaffold(
                 body: SingleChildScrollView(
                   child: Column(
@@ -107,7 +108,7 @@ class _ProfilePageState extends State<ProfilePage>
               );
           });
     } else {
-      textUpdaterByUserModel(userService.userModel);
+      textUpdaterByUserModel(userService!.userModel!);
       return Scaffold(
         body: Column(
           children: <Widget>[
@@ -192,8 +193,8 @@ class _ProfilePageState extends State<ProfilePage>
                     context,
                     MaterialPageRoute(
                         builder: (BuildContext context) => ImageViewer(
-                              tag: profilePhotoUrl,
-                              url: profilePhotoUrl,
+                              tag: profilePhotoUrl!,
+                              url: profilePhotoUrl!,
                             )));
                 /*
                 NavigationManager(context).pushPage(ImageViewer(
@@ -204,12 +205,12 @@ class _ProfilePageState extends State<ProfilePage>
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(15.0),
                 child: Hero(
-                  tag: profilePhotoUrl,
+                  tag: profilePhotoUrl!,
                   child: FadeInImage.assetNetwork(
                     height: heightSize(30),
                     fit: BoxFit.cover,
                     placeholder: "assets/images/avatar_man.png",
-                    image: profilePhotoUrl,
+                    image: profilePhotoUrl!,
                   ),
                 ),
               ),
@@ -222,7 +223,7 @@ class _ProfilePageState extends State<ProfilePage>
               children: <Widget>[
                 Visibility(
                   //replacement: SizedBox(),
-                  visible: isThisProfileMine,
+                  visible: isThisProfileMine!,
                   child: InkWell(
                     onTap: () =>
                         NavigationManager(context).pushPage(SettingsPage()),
@@ -247,14 +248,16 @@ class _ProfilePageState extends State<ProfilePage>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      nameText.toUpperCase() + ' ' + surnameText.toUpperCase(),
+                      nameText!.toUpperCase() +
+                          ' ' +
+                          surnameText!.toUpperCase(),
                       style: TextStyle(
                         fontFamily: "Zona",
                         fontSize: heightSize(3),
                       ),
                     ),
                     Text(
-                      "@" + nickNameText,
+                      "@" + nickNameText!,
                       style: TextStyle(
                         fontFamily: "ZonaLight",
                         fontSize: heightSize(2.5),
@@ -264,7 +267,7 @@ class _ProfilePageState extends State<ProfilePage>
                 ),
                 Visibility(
                   replacement: SizedBox(),
-                  visible: isThisProfileMine,
+                  visible: isThisProfileMine!,
                   child: InkWell(
                     onTap: () {
                       var auth = locator<AuthService>();
@@ -307,7 +310,7 @@ class _ProfilePageState extends State<ProfilePage>
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Text(
-                  aboutText,
+                  aboutText!,
                   style: TextStyle(
                     fontFamily: "Zona",
                     fontSize: heightSize(2),
@@ -428,7 +431,7 @@ class _ProfilePageState extends State<ProfilePage>
                     fontSize: heightSize(3),
                   ),
                 ),
-                Text(eventsText,
+                Text(eventsText!,
                     style: TextStyle(
                       color: MyColors().blueTextColor,
                       fontFamily: "ZonaLight",
@@ -447,7 +450,7 @@ class _ProfilePageState extends State<ProfilePage>
                     fontSize: heightSize(3),
                   ),
                 ),
-                Text(followersText,
+                Text(followersText!,
                     style: TextStyle(
                       color: MyColors().blueTextColor,
                       fontFamily: "ZonaLight",
@@ -466,7 +469,7 @@ class _ProfilePageState extends State<ProfilePage>
                     )),
                 Text(
                     //REVIEW myFollowers text should be here
-                    followingsText,
+                    followingsText!,
                     style: TextStyle(
                       color: MyColors().blueTextColor,
                       fontFamily: "ZonaLight",
@@ -507,14 +510,14 @@ class _ProfilePageState extends State<ProfilePage>
               children: <Widget>[
                 InkWell(
                   onTap: () async {
-                    await userService
-                        .followToggle(userModel.getUserId())
+                    await userService!
+                        .followToggle(userModel!.getUserId())
                         .whenComplete(() {
                       setState(() {
-                        amIFollowing = !amIFollowing;
+                        amIFollowing = !amIFollowing!;
                       });
                     });
-                    await userService.userModelSync();
+                    await userService!.userModelSync();
                   },
                   child: Container(
                     width: widthSize(43),
@@ -533,13 +536,13 @@ class _ProfilePageState extends State<ProfilePage>
                           children: <Widget>[
                             Container(
                               height: heightSize(5),
-                              child: amIFollowing
+                              child: amIFollowing!
                                   ? Image.asset("assets/icons/unfollow.png")
                                   : Image.asset("assets/icons/follow.png"),
                             ),
                             Spacer(),
                             Text(
-                              amIFollowing ? "Takibi Bırak" : "Takip Et",
+                              amIFollowing! ? "Takibi Bırak" : "Takip Et",
                               style: TextStyle(
                                 fontFamily: "Zona",
                                 fontSize: widthSize(3),
@@ -555,17 +558,17 @@ class _ProfilePageState extends State<ProfilePage>
                 InkWell(
                   onTap: () async {
                     // ANCHOR  Mesaj sayfasına gitmek için
-                    if (userService.userModel.getUserId() != widget.userID) {
+                    if (userService!.userModel!.getUserId() != widget.userID) {
                       //ANCHOR mesajlaşma sayfasında karşıdaki kişinin ismini getirip parametre olarak veriyoruz,
                       //Bu sayede appbarda ismi görünüyor
-                      await userService
+                      await userService!
                           .findUserByID(widget.userID)
                           .then((data) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    Message(widget.userID, data['Name'])));
+                                    Message(widget.userID, data!['Name'])));
                       });
                     }
                   },

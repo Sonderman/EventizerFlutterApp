@@ -24,7 +24,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
     return MediaQuery.of(context).size.width * value;
   }
 
-  String category;
+  String? category;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +65,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                     future: (category == null || category == "Hepsi")
                         ? _eventManager.fetchActiveEventLists()
                         : _eventManager
-                            .fetchActiveEventListsByCategory(category),
+                            .fetchActiveEventListsByCategory(category!),
                     builder: (BuildContext context, AsyncSnapshot fetchedlist) {
                       if (fetchedlist.connectionState == ConnectionState.done) {
                         List<Map<String, dynamic>> listofMaps =

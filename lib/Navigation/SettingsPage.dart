@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:eventizer/Models/UserModel.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/ImageEditor.dart';
@@ -12,7 +13,6 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -20,15 +20,15 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  UserService userService;
-  User userModel;
+  UserService? userService;
+  User? userModel;
   final PageController pageController = PageController();
   TextEditingController mailController = TextEditingController();
   TextEditingController detailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  Uint8List _image;
+  Uint8List? _image;
   bool loading = false;
-  String _name, _surname, _phoneNumber, _city;
+  String? _name, _surname, _phoneNumber, _city;
 
   get city => _city;
 
@@ -41,9 +41,9 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void didChangeDependencies() {
     userService = Provider.of<UserService>(context);
-    userModel = userService.userModel;
-    mailController.text = userModel.getUserEmail();
-    detailController.text = userModel.getUserAbout();
+    userModel = userService!.userModel;
+    mailController.text = userModel!.getUserEmail()!;
+    detailController.text = userModel!.getUserAbout()!;
     super.didChangeDependencies();
   }
 
@@ -139,14 +139,15 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
 // ANCHOR kameradan foto almaya yarar
-  Future<Uint8List> _getImageFromCamera() async {
-    File image = await ImagePicker.pickImage(source: ImageSource.camera);
+  Future<Uint8List?> _getImageFromCamera() async {
+    PickedFile? image =
+        await ImagePicker.platform.pickImage(source: ImageSource.camera);
     if (image != null)
       return Navigator.push(
           context,
           MaterialPageRoute(
               builder: (BuildContext context) => ImageEditorPage(
-                    image: image,
+                    image: File(image.path),
                     forCreateEvent: false,
                   ))).then((value) => value);
     else
@@ -154,14 +155,15 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
 // ANCHOR galeriden foto almaya yarar
-  Future<Uint8List> _getImageFromGallery() async {
-    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+  Future<Uint8List?> _getImageFromGallery() async {
+    PickedFile? image =
+        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
     if (image != null)
       return Navigator.push(
           context,
           MaterialPageRoute(
               builder: (BuildContext context) => ImageEditorPage(
-                    image: image,
+                    image: File(image.path),
                     forCreateEvent: false,
                   ))).then((value) => value);
     else
@@ -211,7 +213,7 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       loading = true;
     });
-    userService.userModelUpdater(userModel).then((value) async {
+    userService?.userModelUpdater(userModel!).then((value) async {
       if (value) {
         if (await Provider.of<UserService>(context, listen: false)
             .userModelSync()) {
@@ -256,9 +258,9 @@ class _SettingsPageState extends State<SettingsPage> {
               shape: BoxShape.circle,
               image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: _image == null
-                      ? NetworkImage(userModel.getUserProfilePhotoUrl())
-                      : MemoryImage(_image))),
+                  image: (_image == null
+                      ? NetworkImage(userModel!.getUserProfilePhotoUrl()!)
+                      : MemoryImage(_image!)) as ImageProvider)),
         ),
       ),
     );
@@ -272,7 +274,7 @@ class _SettingsPageState extends State<SettingsPage> {
           height: heightSize(8),
           width: widthSize(40),
           child: TextFormField(
-            initialValue: userModel.getUserName(),
+            initialValue: userModel!.getUserName(),
             onChanged: (ad) => _name = ad,
             textAlign: TextAlign.left,
             decoration: InputDecoration(
@@ -301,7 +303,7 @@ class _SettingsPageState extends State<SettingsPage> {
           height: heightSize(8),
           width: widthSize(40),
           child: TextFormField(
-            initialValue: userModel.getUserSurname(),
+            initialValue: userModel!.getUserSurname(),
             onChanged: (soyad) => _surname = soyad,
             textAlign: TextAlign.left,
             decoration: InputDecoration(
@@ -407,13 +409,13 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget telephoneNumber() {
     return TextFormField(
-      initialValue: userModel.getUserTelNo() == 0
+      initialValue: userModel!.getUserTelNo() == 0
           ? null
-          : userModel.getUserTelNo().toString(),
+          : userModel!.getUserTelNo().toString(),
       onChanged: (phone) => _phoneNumber = phone,
       textAlign: TextAlign.left,
       keyboardType: TextInputType.number,
-      inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       maxLength: 10,
       decoration: InputDecoration(
         border: InputBorder.none,
@@ -439,13 +441,6 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget cityField() {
-    List<DropdownMenuItem<String>> sehirler = [];
-    for (int i = 0; i < 81; i++) {
-      sehirler.add(DropdownMenuItem(
-        value: Sehirler().sehirler[i],
-        child: Text(Sehirler().sehirler[i]),
-      ));
-    }
     return Container(
       height: heightSize(10),
       width: widthSize(90),
@@ -453,15 +448,35 @@ class _SettingsPageState extends State<SettingsPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          SearchableDropdown.single(
+          DropdownSearch<String>(
+            showSearchBox: true,
+            mode: Mode.BOTTOM_SHEET,
+            showSelectedItems: true,
+            items: Sehirler().sehirler,
+            dropdownSearchDecoration: InputDecoration(
+              labelText: "Şehir seçiniz",
+              //hintText: "country in menu mode",
+            ),
+            //popupItemDisabled: (String s) => s.startsWith('I'),
+            onChanged: (value) {
+              if (value != null) {
+                setState(() {
+                  city = value;
+                  print("CITY:" + city!);
+                });
+              }
+            },
+            selectedItem: Sehirler().sehirler.first,
+          ),
+          /* SearchableDropdown.single(
             items: sehirler,
-            hint: userModel.getUserCity() == "null"
+            hint: userModel!.getUserCity() == "null"
                 ? Text("Şehir Seçin",
                     style: TextStyle(
                         color: MyColors().greyTextColor,
                         fontSize: heightSize(2.5),
                         fontFamily: "Zona"))
-                : userModel.getUserCity(),
+                : userModel!.getUserCity(),
             displayClearIcon: true,
             isExpanded: true,
             searchHint: "Şehir Seçin",
@@ -477,11 +492,12 @@ class _SettingsPageState extends State<SettingsPage> {
               if (value != 0 && value != null) {
                 setState(() {
                   _city = value;
-                  print("CITY:" + _city);
+                  print("CITY:" + _city!);
                 });
               }
             },
           ),
+          */
         ],
       ),
     );
@@ -494,11 +510,11 @@ class _SettingsPageState extends State<SettingsPage> {
         bool isChanged = false;
         if (_name != null) {
           isChanged = true;
-          userModel.setUserName(_name);
+          userModel!.setUserName(_name!);
         }
         if (_surname != null) {
           isChanged = true;
-          userModel.setUserSurname(_surname);
+          userModel!.setUserSurname(_surname!);
         }
         /*
         if (mailController.text != null) {
@@ -507,22 +523,22 @@ class _SettingsPageState extends State<SettingsPage> {
         }*/
         if (detailController.text != null) {
           isChanged = true;
-          userModel.setUserAbout(detailController.text);
+          userModel!.setUserAbout(detailController.text);
         }
 
         if (_city != null) {
           isChanged = true;
-          userModel.setUserCity(_city);
+          userModel!.setUserCity(_city!);
         }
         if (_phoneNumber != null) {
           isChanged = true;
-          userModel.setUserTelNo(int.parse(_phoneNumber));
+          userModel!.setUserTelNo(int.parse(_phoneNumber!));
         }
         if (_image != null) {
           setState(() {
             loading = true;
           });
-          if (!await userService.updateProfilePhoto(_image)) {
+          if (!await userService!.updateProfilePhoto(_image)) {
             Fluttertoast.showToast(
                 msg:
                     " Resim Güncellenemedi,İnternet bağlantınızı kontrol ediniz!",

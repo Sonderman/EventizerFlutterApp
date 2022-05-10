@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 Widget eventItem(
     BuildContext context, Map<String, dynamic> eventDatas, bool fromExplorePage,
-    {State parentState}) {
+    {State? parentState}) {
   UserService userService = Provider.of<UserService>(context);
   EventService eventService = Provider.of<EventService>(context);
   var responsive = PageComponents(context);
@@ -29,11 +29,11 @@ Widget eventItem(
   String currentParticipantNumber =
       eventDatas['CurrentParticipantNumber'].toString();
   String maxParticipantNumber = eventDatas['MaxParticipantNumber'].toString();
-  Map<String, dynamic> ownerData;
+  Map<String, dynamic>? ownerData;
   return InkWell(
     onTap: () async {
       eventService
-          .amIparticipant(userService.userModel.getUserId(), eventID)
+          .amIparticipant(userService.userModel!.getUserId(), eventID)
           .then((amIparticipant) {
         print("Kullanıcı bu etkinliğe katılmış:" + amIparticipant.toString());
         NavigationManager(context).pushPage(EventPage(
@@ -126,7 +126,7 @@ Widget eventItem(
                         )
                       : Visibility(
                           visible:
-                              ownerID == userService.userModel.getUserId() &&
+                              ownerID == userService.userModel!.getUserId() &&
                                   status != "Finished",
                           child: DropdownButton<String>(
                             items: [
@@ -199,7 +199,7 @@ Widget eventItem(
                                 ),
                               ),
                             ],
-                            onChanged: (String selected) {
+                            onChanged: (String? selected) {
                               //TODO Paylaş bitir ve düzenle seçenekleri için kod yazılacak
                               if (selected == "delete")
                                 askingDialog(
@@ -225,7 +225,7 @@ Widget eventItem(
                                           "Bitirildi:" + value.toString()));
                                   await userService.increaseNofEvents();
                                 }).whenComplete(
-                                        () => parentState.setState(() {}));
+                                        () => parentState!.setState(() {}));
                             },
                             hint: Row(
                               children: <Widget>[

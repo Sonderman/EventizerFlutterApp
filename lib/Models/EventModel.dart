@@ -1,7 +1,7 @@
 class Event {
   final String eventId;
   final String organizerId;
-  String title;
+  String? title;
 
   Event(this.eventId, this.organizerId);
 

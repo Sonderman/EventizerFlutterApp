@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat/dash_chat.dart';
 import 'package:eventizer/Models/UserModel.dart';
@@ -32,7 +31,7 @@ class AutoIdGenerator {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class DatabaseWorks {
-  final Firestore ref = Firestore.instance;
+  final FirebaseFirestore ref = FirebaseFirestore.instance;
   AppSettings settings = locator<AppSettings>();
 
   DatabaseWorks() {
@@ -43,10 +42,10 @@ class DatabaseWorks {
     try {
       return await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection('users')
-          .document(data['UserID'])
-          .setData(data)
+          .doc(data['UserID'])
+          .set(data)
           .then((value) => true);
     } catch (e) {
       print(e);
@@ -58,10 +57,10 @@ class DatabaseWorks {
     try {
       return await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection("users")
-          .document(model.getUserId())
-          .updateData(model.toMap())
+          .doc(model.getUserId())
+          .update(model.toMap())
           .then((value) => true);
     } catch (e) {
       print(e);
@@ -73,14 +72,14 @@ class DatabaseWorks {
     try {
       return await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection("users")
-          .document(userID)
+          .doc(userID)
           .collection("following")
           .where("OtherUserID", isEqualTo: otherUserID)
-          .getDocuments()
+          .get()
           .then((onValue) {
-        if (onValue.documents.isNotEmpty)
+        if (onValue.docs.isNotEmpty)
           return true;
         else
           return false;
@@ -95,10 +94,10 @@ class DatabaseWorks {
     try {
       await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection('users')
-          .document(userID)
-          .updateData({"Nof_events": FieldValue.increment(1)});
+          .doc(userID)
+          .update({"Nof_events": FieldValue.increment(1)});
       return true;
     } catch (e) {
       print(e);
@@ -106,48 +105,48 @@ class DatabaseWorks {
     }
   }
 
-  Future<bool> followToggle(String userID, String otherUserID) async {
+  Future<bool?> followToggle(String userID, String otherUserID) async {
     bool issuccesfull = false;
     try {
       return await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection("users")
-          .document(userID)
+          .doc(userID)
           .collection("following")
           .where("OtherUserID", isEqualTo: otherUserID)
-          .getDocuments()
+          .get()
           .then((onValue) async {
-        if (onValue.documents.isNotEmpty) {
+        if (onValue.docs.isNotEmpty) {
           await ref.runTransaction((transaction) async {
-            await transaction.delete(ref
+            transaction.delete(ref
                 .collection(settings.appName)
-                .document(settings.getServer())
+                .doc(settings.getServer())
                 .collection('users')
-                .document(userID)
+                .doc(userID)
                 .collection('following')
-                .document(otherUserID));
+                .doc(otherUserID));
 
-            await transaction.delete(ref
+            transaction.delete(ref
                 .collection(settings.appName)
-                .document(settings.getServer())
+                .doc(settings.getServer())
                 .collection('users')
-                .document(otherUserID)
+                .doc(otherUserID)
                 .collection('followers')
-                .document(userID));
-            await transaction.update(
+                .doc(userID));
+            transaction.update(
                 ref
                     .collection(settings.appName)
-                    .document(settings.getServer())
+                    .doc(settings.getServer())
                     .collection('users')
-                    .document(otherUserID),
+                    .doc(otherUserID),
                 {"Nof_follower": FieldValue.increment(-1)});
-            await transaction.update(
+            transaction.update(
                 ref
                     .collection(settings.appName)
-                    .document(settings.getServer())
+                    .doc(settings.getServer())
                     .collection('users')
-                    .document(userID),
+                    .doc(userID),
                 {"Nof_following": FieldValue.increment(-1)});
           }).whenComplete(() {
             print("Takipten çıkıldı");
@@ -155,39 +154,39 @@ class DatabaseWorks {
           });
         } else {
           await ref.runTransaction((transaction) async {
-            await transaction.set(
+            transaction.set(
                 ref
                     .collection(settings.appName)
-                    .document(settings.getServer())
+                    .doc(settings.getServer())
                     .collection('users')
-                    .document(userID)
+                    .doc(userID)
                     .collection('following')
-                    .document(otherUserID),
+                    .doc(otherUserID),
                 {"OtherUserID": otherUserID});
 
-            await transaction.set(
+            transaction.set(
                 ref
                     .collection(settings.appName)
-                    .document(settings.getServer())
+                    .doc(settings.getServer())
                     .collection('users')
-                    .document(otherUserID)
+                    .doc(otherUserID)
                     .collection('followers')
-                    .document(userID),
+                    .doc(userID),
                 {"OtherUserID": userID});
 
-            await transaction.update(
+            transaction.update(
                 ref
                     .collection(settings.appName)
-                    .document(settings.getServer())
+                    .doc(settings.getServer())
                     .collection('users')
-                    .document(otherUserID),
+                    .doc(otherUserID),
                 {"Nof_follower": FieldValue.increment(1)});
-            await transaction.update(
+            transaction.update(
                 ref
                     .collection(settings.appName)
-                    .document(settings.getServer())
+                    .doc(settings.getServer())
                     .collection('users')
-                    .document(userID),
+                    .doc(userID),
                 {"Nof_following": FieldValue.increment(1)});
           }).whenComplete(() {
             print("Takip Ediliyor");
@@ -197,12 +196,12 @@ class DatabaseWorks {
         return issuccesfull;
       });
     } catch (e) {
-      print("Error at followToggle : " + e);
+      print("Error at followToggle : " + e.toString());
       return null;
     }
   }
 
-  Future<String> createEvent(
+  Future<String?> createEvent(
       String userId, Map<String, dynamic> eventData) async {
     String generatedID = AutoIdGenerator.autoId();
     //print("2.url:" + eventData['EventImageUrl'].toString());
@@ -212,18 +211,18 @@ class DatabaseWorks {
     try {
       await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection("users")
-          .document(userId)
+          .doc(userId)
           .collection("events")
-          .document(generatedID)
-          .setData(eventData);
+          .doc(generatedID)
+          .set(eventData);
       await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection("Events")
-          .document(generatedID)
-          .setData(eventData);
+          .doc(generatedID)
+          .set(eventData);
       return generatedID;
     } catch (e) {
       print(e);
@@ -231,20 +230,20 @@ class DatabaseWorks {
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchListOfUserEvents(
+  Future<List<Map<String, dynamic>>?> fetchListOfUserEvents(
       String userID) async {
     try {
       List<Map<String, dynamic>> eventList = [];
       return await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection("Events")
           .where("OrganizerID", isEqualTo: userID)
           .where("Status", isEqualTo: "Accepted")
-          .getDocuments()
+          .get()
           .then((docs) {
-        docs.documents.forEach((event) {
-          eventList.add(event.data);
+        docs.docs.forEach((event) {
+          eventList.add(event.data());
         });
         return eventList;
       });
@@ -254,35 +253,37 @@ class DatabaseWorks {
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchEventListsForUser(
+  Future<List<Map<String, dynamic>>?> fetchEventListsForUser(
       String organizerID, bool isOld) async {
     try {
       List<Map<String, dynamic>> eventList = [];
       if (isOld) {
         return await ref
             .collection(settings.appName)
-            .document(settings.getServer())
+            .doc(settings.getServer())
             .collection("Events")
             .where("OrganizerID", isEqualTo: organizerID)
-            .getDocuments()
+            .get()
             .then((docs) {
-          docs.documents.forEach((event) {
-            if (event.data["Status"] != "Deleted" &&
-                event.data["Status"] == "Finished") eventList.add(event.data);
+          docs.docs.forEach((event) {
+            if (event.data()["Status"] != "Deleted" &&
+                event.data()["Status"] == "Finished")
+              eventList.add(event.data());
           });
           return eventList;
         });
       } else {
         return await ref
             .collection(settings.appName)
-            .document(settings.getServer())
+            .doc(settings.getServer())
             .collection("Events")
             .where("OrganizerID", isEqualTo: organizerID)
-            .getDocuments()
+            .get()
             .then((docs) {
-          docs.documents.forEach((event) {
-            if (event.data["Status"] != "Deleted" &&
-                event.data["Status"] != "Finished") eventList.add(event.data);
+          docs.docs.forEach((event) {
+            if (event.data()["Status"] != "Deleted" &&
+                event.data()["Status"] != "Finished")
+              eventList.add(event.data());
           });
           return eventList;
         });
@@ -293,19 +294,19 @@ class DatabaseWorks {
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchActiveEventLists() async {
+  Future<List<Map<String, dynamic>>?> fetchActiveEventLists() async {
     try {
       List<Map<String, dynamic>> eventList = [];
       return await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection("Events")
           .where("Status", isEqualTo: "Accepted")
-          .getDocuments()
+          .get()
           .then((docs) {
-        // print("gelen verinin uzunluğu:" + docs.documents.length.toString());
-        docs.documents.forEach((event) {
-          eventList.add(event.data);
+        // print("gelen verinin uzunluğu:" + docs.docs.length.toString());
+        docs.docs.forEach((event) {
+          eventList.add(event.data());
         });
         return eventList;
       });
@@ -315,20 +316,20 @@ class DatabaseWorks {
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchActiveEventListsByCategory(
+  Future<List<Map<String, dynamic>>?> fetchActiveEventListsByCategory(
       String subCategory) async {
     try {
       List<Map<String, dynamic>> eventList = [];
       return await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection("Events")
           .where("SubCategory", isEqualTo: subCategory)
           .where("Status", isEqualTo: "Accepted")
-          .getDocuments()
+          .get()
           .then((docs) {
-        docs.documents.forEach((event) {
-          eventList.add(event.data);
+        docs.docs.forEach((event) {
+          eventList.add(event.data());
         });
         return eventList;
       });
@@ -342,12 +343,12 @@ class DatabaseWorks {
     try {
       return await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection("users")
-          .document(userId)
+          .doc(userId)
           .get()
           .then((value) {
-        return value.data["ProfilePhotoUrl"].toString();
+        return value.data()!["ProfilePhotoUrl"].toString();
       });
     } catch (e) {
       print(e);
@@ -361,30 +362,30 @@ class DatabaseWorks {
     if (changedtext == "timeStamp") {
       await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection('users')
-          .document(userId)
-          .updateData({maptext: FieldValue.serverTimestamp()});
+          .doc(userId)
+          .update({maptext: FieldValue.serverTimestamp()});
     } else {
       await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection('users')
-          .document(userId)
-          .updateData({maptext: changedtext});
+          .doc(userId)
+          .update({maptext: changedtext});
     }
   }
 
-  Future<Map<String, dynamic>> findUserbyID(String userID) async {
+  Future<Map<String, dynamic>?> findUserbyID(String userID) async {
     try {
       return await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection("users")
-          .document(userID)
+          .doc(userID)
           .get()
           .then((userData) {
-        return userData.data;
+        return userData.data();
       });
     } catch (e) {
       print(e);
@@ -395,9 +396,9 @@ class DatabaseWorks {
   Stream<QuerySnapshot> getMessagesSnapshot(String chatID) {
     return ref
         .collection(settings.appName)
-        .document(settings.getServer())
+        .doc(settings.getServer())
         .collection('messagePool')
-        .document(chatID)
+        .doc(chatID)
         .collection('messages')
         .snapshots();
   }
@@ -405,9 +406,9 @@ class DatabaseWorks {
   Stream<DocumentSnapshot> getChatPoolSnapshot(String chatID) {
     return ref
         .collection(settings.appName)
-        .document(settings.getServer())
+        .doc(settings.getServer())
         .collection('messagePool')
-        .document(chatID)
+        .doc(chatID)
         .snapshots();
   }
 
@@ -416,45 +417,45 @@ class DatabaseWorks {
     if (chatID == "temp") {
       chatID = AutoIdGenerator.autoId();
       await ref.runTransaction((transaction) async {
-        await transaction.set(
+        transaction.set(
             ref
                 .collection(settings.appName)
-                .document(settings.getServer())
+                .doc(settings.getServer())
                 .collection('users')
-                .document(currentUser)
+                .doc(currentUser)
                 .collection('messages')
-                .document(chatID),
+                .doc(chatID),
             {"OtherUserID": otherUser});
-        await transaction.set(
+        transaction.set(
             ref
                 .collection(settings.appName)
-                .document(settings.getServer())
+                .doc(settings.getServer())
                 .collection('users')
-                .document(otherUser)
+                .doc(otherUser)
                 .collection('messages')
-                .document(chatID),
+                .doc(chatID),
             {"OtherUserID": currentUser});
       });
     }
     var messageRef = ref
         .collection(settings.appName)
-        .document(settings.getServer())
+        .doc(settings.getServer())
         .collection('messagePool')
-        .document(chatID)
+        .doc(chatID)
         .collection('messages')
-        .document(DateTime.now().millisecondsSinceEpoch.toString());
+        .doc(DateTime.now().millisecondsSinceEpoch.toString());
     Map<String, dynamic> messageMap = message.toJson();
     ref.runTransaction((transaction) async {
-      await transaction.set(
+      transaction.set(
         messageRef,
         messageMap,
       );
-      await transaction.set(
+      transaction.set(
         ref
             .collection(settings.appName)
-            .document(settings.getServer())
+            .doc(settings.getServer())
             .collection('messagePool')
-            .document(chatID),
+            .doc(chatID),
         {
           "LastMessage": {
             "SenderID": currentUser,
@@ -471,15 +472,15 @@ class DatabaseWorks {
     try {
       return await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection('users')
-          .document(currentUser)
+          .doc(currentUser)
           .collection('messages')
           .where("OtherUserID", isEqualTo: otherUser)
           .limit(1)
-          .getDocuments()
+          .get()
           .then((data) {
-        return data.documents.first.documentID;
+        return data.docs.first.id;
       });
     } catch (e) {
       print(e);
@@ -491,14 +492,14 @@ class DatabaseWorks {
       ChatMessage message, String time, String chatID) async {
     var messageRef = ref
         .collection(settings.appName)
-        .document(settings.getServer())
+        .doc(settings.getServer())
         .collection('messagePool')
-        .document(chatID)
+        .doc(chatID)
         .collection('messages')
-        .document(time);
+        .doc(time);
 
     await ref.runTransaction((transaction) async {
-      await transaction.set(
+      transaction.set(
         messageRef,
         message.toJson(),
       );
@@ -508,9 +509,9 @@ class DatabaseWorks {
   Stream<QuerySnapshot> getUserChatsSnapshots(String currentUser) {
     return ref
         .collection(settings.appName)
-        .document(settings.getServer())
+        .doc(settings.getServer())
         .collection('users')
-        .document(currentUser)
+        .doc(currentUser)
         .collection('messages')
         .snapshots();
   }
@@ -520,13 +521,13 @@ class DatabaseWorks {
     List<String> categories = [];
     return await ref
         .collection(settings.appName)
-        .document(settings.getServer())
+        .doc(settings.getServer())
         .collection('Settings')
-        .document('Event')
+        .doc('Event')
         .get()
         .then((eventSettings) {
       Map<String, dynamic> temp;
-      temp = eventSettings.data['Category'];
+      temp = eventSettings.data()!['Category'];
       temp.forEach((key, value) {
         categories.add(key);
       });
@@ -540,13 +541,13 @@ class DatabaseWorks {
     List<List<String>> subCategories = [];
     return await ref
         .collection(settings.appName)
-        .document(settings.getServer())
+        .doc(settings.getServer())
         .collection('Settings')
-        .document('Event')
+        .doc('Event')
         .get()
         .then((eventSettings) {
       Map<String, dynamic> temp;
-      temp = eventSettings.data['Category'];
+      temp = eventSettings.data()!['Category'];
       temp.forEach((key, value) {
         subCategories.add(List<String>.from(value));
       });
@@ -557,22 +558,22 @@ class DatabaseWorks {
   Future<bool> joinEvent(String userID, String eventID) async {
     try {
       return ref.runTransaction((transaction) async {
-        await transaction.set(
+        transaction.set(
             ref
                 .collection(settings.appName)
-                .document(settings.getServer())
+                .doc(settings.getServer())
                 .collection('Events')
-                .document(eventID)
+                .doc(eventID)
                 .collection('Participants')
-                .document(userID),
+                .doc(userID),
             {"ParticipantID": userID});
 
-        await transaction.update(
+        transaction.update(
             ref
                 .collection(settings.appName)
-                .document(settings.getServer())
+                .doc(settings.getServer())
                 .collection("Events")
-                .document(eventID),
+                .doc(eventID),
             {"CurrentParticipantNumber": FieldValue.increment(1)});
       }).then((value) => true);
     } catch (e) {
@@ -584,20 +585,20 @@ class DatabaseWorks {
   Future<bool> leaveEvent(String userID, String eventID) async {
     try {
       return ref.runTransaction((transaction) async {
-        await transaction.update(
+        transaction.update(
             ref
                 .collection(settings.appName)
-                .document(settings.getServer())
+                .doc(settings.getServer())
                 .collection("Events")
-                .document(eventID),
+                .doc(eventID),
             {"CurrentParticipantNumber": FieldValue.increment(-1)});
-        await transaction.delete(ref
+        transaction.delete(ref
             .collection(settings.appName)
-            .document(settings.getServer())
+            .doc(settings.getServer())
             .collection("Events")
-            .document(eventID)
+            .doc(eventID)
             .collection("Participants")
-            .document(userID));
+            .doc(userID));
       }).then((value) => true);
     } catch (e) {
       print(e);
@@ -610,11 +611,11 @@ class DatabaseWorks {
     try {
       var doc = await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection('Events')
-          .document(eventID)
+          .doc(eventID)
           .collection('Participants')
-          .document(userId)
+          .doc(userId)
           .get();
       return doc.exists && doc.data != null ? true : false;
     } catch (e) {
@@ -628,12 +629,12 @@ class DatabaseWorks {
     try {
       return await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection("Events")
-          .document(eventID)
+          .doc(eventID)
           .collection("Comments")
-          .document(DateTime.now().millisecondsSinceEpoch.toString())
-          .setData({"Comment": comment, "CommentOwnerID": userID}).then((_) {
+          .doc(DateTime.now().millisecondsSinceEpoch.toString())
+          .set({"Comment": comment, "CommentOwnerID": userID}).then((_) {
         return true;
       });
     } catch (e) {
@@ -642,19 +643,19 @@ class DatabaseWorks {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getComments(String eventID) async {
+  Future<List<Map<String, dynamic>>?> getComments(String eventID) async {
     List<Map<String, dynamic>> commmentList = [];
     try {
       return await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection("Events")
-          .document(eventID)
+          .doc(eventID)
           .collection("Comments")
-          .getDocuments()
+          .get()
           .then((docs) {
-        docs.documents.forEach((comment) {
-          commmentList.add(comment.data);
+        docs.docs.forEach((comment) {
+          commmentList.add(comment.data());
         });
         //print("Comments:" + commmentList.toString());
         return commmentList;
@@ -665,19 +666,19 @@ class DatabaseWorks {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getParticipants(String eventID) async {
+  Future<List<Map<String, dynamic>>?> getParticipants(String eventID) async {
     List<Map<String, dynamic>> participants = [];
     try {
       return await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection("Events")
-          .document(eventID)
+          .doc(eventID)
           .collection("Participants")
-          .getDocuments()
+          .get()
           .then((docs) {
-        docs.documents.forEach((participant) {
-          participants.add(participant.data);
+        docs.docs.forEach((participant) {
+          participants.add(participant.data());
         });
         //print("Comments:" + commmentList.toString());
         return participants;
@@ -692,10 +693,10 @@ class DatabaseWorks {
     try {
       return await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection("Events")
-          .document(eventID)
-          .updateData({"Status": "Deleted"}).then((value) => true);
+          .doc(eventID)
+          .update({"Status": "Deleted"}).then((value) => true);
     } catch (e) {
       print(e);
       return false;
@@ -706,10 +707,10 @@ class DatabaseWorks {
     try {
       return await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection("Events")
-          .document(eventID)
-          .updateData({"Status": "Finished"}).then((value) => true);
+          .doc(eventID)
+          .update({"Status": "Finished"}).then((value) => true);
     } catch (e) {
       print(e);
       return false;
@@ -720,10 +721,10 @@ class DatabaseWorks {
     try {
       return await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .collection("Feedbacks")
-          .document(DateTime.now().millisecondsSinceEpoch.toString())
-          .setData({
+          .doc(DateTime.now().millisecondsSinceEpoch.toString())
+          .set({
         "Feedback": text,
         "FeedbackOwnerID": userID,
         "Created At:": FieldValue.serverTimestamp()
@@ -736,14 +737,14 @@ class DatabaseWorks {
     }
   }
 
-  Future<String> getServerVersion() async {
+  Future<String?> getServerVersion() async {
     try {
       return await ref
           .collection(settings.appName)
-          .document(settings.getServer())
+          .doc(settings.getServer())
           .get()
           .then((value) {
-        return value.data["Version"];
+        return value.data()!["Version"];
       });
     } catch (e) {
       print(e);
@@ -754,17 +755,19 @@ class DatabaseWorks {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 class StorageWorks {
-  final StorageReference ref = FirebaseStorage().ref();
+  final ref = FirebaseStorage.instance;
   AppSettings settings = locator<AppSettings>();
   StorageWorks() {
     print("StorageWorks locator running");
   }
 
-  Future<bool> updateProfilePhoto(String userId, Uint8List image) async {
+  Future<bool> updateProfilePhoto(String userId, Uint8List? image) async {
     if (image == null) {
       print("image null");
+      return false;
     }
-    StorageUploadTask uploadTask = ref
+    UploadTask uploadTask = ref
+        .ref()
         .child('users')
         .child(userId)
         .child('images')
@@ -773,14 +776,14 @@ class StorageWorks {
         .putData(image);
 
     try {
-      return await uploadTask.onComplete.then((value) async {
+      return await uploadTask.then((value) async {
         return await value.ref.getDownloadURL().then((url) async {
-          return await Firestore.instance
+          return await FirebaseFirestore.instance
               .collection(settings.appName)
-              .document(settings.getServer())
+              .doc(settings.getServer())
               .collection('users')
-              .document(userId)
-              .updateData({"ProfilePhotoUrl": url}).then((value) => true);
+              .doc(userId)
+              .update({"ProfilePhotoUrl": url}).then((value) => true);
         });
       });
     } catch (e) {
@@ -791,17 +794,16 @@ class StorageWorks {
 
   Future sendImageMessage(File image, ChatUser user, String currentUser,
       String chatID, String time) async {
-    final StorageReference storageRef =
-        ref.child("users").child(currentUser).child("images").child(time);
+    final storageRef =
+        ref.ref().child("users").child(currentUser).child("images").child(time);
 
-    StorageUploadTask uploadTask = storageRef.putFile(
+    UploadTask uploadTask = storageRef.putFile(
       image,
-      StorageMetadata(
+      SettableMetadata(
         contentType: 'image/jpg',
       ),
     );
-    StorageTaskSnapshot download = await uploadTask.onComplete;
-
+    TaskSnapshot download = await uploadTask.then((task) => task);
     return await download.ref.getDownloadURL().then((url) {
       ChatMessage message = ChatMessage(text: "", user: user, image: url);
       return message;
@@ -810,18 +812,19 @@ class StorageWorks {
 
   Future<String> sendEventImage(Uint8List image) async {
     String url;
-    StorageUploadTask uploadTask = ref
+    UploadTask uploadTask = ref
+        .ref()
         .child('events')
         .child('images')
         .child(AutoIdGenerator.autoId() + '.jpeg')
         .putData(image);
 
-    StreamSubscription<StorageTaskEvent> streamSubscription =
-        uploadTask.events.listen((event) {
-      print('UpdatingProfile Image :${event.type}');
+    StreamSubscription<TaskSnapshot> streamSubscription =
+        uploadTask.asStream().listen((event) {
+      print('UpdatingProfile Image :${event.bytesTransferred}');
     });
 
-    return await uploadTask.onComplete.then((onValue) {
+    return await uploadTask.then((onValue) {
       return onValue.ref.getDownloadURL().then((value) {
         url = value.toString();
         print("Gelen Url:" + url);

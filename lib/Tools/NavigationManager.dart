@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class NavigationManager {
-  NavigationProvider nav;
+  late NavigationProvider nav;
 
   /*
   NOTE stackPage e sayfa eklemek için istediğin yerde bunu çağır :: NavigationManager(context).pushPage(Widget)
@@ -35,7 +35,7 @@ class NavigationManager {
     return nav.getPageStack().isEmpty;
   }
 
-  Widget getLastPage() {
+  Widget? getLastPage() {
     if (isEmpty()) {
       return null;
     } else

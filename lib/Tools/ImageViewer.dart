@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 
 class ImageViewer extends StatefulWidget {
   final String tag, url;
-  final File image;
+  final File? image;
 
-  const ImageViewer({Key key, this.tag, this.image, this.url})
+  const ImageViewer(
+      {Key? key, required this.tag, required this.url, this.image})
       : super(key: key);
-
   @override
   _ImageViewerState createState() => _ImageViewerState();
 }

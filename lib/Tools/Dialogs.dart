@@ -6,28 +6,30 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
-Future<bool> askForQuit(BuildContext context) => showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-          title: Text("Uygulamadan Çıkmak istiyormusunuz?"),
-          actions: <Widget>[
-            FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text("Hayır")),
-            FlatButton(
-                onPressed: () {
-                  SystemNavigator.pop();
-                  //Navigator.pop(context);
-                },
-                child: Text("Evet"))
-          ],
-        ));
+Future<bool> askForQuit(BuildContext context) async {
+  return await showDialog(
+      context: context,
+      builder: (con) => AlertDialog(
+            title: Text("Uygulamadan Çıkmak istiyormusunuz?"),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                  },
+                  child: Text("Hayır")),
+              TextButton(
+                  onPressed: () {
+                    SystemNavigator.pop();
+                    //Navigator.pop(context);
+                  },
+                  child: Text("Evet"))
+            ],
+          ));
+}
 
 Future<bool> askingDialog(
-    BuildContext context, String title, Color backgroundColor) {
-  return showDialog(
+    BuildContext context, String title, Color backgroundColor) async {
+  return await showDialog(
       context: context,
       builder: (dcontext) {
         return AlertDialog(
@@ -36,7 +38,7 @@ Future<bool> askingDialog(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               onPressed: () {
                 Navigator.pop(dcontext, false);
               },
@@ -48,7 +50,7 @@ Future<bool> askingDialog(
                 ),
               ),
             ),
-            FlatButton(
+            TextButton(
               onPressed: () {
                 Navigator.pop(dcontext, true);
               },
@@ -67,8 +69,8 @@ Future<bool> askingDialog(
 
 Future<bool> feedbackDialog(
   BuildContext context,
-) {
-  return showDialog(
+) async {
+  return await showDialog(
       context: context,
       builder: (dcontext) {
         TextEditingController controller = TextEditingController();
@@ -112,7 +114,7 @@ Future<bool> feedbackDialog(
               SizedBox(
                 height: responsive.heightSize(2),
               ),
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   if (controller.text != "")
                     userService.sendFeedback(controller.text).then((value) {
@@ -130,7 +132,9 @@ Future<bool> feedbackDialog(
                       }
                     });
                 },
-                color: Colors.green,
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.green)),
                 child: Text(
                   "Gönder",
                   style: TextStyle(

@@ -15,16 +15,16 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String userId;
+  String? userId;
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
-  String errorText;
+  String? errorText;
   bool _loading = false;
   bool visiblePassword = true;
   bool showLogin = false;
   String sendPasswordMailText = "Giriş Yap";
-  UserService userService;
-  PageController _pageController;
+  UserService? userService;
+  PageController? _pageController;
 
   @override
   void initState() {
@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _pageController!.dispose();
     super.dispose();
   }
 
@@ -220,12 +220,12 @@ class _LoginPageState extends State<LoginPage> {
                     child: SizedBox(
                       width: widthSize(12),
                       height: heightSize(6),
-                      child: FlatButton(
+                      child: TextButton(
                         child: Icon(showPassword
                             ? Icons.visibility
                             : Icons.visibility_off),
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
+                        //splashColor: Colors.transparent,
+                        //highlightColor: Colors.transparent,
                         onPressed: () {
                           state(() {
                             showPassword = !showPassword;
@@ -267,12 +267,14 @@ class _LoginPageState extends State<LoginPage> {
       children: <Widget>[
         ClipRRect(
           borderRadius: BorderRadius.all(Radius.circular(20)),
-          child: FlatButton(
-            color: MyColors().purpleContainer,
-            highlightColor: MyColors().purpleContainerSplash,
-            splashColor: MyColors().purpleContainerSplash,
+          child: TextButton(
+            style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(MyColors().purpleContainer),
+                foregroundColor: MaterialStateProperty.all(
+                    MyColors().purpleContainerSplash)),
             onPressed: () {
-              _pageController.nextPage(
+              _pageController!.nextPage(
                   duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
             },
             child: Container(
@@ -292,10 +294,12 @@ class _LoginPageState extends State<LoginPage> {
         Spacer(),
         ClipRRect(
           borderRadius: BorderRadius.all(Radius.circular(20)),
-          child: FlatButton(
-            color: MyColors().purpleContainer,
-            highlightColor: MyColors().purpleContainerSplash,
-            splashColor: MyColors().purpleContainerSplash,
+          child: TextButton(
+            style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(MyColors().purpleContainer),
+                foregroundColor: MaterialStateProperty.all(
+                    MyColors().purpleContainerSplash)),
             onPressed: () {
               if (visiblePassword == true) {
                 setState(() {
@@ -328,7 +332,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       body: Stack(
           children: <Widget>[
                 PageView(
@@ -361,7 +365,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     //ANCHOR SignUp sayfası
-                    SignUpPage(_pageController)
+                    SignUpPage(_pageController!)
                   ],
                 )
               ] +
@@ -389,15 +393,15 @@ class _LoginPageState extends State<LoginPage> {
           fontSize: 18.0);
     } else {
       //if (await auth.isEmailVerified()) {
-        userService.userInitializer(userId).whenComplete(() async {
-          await userService
-              .updateSingleInfo("LastLoggedIn", "timeStamp")
-              .whenComplete(() {
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (BuildContext context) => HomePage()));
-          });
+      userService!.userInitializer(userId).whenComplete(() async {
+        await userService!
+            .updateSingleInfo("LastLoggedIn", "timeStamp")
+            .whenComplete(() {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (BuildContext context) => HomePage()));
         });
-        /*
+      });
+      /*
       } else {
         setState(() => _loading = false);
         auth.signOut();

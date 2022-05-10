@@ -25,10 +25,10 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController mailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController password2Controller = TextEditingController();
-  Uint8List _image;
+  Uint8List? _image;
   bool loading = false;
-  String _name, _surname, _phoneNumber, _birthday;
-  bool _gender;
+  String? _name, _surname, _phoneNumber, _birthday;
+  bool? _gender;
   bool showPassword = true;
 
   double heightSize(double value) {
@@ -42,14 +42,15 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   // ANCHOR kameradan foto almaya yarar
-  Future<Uint8List> _getImageFromCamera() async {
-    File image = await ImagePicker.pickImage(source: ImageSource.camera);
+  Future<Uint8List?> _getImageFromCamera() async {
+    PickedFile? image =
+        await ImagePicker.platform.pickImage(source: ImageSource.camera);
     if (image != null)
       return Navigator.push(
           context,
           MaterialPageRoute(
               builder: (BuildContext context) => ImageEditorPage(
-                    image: image,
+                    image: File(image.path),
                     forCreateEvent: false,
                   ))).then((value) => value);
     else
@@ -57,14 +58,15 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
 // ANCHOR galeriden foto almaya yarar
-  Future<Uint8List> _getImageFromGallery() async {
-    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+  Future<Uint8List?> _getImageFromGallery() async {
+    PickedFile? image =
+        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
     if (image != null)
       return Navigator.push(
           context,
           MaterialPageRoute(
               builder: (BuildContext context) => ImageEditorPage(
-                    image: image,
+                    image: File(image.path),
                     forCreateEvent: false,
                   ))).then((value) => value);
     else
@@ -180,20 +182,20 @@ class _SignUpPageState extends State<SignUpPage> {
 
   void signUp() async {
     //ANCHOR Veritabanına kaydetmek için
-    List<String> datalist = [
+    List<String?>? datalist = [
       _name,
       _surname,
       mailController.text,
       _phoneNumber,
-      _gender ? "Man" : "Woman",
+      _gender! ? "Man" : "Woman",
       _birthday,
-      generateNickName(_name)
+      generateNickName(_name!)
     ];
     print(datalist);
     try {
       await Provider.of<UserService>(context, listen: false)
           .registerUser(
-              mailController.text, passwordController.text, datalist, _image)
+              mailController.text, passwordController.text, datalist, _image!)
           .then((userID) {
         if (userID != null) {
           print("Upload işlemi bitti");
@@ -249,7 +251,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 )
               : ClipOval(
                   child: Image.memory(
-                    _image,
+                    _image!,
                     width: widthSize(30),
                     height: widthSize(30),
                     fit: BoxFit.cover,
@@ -441,7 +443,7 @@ class _SignUpPageState extends State<SignUpPage> {
       onChanged: (phone) => _phoneNumber = phone,
       textAlign: TextAlign.left,
       keyboardType: TextInputType.number,
-      inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       maxLength: 10,
       decoration: InputDecoration(
         border: InputBorder.none,
@@ -491,7 +493,7 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
         child: Center(
           child: Text(
-            _birthday != null ? _birthday : "Doğum Tarihiniz",
+            _birthday != null ? _birthday! : "Doğum Tarihiniz",
             style: TextStyle(
               fontFamily: "Zona",
               fontSize: heightSize(2),
@@ -518,7 +520,9 @@ class _SignUpPageState extends State<SignUpPage> {
             height: heightSize(5),
             decoration: new BoxDecoration(
               color: _gender != null
-                  ? _gender ? Colors.black : menColor()
+                  ? _gender!
+                      ? Colors.black
+                      : menColor()
                   : menColor(),
               borderRadius: new BorderRadius.all(
                 Radius.circular(20),
@@ -547,7 +551,9 @@ class _SignUpPageState extends State<SignUpPage> {
             height: heightSize(5),
             decoration: new BoxDecoration(
               color: _gender != null
-                  ? _gender ? womenColor() : Colors.black
+                  ? _gender!
+                      ? womenColor()
+                      : Colors.black
                   : womenColor(),
               borderRadius: new BorderRadius.all(
                 Radius.circular(20),

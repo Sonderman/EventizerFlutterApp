@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'dart:typed_data';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:eventizer/Models/UserModel.dart';
 import 'package:eventizer/Navigation/MyEventsPage.dart';
 import 'package:eventizer/Navigation/ProfilePage.dart';
@@ -15,7 +17,6 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 class CreateEventPage extends StatefulWidget {
   @override
@@ -33,9 +34,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
     return MediaQuery.of(context).size.width * value;
   }
 
-  PageController _pageController;
-  UserService userService;
-  User userModel;
+  PageController? _pageController;
+  UserService? userService;
+  User? userModel;
 
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
   Color myBlueColor = MyColors().blueThemeColor;
@@ -46,8 +47,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
   List<String> categoryItems = locator<EventSettings>().categoryItems ?? [];
   List<List<String>> subCategoryItems =
       locator<EventSettings>().subCategoryItems ?? [];
-  MaterialLocalizations localizations;
-  String subCategory,
+  MaterialLocalizations? localizations;
+  String? subCategory,
       mainCategory,
       eventStartDate,
       eventStartTime,
@@ -55,9 +56,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
       eventFinishTime,
       country,
       city;
-  TimeOfDay eventStartTimeOfDay, eventFinishTimeOfDay;
-  DateTime eventStartDateTime;
-  bool isStartDateSelected = false,
+  TimeOfDay? eventStartTimeOfDay, eventFinishTimeOfDay;
+  DateTime? eventStartDateTime;
+  bool? isStartDateSelected = false,
       isStartTimeSelected = false,
       isFinishDateSelected = false,
       isFinishTimeSelected = false,
@@ -66,7 +67,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
       userGender,
       oppositeGender = false,
       loadingOverLay = false;
-  Uint8List _image;
+  Uint8List? _image;
 
   @override
   void initState() {
@@ -77,8 +78,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
   @override
   void didChangeDependencies() {
     userService = Provider.of<UserService>(context);
-    userModel = userService.userModel;
-    userGender = userModel.getUserGender() == "Man" ? true : false;
+    userModel = userService?.userModel;
+    userGender = userModel?.getUserGender() == "Man" ? true : false;
     _pageController = NavigationManager(context).getCreateEventPageController();
     super.didChangeDependencies();
   }
@@ -92,7 +93,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
           children: <Widget>[
                 PageView(controller: _pageController, children: pages())
               ] +
-              (loadingOverLay
+              (loadingOverLay!
                   ? <Widget>[
                       PageComponents(context)
                           .loadingOverlay(backgroundColor: Colors.white)
@@ -121,7 +122,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
               child: _image == null
                   ? Image.asset('assets/images/etkinlik.png', fit: BoxFit.cover)
                   : Image.memory(
-                      _image,
+                      _image!,
                       fit: BoxFit.fill,
                     ),
             ),
@@ -293,9 +294,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
               onTap: () async {
                 final datePick = await showDatePicker(
                   context: context,
-                  initialDate: eventStartDateTime,
-                  firstDate: eventStartDateTime,
-                  lastDate: DateTime(eventStartDateTime.year + 2),
+                  initialDate: eventStartDateTime!,
+                  firstDate: eventStartDateTime!,
+                  lastDate: DateTime(eventStartDateTime!.year + 2),
                 );
                 if (datePick != null) {
                   setState(() {
@@ -364,7 +365,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       eventFinishTime = null;
                       isFinishTimeSelected = false;
                       eventStartTime =
-                          localizations.formatTimeOfDay(eventStartTimeOfDay);
+                          localizations!.formatTimeOfDay(eventStartTimeOfDay!);
                     });
                   }
                 });
@@ -409,14 +410,14 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 if (eventStartTimeOfDay != null) {
                   await showTimePicker(
                     context: context,
-                    initialTime: eventStartTimeOfDay,
+                    initialTime: eventStartTimeOfDay!,
                   ).then((timePick) {
                     if (timePick != null) {
                       eventFinishTimeOfDay = timePick;
                       setState(() {
                         isFinishTimeSelected = true;
-                        eventFinishTime =
-                            localizations.formatTimeOfDay(eventFinishTimeOfDay);
+                        eventFinishTime = localizations!
+                            .formatTimeOfDay(eventFinishTimeOfDay!);
                       });
                     }
                   });
@@ -468,7 +469,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
               height: heightSize(8),
               child: Center(
                 child: TextFormField(
-                  validator: (value) => value.isEmpty ? 'boş olamaz' : null,
+                  validator: (value) => value!.isEmpty ? 'boş olamaz' : null,
                   controller: controllerTitle,
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -529,7 +530,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Widget nextPageButton() {
     return InkWell(
       onTap: () {
-        _pageController.nextPage(
+        _pageController!.nextPage(
             duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
       },
       child: Padding(
@@ -585,18 +586,18 @@ class _CreateEventPageState extends State<CreateEventPage> {
           setState(() {
             loadingOverLay = true;
           });
-          String allowedGenders() {
-            if (userGender & oppositeGender) return "11";
-            if (userGender & !oppositeGender) return "10";
-            if (!userGender & oppositeGender) return "11";
-            if (!userGender & !oppositeGender) return "01";
+          String? allowedGenders() {
+            if (userGender! & oppositeGender!) return "11";
+            if (userGender! & !oppositeGender!) return "10";
+            if (!userGender! & oppositeGender!) return "11";
+            if (!userGender! & !oppositeGender!) return "01";
             return null;
           }
 
           final eventManager =
               Provider.of<EventService>(context, listen: false);
           final userID = Provider.of<UserService>(context, listen: false)
-              .userModel
+              .userModel!
               .getUserId();
           Map<String, dynamic> eventData = {
             // REVIEW Veri tabanında yazılan yer burası , burası için bir çözüm bul
@@ -618,16 +619,16 @@ class _CreateEventPageState extends State<CreateEventPage> {
             "AllowedGenders": allowedGenders(),
             "Status": "New"
           };
-          if (await eventManager.createEvent(userID, eventData, _image)) {
+          if (await eventManager.createEvent(userID, eventData, _image!)) {
             print("Event oluşturma başarılı");
             //ANCHOR Event oluşturma başarılıysa profilepage e gidiyor.
             NavigationManager(context).pushPage(
                 ProfilePage(
-                    userID: userService.userModel.getUserId(),
+                    userID: userService!.userModel!.getUserId(),
                     isFromEvent: false),
                 refresh: false);
             NavigationManager(context).pushPage(MyEventsPage(
-              userID: userService.userModel.getUserId(),
+              userID: userService!.userModel!.getUserId(),
               isOld: false,
             ));
 
@@ -738,7 +739,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       controller: participantNumberController,
                       expands: false,
                       inputFormatters: <TextInputFormatter>[
-                        WhitelistingTextInputFormatter.digitsOnly
+                        FilteringTextInputFormatter.digitsOnly
                       ],
                       decoration: InputDecoration(
                         counterText: "",
@@ -772,7 +773,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Widget selectGender() {
     //ANCHOR karşı cins seçili ise ona özgü renk döndürür, seçilmezse tek tip renk döndürür.
     Color getOppositeGenderColor() {
-      if (oppositeGender) if (userGender)
+      if (oppositeGender!) if (userGender!)
         return Colors.pinkAccent;
       else
         return MyColors().blueContainer;
@@ -786,7 +787,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
         InkWell(
           onTap: () {
             setState(() {
-              oppositeGender = !oppositeGender;
+              oppositeGender = !oppositeGender!;
             });
           },
           child: Container(
@@ -802,7 +803,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Text(
-                  userGender ? "Kadın" : "Erkek",
+                  userGender! ? "Kadın" : "Erkek",
                   style: TextStyle(
                     fontFamily: "Zona",
                     fontSize: heightSize(2),
@@ -946,13 +947,15 @@ class _CreateEventPageState extends State<CreateEventPage> {
   }
 
   void getImageFromCamera() async {
-    await ImagePicker.pickImage(source: ImageSource.camera).then((image) {
+    await ImagePicker.platform
+        .pickImage(source: ImageSource.camera)
+        .then((image) {
       if (image != null) {
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (BuildContext context) => ImageEditorPage(
-                      image: image,
+                      image: File(image.path),
                       forCreateEvent: true,
                     ))).then((editedImage) {
           setState(() {
@@ -964,13 +967,15 @@ class _CreateEventPageState extends State<CreateEventPage> {
   }
 
   void getImageFromGallery() async {
-    await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {
+    await ImagePicker.platform
+        .pickImage(source: ImageSource.gallery)
+        .then((image) {
       if (image != null) {
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (BuildContext context) => ImageEditorPage(
-                      image: image,
+                      image: File(image.path),
                       forCreateEvent: true,
                     ))).then((editedImage) {
           setState(() {
@@ -994,7 +999,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
           height: heightSize(8),
           child: Center(
             child: TextFormField(
-              validator: (value) => value.isEmpty ? 'boş olamaz' : null,
+              validator: (value) => value!.isEmpty ? 'boş olamaz' : null,
               controller: controllerLocation,
               decoration: InputDecoration(
                 border: InputBorder.none,
@@ -1040,7 +1045,28 @@ class _CreateEventPageState extends State<CreateEventPage> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: SearchableDropdown.single(
+                child: DropdownSearch<String>(
+                  showSearchBox: true,
+                  mode: Mode.BOTTOM_SHEET,
+                  showSelectedItems: true,
+                  items: Sehirler().sehirler,
+                  dropdownSearchDecoration: InputDecoration(
+                    labelText: "Şehir seçiniz",
+                    //hintText: "country in menu mode",
+                  ),
+                  //popupItemDisabled: (String s) => s.startsWith('I'),
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() {
+                        city = value;
+                        print("CITY:" + city!);
+                      });
+                    }
+                  },
+                  selectedItem: Sehirler().sehirler.first,
+                ),
+
+                /*SearchableDropdown.single(
                   iconEnabledColor: MyColors().whiteTextColor,
                   underline: SizedBox(),
                   clearIcon: Icon(Icons.delete),
@@ -1060,13 +1086,13 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     if (value != 0 && value != null) {
                       setState(() {
                         city = value;
-                        print("CITY:" + city);
+                        print("CITY:" + city!);
                       });
                     }
                   },
                   displayClearIcon: true,
                   isExpanded: true,
-                ),
+                ),*/
               ),
             ],
           ),
@@ -1076,13 +1102,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
   }
 
   Widget cityAndCountryLittle() {
-    List<DropdownMenuItem<String>> sehirler = [];
-    for (int i = 0; i < 81; i++) {
-      sehirler.add(DropdownMenuItem(
-        value: Sehirler().sehirler[i],
-        child: Text(Sehirler().sehirler[i]),
-      ));
-    }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: ClipRRect(
@@ -1099,7 +1118,28 @@ class _CreateEventPageState extends State<CreateEventPage> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: SearchableDropdown.single(
+                child: DropdownSearch<String>(
+                  showSearchBox: true,
+                  mode: Mode.BOTTOM_SHEET,
+                  showSelectedItems: true,
+                  items: Sehirler().sehirler,
+                  dropdownSearchDecoration: InputDecoration(
+                    labelText: "Şehir seçiniz",
+                    //hintText: "country in menu mode",
+                  ),
+                  //popupItemDisabled: (String s) => s.startsWith('I'),
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() {
+                        city = value;
+                        print("CITY:" + city!);
+                      });
+                    }
+                  },
+                  selectedItem: Sehirler().sehirler.first,
+                ),
+
+                /*SearchableDropdown.single(
                   iconEnabledColor: MyColors().whiteTextColor,
                   underline: SizedBox(),
                   clearIcon: Icon(Icons.delete),
@@ -1119,13 +1159,13 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     if (value != 0 && value != null) {
                       setState(() {
                         city = value;
-                        print("CITY:" + city);
+                        print("CITY:" + city!);
                       });
                     }
                   },
                   displayClearIcon: true,
                   isExpanded: true,
-                ),
+                ),*/
               ),
             ],
           ),
@@ -1187,7 +1227,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
               selectGender(),
               selectMainCategory(),
             ] +
-            (isMainCategorySelected
+            (isMainCategorySelected!
                 ? <Widget>[
                     selectSubCategory(),
                   ]

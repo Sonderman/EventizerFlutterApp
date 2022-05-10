@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:image_editor/image_editor.dart';
 
 class ImageEditorPage extends StatefulWidget {
-  final File image;
-  final bool forCreateEvent;
+  final File? image;
+  final bool? forCreateEvent;
 
-  ImageEditorPage({@required this.image, @required this.forCreateEvent});
-
+  const ImageEditorPage({Key? key, this.image, this.forCreateEvent})
+      : super(key: key);
   @override
   _ImageEditorState createState() => _ImageEditorState(image);
 }
@@ -19,8 +19,8 @@ class _ImageEditorState extends State<ImageEditorPage> {
   final GlobalKey<ExtendedImageEditorState> editorKey =
       GlobalKey<ExtendedImageEditorState>();
 
-  Uint8List _image;
-  final File rawImage;
+  Uint8List? _image;
+  final File? rawImage;
 
   _ImageEditorState(this.rawImage);
 
@@ -56,7 +56,7 @@ class _ImageEditorState extends State<ImageEditorPage> {
       ),
       body: Center(
         child: ExtendedImage.file(
-          rawImage,
+          rawImage!,
           fit: BoxFit.contain,
           mode: ExtendedImageMode.editor,
           enableLoadState: true,
@@ -71,7 +71,7 @@ class _ImageEditorState extends State<ImageEditorPage> {
                 cropRectPadding: EdgeInsets.all(20.0),
                 hitTestSize: 20.0,
                 initCropRectType: InitCropRectType.imageRect,
-                cropAspectRatio: widget.forCreateEvent
+                cropAspectRatio: widget.forCreateEvent!
                     ? CropAspectRatios.ratio16_9
                     : CropAspectRatios.ratio1_1);
           },
@@ -85,68 +85,68 @@ class _ImageEditorState extends State<ImageEditorPage> {
           //mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Expanded(
-              child: FlatButton.icon(
+              child: TextButton.icon(
                 icon: Icon(Icons.flip),
                 label: Text(
                   "Yansıt",
                   style: TextStyle(
                     fontSize: heightSize(1.7),
+                    color: Colors.white,
                   ),
                 ),
-                textColor: Colors.white,
                 onPressed: () {
-                  editorKey.currentState.flip();
+                  editorKey.currentState!.flip();
                 },
               ),
             ),
             Visibility(
-              visible: !widget.forCreateEvent,
+              visible: !widget.forCreateEvent!,
               child: Expanded(
-                child: FlatButton.icon(
+                child: TextButton.icon(
                   icon: Icon(Icons.rotate_left),
                   label: Text(
                     "Sola\nDöndür",
                     style: TextStyle(
                       fontSize: heightSize(1.7),
+                      color: Colors.white,
                     ),
                   ),
-                  textColor: Colors.white,
                   onPressed: () {
-                    editorKey.currentState.rotate(right: false);
+                    editorKey.currentState!.rotate(right: false);
                   },
                 ),
               ),
             ),
             Visibility(
-              visible: !widget.forCreateEvent,
+              visible: !widget.forCreateEvent!,
               child: Expanded(
-                child: FlatButton.icon(
+                child: TextButton.icon(
                   icon: Icon(Icons.rotate_right),
                   label: Text(
                     "Sağa\nDöndür",
                     style: TextStyle(
                       fontSize: heightSize(1.7),
+                      color: Colors.white,
                     ),
                   ),
-                  textColor: Colors.white,
                   onPressed: () {
-                    editorKey.currentState.rotate(right: true);
+                    editorKey.currentState!.rotate(right: true);
                   },
                 ),
               ),
             ),
             Expanded(
-              child: FlatButton.icon(
+              child: TextButton.icon(
                 icon: Icon(Icons.restore),
                 label: Text(
                   "Sıfırla",
                   style: TextStyle(
                     fontSize: heightSize(1.7),
+                    color: Colors.white,
                   ),
                 ),
-                textColor: Colors.white,
                 onPressed: () {
-                  editorKey.currentState.reset();
+                  editorKey.currentState!.reset();
                 },
               ),
             ),
@@ -172,14 +172,13 @@ class _ImageEditorState extends State<ImageEditorPage> {
     try {
       showBusyingDialog();
       _image =
-          await cropImageDataWithNativeLibrary(state: editorKey.currentState);
+          await cropImageDataWithNativeLibrary(state: editorKey.currentState!);
     } catch (e) {
       print(e);
     }
   }
 
-  Future<Uint8List> cropImageDataWithNativeLibrary(
-      {ExtendedImageEditorState state}) async {
+  Future<Uint8List> cropImageDataWithNativeLibrary({var state}) async {
     print("native library start cropping");
 
     final cropRect = state.getCropRect();
@@ -205,8 +204,8 @@ class _ImageEditorState extends State<ImageEditorPage> {
       imageEditorOption: option,
     );
 
-    print("${DateTime.now().difference(start)} ：total time");
-    return result;
+    print("${DateTime.now().difference(start)} :total time");
+    return result!;
   }
 
   void showBusyingDialog() async {
@@ -215,28 +214,30 @@ class _ImageEditorState extends State<ImageEditorPage> {
         useRootNavigator: true,
         context: context,
         barrierDismissible: false,
-        child: Material(
-          color: Colors.transparent.withOpacity(0.2),
-          child: Container(
-            height: double.infinity,
-            width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                CircularProgressIndicator(
-                  strokeWidth: 5.0,
-                  valueColor: AlwaysStoppedAnimation(primaryColor),
-                ),
-                SizedBox(
-                  width: 10.0,
-                ),
-                Text(
-                  "cropping...",
-                  style: TextStyle(color: primaryColor),
-                )
-              ],
+        builder: (con) {
+          return Material(
+            color: Colors.transparent.withOpacity(0.2),
+            child: Container(
+              height: double.infinity,
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  CircularProgressIndicator(
+                    strokeWidth: 5.0,
+                    valueColor: AlwaysStoppedAnimation(primaryColor),
+                  ),
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                  Text(
+                    "cropping...",
+                    style: TextStyle(color: primaryColor),
+                  )
+                ],
+              ),
             ),
-          ),
-        ));
+          );
+        });
   }
 }

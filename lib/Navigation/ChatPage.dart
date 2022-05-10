@@ -5,7 +5,6 @@ import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/Message.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -75,13 +74,14 @@ class _ChatPageState extends State<ChatPage> {
           Expanded(
             child: StreamBuilder(
               stream: messageService
-                  .getUserChatsSnapshot(userService.userModel.getUserId()),
+                  .getUserChatsSnapshot(userService.userModel!.getUserId()),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return PageComponents(context)
                       .loadingOverlay(backgroundColor: Colors.white);
                 } else {
-                  List<DocumentSnapshot> items = snapshot.data.documents;
+                  List<DocumentSnapshot> items =
+                      snapshot.data as List<DocumentSnapshot>;
                   int itemLength = items.length;
                   return ScrollConfiguration(
                     behavior: NoScrollEffectBehavior(),
@@ -92,16 +92,19 @@ class _ChatPageState extends State<ChatPage> {
                             ),
                         itemCount: itemLength,
                         itemBuilder: (context, index) {
-                          String otherUserID = items[index].data['OtherUserID'];
-                          String chatID = items[index].documentID;
+                          String otherUserID = (items[index].data()!
+                              as Map<String, dynamic>)['OtherUserID'];
+                          String chatID = items[index].id;
                           return FutureBuilder(
                               future: userService.findUserByID(otherUserID),
-                              builder: (context, snapshot) {
+                              builder: (context,
+                                  AsyncSnapshot<Map<String, dynamic>?>
+                                      snapshot) {
                                 switch (snapshot.connectionState) {
                                   case ConnectionState.done:
                                     String url =
-                                        snapshot.data['ProfilePhotoUrl'];
-                                    String userName = snapshot.data['Name'];
+                                        snapshot.data!['ProfilePhotoUrl'];
+                                    String userName = snapshot.data!['Name'];
 
                                     return InkWell(
                                       onTap: () {
@@ -120,17 +123,15 @@ class _ChatPageState extends State<ChatPage> {
                                             if (lastMessageSnap.hasData) {
                                               var lastMessagemap =
                                                   lastMessageSnap.data;
-                                              String message =
-                                                  lastMessagemap["LastMessage"]
-                                                      ["Message"];
+                                              String message = (lastMessagemap!
+                                                      as Map<String, dynamic>)[
+                                                  "LastMessage"]["Message"];
 
                                               String formattedTime = DateFormat(
                                                       'kk:mm')
                                                   .format(DateTime
                                                       .fromMillisecondsSinceEpoch(
-                                                          lastMessagemap[
-                                                                  "LastMessage"]
-                                                              ["createdAt"]));
+                                                          int.parse(message)));
 
                                               return Row(
                                                 children: <Widget>[
