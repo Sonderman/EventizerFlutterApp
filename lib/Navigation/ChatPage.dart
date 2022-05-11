@@ -75,13 +75,13 @@ class _ChatPageState extends State<ChatPage> {
             child: StreamBuilder(
               stream: messageService
                   .getUserChatsSnapshot(userService.userModel!.getUserId()),
-              builder: (context, snapshot) {
+              builder: (context,
+                  AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                 if (!snapshot.hasData) {
                   return PageComponents(context)
                       .loadingOverlay(backgroundColor: Colors.white);
                 } else {
-                  List<DocumentSnapshot> items =
-                      snapshot.data as List<DocumentSnapshot>;
+                  final items = snapshot.data!.docs;
                   int itemLength = items.length;
                   return ScrollConfiguration(
                     behavior: NoScrollEffectBehavior(),
@@ -92,8 +92,8 @@ class _ChatPageState extends State<ChatPage> {
                             ),
                         itemCount: itemLength,
                         itemBuilder: (context, index) {
-                          String otherUserID = (items[index].data()!
-                              as Map<String, dynamic>)['OtherUserID'];
+                          String otherUserID =
+                              items[index].data()['OtherUserID'];
                           String chatID = items[index].id;
                           return FutureBuilder(
                               future: userService.findUserByID(otherUserID),
@@ -119,19 +119,28 @@ class _ChatPageState extends State<ChatPage> {
                                       child: StreamBuilder(
                                           stream: messageService
                                               .getChatPoolSnapshot(chatID),
-                                          builder: (_, lastMessageSnap) {
+                                          builder: (_,
+                                              AsyncSnapshot<
+                                                      DocumentSnapshot<
+                                                          Map<String, dynamic>>>
+                                                  lastMessageSnap) {
                                             if (lastMessageSnap.hasData) {
-                                              var lastMessagemap =
-                                                  lastMessageSnap.data;
-                                              String message = (lastMessagemap!
-                                                      as Map<String, dynamic>)[
-                                                  "LastMessage"]["Message"];
-
+                                              DocumentSnapshot<
+                                                      Map<String, dynamic>>
+                                                  lastMessagemap =
+                                                  lastMessageSnap.data!;
+                                              String message =
+                                                  lastMessagemap["LastMessage"]
+                                                      ["Message"];
+                                              int createdAt =
+                                                  lastMessagemap["LastMessage"]
+                                                      ["createdAt"];
                                               String formattedTime = DateFormat(
                                                       'kk:mm')
                                                   .format(DateTime
                                                       .fromMillisecondsSinceEpoch(
-                                                          int.parse(message)));
+                                                          int.parse(createdAt
+                                                              .toString())));
 
                                               return Row(
                                                 children: <Widget>[
@@ -204,7 +213,7 @@ class _ChatPageState extends State<ChatPage> {
                                               return Text("null");
                                           }),
                                     );
-                                    break;
+
                                   case ConnectionState.none:
                                     return Center(child: Text("Hata"));
                                   case ConnectionState.waiting:

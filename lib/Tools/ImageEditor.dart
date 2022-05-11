@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:image_editor/image_editor.dart';
 
 class ImageEditorPage extends StatefulWidget {
-  final File? image;
+  final File image;
   final bool? forCreateEvent;
 
-  const ImageEditorPage({Key? key, this.image, this.forCreateEvent})
+  const ImageEditorPage({Key? key, required this.image, this.forCreateEvent})
       : super(key: key);
   @override
   _ImageEditorState createState() => _ImageEditorState(image);
@@ -20,7 +20,7 @@ class _ImageEditorState extends State<ImageEditorPage> {
       GlobalKey<ExtendedImageEditorState>();
 
   Uint8List? _image;
-  final File? rawImage;
+  final File rawImage;
 
   _ImageEditorState(this.rawImage);
 
@@ -56,7 +56,8 @@ class _ImageEditorState extends State<ImageEditorPage> {
       ),
       body: Center(
         child: ExtendedImage.file(
-          rawImage!,
+          rawImage,
+          cacheRawData: true,
           fit: BoxFit.contain,
           mode: ExtendedImageMode.editor,
           enableLoadState: true,
@@ -172,17 +173,18 @@ class _ImageEditorState extends State<ImageEditorPage> {
     try {
       showBusyingDialog();
       _image =
-          await cropImageDataWithNativeLibrary(state: editorKey.currentState!);
+          await cropImageDataWithNativeLibrary(state: editorKey.currentState);
     } catch (e) {
       print(e);
     }
   }
 
-  Future<Uint8List> cropImageDataWithNativeLibrary({var state}) async {
+  Future<Uint8List> cropImageDataWithNativeLibrary(
+      {ExtendedImageEditorState? state}) async {
     print("native library start cropping");
 
-    final cropRect = state.getCropRect();
-    final action = state.editAction;
+    final Rect cropRect = state!.getCropRect()!;
+    final EditActionDetails action = state.editAction!;
     final rotateAngle = action.rotateAngle.toInt();
     final flipHorizontal = action.flipY;
     final flipVertical = action.flipX;

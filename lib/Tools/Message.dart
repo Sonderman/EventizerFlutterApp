@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:dash_chat/dash_chat.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
@@ -11,7 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class Message extends StatefulWidget {
-  //ANCHOR Karşıdak kullanıcının Idsi ve ismi geliyor
+  //ANCHOR Karşıdaki kullanıcının Idsi ve ismi geliyor
   final otherUserID;
   final otherUserName;
   Message(this.otherUserID, this.otherUserName);
@@ -87,15 +86,11 @@ class _MessageState extends State<Message> {
               messageStream =
                   messageService.getMessagesSnapshot(chatID).listen((snapshot) {
                 print("Subscribe oldu");
-                if (snapshot != null)
-                  setState(() {
-                    print("Message.dart/ 93. satır kontrol et");
-/*
-                    messages = snapshot.docs
-                        .map((i) => ChatMessage.fromJson(i.data()))
-                        .toList();
-                        */
-                  });
+                setState(() {
+                  messages = snapshot.docs
+                      .map((i) => ChatMessage.fromJson(i.data()))
+                      .toList();
+                });
               });
             }
 

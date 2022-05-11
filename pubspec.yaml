@@ -13,13 +13,13 @@ dependencies:
   package_info: ^2.0.2
   fancy_bottom_navigation: ^0.3.2
   image_editor: ^1.0.2
-  extended_image: ^6.0.3
+  extended_image: ^6.1.0
   splashscreen: ^1.2.0
   get_it: ^7.2.0
   line_awesome_icons: ^1.0.4+2
   font_awesome_flutter: ^10.1.0
   provider: ^6.0.2
-  dash_chat: ^1.1.14
+  dash_chat: ^1.1.16
   image_picker: ^0.8.5
   fluttertoast: ^8.0.9
   store_redirect: ^2.0.1

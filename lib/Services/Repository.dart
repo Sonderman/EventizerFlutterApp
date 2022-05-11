@@ -244,15 +244,18 @@ class MessagingService with ChangeNotifier {
         currentUserID, otherUserID);
   }
 
-  Stream<QuerySnapshot> getMessagesSnapshot(String chatID) {
+  Stream<QuerySnapshot<Map<String, dynamic>>> getMessagesSnapshot(
+      String chatID) {
     return firebaseDatabaseWorks.getMessagesSnapshot(chatID);
   }
 
-  Stream<QuerySnapshot> getUserChatsSnapshot(String currentUser) {
+  Stream<QuerySnapshot<Map<String, dynamic>>> getUserChatsSnapshot(
+      String currentUser) {
     return firebaseDatabaseWorks.getUserChatsSnapshots(currentUser);
   }
 
-  Stream<DocumentSnapshot> getChatPoolSnapshot(String chatID) {
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getChatPoolSnapshot(
+      String chatID) {
     return firebaseDatabaseWorks.getChatPoolSnapshot(chatID);
   }
 }

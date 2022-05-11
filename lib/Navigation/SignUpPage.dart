@@ -43,8 +43,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
   // ANCHOR kameradan foto almaya yarar
   Future<Uint8List?> _getImageFromCamera() async {
-    PickedFile? image =
-        await ImagePicker.platform.pickImage(source: ImageSource.camera);
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
     if (image != null)
       return Navigator.push(
           context,
@@ -59,8 +59,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
 // ANCHOR galeriden foto almaya yarar
   Future<Uint8List?> _getImageFromGallery() async {
-    PickedFile? image =
-        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null)
       return Navigator.push(
           context,

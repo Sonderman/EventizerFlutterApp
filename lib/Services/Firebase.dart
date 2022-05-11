@@ -393,7 +393,8 @@ class DatabaseWorks {
     }
   }
 
-  Stream<QuerySnapshot> getMessagesSnapshot(String chatID) {
+  Stream<QuerySnapshot<Map<String, dynamic>>> getMessagesSnapshot(
+      String chatID) {
     return ref
         .collection(settings.appName)
         .doc(settings.getServer())
@@ -403,7 +404,8 @@ class DatabaseWorks {
         .snapshots();
   }
 
-  Stream<DocumentSnapshot> getChatPoolSnapshot(String chatID) {
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getChatPoolSnapshot(
+      String chatID) {
     return ref
         .collection(settings.appName)
         .doc(settings.getServer())
@@ -506,7 +508,8 @@ class DatabaseWorks {
     });
   }
 
-  Stream<QuerySnapshot> getUserChatsSnapshots(String currentUser) {
+  Stream<QuerySnapshot<Map<String, dynamic>>> getUserChatsSnapshots(
+      String currentUser) {
     return ref
         .collection(settings.appName)
         .doc(settings.getServer())

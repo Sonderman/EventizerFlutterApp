@@ -563,8 +563,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
     return InkWell(
       onTap: () async {
         int maxParticipantNumber;
-        if (participantNumberController.text == null ||
-            participantNumberController.text == "")
+        if (participantNumberController.text == "")
           maxParticipantNumber = 2;
         else
           maxParticipantNumber = int.parse(participantNumberController.text);
@@ -572,7 +571,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
         if (controllerTitle.text != "" &&
             controllerDetail.text != "" &&
             controllerLocation.text != "" &&
-            maxParticipantNumber != null &&
             maxParticipantNumber != 0 &&
             _image != null &&
             subCategory != null &&
@@ -1022,13 +1020,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
   }
 
   Widget cityAndCountry() {
-    List<DropdownMenuItem<String>> sehirler = [];
-    for (int i = 0; i < 81; i++) {
-      sehirler.add(DropdownMenuItem(
-        value: Sehirler().sehirler[i],
-        child: Text(Sehirler().sehirler[i]),
-      ));
-    }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: ClipRRect(
@@ -1051,10 +1042,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   showSelectedItems: true,
                   items: Sehirler().sehirler,
                   dropdownSearchDecoration: InputDecoration(
-                    labelText: "Şehir seçiniz",
-                    //hintText: "country in menu mode",
-                  ),
-                  //popupItemDisabled: (String s) => s.startsWith('I'),
+                      labelText: "Şehir seçiniz",
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelStyle: TextStyle(color: Colors.black)),
                   onChanged: (value) {
                     if (value != null) {
                       setState(() {
@@ -1124,10 +1115,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   showSelectedItems: true,
                   items: Sehirler().sehirler,
                   dropdownSearchDecoration: InputDecoration(
-                    labelText: "Şehir seçiniz",
-                    //hintText: "country in menu mode",
-                  ),
-                  //popupItemDisabled: (String s) => s.startsWith('I'),
+                      labelText: "Şehir seçiniz",
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelStyle: TextStyle(color: Colors.black)),
                   onChanged: (value) {
                     if (value != null) {
                       setState(() {
