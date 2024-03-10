@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:dash_chat/dash_chat.dart';
+import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
@@ -13,14 +13,14 @@ class Message extends StatefulWidget {
   //ANCHOR Karşıdaki kullanıcının Idsi ve ismi geliyor
   final otherUserID;
   final otherUserName;
-  Message(this.otherUserID, this.otherUserName);
+  const Message(this.otherUserID, this.otherUserName, {super.key});
 
   @override
   _MessageState createState() => _MessageState();
 }
 
 class _MessageState extends State<Message> {
-  final GlobalKey<DashChatState> _chatViewKey = GlobalKey<DashChatState>();
+  //final GlobalKey<DashChatState> _chatViewKey = GlobalKey<DashChatState>();
   List<ChatMessage>? messages;
   StreamSubscription? messageStream;
   late UserService userService;
@@ -28,7 +28,7 @@ class _MessageState extends State<Message> {
   List<ChatMessage>? m;
   var scrollController = ScrollController();
   String chatID = "temp";
-  String? currentUserID;
+  String currentUserID = "";
   String? otherUserID;
   String? currentUserPhotoUrl;
   var i = 0;
@@ -47,9 +47,9 @@ class _MessageState extends State<Message> {
 
     //ANCHOR Buradaki user sağ tarafta görülen kendimiz
     user = ChatUser(
-      name: userService.userModel!.getUserName(),
-      uid: currentUserID,
-      avatar: currentUserPhotoUrl, // Kendi url miz
+      firstName: userService.userModel!.getUserName(),
+      id: currentUserID,
+      profileImage: currentUserPhotoUrl, // Kendi url miz
     );
   }
 
@@ -68,7 +68,7 @@ class _MessageState extends State<Message> {
         centerTitle: true,
       ),
       body: FutureBuilder(
-        future: messageService.checkConversation(currentUserID!, otherUserID!),
+        future: messageService.checkConversation(currentUserID, otherUserID!),
         builder: (context, AsyncSnapshot snapshot) {
           print("Control Future");
           if (snapshot.connectionState == ConnectionState.done ||
@@ -94,13 +94,13 @@ class _MessageState extends State<Message> {
               });
             }
 
-            print("ChatID:" + chatID);
+            print("ChatID:$chatID");
             return DashChat(
-              key: _chatViewKey,
-              scrollController: scrollController,
+              // key: _chatViewKey,
+              currentUser: user!,
               onSend: (ChatMessage message) {
                 messageService
-                    .sendMessage(chatID, message, currentUserID!, otherUserID!)
+                    .sendMessage(chatID, message, currentUserID, otherUserID!)
                     .then((id) {
                   if (messages == null) {
                     print("ilkmesaj");
@@ -110,17 +110,19 @@ class _MessageState extends State<Message> {
                   }
                 });
               },
+              messages: messages ?? [],
+              /*
               shouldShowLoadEarlier: true,
-              showLoadEarlierWidget: () => CircularProgressIndicator(),
+              showLoadEarlierWidget: () => const CircularProgressIndicator(),
               onLoadEarlier: () {
                 print("loading...");
               },
-              user: user!,
+              scrollController: scrollController,
               inputDecoration:
-                  InputDecoration.collapsed(hintText: "Mesaj gönderin"),
+                  const InputDecoration.collapsed(hintText: "Mesaj gönderin"),
               dateFormat: DateFormat('yyyy-MMM-dd'),
               timeFormat: DateFormat('HH:mm'),
-              messages: messages ?? [],
+              
               showUserAvatar: false,
               showAvatarForEveryMessage: false,
               onPressAvatar: (ChatUser user) {
@@ -130,8 +132,9 @@ class _MessageState extends State<Message> {
                 print("OnLongPressAvatar: ${user.name}");
               },
               inputMaxLines: 5,
-              messageContainerPadding: EdgeInsets.only(left: 5.0, right: 5.0),
-              inputTextStyle: TextStyle(fontSize: 16.0),
+              messageContainerPadding:
+                  const EdgeInsets.only(left: 5.0, right: 5.0),
+              inputTextStyle: const TextStyle(fontSize: 16.0),
               inputContainerStyle: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
                 border: Border.all(width: 0.0),
@@ -151,7 +154,7 @@ class _MessageState extends State<Message> {
               inputCursorColor: MyColors().blueThemeColor,
               trailing: <Widget>[
                 IconButton(
-                  icon: Icon(Icons.photo),
+                  icon: const Icon(Icons.photo),
                   onPressed: () async {
                     PickedFile? result = await ImagePicker.platform.pickImage(
                       source: ImageSource.gallery,
@@ -167,7 +170,7 @@ class _MessageState extends State<Message> {
                     }
                   },
                 )
-              ],
+              ],*/
             );
           } else {
             return PageComponents(context)

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dash_chat/dash_chat.dart';
+import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:eventizer/Models/UserModel.dart';
 import 'package:eventizer/Settings/AppSettings.dart';
 import 'package:eventizer/locator.dart';
@@ -19,7 +19,7 @@ class AutoIdGenerator {
 
   static String autoId() {
     final StringBuffer stringBuffer = StringBuffer();
-    final int maxRandom = _AUTO_ID_ALPHABET.length;
+    const int maxRandom = _AUTO_ID_ALPHABET.length;
 
     for (int i = 0; i < _AUTO_ID_LENGTH; ++i) {
       stringBuffer.write(_AUTO_ID_ALPHABET[_random.nextInt(maxRandom)]);
@@ -79,10 +79,11 @@ class DatabaseWorks {
           .where("OtherUserID", isEqualTo: otherUserID)
           .get()
           .then((onValue) {
-        if (onValue.docs.isNotEmpty)
+        if (onValue.docs.isNotEmpty) {
           return true;
-        else
+        } else {
           return false;
+        }
       });
     } catch (e) {
       print(e);
@@ -196,7 +197,7 @@ class DatabaseWorks {
         return issuccesfull;
       });
     } catch (e) {
-      print("Error at followToggle : " + e.toString());
+      print("Error at followToggle : $e");
       return null;
     }
   }
@@ -242,9 +243,9 @@ class DatabaseWorks {
           .where("Status", isEqualTo: "Accepted")
           .get()
           .then((docs) {
-        docs.docs.forEach((event) {
+        for (var event in docs.docs) {
           eventList.add(event.data());
-        });
+        }
         return eventList;
       });
     } catch (e) {
@@ -265,11 +266,12 @@ class DatabaseWorks {
             .where("OrganizerID", isEqualTo: organizerID)
             .get()
             .then((docs) {
-          docs.docs.forEach((event) {
+          for (var event in docs.docs) {
             if (event.data()["Status"] != "Deleted" &&
-                event.data()["Status"] == "Finished")
+                event.data()["Status"] == "Finished") {
               eventList.add(event.data());
-          });
+            }
+          }
           return eventList;
         });
       } else {
@@ -280,11 +282,12 @@ class DatabaseWorks {
             .where("OrganizerID", isEqualTo: organizerID)
             .get()
             .then((docs) {
-          docs.docs.forEach((event) {
+          for (var event in docs.docs) {
             if (event.data()["Status"] != "Deleted" &&
-                event.data()["Status"] != "Finished")
+                event.data()["Status"] != "Finished") {
               eventList.add(event.data());
-          });
+            }
+          }
           return eventList;
         });
       }
@@ -305,9 +308,9 @@ class DatabaseWorks {
           .get()
           .then((docs) {
         // print("gelen verinin uzunluğu:" + docs.docs.length.toString());
-        docs.docs.forEach((event) {
+        for (var event in docs.docs) {
           eventList.add(event.data());
-        });
+        }
         return eventList;
       });
     } catch (e) {
@@ -328,9 +331,9 @@ class DatabaseWorks {
           .where("Status", isEqualTo: "Accepted")
           .get()
           .then((docs) {
-        docs.docs.forEach((event) {
+        for (var event in docs.docs) {
           eventList.add(event.data());
-        });
+        }
         return eventList;
       });
     } catch (e) {
@@ -466,7 +469,7 @@ class DatabaseWorks {
           }
         },
       );
-    }, timeout: Duration(seconds: 1));
+    }, timeout: const Duration(seconds: 1));
     return chatID;
   }
 
@@ -620,7 +623,7 @@ class DatabaseWorks {
           .collection('Participants')
           .doc(userId)
           .get();
-      return doc.exists && doc.data != null ? true : false;
+      return doc.exists ? true : false;
     } catch (e) {
       print(e);
       return false;
@@ -657,9 +660,9 @@ class DatabaseWorks {
           .collection("Comments")
           .get()
           .then((docs) {
-        docs.docs.forEach((comment) {
+        for (var comment in docs.docs) {
           commmentList.add(comment.data());
-        });
+        }
         //print("Comments:" + commmentList.toString());
         return commmentList;
       });
@@ -680,9 +683,9 @@ class DatabaseWorks {
           .collection("Participants")
           .get()
           .then((docs) {
-        docs.docs.forEach((participant) {
+        for (var participant in docs.docs) {
           participants.add(participant.data());
-        });
+        }
         //print("Comments:" + commmentList.toString());
         return participants;
       });
@@ -808,7 +811,14 @@ class StorageWorks {
     );
     TaskSnapshot download = await uploadTask.then((task) => task);
     return await download.ref.getDownloadURL().then((url) {
-      ChatMessage message = ChatMessage(text: "", user: user, image: url);
+      ChatMessage message = ChatMessage(
+          text: "",
+          user: user,
+          medias: [
+            ChatMedia(
+                url: url, fileName: "Profile Picture", type: MediaType.image)
+          ],
+          createdAt: DateTime.now());
       return message;
     });
   }
@@ -819,7 +829,7 @@ class StorageWorks {
         .ref()
         .child('events')
         .child('images')
-        .child(AutoIdGenerator.autoId() + '.jpeg')
+        .child('${AutoIdGenerator.autoId()}.jpeg')
         .putData(image);
 
     StreamSubscription<TaskSnapshot> streamSubscription =
@@ -830,7 +840,7 @@ class StorageWorks {
     return await uploadTask.then((onValue) {
       return onValue.ref.getDownloadURL().then((value) {
         url = value.toString();
-        print("Gelen Url:" + url);
+        print("Gelen Url:$url");
         streamSubscription.cancel();
         return value.toString();
       });

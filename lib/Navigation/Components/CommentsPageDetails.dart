@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 class ProfileListItem extends StatefulWidget {
   final Map<String, dynamic>? jsonData;
 
-  const ProfileListItem({Key? key, this.jsonData}) : super(key: key);
+  const ProfileListItem({super.key, this.jsonData});
 
   @override
   _ProfileListItemState createState() => _ProfileListItemState();
@@ -49,8 +49,7 @@ class _ProfileListItemInternal extends StatefulWidget {
   final String? comment;
 
   const _ProfileListItemInternal(
-      {Key? key, this.name, this.image, this.comment})
-      : super(key: key);
+      {this.name, this.image, this.comment});
 
   @override
   _ProfileListItemInternalState createState() =>
@@ -83,9 +82,9 @@ class _ProfileListItemInternalState extends State<_ProfileListItemInternal> {
       },
       child: Container(
 //        height: _height,
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
           color: MyColors().lightGreen,
         ),
         child: Row(
@@ -95,7 +94,7 @@ class _ProfileListItemInternalState extends State<_ProfileListItemInternal> {
               child: Container(
                 height: heightSize(7),
                 width: widthSize(14),
-                decoration: new BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
                     fit: BoxFit.cover,

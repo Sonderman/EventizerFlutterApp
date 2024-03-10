@@ -11,15 +11,13 @@ import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:eventizer/locator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
   final userID;
   final isFromEvent;
 
-  const ProfilePage({Key? key, this.userID, this.isFromEvent})
-      : super(key: key);
+  const ProfilePage({super.key, this.userID, this.isFromEvent});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -101,11 +99,12 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                 ),
               );
-            } else
+            } else {
               return Center(
                 child: PageComponents(context)
                     .loadingOverlay(backgroundColor: Colors.white),
               );
+            }
           });
     } else {
       textUpdaterByUserModel(userService!.userModel!);
@@ -226,19 +225,19 @@ class _ProfilePageState extends State<ProfilePage>
                   visible: isThisProfileMine!,
                   child: InkWell(
                     onTap: () =>
-                        NavigationManager(context).pushPage(SettingsPage()),
+                        NavigationManager(context).pushPage(const SettingsPage()),
                     child: Container(
                       height: heightSize(6),
+                      decoration: BoxDecoration(
+                        color: MyColors().yellowContainer,
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(20),
+                        ),
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.all(7),
                         child: Image.asset(
                           "assets/icons/options.png",
-                        ),
-                      ),
-                      decoration: new BoxDecoration(
-                        color: MyColors().yellowContainer,
-                        borderRadius: new BorderRadius.all(
-                          Radius.circular(20),
                         ),
                       ),
                     ),
@@ -248,16 +247,14 @@ class _ProfilePageState extends State<ProfilePage>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      nameText!.toUpperCase() +
-                          ' ' +
-                          surnameText!.toUpperCase(),
+                      '${nameText!.toUpperCase()} ${surnameText!.toUpperCase()}',
                       style: TextStyle(
                         fontFamily: "Zona",
                         fontSize: heightSize(3),
                       ),
                     ),
                     Text(
-                      "@" + nickNameText!,
+                      "@${nickNameText!}",
                       style: TextStyle(
                         fontFamily: "ZonaLight",
                         fontSize: heightSize(2.5),
@@ -266,7 +263,7 @@ class _ProfilePageState extends State<ProfilePage>
                   ],
                 ),
                 Visibility(
-                  replacement: SizedBox(),
+                  replacement: const SizedBox(),
                   visible: isThisProfileMine!,
                   child: InkWell(
                     onTap: () {
@@ -275,20 +272,20 @@ class _ProfilePageState extends State<ProfilePage>
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (BuildContext context) => LoginPage()));
+                              builder: (BuildContext context) => const LoginPage()));
                     },
                     child: Container(
                       height: heightSize(6),
+                      decoration: BoxDecoration(
+                        color: MyColors().yellowContainer,
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(20),
+                        ),
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.all(7),
                         child: Image.asset(
                           "assets/icons/logout.png",
-                        ),
-                      ),
-                      decoration: new BoxDecoration(
-                        color: MyColors().yellowContainer,
-                        borderRadius: new BorderRadius.all(
-                          Radius.circular(20),
                         ),
                       ),
                     ),
@@ -307,6 +304,12 @@ class _ProfilePageState extends State<ProfilePage>
             //ANCHOR About myself box are here
             Container(
               width: double.infinity,
+              decoration: BoxDecoration(
+                color: MyColors().blueContainer,
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Text(
@@ -316,12 +319,6 @@ class _ProfilePageState extends State<ProfilePage>
                     fontSize: heightSize(2),
                     color: MyColors().whiteTextColor,
                   ),
-                ),
-              ),
-              decoration: new BoxDecoration(
-                color: MyColors().blueContainer,
-                borderRadius: new BorderRadius.all(
-                  Radius.circular(20),
                 ),
               ),
             ),
@@ -341,9 +338,9 @@ class _ProfilePageState extends State<ProfilePage>
                   child: Container(
                     width: widthSize(43),
                     height: heightSize(8),
-                    decoration: new BoxDecoration(
+                    decoration: BoxDecoration(
                       color: MyColors().purpleContainer,
-                      borderRadius: new BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                         Radius.circular(20),
                       ),
                     ),
@@ -352,7 +349,7 @@ class _ProfilePageState extends State<ProfilePage>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                            Container(
+                            SizedBox(
                               height: heightSize(5),
                               child: Image.asset("assets/icons/future.png"),
                             ),
@@ -382,7 +379,7 @@ class _ProfilePageState extends State<ProfilePage>
                     height: heightSize(8),
                     decoration: BoxDecoration(
                       color: MyColors().purpleContainer,
-                      borderRadius: BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                         Radius.circular(20),
                       ),
                     ),
@@ -391,7 +388,7 @@ class _ProfilePageState extends State<ProfilePage>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                            Container(
+                            SizedBox(
                               height: heightSize(5),
                               child: Image.asset("assets/icons/past.png"),
                             ),
@@ -522,9 +519,9 @@ class _ProfilePageState extends State<ProfilePage>
                   child: Container(
                     width: widthSize(43),
                     height: heightSize(8),
-                    decoration: new BoxDecoration(
+                    decoration: BoxDecoration(
                       color: MyColors().lightGreen,
-                      borderRadius: new BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                         Radius.circular(20),
                       ),
                     ),
@@ -534,13 +531,13 @@ class _ProfilePageState extends State<ProfilePage>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Container(
+                            SizedBox(
                               height: heightSize(5),
                               child: amIFollowing!
                                   ? Image.asset("assets/icons/unfollow.png")
                                   : Image.asset("assets/icons/follow.png"),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Text(
                               amIFollowing! ? "Takibi Bırak" : "Takip Et",
                               style: TextStyle(
@@ -577,7 +574,7 @@ class _ProfilePageState extends State<ProfilePage>
                     height: heightSize(8),
                     decoration: BoxDecoration(
                       color: MyColors().darkblueText,
-                      borderRadius: BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                         Radius.circular(20),
                       ),
                     ),
@@ -587,12 +584,12 @@ class _ProfilePageState extends State<ProfilePage>
                           padding: const EdgeInsets.symmetric(horizontal: 30),
                           child: Row(
                             children: <Widget>[
-                              Container(
+                              SizedBox(
                                 height: heightSize(4.2),
                                 child:
                                     Image.asset("assets/icons/sendMessage.png"),
                               ),
-                              Spacer(),
+                              const Spacer(),
                               Text(
                                 "Mesaj \nGönder",
                                 style: TextStyle(

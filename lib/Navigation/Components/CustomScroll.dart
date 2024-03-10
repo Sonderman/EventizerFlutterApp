@@ -5,8 +5,8 @@ gereksiz görüntüyü kaldırma için oluşturuldu*/
 
 class NoScrollEffectBehavior extends ScrollBehavior {
   @override
-  Widget buildViewportChrome(
-      BuildContext context, Widget child, AxisDirection axisDirection) {
+  Widget buildOverscrollIndicator(
+      BuildContext context, Widget child, ScrollableDetails details) {
     return child;
   }
 }

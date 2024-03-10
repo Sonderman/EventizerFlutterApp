@@ -49,8 +49,9 @@ class User {
   String? getUserProfilePhotoUrl() {
     if (_profilePhotoUrl == null) {
       return "https://farm5.staticflickr.com/4363/36346283311_74018f6e7d_o.png";
-    } else
+    } else {
       return _profilePhotoUrl;
+    }
   }
 
   //ANCHOR Setters

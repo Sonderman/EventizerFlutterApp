@@ -18,7 +18,7 @@ class NavigationManager {
     if (nav.getBottomNavIndex() == 1 &&
         nav.getCreateEventPageController().page == 1) {
       nav.getCreateEventPageController().previousPage(
-          duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
+          duration: const Duration(seconds: 1), curve: Curves.easeInOutCubic);
       return true;
     } else if (isEmpty()) {
       return false;
@@ -38,8 +38,9 @@ class NavigationManager {
   Widget? getLastPage() {
     if (isEmpty()) {
       return null;
-    } else
+    } else {
       return nav.getPageStack().last;
+    }
   }
 
   void popPage() {

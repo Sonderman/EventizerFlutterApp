@@ -10,6 +10,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -266,7 +268,7 @@ class _LoginPageState extends State<LoginPage> {
     return Row(
       children: <Widget>[
         ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
           child: TextButton(
             style: ButtonStyle(
                 backgroundColor:
@@ -275,7 +277,7 @@ class _LoginPageState extends State<LoginPage> {
                     MyColors().purpleContainerSplash)),
             onPressed: () {
               _pageController!.nextPage(
-                  duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
+                  duration: const Duration(seconds: 1), curve: Curves.easeInOutCubic);
             },
             child: Container(
               height: heightSize(8),
@@ -291,9 +293,9 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-        Spacer(),
+        const Spacer(),
         ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
           child: TextButton(
             style: ButtonStyle(
                 backgroundColor:
@@ -336,12 +338,12 @@ class _LoginPageState extends State<LoginPage> {
       body: Stack(
           children: <Widget>[
                 PageView(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   controller: _pageController,
                   children: <Widget>[
                     //ANCHOR Login sayfası
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -353,7 +355,7 @@ class _LoginPageState extends State<LoginPage> {
                             height: heightSize(5),
                           ),
                           emailAndPasswordFields(),
-                          Spacer(),
+                          const Spacer(),
                           signInButton(),
                           SizedBox(
                             height: heightSize(1),
@@ -398,7 +400,7 @@ class _LoginPageState extends State<LoginPage> {
             .updateSingleInfo("LastLoggedIn", "timeStamp")
             .whenComplete(() {
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (BuildContext context) => HomePage()));
+              MaterialPageRoute(builder: (BuildContext context) => const HomePage()));
         });
       });
       /*

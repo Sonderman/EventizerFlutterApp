@@ -19,6 +19,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class CreateEventPage extends StatefulWidget {
+  const CreateEventPage({super.key});
+
   @override
   _CreateEventPageState createState() => _CreateEventPageState();
 }
@@ -112,7 +114,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
             height: heightSize(10),
           ),
           ClipRRect(
-            borderRadius: new BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(20),
             ),
             child: Container(
@@ -138,7 +140,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 height: heightSize(8),
                 decoration: BoxDecoration(
                   color: MyColors().blackOpacityContainer,
-                  borderRadius: BorderRadius.all(
+                  borderRadius: const BorderRadius.all(
                     Radius.circular(20),
                   ),
                 ),
@@ -146,11 +148,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   onTap: getImageFromCamera,
                   child: Center(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Container(
+                          SizedBox(
                             height: heightSize(4),
                             child: Image.asset("assets/icons/camera.png"),
                           ),
@@ -171,9 +173,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
               Container(
                 width: widthSize(43),
                 height: heightSize(8),
-                decoration: new BoxDecoration(
+                decoration: BoxDecoration(
                   color: MyColors().blackOpacityContainer,
-                  borderRadius: new BorderRadius.all(
+                  borderRadius: const BorderRadius.all(
                     Radius.circular(20),
                   ),
                 ),
@@ -181,11 +183,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   onTap: getImageFromGallery,
                   child: Center(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Container(
+                          SizedBox(
                             height: heightSize(4),
                             child: Image.asset("assets/icons/gallery.png"),
                           ),
@@ -219,9 +221,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
           Container(
             width: widthSize(43),
             height: heightSize(8),
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: MyColors().blackOpacityContainer,
-              borderRadius: new BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(20),
               ),
             ),
@@ -257,11 +259,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
               },
               child: Center(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Container(
+                      SizedBox(
                         height: heightSize(4),
                         child: Image.asset("assets/icons/startDate.png"),
                       ),
@@ -284,9 +286,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
           Container(
             width: widthSize(43),
             height: heightSize(8),
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: MyColors().blackOpacityContainer,
-              borderRadius: new BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(20),
               ),
             ),
@@ -309,12 +311,12 @@ class _CreateEventPageState extends State<CreateEventPage> {
               child: Center(
                 child: Padding(
                   padding: eventFinishDate == null
-                      ? EdgeInsets.symmetric(horizontal: 40)
-                      : EdgeInsets.symmetric(horizontal: 15),
+                      ? const EdgeInsets.symmetric(horizontal: 40)
+                      : const EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Container(
+                      SizedBox(
                         height: heightSize(4),
                         child: Image.asset("assets/icons/end_date.png"),
                       ),
@@ -346,9 +348,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
           Container(
             width: widthSize(43),
             height: heightSize(8),
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: MyColors().blackOpacityContainer,
-              borderRadius: new BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(20),
               ),
             ),
@@ -372,11 +374,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
               },
               child: Center(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Container(
+                      SizedBox(
                         height: heightSize(4),
                         child: Image.asset("assets/icons/startTime.png"),
                       ),
@@ -399,9 +401,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
           Container(
             width: widthSize(43),
             height: heightSize(8),
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: MyColors().blackOpacityContainer,
-              borderRadius: new BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(20),
               ),
             ),
@@ -426,12 +428,12 @@ class _CreateEventPageState extends State<CreateEventPage> {
               child: Center(
                 child: Padding(
                   padding: eventFinishTime == null
-                      ? EdgeInsets.symmetric(horizontal: 40)
-                      : EdgeInsets.symmetric(horizontal: 20),
+                      ? const EdgeInsets.symmetric(horizontal: 40)
+                      : const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Container(
+                      SizedBox(
                         height: heightSize(4),
                         child: Image.asset("assets/icons/endTime.png"),
                       ),
@@ -460,7 +462,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
       child: Column(
         children: <Widget>[
           ClipRRect(
-            borderRadius: new BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(20),
             ),
             child: Container(
@@ -492,7 +494,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
             height: heightSize(1.5),
           ),
           ClipRRect(
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(20),
             ),
             child: Container(
@@ -531,16 +533,16 @@ class _CreateEventPageState extends State<CreateEventPage> {
     return InkWell(
       onTap: () {
         _pageController!.nextPage(
-            duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
+            duration: const Duration(seconds: 1), curve: Curves.easeInOutCubic);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Container(
           width: widthSize(50),
           height: heightSize(8),
-          decoration: new BoxDecoration(
+          decoration: BoxDecoration(
             color: MyColors().purpleContainer,
-            borderRadius: new BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(20),
             ),
           ),
@@ -563,10 +565,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
     return InkWell(
       onTap: () async {
         int maxParticipantNumber;
-        if (participantNumberController.text == "")
+        if (participantNumberController.text == "") {
           maxParticipantNumber = 2;
-        else
+        } else {
           maxParticipantNumber = int.parse(participantNumberController.text);
+        }
 
         if (controllerTitle.text != "" &&
             controllerDetail.text != "" &&
@@ -667,9 +670,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
         child: Container(
           width: widthSize(100),
           height: heightSize(8),
-          decoration: new BoxDecoration(
+          decoration: BoxDecoration(
             color: MyColors().blackOpacityContainer,
-            borderRadius: new BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(20),
             ),
           ),
@@ -677,7 +680,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
+                SizedBox(
                   height: heightSize(4),
                   child: Image.asset("assets/icons/addEvent.png"),
                 ),
@@ -708,9 +711,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
           Container(
             width: widthSize(100),
             height: heightSize(8),
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: MyColors().blackOpacityContainer,
-              borderRadius: new BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(20),
               ),
             ),
@@ -726,8 +729,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       color: MyColors().whiteTextColor,
                     ),
                   ),
-                  Spacer(),
-                  Container(
+                  const Spacer(),
+                  SizedBox(
                     width: widthSize(20),
                     child: TextFormField(
                       keyboardType: TextInputType.number,
@@ -771,12 +774,14 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Widget selectGender() {
     //ANCHOR karşı cins seçili ise ona özgü renk döndürür, seçilmezse tek tip renk döndürür.
     Color getOppositeGenderColor() {
-      if (oppositeGender!) if (userGender!)
+      if (oppositeGender!) if (userGender!) {
         return Colors.pinkAccent;
-      else
+      } else {
         return MyColors().blueContainer;
-      else
+      }
+      else {
         return Colors.blueAccent;
+      }
     }
 
     return Column(
@@ -791,9 +796,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
           child: Container(
             width: widthSize(43),
             height: heightSize(5),
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: getOppositeGenderColor(),
-              borderRadius: new BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(20),
               ),
             ),
@@ -834,9 +839,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
           child: Container(
             width: widthSize(100),
             height: heightSize(8),
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: MyColors().blackOpacityContainer,
-              borderRadius: new BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(20),
               ),
             ),
@@ -852,7 +857,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       color: MyColors().whiteTextColor,
                     ),
                   ),
-                  value: mainCategory != null ? mainCategory : null,
+                  value: mainCategory,
                   items: categoryItems
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
@@ -896,9 +901,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
           child: Container(
             width: widthSize(100),
             height: heightSize(8),
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: MyColors().blackOpacityContainer,
-              borderRadius: new BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(20),
               ),
             ),
@@ -914,7 +919,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       color: MyColors().whiteTextColor,
                     ),
                   ),
-                  value: subCategory != null ? subCategory : null,
+                  value: subCategory,
                   items: subCategoryItems[selectedMainCategoryIndex]
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
@@ -946,7 +951,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
   void getImageFromCamera() async {
     await ImagePicker.platform
-        .pickImage(source: ImageSource.camera)
+        .getImageFromSource(source: ImageSource.camera)
         .then((image) {
       if (image != null) {
         Navigator.push(
@@ -966,7 +971,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
   void getImageFromGallery() async {
     await ImagePicker.platform
-        .pickImage(source: ImageSource.gallery)
+        .getImageFromSource(source: ImageSource.gallery)
         .then((image) {
       if (image != null) {
         Navigator.push(
@@ -988,7 +993,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: ClipRRect(
-        borderRadius: new BorderRadius.all(
+        borderRadius: const BorderRadius.all(
           Radius.circular(20),
         ),
         child: Container(
@@ -1023,7 +1028,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: ClipRRect(
-        borderRadius: BorderRadius.all(
+        borderRadius: const BorderRadius.all(
           Radius.circular(20),
         ),
         child: Container(
@@ -1037,20 +1042,22 @@ class _CreateEventPageState extends State<CreateEventPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: DropdownSearch<String>(
-                  showSearchBox: true,
-                  mode: Mode.BOTTOM_SHEET,
-                  showSelectedItems: true,
+                  // showSearchBox: true,
+                  //mode: Mode.BOTTOM_SHEET,
+                  //showSelectedItems: true,
                   items: Sehirler().sehirler,
-                  dropdownSearchDecoration: InputDecoration(
-                      labelText: "Şehir seçiniz",
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelStyle: TextStyle(color: Colors.black)),
+                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                      dropdownSearchDecoration: InputDecoration(
+                          labelText: "Şehir seçiniz",
+                          filled: true,
+                          fillColor: Colors.white,
+                          labelStyle: TextStyle(color: Colors.black))),
+
                   onChanged: (value) {
                     if (value != null) {
                       setState(() {
                         city = value;
-                        print("CITY:" + city!);
+                        print("CITY:${city!}");
                       });
                     }
                   },
@@ -1096,7 +1103,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: ClipRRect(
-        borderRadius: BorderRadius.all(
+        borderRadius: const BorderRadius.all(
           Radius.circular(20),
         ),
         child: Container(
@@ -1110,20 +1117,22 @@ class _CreateEventPageState extends State<CreateEventPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: DropdownSearch<String>(
-                  showSearchBox: true,
-                  mode: Mode.BOTTOM_SHEET,
-                  showSelectedItems: true,
+                  // showSearchBox: true,
+                  //mode: Mode.BOTTOM_SHEET,
+                  //showSelectedItems: true,
                   items: Sehirler().sehirler,
-                  dropdownSearchDecoration: InputDecoration(
-                      labelText: "Şehir seçiniz",
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelStyle: TextStyle(color: Colors.black)),
+                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                      dropdownSearchDecoration: InputDecoration(
+                          labelText: "Şehir seçiniz",
+                          filled: true,
+                          fillColor: Colors.white,
+                          labelStyle: TextStyle(color: Colors.black))),
+
                   onChanged: (value) {
                     if (value != null) {
                       setState(() {
                         city = value;
-                        print("CITY:" + city!);
+                        print("CITY:${city!}");
                       });
                     }
                   },

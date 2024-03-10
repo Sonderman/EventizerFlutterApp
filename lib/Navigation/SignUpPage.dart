@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/ImageEditor.dart';
 import 'package:eventizer/Tools/loading.dart';
@@ -15,7 +14,7 @@ import 'Components/CustomScroll.dart';
 class SignUpPage extends StatefulWidget {
   final PageController pageController;
 
-  SignUpPage(this.pageController);
+  const SignUpPage(this.pageController, {super.key});
 
   @override
   _SignUpPageState createState() => _SignUpPageState();
@@ -43,9 +42,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
   // ANCHOR kameradan foto almaya yarar
   Future<Uint8List?> _getImageFromCamera() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
-    if (image != null)
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+    if (image != null) {
       return Navigator.push(
           context,
           MaterialPageRoute(
@@ -53,15 +52,16 @@ class _SignUpPageState extends State<SignUpPage> {
                     image: File(image.path),
                     forCreateEvent: false,
                   ))).then((value) => value);
-    else
+    } else {
       return null;
+    }
   }
 
 // ANCHOR galeriden foto almaya yarar
   Future<Uint8List?> _getImageFromGallery() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null)
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
       return Navigator.push(
           context,
           MaterialPageRoute(
@@ -69,8 +69,9 @@ class _SignUpPageState extends State<SignUpPage> {
                     image: File(image.path),
                     forCreateEvent: false,
                   ))).then((value) => value);
-    else
+    } else {
       return null;
+    }
   }
 
   @override
@@ -78,7 +79,7 @@ class _SignUpPageState extends State<SignUpPage> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return loading
-        ? Loading()
+        ? const Loading()
         : Scaffold(
             body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -143,7 +144,7 @@ class _SignUpPageState extends State<SignUpPage> {
               child: ListBody(
                 children: <Widget>[
                   GestureDetector(
-                      child: Text(
+                      child: const Text(
                         'Galeri',
                       ),
                       onTap: () {
@@ -154,11 +155,11 @@ class _SignUpPageState extends State<SignUpPage> {
                           });
                         });
                       }),
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.all(8.0),
                   ),
                   GestureDetector(
-                      child: Text(
+                      child: const Text(
                         'Kamera',
                       ),
                       onTap: () {
@@ -210,7 +211,8 @@ class _SignUpPageState extends State<SignUpPage> {
               textColor: Colors.white,
               fontSize: 18.0);
           widget.pageController.previousPage(
-              duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
+              duration: const Duration(seconds: 1),
+              curve: Curves.easeInOutCubic);
         } else {
           setState(() {
             loading = false;
@@ -233,7 +235,7 @@ class _SignUpPageState extends State<SignUpPage> {
       onTap: () {
         _showChoiceDialog(context);
       },
-      child: Container(
+      child: SizedBox(
         width: widthSize(30),
         height: widthSize(30),
         /*
@@ -266,7 +268,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Container(
+        SizedBox(
           height: heightSize(8),
           width: widthSize(40),
           child: TextFormField(
@@ -294,7 +296,7 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
           ),
         ),
-        Container(
+        SizedBox(
           height: heightSize(8),
           width: widthSize(40),
           child: TextFormField(
@@ -368,11 +370,11 @@ class _SignUpPageState extends State<SignUpPage> {
               color: MyColors().loginGreyColor,
             ),
             alignLabelWithHint: true,
-            suffixIcon: FlatButton(
+            suffixIcon: TextButton(
               child:
                   Icon(showPassword ? Icons.visibility : Icons.visibility_off),
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
+              // splashColor: Colors.transparent,
+              //highlightColor: Colors.transparent,
               onPressed: () {
                 setState(() {
                   showPassword = !showPassword;
@@ -407,11 +409,11 @@ class _SignUpPageState extends State<SignUpPage> {
               color: MyColors().loginGreyColor,
             ),
             alignLabelWithHint: true,
-            suffixIcon: FlatButton(
+            suffixIcon: TextButton(
               child:
                   Icon(showPassword ? Icons.visibility : Icons.visibility_off),
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
+              //splashColor: Colors.transparent,
+              //highlightColor: Colors.transparent,
               onPressed: () {
                 setState(() {
                   showPassword = !showPassword;
@@ -487,7 +489,7 @@ class _SignUpPageState extends State<SignUpPage> {
         height: heightSize(8),
         decoration: BoxDecoration(
           color: MyColors().yellowContainer,
-          borderRadius: BorderRadius.all(
+          borderRadius: const BorderRadius.all(
             Radius.circular(20),
           ),
         ),
@@ -518,13 +520,13 @@ class _SignUpPageState extends State<SignUpPage> {
           child: Container(
             width: widthSize(43),
             height: heightSize(5),
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: _gender != null
                   ? _gender!
                       ? Colors.black
                       : menColor()
                   : menColor(),
-              borderRadius: new BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(20),
               ),
             ),
@@ -549,13 +551,13 @@ class _SignUpPageState extends State<SignUpPage> {
           child: Container(
             width: widthSize(43),
             height: heightSize(5),
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: _gender != null
                   ? _gender!
                       ? womenColor()
                       : Colors.black
                   : womenColor(),
-              borderRadius: new BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(20),
               ),
             ),
@@ -580,14 +582,18 @@ class _SignUpPageState extends State<SignUpPage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-          child: FlatButton(
-            color: MyColors().purpleContainer,
-            highlightColor: MyColors().purpleContainerSplash,
-            splashColor: MyColors().purpleContainerSplash,
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          child: TextButton(
+            style: ButtonStyle(
+                iconColor:
+                    MaterialStateProperty.all(MyColors().purpleContainer)),
+
+            //highlightColor: MyColors().purpleContainerSplash,
+            //splashColor: MyColors().purpleContainerSplash,
             onPressed: () {
               widget.pageController.previousPage(
-                  duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
+                  duration: const Duration(seconds: 1),
+                  curve: Curves.easeInOutCubic);
             },
             child: Container(
               height: heightSize(8),
@@ -610,8 +616,6 @@ class _SignUpPageState extends State<SignUpPage> {
             if (_image != null &&
                 _name != null &&
                 _surname != null &&
-                mailController.text != null &&
-                passwordController.text != null &&
                 passwordController.text == password2Controller.text &&
                 _gender != null &&
                 _birthday != null) {
@@ -633,9 +637,9 @@ class _SignUpPageState extends State<SignUpPage> {
           child: Container(
             width: widthSize(42),
             height: heightSize(8),
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: MyColors().purpleContainer,
-              borderRadius: new BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(20),
               ),
             ),

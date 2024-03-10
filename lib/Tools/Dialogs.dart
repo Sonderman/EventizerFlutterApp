@@ -10,19 +10,19 @@ Future<bool> askForQuit(BuildContext context) async {
   return await showDialog(
       context: context,
       builder: (con) => AlertDialog(
-            title: Text("Uygulamadan Çıkmak istiyormusunuz?"),
+            title: const Text("Uygulamadan Çıkmak istiyormusunuz?"),
             actions: <Widget>[
               TextButton(
                   onPressed: () {
                     Navigator.pop(context, false);
                   },
-                  child: Text("Hayır")),
+                  child: const Text("Hayır")),
               TextButton(
                   onPressed: () {
                     SystemNavigator.pop();
                     //Navigator.pop(context);
                   },
-                  child: Text("Evet"))
+                  child: const Text("Evet"))
             ],
           ));
 }
@@ -35,14 +35,14 @@ Future<bool> askingDialog(
         return AlertDialog(
           title: Text(title),
           backgroundColor: backgroundColor,
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.pop(dcontext, false);
               },
-              child: Text(
+              child: const Text(
                 "Hayır",
                 style: TextStyle(
                   fontSize: 16.0,
@@ -54,7 +54,7 @@ Future<bool> askingDialog(
               onPressed: () {
                 Navigator.pop(dcontext, true);
               },
-              child: Text(
+              child: const Text(
                 "Evet",
                 style: TextStyle(
                   fontSize: 16.0,
@@ -78,14 +78,14 @@ Future<bool> feedbackDialog(
         UserService userService =
             Provider.of<UserService>(context, listen: false);
         return AlertDialog(
-          title: Center(child: Text("Sorun Bildir")),
-          shape: RoundedRectangleBorder(
+          title: const Center(child: Text("Sorun Bildir")),
+          shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Container(
+              SizedBox(
                 width: responsive.widthSize(80),
                 child: TextFormField(
                   controller: controller,
@@ -116,7 +116,7 @@ Future<bool> feedbackDialog(
               ),
               TextButton(
                 onPressed: () {
-                  if (controller.text != "")
+                  if (controller.text != "") {
                     userService.sendFeedback(controller.text).then((value) {
                       if (value) {
                         Navigator.pop(dcontext, true);
@@ -131,11 +131,12 @@ Future<bool> feedbackDialog(
                             fontSize: 18.0);
                       }
                     });
+                  }
                 },
                 style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all<Color>(Colors.green)),
-                child: Text(
+                child: const Text(
                   "Gönder",
                   style: TextStyle(
                     fontSize: 16.0,

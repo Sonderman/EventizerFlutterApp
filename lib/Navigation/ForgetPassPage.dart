@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ForgetPassword extends StatefulWidget {
+  const ForgetPassword({super.key});
+
   @override
   _ForgetPasswordState createState() => _ForgetPasswordState();
 }
@@ -27,7 +29,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         children: <Widget>[
           Expanded(
             flex: 7,
-            child: Container(
+            child: SizedBox(
               height: height * 0.3 + 40,
               child: Stack(
                 children: <Widget>[
@@ -36,7 +38,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     height: height * 0.3 + 40,
                     width: width,
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage('assets/images/background.png'),
                           fit: BoxFit.fill,
@@ -48,7 +50,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     height: height * 0.3 + 40,
                     width: width + 20,
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage('assets/images/background-2.png'),
                           fit: BoxFit.fill,
@@ -60,7 +62,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     top: height * 0.1 + 40,
                     height: height * 0.3 + 40,
                     width: width + 20,
-                    child: Text(
+                    child: const Text(
                       "Eventizer",
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -81,11 +83,11 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             child: Form(
               key: formkey,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 40),
+                padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
+                    const Text(
                       "Şifremi Sıfırla",
                       style: TextStyle(
                         color: Color.fromRGBO(49, 39, 79, 1),
@@ -93,14 +95,14 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                         fontSize: 30,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 50,
                     ),
                     Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.white,
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               color: Color.fromRGBO(196, 135, 198, .3),
                               blurRadius: 20,
@@ -110,7 +112,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                       child: Column(
                         children: <Widget>[
                           Container(
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                                 border: Border(
                               bottom: BorderSide(
@@ -118,7 +120,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                               ),
                             )),
                             child: TextFormField(
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 hintText: "Email Adresi",
                                 hintStyle: TextStyle(color: Colors.grey),
@@ -132,19 +134,19 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     MaterialButton(
                       onPressed: () {},
                       child: Container(
                         height: 50,
-                        margin: EdgeInsets.symmetric(horizontal: 70),
+                        margin: const EdgeInsets.symmetric(horizontal: 70),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(50),
-                          color: Color.fromRGBO(49, 39, 79, 1),
+                          color: const Color.fromRGBO(49, 39, 79, 1),
                         ),
-                        child: Center(
+                        child: const Center(
                           child: Text(
                             "Şifremi Yenile",
                             style: TextStyle(
@@ -154,7 +156,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                   ],

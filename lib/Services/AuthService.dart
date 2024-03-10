@@ -41,26 +41,29 @@ class AuthService {
 
   bool? isEmailVerified() {
     User? user = _firebaseAuth.currentUser;
-    if (user != null)
+    if (user != null) {
       return user.emailVerified;
-    else
+    } else {
       return null;
+    }
   }
 
   String? getUserEmail() {
     User? user = _firebaseAuth.currentUser;
-    if (user != null)
+    if (user != null) {
       return user.email;
-    else
+    } else {
       return null;
+    }
   }
 
   String? getUserUid() {
     User? user = _firebaseAuth.currentUser;
-    if (user != null)
+    if (user != null) {
       return user.uid;
-    else
+    } else {
       return null;
+    }
   }
 
   Future<bool> checkPassword(String email, String password) async {

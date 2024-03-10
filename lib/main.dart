@@ -1,6 +1,7 @@
 import 'package:eventizer/Navigation/Components/SplashScreen.dart';
 import 'package:eventizer/Services/NavigationProvider.dart';
 import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/firebase_options.dart';
 import 'package:eventizer/locator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -12,17 +13,21 @@ Future<void> main() async {
   //ANCHOR burada ekranın dönmesi engellenir, dikey mod
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   //ANCHOR status barı transparent yapıyor
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarBrightness: Brightness.light,
   ));
-  await Firebase.initializeApp().then((value) {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  ).then((value) {
     setupLocator();
   });
-  return runApp(MyApp());
+  return runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -37,13 +42,10 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider<UserService>(
               create: (context) => UserService()),
         ],
-        child: MaterialApp(
+        child: const MaterialApp(
             debugShowMaterialGrid: false,
             debugShowCheckedModeBanner: false,
-            supportedLocales: const <Locale>[
-              Locale('en', 'US'),
-              Locale('tr', 'TR')
-            ],
+            supportedLocales: <Locale>[Locale('en', 'US'), Locale('tr', 'TR')],
             home: SplashScreen()));
   }
 }

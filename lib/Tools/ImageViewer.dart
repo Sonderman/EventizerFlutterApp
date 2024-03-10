@@ -7,8 +7,7 @@ class ImageViewer extends StatefulWidget {
   final File? image;
 
   const ImageViewer(
-      {Key? key, required this.tag, required this.url, this.image})
-      : super(key: key);
+      {super.key, required this.tag, required this.url, this.image});
   @override
   _ImageViewerState createState() => _ImageViewerState();
 }

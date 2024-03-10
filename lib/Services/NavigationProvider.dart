@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 
 class NavigationProvider with ChangeNotifier {
   int _bottomNavIndex = locator<AppSettings>().defaultNavIndex;
-  PageController _createEventPageController = PageController(
+  final PageController _createEventPageController = PageController(
     initialPage: 0,
   );
 
-  List<Widget> _pageStack = [];
+  final List<Widget> _pageStack = [];
 
   void refresh() {
     notifyListeners();

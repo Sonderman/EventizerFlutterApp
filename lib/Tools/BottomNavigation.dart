@@ -5,7 +5,7 @@ import 'package:eventizer/Navigation/ProfilePage.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/NavigationManager.dart';
 import 'package:eventizer/assets/Colors.dart';
-import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
+import 'package:fancy_bottom_navigation_2/fancy_bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,9 +16,9 @@ Widget getNavigatedPage(BuildContext context) {
   } else {
     UserService userWorker = Provider.of<UserService>(context);
     List<Widget> pages = [
-      ChatPage(),
-      CreateEventPage(),
-      ExploreEventPage(),
+      const ChatPage(),
+      const CreateEventPage(),
+      const ExploreEventPage(),
       ProfilePage(
           key: UniqueKey(),
           userID: userWorker.userModel!.getUserId(),

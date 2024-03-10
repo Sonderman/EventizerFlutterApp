@@ -9,8 +9,7 @@ class ImageEditorPage extends StatefulWidget {
   final File image;
   final bool? forCreateEvent;
 
-  const ImageEditorPage({Key? key, required this.image, this.forCreateEvent})
-      : super(key: key);
+  const ImageEditorPage({super.key, required this.image, this.forCreateEvent});
   @override
   _ImageEditorState createState() => _ImageEditorState(image);
 }
@@ -38,11 +37,11 @@ class _ImageEditorState extends State<ImageEditorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Image Editor"),
+        title: const Text("Image Editor"),
         backgroundColor: MyColors().loginGreyColor,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.done),
+            icon: const Icon(Icons.done),
             onPressed: () {
               _cropImage().whenComplete(() {
                 if (_image != null) {
@@ -69,7 +68,7 @@ class _ImageEditorState extends State<ImageEditorPage> {
                 maxScale: 2.0,
                 cornerColor: Colors.red,
                 //cornerSize: Size(25, 5),
-                cropRectPadding: EdgeInsets.all(20.0),
+                cropRectPadding: const EdgeInsets.all(20.0),
                 hitTestSize: 20.0,
                 initCropRectType: InitCropRectType.imageRect,
                 cropAspectRatio: widget.forCreateEvent!
@@ -80,14 +79,14 @@ class _ImageEditorState extends State<ImageEditorPage> {
       ),
       bottomNavigationBar: BottomAppBar(
         color: MyColors().loginGreyColor,
-        shape: CircularNotchedRectangle(),
+        shape: const CircularNotchedRectangle(),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           //mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Expanded(
               child: TextButton.icon(
-                icon: Icon(Icons.flip),
+                icon: const Icon(Icons.flip),
                 label: Text(
                   "Yansıt",
                   style: TextStyle(
@@ -104,7 +103,7 @@ class _ImageEditorState extends State<ImageEditorPage> {
               visible: !widget.forCreateEvent!,
               child: Expanded(
                 child: TextButton.icon(
-                  icon: Icon(Icons.rotate_left),
+                  icon: const Icon(Icons.rotate_left),
                   label: Text(
                     "Sola\nDöndür",
                     style: TextStyle(
@@ -122,7 +121,7 @@ class _ImageEditorState extends State<ImageEditorPage> {
               visible: !widget.forCreateEvent!,
               child: Expanded(
                 child: TextButton.icon(
-                  icon: Icon(Icons.rotate_right),
+                  icon: const Icon(Icons.rotate_right),
                   label: Text(
                     "Sağa\nDöndür",
                     style: TextStyle(
@@ -138,7 +137,7 @@ class _ImageEditorState extends State<ImageEditorPage> {
             ),
             Expanded(
               child: TextButton.icon(
-                icon: Icon(Icons.restore),
+                icon: const Icon(Icons.restore),
                 label: Text(
                   "Sıfırla",
                   style: TextStyle(
@@ -194,9 +193,10 @@ class _ImageEditorState extends State<ImageEditorPage> {
 
     if (action.needCrop) option.addOption(ClipOption.fromRect(cropRect));
 
-    if (action.needFlip)
+    if (action.needFlip) {
       option.addOption(
           FlipOption(horizontal: flipHorizontal, vertical: flipVertical));
+    }
 
     if (action.hasRotateAngle) option.addOption(RotateOption(rotateAngle));
 
@@ -219,7 +219,7 @@ class _ImageEditorState extends State<ImageEditorPage> {
         builder: (con) {
           return Material(
             color: Colors.transparent.withOpacity(0.2),
-            child: Container(
+            child: SizedBox(
               height: double.infinity,
               width: double.infinity,
               child: Row(
@@ -229,7 +229,7 @@ class _ImageEditorState extends State<ImageEditorPage> {
                     strokeWidth: 5.0,
                     valueColor: AlwaysStoppedAnimation(primaryColor),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10.0,
                   ),
                   Text(

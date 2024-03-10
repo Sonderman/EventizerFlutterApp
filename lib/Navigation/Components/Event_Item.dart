@@ -35,7 +35,7 @@ Widget eventItem(
       eventService
           .amIparticipant(userService.userModel!.getUserId(), eventID)
           .then((amIparticipant) {
-        print("Kullanıcı bu etkinliğe katılmış:" + amIparticipant.toString());
+        print("Kullanıcı bu etkinliğe katılmış:$amIparticipant");
         NavigationManager(context).pushPage(EventPage(
           eventData: eventDatas,
           userData: ownerData,
@@ -44,7 +44,7 @@ Widget eventItem(
       });
     },
     child: ClipRRect(
-      borderRadius: BorderRadius.all(
+      borderRadius: const BorderRadius.all(
         Radius.circular(20),
       ),
       child: Container(
@@ -72,7 +72,7 @@ Widget eventItem(
                       children: <Widget>[
                         Container(
                           height: responsive.heightSize(5),
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             borderRadius: BorderRadius.all(
                               Radius.circular(20),
                             ),
@@ -96,9 +96,10 @@ Widget eventItem(
                                               .data['ProfilePhotoUrl'])),
                                     ),
                                   );
-                                } else
+                                } else {
                                   return Image.asset(
                                       "assets/images/avatar_man.png");
+                                }
                               }),
                         ),
                         SizedBox(
@@ -115,7 +116,7 @@ Widget eventItem(
                       ],
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   fromExplorePage
                       ? IconButton(
                           onPressed: () {},
@@ -143,7 +144,7 @@ Widget eventItem(
                                         size: 30,
                                       ),
                                     ),
-                                    Text("Paylaş")
+                                    const Text("Paylaş")
                                   ],
                                 ),
                               ),
@@ -160,16 +161,16 @@ Widget eventItem(
                                         size: 30,
                                       ),
                                     ),
-                                    Text("Düzenle")
+                                    const Text("Düzenle")
                                   ],
                                 ),
                               ),
-                              DropdownMenuItem<String>(
+                              const DropdownMenuItem<String>(
                                 value: "finish",
                                 child: Row(
                                   children: <Widget>[
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(
+                                      padding: EdgeInsets.symmetric(
                                           horizontal: 10),
                                       child: Icon(
                                         Icons.stop,
@@ -181,12 +182,12 @@ Widget eventItem(
                                   ],
                                 ),
                               ),
-                              DropdownMenuItem<String>(
+                              const DropdownMenuItem<String>(
                                 value: "delete",
                                 child: Row(
                                   children: <Widget>[
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(
+                                      padding: EdgeInsets.symmetric(
                                           horizontal: 10),
                                       child: Icon(
                                         Icons.delete,
@@ -201,7 +202,7 @@ Widget eventItem(
                             ],
                             onChanged: (String? selected) {
                               //TODO Paylaş bitir ve düzenle seçenekleri için kod yazılacak
-                              if (selected == "delete")
+                              if (selected == "delete") {
                                 askingDialog(
                                         context,
                                         "Silmek istediğinize eminmisiniz?",
@@ -210,11 +211,12 @@ Widget eventItem(
                                   if (value) {
                                     eventService.deleteEvent(eventID).then(
                                         (value) => print(
-                                            "Silindi:" + value.toString()));
+                                            "Silindi:$value"));
                                   }
                                 });
+                              }
 
-                              if (selected == "finish")
+                              if (selected == "finish") {
                                 askingDialog(
                                         context,
                                         "Bitirmek istediğinize eminmisiniz?",
@@ -222,16 +224,17 @@ Widget eventItem(
                                     .then((value) async {
                                   await eventService.finishEvent(eventID).then(
                                       (value) => print(
-                                          "Bitirildi:" + value.toString()));
+                                          "Bitirildi:$value"));
                                   await userService.increaseNofEvents();
                                 }).whenComplete(
                                         () => parentState!.setState(() {}));
+                              }
                             },
                             hint: Row(
                               children: <Widget>[
                                 Icon(Icons.menu,
                                     color: MyColors().purpleContainer),
-                                Text("Seçenekler")
+                                const Text("Seçenekler")
                               ],
                             ),
                           ),
@@ -300,9 +303,7 @@ Widget eventItem(
                             width: responsive.widthSize(2),
                           ),
                           Text(
-                            currentParticipantNumber +
-                                "/" +
-                                maxParticipantNumber,
+                            "$currentParticipantNumber/$maxParticipantNumber",
                             style: TextStyle(
                               fontFamily: "Zona",
                               fontSize: responsive.heightSize(2),
@@ -313,7 +314,7 @@ Widget eventItem(
                       ),
                     ],
                   ),
-                  Spacer(),
+                  const Spacer(),
                   //ANCHOR Finish Date and Locaition icons are here
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -356,7 +357,7 @@ Widget eventItem(
                           ),
                           //TODO Konum çift satır olmalı
                           Text(
-                            location + "\n" + "$city",
+                            "$location\n$city",
                             style: TextStyle(
                               fontFamily: "Zona",
                               fontSize: responsive.heightSize(2),

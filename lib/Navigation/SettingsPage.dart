@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:eventizer/Models/UserModel.dart';
 import 'package:eventizer/Services/Repository.dart';
@@ -15,6 +14,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
+  const SettingsPage({super.key});
+
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
@@ -60,7 +61,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return loading
-        ? Loading()
+        ? const Loading()
         : Scaffold(
             body: SingleChildScrollView(
               child: Padding(
@@ -140,9 +141,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
 // ANCHOR kameradan foto almaya yarar
   Future<Uint8List?> _getImageFromCamera() async {
-    PickedFile? image =
-        await ImagePicker.platform.pickImage(source: ImageSource.camera);
-    if (image != null)
+    XFile? image = await ImagePicker.platform
+        .getImageFromSource(source: ImageSource.camera);
+    if (image != null) {
       return Navigator.push(
           context,
           MaterialPageRoute(
@@ -150,15 +151,16 @@ class _SettingsPageState extends State<SettingsPage> {
                     image: File(image.path),
                     forCreateEvent: false,
                   ))).then((value) => value);
-    else
+    } else {
       return null;
+    }
   }
 
 // ANCHOR galeriden foto almaya yarar
   Future<Uint8List?> _getImageFromGallery() async {
-    PickedFile? image =
-        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
-    if (image != null)
+    XFile? image = await ImagePicker.platform
+        .getImageFromSource(source: ImageSource.gallery);
+    if (image != null) {
       return Navigator.push(
           context,
           MaterialPageRoute(
@@ -166,8 +168,9 @@ class _SettingsPageState extends State<SettingsPage> {
                     image: File(image.path),
                     forCreateEvent: false,
                   ))).then((value) => value);
-    else
+    } else {
       return null;
+    }
   }
 
   Future<void> _showChoiceDialog(BuildContext context) {
@@ -175,12 +178,12 @@ class _SettingsPageState extends State<SettingsPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Bir Seçim Yapınız'),
+            title: const Text('Bir Seçim Yapınız'),
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
                   GestureDetector(
-                      child: Text('Galeri'),
+                      child: const Text('Galeri'),
                       onTap: () {
                         _getImageFromGallery().then((value) {
                           setState(() {
@@ -189,11 +192,11 @@ class _SettingsPageState extends State<SettingsPage> {
                           });
                         });
                       }),
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.all(8.0),
                   ),
                   GestureDetector(
-                      child: Text('Kamera'),
+                      child: const Text('Kamera'),
                       onTap: () {
                         _getImageFromCamera().then((value) {
                           setState(() {
@@ -270,7 +273,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Container(
+        SizedBox(
           height: heightSize(8),
           width: widthSize(40),
           child: TextFormField(
@@ -299,7 +302,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
         ),
-        Container(
+        SizedBox(
           height: heightSize(8),
           width: widthSize(40),
           child: TextFormField(
@@ -441,7 +444,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget cityField() {
-    return Container(
+    return SizedBox(
       height: heightSize(10),
       width: widthSize(90),
       child: Column(
@@ -449,14 +452,15 @@ class _SettingsPageState extends State<SettingsPage> {
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           DropdownSearch<String>(
-            showSearchBox: true,
-            mode: Mode.BOTTOM_SHEET,
-            showSelectedItems: true,
+            //showSearchBox: true,
+            //mode: Mode.BOTTOM_SHEET,
+            //showSelectedItems: true,
             items: Sehirler().sehirler,
-            dropdownSearchDecoration: InputDecoration(
+            dropdownDecoratorProps: const DropDownDecoratorProps(
+                dropdownSearchDecoration: InputDecoration(
               labelText: "Şehir seçiniz",
               //hintText: "country in menu mode",
-            ),
+            )),
             //popupItemDisabled: (String s) => s.startsWith('I'),
             onChanged: (value) {
               if (value != null) {
@@ -521,10 +525,8 @@ class _SettingsPageState extends State<SettingsPage> {
           isChanged = true;
           userModel.setUserEmail(mailController.text);
         }*/
-        if (detailController.text != null) {
-          isChanged = true;
-          userModel!.setUserAbout(detailController.text);
-        }
+        isChanged = true;
+        userModel!.setUserAbout(detailController.text);
 
         if (_city != null) {
           isChanged = true;
@@ -566,9 +568,9 @@ class _SettingsPageState extends State<SettingsPage> {
       child: Container(
         width: widthSize(75),
         height: heightSize(8),
-        decoration: new BoxDecoration(
+        decoration: BoxDecoration(
           color: MyColors().purpleContainer,
-          borderRadius: new BorderRadius.all(
+          borderRadius: const BorderRadius.all(
             Radius.circular(20),
           ),
         ),

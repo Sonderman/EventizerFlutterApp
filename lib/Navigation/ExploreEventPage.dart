@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ExploreEventPage extends StatefulWidget {
+  const ExploreEventPage({super.key});
+
   @override
   _ExploreEventPageState createState() => _ExploreEventPageState();
 }
@@ -44,10 +46,10 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
   }
 
   Widget eventList() {
-    var _eventManager = Provider.of<EventService>(context);
+    var eventManager = Provider.of<EventService>(context);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -63,14 +65,14 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
             child: Container(
                 child: FutureBuilder(
                     future: (category == null || category == "Hepsi")
-                        ? _eventManager.fetchActiveEventLists()
-                        : _eventManager
+                        ? eventManager.fetchActiveEventLists()
+                        : eventManager
                             .fetchActiveEventListsByCategory(category!),
                     builder: (BuildContext context, AsyncSnapshot fetchedlist) {
                       if (fetchedlist.connectionState == ConnectionState.done) {
                         List<Map<String, dynamic>> listofMaps =
                             fetchedlist.data;
-                        if (listofMaps.length == 0) {
+                        if (listofMaps.isEmpty) {
                           return Center(
                               child: Text(
                             "Etkinlik Yok",
@@ -96,10 +98,11 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                                 }),
                           );
                         }
-                      } else
+                      } else {
                         return Center(
                             child: PageComponents(context)
                                 .loadingCustomOverlay(spinColor: Colors.white));
+                      }
                     })),
           ),
           SizedBox(
@@ -115,7 +118,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
       text: TextSpan(
         children: <TextSpan>[
           TextSpan(
-            text: category != null ? category : "En Yeni",
+            text: category ?? "En Yeni",
             style: TextStyle(fontFamily: "Zona", fontSize: heightSize(3)),
           ),
           TextSpan(
@@ -131,7 +134,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
     print(locator<EventSettings>().subCategoryItems);
     print(category);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -151,9 +154,9 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                   child: Container(
                     width: widthSize(20),
                     height: heightSize(8),
-                    decoration: new BoxDecoration(
+                    decoration: BoxDecoration(
                       color: MyColors().lightBlueContainer,
-                      borderRadius: new BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                         Radius.circular(20),
                       ),
                     ),
@@ -181,19 +184,19 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                   child: Container(
                     width: widthSize(42),
                     height: heightSize(8),
-                    decoration: new BoxDecoration(
+                    decoration: BoxDecoration(
                       color: MyColors().purpleContainer,
-                      borderRadius: new BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                         Radius.circular(20),
                       ),
                     ),
                     child: Center(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                            Container(
+                            SizedBox(
                               height: heightSize(4),
                               child: Image.asset(
                                   "assets/icons/birthdayCategory.png"),
@@ -224,19 +227,19 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                   child: Container(
                     width: widthSize(42),
                     height: heightSize(8),
-                    decoration: new BoxDecoration(
+                    decoration: BoxDecoration(
                       color: MyColors().purpleContainer,
-                      borderRadius: new BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                         Radius.circular(20),
                       ),
                     ),
                     child: Center(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                            Container(
+                            SizedBox(
                               height: heightSize(4),
                               child: Image.asset(
                                   "assets/icons/travelCategory.png"),
@@ -267,19 +270,19 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                   child: Container(
                     width: widthSize(45),
                     height: heightSize(8),
-                    decoration: new BoxDecoration(
+                    decoration: BoxDecoration(
                       color: MyColors().purpleContainer,
-                      borderRadius: new BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                         Radius.circular(20),
                       ),
                     ),
                     child: Center(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                            Container(
+                            SizedBox(
                               height: heightSize(4),
                               child: Image.asset(
                                   "assets/icons/worldtravelCategory.png"),
@@ -310,19 +313,19 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                   child: Container(
                     width: widthSize(58),
                     height: heightSize(8),
-                    decoration: new BoxDecoration(
+                    decoration: BoxDecoration(
                       color: MyColors().purpleContainer,
-                      borderRadius: new BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                         Radius.circular(20),
                       ),
                     ),
                     child: Center(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                            Container(
+                            SizedBox(
                               height: heightSize(4),
                               child: Image.asset(
                                   "assets/icons/cameraCategory.png"),
@@ -353,9 +356,9 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                   child: Container(
                     width: widthSize(45),
                     height: heightSize(8),
-                    decoration: new BoxDecoration(
+                    decoration: BoxDecoration(
                       color: MyColors().purpleContainer,
-                      borderRadius: new BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                         Radius.circular(20),
                       ),
                     ),
@@ -365,7 +368,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
-                            Container(
+                            SizedBox(
                               height: heightSize(4),
                               child: Image.asset(
                                   "assets/icons/conferenceCategory.png"),
@@ -396,9 +399,9 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                   child: Container(
                     width: widthSize(30),
                     height: heightSize(8),
-                    decoration: new BoxDecoration(
+                    decoration: BoxDecoration(
                       color: MyColors().purpleContainer,
-                      borderRadius: new BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                         Radius.circular(20),
                       ),
                     ),
@@ -408,7 +411,7 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
-                            Container(
+                            SizedBox(
                               height: heightSize(4),
                               child:
                                   Image.asset("assets/icons/campCategory.png"),
@@ -440,13 +443,19 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
 
   Widget searchField() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Container(
         height: heightSize(8),
         width: widthSize(90),
         alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: MyColors().purpleContainer,
+          borderRadius: const BorderRadius.all(
+            Radius.circular(20),
+          ),
+        ),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 15),
           child: TextFormField(
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -465,12 +474,6 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
               fontFamily: "Zona",
               color: MyColors().whiteTextColor,
             ),
-          ),
-        ),
-        decoration: new BoxDecoration(
-          color: MyColors().purpleContainer,
-          borderRadius: new BorderRadius.all(
-            Radius.circular(20),
           ),
         ),
       ),

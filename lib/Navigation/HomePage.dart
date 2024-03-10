@@ -10,6 +10,9 @@ import 'package:store_redirect/store_redirect.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
   _HomePageState createState() => _HomePageState();
 }
 
@@ -87,27 +90,27 @@ class _HomePageState extends State<HomePage> {
                         ])),
                   )),
                   MaterialButton(
-                      child: Row(
+                      color: Colors.green,
+                      onPressed: () {
+                        StoreRedirect.redirect();
+                      },
+                      child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Icon(Icons.play_arrow),
                           Text("Play Store"),
                         ],
-                      ),
-                      color: Colors.green,
-                      onPressed: () {
-                        StoreRedirect.redirect();
-                      }),
-                  Spacer(),
+                      )),
+                  const Spacer(),
                   GestureDetector(
                     onTap: () {
                       feedbackDialog(context);
                     },
-                    child: Row(
+                    child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(8.0),
                           child: Icon(
                             Icons.feedback,
                             size: 40,

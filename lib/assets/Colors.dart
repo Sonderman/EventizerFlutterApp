@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MyColors {
-  Color blueThemeColor = Color(0XFF001970);
+  Color blueThemeColor = const Color(0XFF001970);
   Color whiteThemeColor = Colors.white;
   Color yellowContainer = Colors.orange.shade200;
   Color blueContainer = Colors.blue;

@@ -11,30 +11,31 @@ import 'package:provider/provider.dart';
 import 'package:store_redirect/store_redirect.dart';
 
 class SplashScreen extends StatefulWidget {
-  SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
   authChecking(BuildContext context) {
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       String? userID = locator<AuthService>().getUserUid();
 
       if (userID != null) {
-        print("UserID:" + userID);
+        print("UserID:$userID");
         Provider.of<UserService>(context, listen: false)
             .userInitializer(userID)
             .then((value) {
-          if (value)
+          if (value) {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (BuildContext context) => HomePage()));
+                    builder: (BuildContext context) => const HomePage()));
+          }
         });
       } else {
         Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext context) => LoginPage()));
+            MaterialPageRoute(builder: (BuildContext context) => const LoginPage()));
       }
     });
   }
@@ -42,15 +43,15 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<bool?> checkUpdate() async {
     String? appVersion;
     String? serverVersion;
-    var temp, temp2;
+    List<String> temp, temp2;
     bool needToUpdate = false;
     try {
       await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-        print("appVersion:" + packageInfo.version);
+        print("appVersion:${packageInfo.version}");
         appVersion = packageInfo.version;
       });
       serverVersion = await locator<DatabaseWorks>().getServerVersion();
-      print("serverVersion:" + serverVersion!);
+      print("serverVersion:${serverVersion!}");
       temp = appVersion!.split(".");
       temp2 = serverVersion.split(".");
       for (int i = 0; i < 3; i++) {
@@ -68,9 +69,9 @@ class _SplashScreenState extends State<SplashScreen> {
     super.didChangeDependencies();
     checkUpdate().then((value) {
       print(value);
-      if (!value!)
+      if (!value!) {
         authChecking(context);
-      else
+      } else {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -80,21 +81,22 @@ class _SplashScreenState extends State<SplashScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Text("Lütfen Uygulamayı Güncelleyin!"),
-                              SizedBox(
+                              const Text("Lütfen Uygulamayı Güncelleyin!"),
+                              const SizedBox(
                                 height: 50,
                               ),
                               MaterialButton(
-                                  child: Text("Güncelle"),
                                   color: Colors.green,
                                   onPressed: () {
                                     StoreRedirect.redirect();
-                                  })
+                                  },
+                                  child: const Text("Güncelle"))
                             ],
                           ),
                         ),
                       ),
                     )));
+      }
     });
   }
 
@@ -103,13 +105,13 @@ class _SplashScreenState extends State<SplashScreen> {
     return Container(
       // ANCHOR  background image icin renk karisimini saglayan bir ozellik
       // ANCHOR  2 den fazla renk eklenebilir https://alligator.io/flutter/flutter-gradient/
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
             colors: [Colors.blue, Colors.red]),
       ),
-      child: Column(
+      child: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text("Eventizer",

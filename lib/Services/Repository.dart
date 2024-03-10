@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dash_chat/dash_chat.dart';
+import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:eventizer/Models/UserModel.dart';
 import 'package:eventizer/Services/AuthService.dart';
 import 'package:eventizer/Services/Firebase.dart';
@@ -77,8 +77,9 @@ class UserService with ChangeNotifier {
       if (value) {
         userModelSync();
         return true;
-      } else
+      } else {
         return false;
+      }
     });
   }
 
@@ -112,17 +113,15 @@ class UserService with ChangeNotifier {
     try {
       AuthService auth = locator<AuthService>();
       return await auth.signUp(eposta, sifre).then((userId) async {
-        if (userId != null) {
-          data['UserID'] = userId;
+        data['UserID'] = userId;
 
-          await firebaseDatabaseWorks.newUser(data).then((value) async {
-            if (value)
-              await firebaseStorageWorks.updateProfilePhoto(userId, image);
-          });
-          //auth.sendEmailVerification();
-          return userId;
-        } else
-          return null;
+        await firebaseDatabaseWorks.newUser(data).then((value) async {
+          if (value) {
+            await firebaseStorageWorks.updateProfilePhoto(userId, image);
+          }
+        });
+        //auth.sendEmailVerification();
+        return userId;
       });
     } catch (e) {
       print(e);
@@ -167,22 +166,12 @@ class EventService with ChangeNotifier {
   Future<bool> createEvent(
       String userId, Map<String, dynamic> eventData, Uint8List image) async {
     String? eventID;
-    if (image != null) {
-      eventData['EventImageUrl'] =
-          await firebaseStorageWorks.sendEventImage(image);
-      //print("1.url:" + eventData['EventImageUrl'].toString());
-      eventID = await firebaseDatabaseWorks.createEvent(userId, eventData);
-      //ANCHOR etkinlik oluştuğunda kullanıcıyı direk katılımcı yapar
-      return (eventID != null && await joinEvent(userId, eventID))
-          ? true
-          : false;
-    } else {
-      eventData['EventImageUrl'] = 'none';
-      eventID = await firebaseDatabaseWorks.createEvent(userId, eventData);
-      return (eventID != null && await joinEvent(userId, eventID))
-          ? true
-          : false;
-    }
+    eventData['EventImageUrl'] =
+        await firebaseStorageWorks.sendEventImage(image);
+    //print("1.url:" + eventData['EventImageUrl'].toString());
+    eventID = await firebaseDatabaseWorks.createEvent(userId, eventData);
+    //ANCHOR etkinlik oluştuğunda kullanıcıyı direk katılımcı yapar
+    return (eventID != null && await joinEvent(userId, eventID)) ? true : false;
   }
 
   Future<List<Map<String, dynamic>>?> fetchListOfUserEvents(String userID) {

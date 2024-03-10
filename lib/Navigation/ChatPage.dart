@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dash_chat/dash_chat.dart';
 import 'package:eventizer/Navigation/Components/CustomScroll.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/Message.dart';
@@ -7,8 +6,11 @@ import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class ChatPage extends StatefulWidget {
+  const ChatPage({super.key});
+
   @override
   _ChatPageState createState() => _ChatPageState();
 }
@@ -31,7 +33,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: <Widget>[
             /*
@@ -87,7 +89,7 @@ class _ChatPageState extends State<ChatPage> {
                     behavior: NoScrollEffectBehavior(),
                     child: ListView.separated(
                         separatorBuilder: (BuildContext context, int index) =>
-                            Divider(
+                            const Divider(
                               height: 50,
                             ),
                         itemCount: itemLength,
@@ -167,7 +169,7 @@ class _ChatPageState extends State<ChatPage> {
                                                             .start,
                                                     children: <Widget>[
                                                       Text(
-                                                        "$userName",
+                                                        userName,
                                                         style: TextStyle(
                                                           fontFamily: "Zona",
                                                           fontSize:
@@ -196,7 +198,7 @@ class _ChatPageState extends State<ChatPage> {
                                                       ),
                                                     ],
                                                   ),
-                                                  Spacer(),
+                                                  const Spacer(),
                                                   Text(
                                                     formattedTime,
                                                     style: TextStyle(
@@ -209,13 +211,14 @@ class _ChatPageState extends State<ChatPage> {
                                                   )
                                                 ],
                                               );
-                                            } else
-                                              return Text("null");
+                                            } else {
+                                              return const Text("null");
+                                            }
                                           }),
                                     );
 
                                   case ConnectionState.none:
-                                    return Center(child: Text("Hata"));
+                                    return const Center(child: Text("Hata"));
                                   case ConnectionState.waiting:
                                     return PageComponents(context)
                                         .loadingCustomOverlay(
@@ -223,7 +226,7 @@ class _ChatPageState extends State<ChatPage> {
                                                 MyColors().blueThemeColor,
                                             spinSize: 40);
                                   default:
-                                    return Center(
+                                    return const Center(
                                         child: Text("Beklenmedik durum"));
                                 }
                               });
@@ -255,7 +258,7 @@ class _ChatPageState extends State<ChatPage> {
                   color: MyColors().blackOpacityContainer,
                   width: 2,
                 ),
-                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -293,7 +296,7 @@ class _ChatPageState extends State<ChatPage> {
               height: heightSize(20),
               decoration: BoxDecoration(
                 color: MyColors().yellowContainer,
-                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
               ),
               child: Center(
                 child: Text(
@@ -319,7 +322,7 @@ class _ChatPageState extends State<ChatPage> {
               height: heightSize(20),
               decoration: BoxDecoration(
                 color: MyColors().purpleContainer,
-                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
               ),
               child: Center(
                 child: Text(
@@ -345,7 +348,7 @@ class _ChatPageState extends State<ChatPage> {
               height: heightSize(20),
               decoration: BoxDecoration(
                 color: MyColors().lightBlueContainer,
-                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
               ),
               child: Center(
                 child: Text(
@@ -371,7 +374,7 @@ class _ChatPageState extends State<ChatPage> {
               height: heightSize(20),
               decoration: BoxDecoration(
                 color: MyColors().orangeContainer,
-                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
               ),
               child: Center(
                 child: Text(

@@ -16,8 +16,7 @@ class EventPage extends StatefulWidget {
   final bool? amIparticipant;
 
   const EventPage(
-      {Key? key, this.eventData, this.userData, this.amIparticipant})
-      : super(key: key);
+      {super.key, this.eventData, this.userData, this.amIparticipant});
 
   @override
   _EventPageState createState() => _EventPageState();
@@ -52,10 +51,11 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
     super.didChangeDependencies();
     eventService = Provider.of<EventService>(context);
     userService = Provider.of<UserService>(context);
-    if (widget.userData!['UserID'] == userService!.userModel!.getUserId())
+    if (widget.userData!['UserID'] == userService!.userModel!.getUserId()) {
       isThisEventMine = true;
-    else
+    } else {
       isThisEventMine = false;
+    }
   }
 
   @override
@@ -89,11 +89,11 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                   ),
                   indicatorWeight: 3,
                   indicatorSize: TabBarIndicatorSize.tab,
-                  indicatorPadding: EdgeInsets.symmetric(horizontal: 15),
+                  indicatorPadding: const EdgeInsets.symmetric(horizontal: 15),
                   indicatorColor: MyColors().darkblueText,
                   controller: _tabController,
                   isScrollable: true,
-                  tabs: [
+                  tabs: const [
                     Tab(
                       text: "Etkinlik",
                     ),
@@ -169,8 +169,8 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
       builder: (BuildContext context,
           AsyncSnapshot<List<Map<String, dynamic>>?> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.data!.length == 0) {
-            return Center(child: Text("Katılımcı Yok"));
+          if (snapshot.data!.isEmpty) {
+            return const Center(child: Text("Katılımcı Yok"));
           } else {
             return ListView.separated(
               separatorBuilder: (BuildContext context, int index) {
@@ -196,7 +196,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                         child: Container(
                           height: heightSize(10),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
                             color: MyColors().lightGreen,
                           ),
                           child: Padding(
@@ -262,9 +262,9 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
               builder: (BuildContext context,
                   AsyncSnapshot<List<Map<String, dynamic>>?> snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.data!.length == 0) {
-                    return Center(child: Text("Henüz yorum yapılmadı"));
-                  } else
+                  if (snapshot.data!.isEmpty) {
+                    return const Center(child: Text("Henüz yorum yapılmadı"));
+                  } else {
                     return ListView.separated(
                         //physics: ClampingScrollPhysics(),
                         shrinkWrap: true,
@@ -275,9 +275,11 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                           return ProfileListItem(
                               jsonData: snapshot.data![index]);
                         });
-                } else
+                  }
+                } else {
                   return PageComponents(context)
                       .loadingOverlay(backgroundColor: Colors.white);
+                }
               }),
         ),
         SizedBox(
@@ -292,7 +294,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                   Expanded(
                     flex: 3,
                     child: Padding(
-                        padding: EdgeInsets.fromLTRB(5, 3, 5, 1),
+                        padding: const EdgeInsets.fromLTRB(5, 3, 5, 1),
                         child: TextField(
                           style: TextStyle(
                             fontFamily: "ZonaLight",
@@ -313,7 +315,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                               fontSize: heightSize(2),
                               color: MyColors().darkblueText,
                             ),
-                            errorStyle: TextStyle(
+                            errorStyle: const TextStyle(
                               color: Colors.red,
                             ),
                             fillColor: MyColors().blueThemeColor,
@@ -323,13 +325,13 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                             counterText: '',
                             focusedBorder: OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(4)),
+                                  const BorderRadius.all(Radius.circular(4)),
                               borderSide: BorderSide(
                                   width: 1, color: MyColors().blueThemeColor),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(4)),
+                                  const BorderRadius.all(Radius.circular(4)),
                               borderSide: BorderSide(
                                   width: 1, color: MyColors().blueThemeColor),
                             ),
@@ -395,7 +397,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
           Container(
             height: heightSize(7),
             width: widthSize(14),
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
                 fit: BoxFit.cover,
@@ -468,7 +470,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                         )));
           },
           child: ClipRRect(
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(20),
             ),
             child: Container(
@@ -503,15 +505,15 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             Container(
               width: widthSize(43),
               height: heightSize(6),
-              decoration: new BoxDecoration(
+              decoration: BoxDecoration(
                 color: MyColors().darkblueText,
-                borderRadius: new BorderRadius.all(
+                borderRadius: const BorderRadius.all(
                   Radius.circular(20),
                 ),
               ),
               child: Center(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: RichText(
                     text: TextSpan(
                       children: <TextSpan>[
@@ -524,7 +526,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                           ),
                         ),
                         TextSpan(
-                          text: " | " + startTime,
+                          text: " | $startTime",
                           style: TextStyle(
                             fontFamily: "ZonaLight",
                             fontSize: heightSize(2),
@@ -540,15 +542,15 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
             Container(
               width: widthSize(43),
               height: heightSize(6),
-              decoration: new BoxDecoration(
+              decoration: BoxDecoration(
                 color: MyColors().darkblueText,
-                borderRadius: new BorderRadius.all(
+                borderRadius: const BorderRadius.all(
                   Radius.circular(20),
                 ),
               ),
               child: Center(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: RichText(
                     text: TextSpan(
                       children: <TextSpan>[
@@ -561,7 +563,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                           ),
                         ),
                         TextSpan(
-                          text: " | " + finishTime,
+                          text: " | $finishTime",
                           style: TextStyle(
                             fontFamily: "ZonaLight",
                             fontSize: heightSize(2),
@@ -581,7 +583,7 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
           height: heightSize(2),
         ),
         ClipRRect(
-          borderRadius: new BorderRadius.all(
+          borderRadius: const BorderRadius.all(
             Radius.circular(20),
           ),
           child: Container(
@@ -630,15 +632,15 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
         Container(
           width: widthSize(43),
           height: heightSize(6),
-          decoration: new BoxDecoration(
+          decoration: BoxDecoration(
             color: MyColors().lightGreen,
-            borderRadius: new BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(20),
             ),
           ),
           child: Center(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
                 gender!,
                 style: TextStyle(
@@ -653,20 +655,17 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
         Container(
           width: widthSize(43),
           height: heightSize(6),
-          decoration: new BoxDecoration(
+          decoration: BoxDecoration(
             color: MyColors().orangeContainer,
-            borderRadius: new BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(20),
             ),
           ),
           child: Center(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                currentParticipantNumber +
-                    "/" +
-                    maxParticipantNumber +
-                    " Katılımcı",
+                "$currentParticipantNumber/$maxParticipantNumber Katılımcı",
                 style: TextStyle(
                   fontFamily: "Zona",
                   fontSize: heightSize(2),
@@ -684,15 +683,15 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
     return Container(
       width: widthSize(100),
       height: heightSize(6),
-      decoration: new BoxDecoration(
+      decoration: BoxDecoration(
         color: MyColors().purpleContainer,
-        borderRadius: new BorderRadius.all(
+        borderRadius: const BorderRadius.all(
           Radius.circular(20),
         ),
       ),
       child: Center(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Text(
             widget.eventData!['MainCategory'] +
                 " | " +
@@ -715,15 +714,15 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
     return Container(
       width: widthSize(100),
       height: heightSize(6),
-      decoration: new BoxDecoration(
+      decoration: BoxDecoration(
         color: MyColors().purpleContainer,
-        borderRadius: new BorderRadius.all(
+        borderRadius: const BorderRadius.all(
           Radius.circular(20),
         ),
       ),
       child: Center(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Text(
             (location + " / " + city
             //+ " / " + country
@@ -819,19 +818,19 @@ class _EventPageState extends State<EventPage> with TickerProviderStateMixin {
                       child: Container(
                         width: widthSize(90),
                         height: heightSize(8),
-                        decoration: new BoxDecoration(
+                        decoration: BoxDecoration(
                           color: MyColors().darkblueText,
-                          borderRadius: new BorderRadius.all(
+                          borderRadius: const BorderRadius.all(
                             Radius.circular(20),
                           ),
                         ),
                         child: Center(
                           child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 35),
+                            padding: const EdgeInsets.symmetric(horizontal: 35),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                Container(
+                                SizedBox(
                                   height: heightSize(4.5),
                                   child: joinButton!
                                       ? Image.asset("assets/icons/unjoin.png")
