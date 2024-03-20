@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:eventizer/Services/Repository.dart';
 import 'package:eventizer/Tools/PageComponents.dart';
 import 'package:eventizer/assets/Colors.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class Message extends StatefulWidget {
@@ -64,8 +61,12 @@ class _MessageState extends State<Message> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: MyColors().blueThemeColor,
-        title: Text(widget.otherUserName),
+        title: Text(
+          widget.otherUserName,
+          style: const TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: FutureBuilder(
         future: messageService.checkConversation(currentUserID, otherUserID!),
@@ -89,6 +90,8 @@ class _MessageState extends State<Message> {
                 setState(() {
                   messages = snapshot.docs
                       .map((i) => ChatMessage.fromJson(i.data()))
+                      .toList()
+                      .reversed
                       .toList();
                 });
               });

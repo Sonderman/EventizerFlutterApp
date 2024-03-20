@@ -224,8 +224,8 @@ class _ProfilePageState extends State<ProfilePage>
                   //replacement: SizedBox(),
                   visible: isThisProfileMine!,
                   child: InkWell(
-                    onTap: () =>
-                        NavigationManager(context).pushPage(const SettingsPage()),
+                    onTap: () => NavigationManager(context)
+                        .pushPage(const SettingsPage()),
                     child: Container(
                       height: heightSize(6),
                       decoration: BoxDecoration(
@@ -272,7 +272,8 @@ class _ProfilePageState extends State<ProfilePage>
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (BuildContext context) => const LoginPage()));
+                              builder: (BuildContext context) =>
+                                  const LoginPage()));
                     },
                     child: Container(
                       height: heightSize(6),

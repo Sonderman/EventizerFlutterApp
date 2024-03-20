@@ -107,7 +107,6 @@ class _ChatPageState extends State<ChatPage> {
                                     String url =
                                         snapshot.data!['ProfilePhotoUrl'];
                                     String userName = snapshot.data!['Name'];
-
                                     return InkWell(
                                       onTap: () {
                                         Navigator.push(
@@ -134,15 +133,15 @@ class _ChatPageState extends State<ChatPage> {
                                               String message =
                                                   lastMessagemap["LastMessage"]
                                                       ["Message"];
-                                              int createdAt =
+                                              String createdAt =
                                                   lastMessagemap["LastMessage"]
                                                       ["createdAt"];
                                               String formattedTime = DateFormat(
                                                       'kk:mm')
                                                   .format(DateTime
                                                       .fromMillisecondsSinceEpoch(
-                                                          int.parse(createdAt
-                                                              .toString())));
+                                                          int.parse(
+                                                              createdAt)));
 
                                               return Row(
                                                 children: <Widget>[
@@ -185,6 +184,8 @@ class _ChatPageState extends State<ChatPage> {
                                                           overflow: TextOverflow
                                                               .ellipsis,
                                                           style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
                                                             height:
                                                                 heightSize(0.2),
                                                             fontFamily:
@@ -202,6 +203,8 @@ class _ChatPageState extends State<ChatPage> {
                                                   Text(
                                                     formattedTime,
                                                     style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       height: heightSize(0.2),
                                                       fontFamily: "ZonaLight",
                                                       fontSize: heightSize(2),

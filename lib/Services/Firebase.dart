@@ -419,6 +419,7 @@ class DatabaseWorks {
 
   Future<String> sendMessage(ChatMessage message, String chatID,
       String currentUser, String otherUser) async {
+    String currentDate = DateTime.now().millisecondsSinceEpoch.toString();
     if (chatID == "temp") {
       chatID = AutoIdGenerator.autoId();
       await ref.runTransaction((transaction) async {
@@ -448,7 +449,7 @@ class DatabaseWorks {
         .collection('messagePool')
         .doc(chatID)
         .collection('messages')
-        .doc(DateTime.now().millisecondsSinceEpoch.toString());
+        .doc(currentDate);
     Map<String, dynamic> messageMap = message.toJson();
     ref.runTransaction((transaction) async {
       transaction.set(
@@ -465,7 +466,7 @@ class DatabaseWorks {
           "LastMessage": {
             "SenderID": currentUser,
             "Message": messageMap['text'],
-            "createdAt": messageMap['createdAt']
+            "createdAt": currentDate
           }
         },
       );
