@@ -1,0 +1,1150 @@
+import 'dart:typed_data';
+import 'package:dropdown_search/dropdown_search.dart';
+import 'package:eventizer/data/themes.dart';
+import 'package:eventizer/data/cities.dart';
+import 'package:eventizer/models/user_model.dart';
+import 'package:eventizer/locator.dart';
+import 'package:eventizer/navigation/my_events_page.dart';
+import 'package:eventizer/navigation/profile_page.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import '../services/repository.dart';
+import '../settings/event_settings.dart';
+import '../tools/navigation_manager.dart';
+import '../tools/page_components.dart';
+
+class CreateEventPage extends StatefulWidget {
+  const CreateEventPage({super.key});
+
+  @override
+  State<CreateEventPage> createState() => _CreateEventPageState();
+}
+
+class _CreateEventPageState extends State<CreateEventPage> {
+  double heightSize(double value) {
+    value /= 100;
+    return MediaQuery.of(context).size.height * value;
+  }
+
+  double widthSize(double value) {
+    value /= 100;
+    return MediaQuery.of(context).size.width * value;
+  }
+
+  PageController? _pageController;
+  UserService? userService;
+  UserModel? userModel;
+
+  final GlobalKey<FormState> formkey = GlobalKey<FormState>();
+  Color myBlueColor = MyColors.blueThemeColor;
+  TextEditingController controllerTitle = TextEditingController();
+  TextEditingController controllerDetail = TextEditingController();
+  TextEditingController controllerLocation = TextEditingController();
+  TextEditingController participantNumberController = TextEditingController();
+  List<String> categoryItems = locator<EventSettings>().categoryItems ?? [];
+  List<List<String>> subCategoryItems = locator<EventSettings>().subCategoryItems ?? [];
+  MaterialLocalizations? localizations;
+  String? subCategory,
+      mainCategory,
+      eventStartDate,
+      eventStartTime,
+      eventFinishDate,
+      eventFinishTime,
+      country,
+      city;
+  TimeOfDay? eventStartTimeOfDay, eventFinishTimeOfDay;
+  DateTime? eventStartDateTime;
+  bool? isStartDateSelected = false,
+      isStartTimeSelected = false,
+      isFinishDateSelected = false,
+      isFinishTimeSelected = false,
+      isMainCategorySelected = false,
+      //ANCHOR true ise Erkek
+      userGender,
+      oppositeGender = false,
+      loadingOverLay = false;
+  Uint8List? _image;
+
+  @override
+  void initState() {
+    participantNumberController.text = "1";
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    userService = Provider.of<UserService>(context);
+    userModel = userService?.userModel;
+    userGender = userModel?.getUserGender() == "Man" ? true : false;
+    _pageController = NavigationManager(context).getCreateEventPageController();
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    localizations = MaterialLocalizations.of(context);
+    return Scaffold(
+      backgroundColor: Colors.deepPurpleAccent,
+      body: Stack(
+        children:
+            <Widget>[PageView(controller: _pageController, children: pages())] +
+            (loadingOverLay!
+                ? <Widget>[PageComponents(context).loadingOverlay(backgroundColor: Colors.white)]
+                : <Widget>[]),
+      ),
+    );
+  }
+
+  Widget eventPhotoAndButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(height: heightSize(10)),
+          ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            child: Container(
+              color: MyColors.blackOpacityContainer,
+              width: widthSize(100),
+              height: widthSize(100) * (9 / 16),
+              child: _image == null
+                  ? Image.asset('assets/images/etkinlik.png', fit: BoxFit.cover)
+                  : Image.memory(_image!, fit: BoxFit.fill),
+            ),
+          ),
+          SizedBox(height: heightSize(2)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Container(
+                width: widthSize(43),
+                height: heightSize(8),
+                decoration: BoxDecoration(
+                  color: MyColors.blackOpacityContainer,
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                ),
+                child: InkWell(
+                  onTap: getImageFromCamera,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          SizedBox(
+                            height: heightSize(4),
+                            child: Image.asset("assets/icons/camera.png"),
+                          ),
+                          Text(
+                            "Kamera",
+                            style: TextStyle(
+                              fontFamily: "Zona",
+                              fontSize: heightSize(2),
+                              color: MyColors.globalTextColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                width: widthSize(43),
+                height: heightSize(8),
+                decoration: BoxDecoration(
+                  color: MyColors.blackOpacityContainer,
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                ),
+                child: InkWell(
+                  onTap: getImageFromGallery,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          SizedBox(
+                            height: heightSize(4),
+                            child: Image.asset("assets/icons/gallery.png"),
+                          ),
+                          Text(
+                            "Galeri",
+                            style: TextStyle(
+                              fontFamily: "Zona",
+                              fontSize: heightSize(2),
+                              color: MyColors.globalTextColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget dateButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Container(
+            width: widthSize(43),
+            height: heightSize(8),
+            decoration: BoxDecoration(
+              color: MyColors.blackOpacityContainer,
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+            ),
+            child: InkWell(
+              onTap: () async {
+                final datePick = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(DateTime.now().year),
+                  lastDate: DateTime(DateTime.now().year + 2),
+                  selectableDayPredicate: (DateTime currentDate) {
+                    if (currentDate.month > DateTime.now().month &&
+                        currentDate.year >= DateTime.now().year) {
+                      return true;
+                    } else if (currentDate.day >= DateTime.now().day &&
+                        currentDate.month >= DateTime.now().month) {
+                      return true;
+                    } else if (currentDate.year > DateTime.now().year)
+                      return true;
+                    else
+                      return false;
+                  },
+                );
+                if (datePick != null) {
+                  eventStartDateTime = datePick;
+                  setState(() {
+                    isStartDateSelected = true;
+                    eventFinishDate = null;
+                    isFinishDateSelected = false;
+                    eventStartDate = "${datePick.day}/${datePick.month}/${datePick.year}";
+                  });
+                }
+              },
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      SizedBox(
+                        height: heightSize(4),
+                        child: Image.asset("assets/icons/startDate.png"),
+                      ),
+                      Text(
+                        eventStartDate == null ? "Başlangıç" : "$eventStartDate",
+                        style: TextStyle(
+                          fontFamily: "Zona",
+                          fontSize: heightSize(2),
+                          color: MyColors.globalTextColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            width: widthSize(43),
+            height: heightSize(8),
+            decoration: BoxDecoration(
+              color: MyColors.blackOpacityContainer,
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+            ),
+            child: InkWell(
+              onTap: () async {
+                final datePick = await showDatePicker(
+                  context: context,
+                  initialDate: eventStartDateTime!,
+                  firstDate: eventStartDateTime!,
+                  lastDate: DateTime(eventStartDateTime!.year + 2),
+                );
+                if (datePick != null) {
+                  setState(() {
+                    isFinishDateSelected = true;
+                    eventFinishDate = "${datePick.day}/${datePick.month}/${datePick.year}";
+                  });
+                }
+              },
+              child: Center(
+                child: Padding(
+                  padding: eventFinishDate == null
+                      ? const EdgeInsets.symmetric(horizontal: 40)
+                      : const EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      SizedBox(
+                        height: heightSize(4),
+                        child: Image.asset("assets/icons/end_date.png"),
+                      ),
+                      Text(
+                        eventFinishDate == null ? "Bitiş" : "$eventFinishDate",
+                        style: TextStyle(
+                          fontFamily: "Zona",
+                          fontSize: heightSize(2),
+                          color: MyColors.globalTextColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget timeButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Container(
+            width: widthSize(43),
+            height: heightSize(8),
+            decoration: BoxDecoration(
+              color: MyColors.blackOpacityContainer,
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+            ),
+            child: InkWell(
+              onTap: () async {
+                await showTimePicker(context: context, initialTime: TimeOfDay.now()).then((
+                  timePick,
+                ) {
+                  if (timePick != null) {
+                    eventStartTimeOfDay = timePick;
+                    setState(() {
+                      isStartTimeSelected = true;
+                      eventFinishTime = null;
+                      isFinishTimeSelected = false;
+                      eventStartTime = localizations!.formatTimeOfDay(eventStartTimeOfDay!);
+                    });
+                  }
+                });
+              },
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      SizedBox(
+                        height: heightSize(4),
+                        child: Image.asset("assets/icons/startTime.png"),
+                      ),
+                      Text(
+                        eventStartTime == null ? "Başlangıç" : "$eventStartTime",
+                        style: TextStyle(
+                          fontFamily: "Zona",
+                          fontSize: heightSize(2),
+                          color: MyColors.globalTextColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            width: widthSize(43),
+            height: heightSize(8),
+            decoration: BoxDecoration(
+              color: MyColors.blackOpacityContainer,
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+            ),
+            child: InkWell(
+              onTap: () async {
+                if (eventStartTimeOfDay != null) {
+                  await showTimePicker(context: context, initialTime: eventStartTimeOfDay!).then((
+                    timePick,
+                  ) {
+                    if (timePick != null) {
+                      eventFinishTimeOfDay = timePick;
+                      setState(() {
+                        isFinishTimeSelected = true;
+                        eventFinishTime = localizations!.formatTimeOfDay(eventFinishTimeOfDay!);
+                      });
+                    }
+                  });
+                }
+              },
+              child: Center(
+                child: Padding(
+                  padding: eventFinishTime == null
+                      ? const EdgeInsets.symmetric(horizontal: 40)
+                      : const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      SizedBox(
+                        height: heightSize(4),
+                        child: Image.asset("assets/icons/endTime.png"),
+                      ),
+                      Text(
+                        eventFinishTime == null ? "Bitiş" : "$eventFinishTime",
+                        style: TextStyle(
+                          fontFamily: "Zona",
+                          fontSize: heightSize(2),
+                          color: MyColors.globalTextColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget eventTitleAndDetails() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: <Widget>[
+          ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            child: Container(
+              color: MyColors.blackOpacityContainer,
+              width: widthSize(100),
+              height: heightSize(8),
+              child: Center(
+                child: TextFormField(
+                  validator: (value) => value!.isEmpty ? 'boş olamaz' : null,
+                  controller: controllerTitle,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "Etkinlik başlığı...",
+                    hintStyle: TextStyle(
+                      fontSize: heightSize(2.5),
+                      color: MyColors.globalTextColor,
+                    ),
+                  ),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontFamily: "Zona", color: MyColors.globalTextColor),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: heightSize(1.5)),
+          ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            child: Container(
+              color: MyColors.blackOpacityContainer,
+              width: widthSize(100),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 8),
+                child: TextFormField(
+                  controller: controllerDetail,
+                  minLines: 2,
+                  maxLines: 10,
+                  keyboardType: TextInputType.multiline,
+                  enableInteractiveSelection: true,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "Etkinlik detayı...",
+                    hintStyle: TextStyle(
+                      fontSize: heightSize(2.5),
+                      color: MyColors.globalTextColor,
+                    ),
+                  ),
+                  style: TextStyle(fontFamily: "ZonaLight", color: MyColors.globalTextColor),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget nextPageButton() {
+    return InkWell(
+      onTap: () {
+        _pageController!.nextPage(
+          duration: const Duration(seconds: 1),
+          curve: Curves.easeInOutCubic,
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Container(
+          width: widthSize(50),
+          height: heightSize(8),
+          decoration: BoxDecoration(
+            color: MyColors.purpleContainer,
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+          ),
+          child: Center(
+            child: Text(
+              "Devam Et",
+              style: TextStyle(
+                fontFamily: "Zona",
+                fontSize: heightSize(2.5),
+                color: MyColors.globalTextColor,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget createEventButton() {
+    return InkWell(
+      onTap: () async {
+        int maxParticipantNumber;
+        if (participantNumberController.text == "") {
+          maxParticipantNumber = 2;
+        } else {
+          maxParticipantNumber = int.parse(participantNumberController.text);
+        }
+
+        if (controllerTitle.text != "" &&
+            controllerDetail.text != "" &&
+            controllerLocation.text != "" &&
+            maxParticipantNumber != 0 &&
+            _image != null &&
+            subCategory != null &&
+            mainCategory != null &&
+            city != null &&
+            //country != null &&
+            eventStartDate != null &&
+            eventStartTime != null &&
+            eventFinishDate != null &&
+            eventFinishTime != null) {
+          setState(() {
+            loadingOverLay = true;
+          });
+          String? allowedGenders() {
+            if (userGender! & oppositeGender!) return "11";
+            if (userGender! & !oppositeGender!) return "10";
+            if (!userGender! & oppositeGender!) return "11";
+            if (!userGender! & !oppositeGender!) return "01";
+            return null;
+          }
+
+          final eventManager = Provider.of<EventService>(context, listen: false);
+          final userID = Provider.of<UserService>(context, listen: false).userModel!.getUserId();
+          Map<String, dynamic> eventData = {
+            // REVIEW Veri tabanında yazılan yer burası , burası için bir çözüm bul
+            "OrganizerID": userID,
+            "Title": controllerTitle.text,
+            "MaxParticipantNumber": maxParticipantNumber,
+            "CurrentParticipantNumber": 0,
+            "MainCategory": mainCategory,
+            "SubCategory": subCategory,
+            "City": city,
+            //"Country": country,
+            "StartDate": eventStartDate,
+            "FinishDate": eventFinishDate,
+            "StartTime": eventStartTime,
+            "FinishTime": eventFinishTime,
+            "Detail": controllerDetail.text,
+            "Location": controllerLocation.text,
+            //ANCHOR Erkek izin verildiyse "10", kadın izin verildiyse "01" , ikiside izin verildiyse "11"
+            "AllowedGenders": allowedGenders(),
+            "Status": "New",
+          };
+          if (await eventManager.createEvent(userID, eventData, _image!)) {
+            print("Event oluşturma başarılı");
+            //ANCHOR Event oluşturma başarılıysa profilepage e gidiyor.
+            NavigationManager(context).pushPage(
+              ProfilePage(userID: userService!.userModel!.getUserId(), isFromEvent: false),
+              refresh: false,
+            );
+            NavigationManager(
+              context,
+            ).pushPage(MyEventsPage(userID: userService!.userModel!.getUserId(), isOld: false));
+
+            Fluttertoast.showToast(
+              msg: "Etkinlik Oluşturuldu",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 4,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 18.0,
+            );
+          } else {
+            setState(() {
+              loadingOverLay = false;
+            });
+            Fluttertoast.showToast(
+              msg: "İnternet Bağlantınızı kontrol ediniz!",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 3,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 18.0,
+            );
+          }
+        } else {
+          Fluttertoast.showToast(
+            msg: "Eksik Alanları Doldurunuz!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 18.0,
+          );
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Container(
+          width: widthSize(100),
+          height: heightSize(8),
+          decoration: BoxDecoration(
+            color: MyColors.blackOpacityContainer,
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+          ),
+          child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(height: heightSize(4), child: Image.asset("assets/icons/addEvent.png")),
+                SizedBox(width: widthSize(3)),
+                Text(
+                  "ETKİNLİK OLUŞTUR",
+                  style: TextStyle(
+                    fontFamily: "Zona",
+                    fontSize: heightSize(2),
+                    color: MyColors.globalTextColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget numberOfParticipants() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: <Widget>[
+          Container(
+            width: widthSize(100),
+            height: heightSize(8),
+            decoration: BoxDecoration(
+              color: MyColors.blackOpacityContainer,
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: <Widget>[
+                  Text(
+                    "Katılım Sınırı:",
+                    style: TextStyle(
+                      fontSize: heightSize(2.5),
+                      fontFamily: "Zona",
+                      color: MyColors.globalTextColor,
+                    ),
+                  ),
+                  const Spacer(),
+                  SizedBox(
+                    width: widthSize(20),
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      textAlign: TextAlign.right,
+                      maxLength: 3,
+                      enableInteractiveSelection: false,
+                      controller: participantNumberController,
+                      expands: false,
+                      inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+                      decoration: InputDecoration(
+                        counterText: "",
+                        border: InputBorder.none,
+                        hintText: "0",
+                        hintStyle: TextStyle(fontFamily: "Zona", color: MyColors.globalTextColor),
+                        alignLabelWithHint: true,
+                      ),
+                      style: TextStyle(
+                        fontSize: heightSize(2.5),
+                        fontFamily: "Zona",
+                        color: MyColors.globalTextColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: heightSize(3)),
+        ],
+      ),
+    );
+  }
+
+  Widget selectGender() {
+    //ANCHOR karşı cins seçili ise ona özgü renk döndürür, seçilmezse tek tip renk döndürür.
+    Color getOppositeGenderColor() {
+      if (oppositeGender!)
+        if (userGender!) {
+          return Colors.pinkAccent;
+        } else {
+          return MyColors.blueContainer;
+        }
+      else {
+        return Colors.blueAccent;
+      }
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        InkWell(
+          onTap: () {
+            setState(() {
+              oppositeGender = !oppositeGender!;
+            });
+          },
+          child: Container(
+            width: widthSize(43),
+            height: heightSize(5),
+            decoration: BoxDecoration(
+              color: getOppositeGenderColor(),
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Text(
+                  userGender! ? "Kadın" : "Erkek",
+                  style: TextStyle(
+                    fontFamily: "Zona",
+                    fontSize: heightSize(2),
+                    color: MyColors.globalTextColor,
+                  ),
+                ),
+                Checkbox(
+                  value: oppositeGender,
+                  onChanged: (check) {
+                    setState(() {
+                      oppositeGender = check;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: heightSize(3)),
+      ],
+    );
+  }
+
+  Widget selectMainCategory() {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Container(
+            width: widthSize(100),
+            height: heightSize(8),
+            decoration: BoxDecoration(
+              color: MyColors.blackOpacityContainer,
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+            ),
+            child: Center(
+              child: DropdownButton<String>(
+                iconEnabledColor: Colors.white,
+                dropdownColor: MyColors.purpleContainerSplash,
+                hint: Text(
+                  "Kategori Seçiniz",
+                  style: TextStyle(
+                    fontFamily: "Zona",
+                    fontSize: heightSize(2),
+                    color: MyColors.globalTextColor,
+                  ),
+                ),
+                value: mainCategory,
+                items: categoryItems.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: TextStyle(
+                        fontFamily: "Zona",
+                        fontSize: heightSize(2),
+                        color: MyColors.globalTextColor,
+                      ),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (chosen) {
+                  setState(() {
+                    if (mainCategory != chosen) {
+                      mainCategory = chosen;
+                      isMainCategorySelected = true;
+                      subCategory = null;
+                    }
+                  });
+                },
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: heightSize(3)),
+      ],
+    );
+  }
+
+  Widget selectSubCategory() {
+    int selectedMainCategoryIndex = categoryItems.indexWhere((element) => element == mainCategory);
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Container(
+            width: widthSize(100),
+            height: heightSize(8),
+            decoration: BoxDecoration(
+              color: MyColors.blackOpacityContainer,
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+            ),
+            child: Center(
+              child: DropdownButton<String>(
+                iconEnabledColor: Colors.white,
+                dropdownColor: MyColors.purpleContainerSplash,
+                hint: Text(
+                  "Alt Kategori Seçiniz",
+                  style: TextStyle(
+                    fontFamily: "Zona",
+                    fontSize: heightSize(2),
+                    color: MyColors.globalTextColor,
+                  ),
+                ),
+                value: subCategory,
+                items: subCategoryItems[selectedMainCategoryIndex].map<DropdownMenuItem<String>>((
+                  String value,
+                ) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: TextStyle(
+                        fontFamily: "Zona",
+                        fontSize: heightSize(2),
+                        color: MyColors.globalTextColor,
+                      ),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (chosen) {
+                  setState(() {
+                    subCategory = chosen;
+                  });
+                },
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: heightSize(3)),
+      ],
+    );
+  }
+
+  void getImageFromCamera() async {
+    await ImagePicker.platform.getImageFromSource(source: ImageSource.camera).then((image) {});
+  }
+
+  void getImageFromGallery() async {
+    await ImagePicker.platform.getImageFromSource(source: ImageSource.gallery).then((image) {});
+  }
+
+  Widget location() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        child: Container(
+          color: MyColors.blackOpacityContainer,
+          width: widthSize(100),
+          height: heightSize(8),
+          child: Center(
+            child: TextFormField(
+              validator: (value) => value!.isEmpty ? 'boş olamaz' : null,
+              controller: controllerLocation,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "Etkinlik yeri/mekanı...",
+                hintStyle: TextStyle(color: MyColors.globalTextColor),
+              ),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: "Zona",
+                fontSize: heightSize(2.5),
+                color: MyColors.globalTextColor,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget cityAndCountry() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        child: Container(
+          height: heightSize(10),
+          //TODO responsive yap
+          color: MyColors.blackOpacityContainer,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: DropdownSearch<String>(
+                  items: (String filter, dynamic loadProps) => citiesTR,
+                  decoratorProps: const DropDownDecoratorProps(
+                    decoration: InputDecoration(
+                      labelText: "Şehir seçiniz",
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelStyle: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() {
+                        city = value;
+                        print("CITY:${city!}");
+                      });
+                    }
+                  },
+                  selectedItem: citiesTR.first,
+                ),
+
+                /*SearchableDropdown.single(
+                  iconEnabledColor: MyColors.whiteTextColor,
+                  underline: SizedBox(),
+                  clearIcon: Icon(Icons.delete),
+                  menuBackgroundColor: MyColors.yellowContainer,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: heightSize(2.5),
+                      fontFamily: "Zona"),
+                  hint: Text("Şehir Seçin",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: heightSize(2.5),
+                          fontFamily: "Zona")),
+                  items: sehirler,
+                  searchHint: "Şehir Seçin",
+                  onChanged: (value) {
+                    if (value != 0 && value != null) {
+                      setState(() {
+                        city = value;
+                        print("CITY:" + city!);
+                      });
+                    }
+                  },
+                  displayClearIcon: true,
+                  isExpanded: true,
+                ),*/
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget cityAndCountryLittle() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        child: Container(
+          height: heightSize(13),
+          //TODO responsive yap
+          color: MyColors.blackOpacityContainer,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: DropdownSearch<String>(
+                  items: (String filter, dynamic loadProps) => citiesTR,
+                  decoratorProps: const DropDownDecoratorProps(
+                    decoration: InputDecoration(
+                      labelText: "Şehir seçiniz",
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelStyle: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() {
+                        city = value;
+                        print("CITY:${city!}");
+                      });
+                    }
+                  },
+                  selectedItem: citiesTR.first,
+                ),
+
+                /*SearchableDropdown.single(
+                  iconEnabledColor: MyColors.whiteTextColor,
+                  underline: SizedBox(),
+                  clearIcon: Icon(Icons.delete),
+                  menuBackgroundColor: MyColors.yellowContainer,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: heightSize(2.5),
+                      fontFamily: "Zona"),
+                  hint: Text("Şehir Seçin",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: heightSize(2.5),
+                          fontFamily: "Zona")),
+                  items: sehirler,
+                  searchHint: "Şehir Seçin",
+                  onChanged: (value) {
+                    if (value != 0 && value != null) {
+                      setState(() {
+                        city = value;
+                        print("CITY:" + city!);
+                      });
+                    }
+                  },
+                  displayClearIcon: true,
+                  isExpanded: true,
+                ),*/
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> pages() {
+    return [
+      //ANCHOR 1. sayfa
+      LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              eventPhotoAndButtons(),
+              SizedBox(height: heightSize(3)),
+              dateButtons(),
+              SizedBox(height: heightSize(3)),
+              timeButtons(),
+              SizedBox(height: heightSize(3)),
+              eventTitleAndDetails(),
+              SizedBox(height: heightSize(3)),
+              constraints.maxWidth < 400 ? cityAndCountryLittle() : cityAndCountry(),
+              SizedBox(height: heightSize(3)),
+              location(),
+              SizedBox(height: heightSize(3)),
+              nextPageButton(),
+              constraints.maxWidth < 400
+                  ? SizedBox(height: heightSize(10))
+                  : SizedBox(height: heightSize(5)),
+            ],
+          ),
+        ),
+      ),
+      //ANCHOR 2. sayfa
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children:
+            <Widget>[numberOfParticipants(), selectGender(), selectMainCategory()] +
+            (isMainCategorySelected! ? <Widget>[selectSubCategory()] : <Widget>[]) +
+            <Widget>[createEventButton()],
+      ),
+    ];
+  }
+}
+
+//NOTE old country select are here;
+/*
+          Container(
+            width: widthSize(43),
+            height: heightSize(8),
+            decoration: new BoxDecoration(
+              color: MyColors.blackOpacityContainer,
+              borderRadius: new BorderRadius.all(
+                Radius.circular(20),
+              ),
+            ),
+            child: Container(
+              width: widthSize(43),
+              height: heightSize(8),
+              decoration: new BoxDecoration(
+                color: MyColors.yellowContainer,
+                borderRadius: new BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
+              child: Center(
+                child: DropdownButton<String>(
+                  hint: Text(
+                    country != null ? country : ("Ülke Seçin"),
+                    style: TextStyle(
+                      fontFamily: "Zona",
+                      fontSize: heightSize(2),
+                      color: MyColors.whiteTextColor,
+                    ),
+                  ),
+                  items: [
+                    DropdownMenuItem(
+                      child: Text("Türkiye"),
+                      value: "TR",
+                    ),
+                    DropdownMenuItem(
+                      child: Text("United States"),
+                      value: "US",
+                    ),
+                    DropdownMenuItem(
+                      child: Text("United Kingdom"),
+                      value: "UK",
+                    ),
+                  ],
+                  onChanged: (con) {
+                    setState(() {
+                      country = con;
+                    });
+                  },
+                ),
+              ),
+            ),
+          ),
+*/

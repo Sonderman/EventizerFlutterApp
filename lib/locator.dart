@@ -1,8 +1,8 @@
-import 'package:eventizer/Services/AuthService.dart';
-import 'package:eventizer/Settings/AppSettings.dart';
-import 'package:eventizer/Settings/EventSettings.dart';
+import 'package:eventizer/services/auth_service.dart';
+import 'package:eventizer/app_settings.dart';
+import 'package:eventizer/settings/event_settings.dart';
 import 'package:get_it/get_it.dart';
-import 'package:eventizer/Services/Firebase.dart';
+import 'package:eventizer/services/firebase_service.dart';
 
 GetIt locator = GetIt.instance;
 

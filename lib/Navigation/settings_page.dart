@@ -1,0 +1,577 @@
+import 'package:dropdown_search/dropdown_search.dart';
+import 'package:eventizer/data/themes.dart';
+import 'package:eventizer/data/cities.dart';
+import 'package:eventizer/models/user_model.dart';
+import 'package:eventizer/routes/app_routes.dart';
+import 'package:eventizer/services/repository.dart';
+import 'package:eventizer/tools/loading.dart';
+import 'package:eventizer/tools/navigation_manager.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({super.key});
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  UserService? userService;
+  UserModel? userModel;
+  final PageController pageController = PageController();
+  TextEditingController mailController = TextEditingController();
+  TextEditingController detailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  Uint8List? _image;
+  bool loading = false;
+  String? _name, _surname, _phoneNumber, _city;
+
+  get city => _city;
+
+  set city(value) {
+    _city = value;
+  }
+
+  bool showPassword = true;
+
+  @override
+  void didChangeDependencies() {
+    userService = Provider.of<UserService>(context);
+    userModel = userService!.userModel;
+    mailController.text = userModel!.getUserEmail()!;
+    detailController.text = userModel!.getUserAbout()!;
+    super.didChangeDependencies();
+  }
+
+  double heightSize(double value) {
+    value /= 100;
+    return MediaQuery.of(context).size.height * value;
+  }
+
+  double widthSize(double value) {
+    value /= 100;
+    return MediaQuery.of(context).size.width * value;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return loading
+        ? const Loading()
+        : Scaffold(
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(height: heightSize(5)),
+                    addPhoto(),
+                    SizedBox(height: heightSize(1)),
+                    nameSurname(),
+                    /*
+                    SizedBox(
+                      height: heightSize(1),
+                    ),
+                    emailField(),
+                     */
+                    SizedBox(height: heightSize(1)),
+                    detailField(),
+                    SizedBox(height: heightSize(2)),
+                    telephoneNumber(),
+                    SizedBox(height: heightSize(2)),
+                    cityField(),
+                    SizedBox(height: heightSize(2)),
+                    saveChangesButton(),
+                    SizedBox(height: heightSize(2)),
+                    themeSettingsButton(),
+                    SizedBox(height: heightSize(2)),
+                  ],
+                ),
+              ),
+            ),
+          );
+  }
+
+  Widget detailField() {
+    return TextFormField(
+      controller: detailController,
+      textAlign: TextAlign.left,
+      keyboardType: TextInputType.multiline,
+      enableInteractiveSelection: true,
+      minLines: 2,
+      maxLines: 10,
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        hintText: "Hakkımda",
+        hintStyle: TextStyle(fontFamily: "Zona", color: MyColors.loginGreyColor),
+        alignLabelWithHint: true,
+        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: MyColors.loginGreyColor)),
+        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: MyColors.loginGreyColor)),
+      ),
+      style: TextStyle(
+        fontSize: heightSize(2.5),
+        fontFamily: "ZonaLight",
+        color: MyColors.loginGreyColor,
+      ),
+    );
+  }
+
+  // ANCHOR kameradan foto almaya yarar
+  Future<Uint8List?> _getImageFromCamera() async {
+    XFile? image = await ImagePicker.platform.getImageFromSource(source: ImageSource.camera);
+    if (image != null) {
+    } else {
+      return null;
+    }
+    return null;
+  }
+
+  // ANCHOR galeriden foto almaya yarar
+  Future<Uint8List?> _getImageFromGallery() async {
+    XFile? image = await ImagePicker.platform.getImageFromSource(source: ImageSource.gallery);
+    if (image != null) {
+    } else {
+      return null;
+    }
+    return null;
+  }
+
+  Future<void> _showChoiceDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Bir Seçim Yapınız'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                GestureDetector(
+                  child: const Text('Galeri'),
+                  onTap: () {
+                    _getImageFromGallery().then((value) {
+                      setState(() {
+                        _image = value;
+                        Navigator.pop(context);
+                      });
+                    });
+                  },
+                ),
+                const Padding(padding: EdgeInsets.all(8.0)),
+                GestureDetector(
+                  child: const Text('Kamera'),
+                  onTap: () {
+                    _getImageFromCamera().then((value) {
+                      setState(() {
+                        _image = value;
+                        Navigator.pop(context);
+                      });
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void saveChanges() async {
+    setState(() {
+      loading = true;
+    });
+    userService?.userModelUpdater(userModel!).then((value) async {
+      if (value) {
+        if (await Provider.of<UserService>(context, listen: false).userModelSync()) {
+          NavigationManager(context).popPage();
+        }
+
+        Fluttertoast.showToast(
+          msg: "Bilgileriniz Güncellenmiştir",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 18.0,
+        );
+      } else {
+        setState(() {
+          loading = false;
+          Fluttertoast.showToast(
+            msg: "İnternet bağlantınızı kontrol ediniz!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 18.0,
+          );
+          NavigationManager(context).popPage();
+        });
+      }
+    });
+  }
+
+  Widget addPhoto() {
+    return GestureDetector(
+      onTap: () {
+        _showChoiceDialog(context);
+      },
+      child: Center(
+        child: Container(
+          height: widthSize(50),
+          width: widthSize(50),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image:
+                  (_image == null
+                          ? NetworkImage(userModel!.getUserProfilePhotoUrl()!)
+                          : MemoryImage(_image!))
+                      as ImageProvider,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget nameSurname() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        SizedBox(
+          height: heightSize(8),
+          width: widthSize(40),
+          child: TextFormField(
+            initialValue: userModel!.getUserName(),
+            onChanged: (ad) => _name = ad,
+            textAlign: TextAlign.left,
+            decoration: InputDecoration(
+              hintText: "Ad*",
+              border: InputBorder.none,
+              hintStyle: TextStyle(fontFamily: "Zona", color: MyColors.loginGreyColor),
+              alignLabelWithHint: true,
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: MyColors.loginGreyColor),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: MyColors.loginGreyColor),
+              ),
+            ),
+            style: TextStyle(
+              fontSize: heightSize(2.5),
+              fontFamily: "ZonaLight",
+              color: MyColors.loginGreyColor,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: heightSize(8),
+          width: widthSize(40),
+          child: TextFormField(
+            initialValue: userModel!.getUserSurname(),
+            onChanged: (soyad) => _surname = soyad,
+            textAlign: TextAlign.left,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: "Soyad*",
+              hintStyle: TextStyle(fontFamily: "Zona", color: MyColors.loginGreyColor),
+              alignLabelWithHint: true,
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: MyColors.loginGreyColor),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: MyColors.loginGreyColor),
+              ),
+            ),
+            style: TextStyle(
+              fontSize: heightSize(2.5),
+              fontFamily: "ZonaLight",
+              color: MyColors.loginGreyColor,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget emailField() {
+    return Column(
+      children: <Widget>[
+        TextFormField(
+          controller: mailController,
+          textAlign: TextAlign.left,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: "Email*",
+            hintStyle: TextStyle(fontFamily: "Zona", color: MyColors.loginGreyColor),
+            alignLabelWithHint: true,
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: MyColors.loginGreyColor),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: MyColors.loginGreyColor),
+            ),
+          ),
+          style: TextStyle(
+            fontSize: heightSize(2.5),
+            fontFamily: "ZonaLight",
+            color: MyColors.loginGreyColor,
+          ),
+        ),
+        SizedBox(height: heightSize(3)),
+        /*
+        TextFormField(
+          controller: passwordController,
+          obscureText: showPassword,
+          textAlign: TextAlign.left,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: "Şifre*",
+            hintStyle: TextStyle(
+              fontFamily: "Zona",
+              color: MyColors.loginGreyColor,
+            ),
+            alignLabelWithHint: true,
+            suffixIcon: FlatButton(
+              child:
+                  Icon(showPassword ? Icons.visibility : Icons.visibility_off),
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              onPressed: () {
+                setState(() {
+                  showPassword = !showPassword;
+                });
+              },
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: MyColors.loginGreyColor),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: MyColors.loginGreyColor),
+            ),
+          ),
+          style: TextStyle(
+            fontSize: heightSize(2.5),
+            fontFamily: "ZonaLight",
+            color: MyColors.loginGreyColor,
+          ),
+        ),
+        SizedBox(
+          height: heightSize(3),
+        ),
+    */
+      ],
+    );
+  }
+
+  Widget telephoneNumber() {
+    return TextFormField(
+      initialValue: userModel!.getUserTelNo() == 0 ? null : userModel!.getUserTelNo().toString(),
+      onChanged: (phone) => _phoneNumber = phone,
+      textAlign: TextAlign.left,
+      keyboardType: TextInputType.number,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      maxLength: 10,
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        hintText: "Telefon Numarası",
+        hintStyle: TextStyle(fontFamily: "Zona", color: MyColors.loginGreyColor),
+        alignLabelWithHint: true,
+        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: MyColors.loginGreyColor)),
+        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: MyColors.loginGreyColor)),
+      ),
+      style: TextStyle(
+        fontSize: heightSize(2.5),
+        fontFamily: "ZonaLight",
+        color: MyColors.loginGreyColor,
+      ),
+    );
+  }
+
+  Widget cityField() {
+    return SizedBox(
+      height: heightSize(10),
+      width: widthSize(90),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          DropdownSearch<String>(
+            //showSearchBox: true,
+            //mode: Mode.BOTTOM_SHEET,
+            //showSelectedItems: true,
+            items: (String filter, dynamic loadProps) async {
+              return citiesTR;
+            },
+            decoratorProps: const DropDownDecoratorProps(
+              decoration: InputDecoration(
+                labelText: "Şehir seçiniz",
+                //hintText: "country in menu mode",
+              ),
+            ),
+            //popupItemDisabled: (String s) => s.startsWith('I'),
+            onChanged: (value) {
+              if (value != null) {
+                setState(() {
+                  city = value;
+                  print("CITY:" + city!);
+                });
+              }
+            },
+            selectedItem: citiesTR.first,
+          ),
+          /* SearchableDropdown.single(
+            items: sehirler,
+            hint: userModel!.getUserCity() == "null"
+                ? Text("Şehir Seçin",
+                    style: TextStyle(
+                        color: MyColors.greyTextColor,
+                        fontSize: heightSize(2.5),
+                        fontFamily: "Zona"))
+                : userModel!.getUserCity(),
+            displayClearIcon: true,
+            isExpanded: true,
+            searchHint: "Şehir Seçin",
+            iconEnabledColor: MyColors.greyTextColor,
+            underline: SizedBox(),
+            clearIcon: Icon(null),
+            menuBackgroundColor: MyColors.yellowContainer,
+            style: TextStyle(
+                color: MyColors.greyTextColor,
+                fontSize: heightSize(2.5),
+                fontFamily: "Zona"),
+            onChanged: (value) {
+              if (value != 0 && value != null) {
+                setState(() {
+                  _city = value;
+                  print("CITY:" + _city!);
+                });
+              }
+            },
+          ),
+          */
+        ],
+      ),
+    );
+  }
+
+  Widget saveChangesButton() {
+    return InkWell(
+      onTap: () async {
+        //ANCHOR veri kontrolleri burda
+        bool isChanged = false;
+        if (_name != null) {
+          isChanged = true;
+          userModel!.setUserName(_name!);
+        }
+        if (_surname != null) {
+          isChanged = true;
+          userModel!.setUserSurname(_surname!);
+        }
+        /*
+        if (mailController.text != null) {
+          isChanged = true;
+          userModel.setUserEmail(mailController.text);
+        }*/
+        isChanged = true;
+        userModel!.setUserAbout(detailController.text);
+
+        if (_city != null) {
+          isChanged = true;
+          userModel!.setUserCity(_city!);
+        }
+        if (_phoneNumber != null) {
+          isChanged = true;
+          userModel!.setUserTelNo(int.parse(_phoneNumber!));
+        }
+        if (_image != null) {
+          setState(() {
+            loading = true;
+          });
+          if (!await userService!.updateProfilePhoto(_image)) {
+            Fluttertoast.showToast(
+              msg: " Resim Güncellenemedi,İnternet bağlantınızı kontrol ediniz!",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 18.0,
+            );
+          }
+        }
+        if (isChanged) {
+          saveChanges();
+        } else {
+          Fluttertoast.showToast(
+            msg: "Güncellemek için değişiklik yapmalısınız",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 18.0,
+          );
+        }
+      },
+      child: Container(
+        width: widthSize(75),
+        height: heightSize(8),
+        decoration: BoxDecoration(
+          color: MyColors.purpleContainer,
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+        ),
+        child: Center(
+          child: Text(
+            "Güncelle",
+            style: TextStyle(
+              fontFamily: "Zona",
+              fontSize: heightSize(2),
+              color: MyColors.globalTextColor,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Theme settings button to navigate to theme settings page
+  Widget themeSettingsButton() {
+    return InkWell(
+      onTap: () {
+        Get.toNamed(AppRoutes.themeSettings);
+      },
+      child: Container(
+        width: widthSize(75),
+        height: heightSize(8),
+        decoration: BoxDecoration(
+          color: MyColors.purpleContainer,
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.palette, color: MyColors.globalTextColor, size: heightSize(2.5)),
+            SizedBox(width: widthSize(2)),
+            Text(
+              "Tema Ayarları",
+              style: TextStyle(
+                fontFamily: "Zona",
+                fontSize: heightSize(2),
+                color: MyColors.globalTextColor,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
