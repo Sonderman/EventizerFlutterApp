@@ -3,23 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 class MyLiquidGlass {
-  static LiquidGlass standartContainer({required Widget child, Key? key}) => LiquidGlass(
-    key: key,
-    shape: LiquidRoundedSuperellipse(borderRadius: Radius.circular(15)),
-    glassContainsChild: false,
+  static LiquidGlassLayer standartContainer({required Widget child, Key? key}) => LiquidGlassLayer(
     settings: LiquidGlassSettings(
       ambientStrength: 0.5,
       lightAngle: 0.2 * math.pi,
       blur: 2,
       // glassColor: Colors.white24,
     ),
-    child: child,
+    child: LiquidGlass(
+      key: key,
+      shape: LiquidRoundedSuperellipse(borderRadius: 15),
+      glassContainsChild: false,
+      child: child,
+    ),
   );
-  static LiquidGlass standartButton({required Widget child, Key? key}) => LiquidGlass(
-    key: key,
-    shape: LiquidRoundedSuperellipse(borderRadius: Radius.circular(10)),
-    glassContainsChild: false,
-
+  static LiquidGlassLayer standartButton({required Widget child, Key? key}) => LiquidGlassLayer(
     settings: LiquidGlassSettings(
       ambientStrength: 5,
       //lightAngle: 0.5 * math.pi,
@@ -27,18 +25,20 @@ class MyLiquidGlass {
       lightIntensity: 0.5,
       thickness: 10,
     ),
-    child: child,
+    child: LiquidGlass(
+      key: key,
+      shape: LiquidRoundedSuperellipse(borderRadius: 10),
+      glassContainsChild: false,
+      child: child,
+    ),
   );
-  static LiquidGlass selectableButton({
+  static LiquidGlassLayer selectableButton({
     required Widget child,
     Key? key,
     bool? isSelected = false,
     Color? selectedColor,
     Color? unselectedColor,
-  }) => LiquidGlass(
-    key: key,
-    shape: LiquidRoundedSuperellipse(borderRadius: Radius.circular(10)),
-    glassContainsChild: false,
+  }) => LiquidGlassLayer(
     settings: LiquidGlassSettings(
       ambientStrength: 1,
       //lightAngle: 0.5 * math.pi,
@@ -48,12 +48,15 @@ class MyLiquidGlass {
       lightIntensity: 1,
       thickness: 5,
     ),
-    child: child,
+    child: LiquidGlass(
+      key: key,
+      shape: LiquidRoundedSuperellipse(borderRadius: 10),
+      glassContainsChild: false,
+
+      child: child,
+    ),
   );
-  static LiquidGlass standartCircle({required Widget child, Key? key}) => LiquidGlass(
-    key: key,
-    shape: LiquidRoundedSuperellipse(borderRadius: Radius.circular(100)),
-    glassContainsChild: false,
+  static LiquidGlassLayer standartCircle({required Widget child, Key? key}) => LiquidGlassLayer(
     settings: LiquidGlassSettings(
       ambientStrength: 1,
       lightAngle: 0.2 * math.pi,
@@ -61,12 +64,15 @@ class MyLiquidGlass {
       lightIntensity: 0.5,
       thickness: 5,
     ),
-    child: child,
+    child: LiquidGlass(
+      key: key,
+      shape: LiquidRoundedSuperellipse(borderRadius: 100),
+      glassContainsChild: false,
+
+      child: child,
+    ),
   );
-  static LiquidGlass standartDialog({required Widget child, Key? key}) => LiquidGlass(
-    key: key,
-    shape: LiquidRoundedSuperellipse(borderRadius: Radius.circular(10)),
-    glassContainsChild: false,
+  static LiquidGlassLayer standartDialog({required Widget child, Key? key}) => LiquidGlassLayer(
     settings: LiquidGlassSettings(
       ambientStrength: 5,
       //lightAngle: 0.5 * math.pi,
@@ -74,6 +80,12 @@ class MyLiquidGlass {
       lightIntensity: 10,
       thickness: 10,
     ),
-    child: child,
+    child: LiquidGlass(
+      key: key,
+      shape: LiquidRoundedSuperellipse(borderRadius: 10),
+      glassContainsChild: false,
+
+      child: child,
+    ),
   );
 }

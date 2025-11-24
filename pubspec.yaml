@@ -5,19 +5,19 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 0.1.5+6
 
 environment:
-  sdk: ^3.8.1
+  sdk: ^3.10.1
 
 dependencies:
   flutter:
     sdk: flutter
 
   # -------------------- Firebase Integration --------------------
-  firebase_core: ^3.15.1            # Core Firebase SDK
-  firebase_auth: ^5.6.2             # Authentication service
-  firebase_analytics: ^11.5.2       # User behavior analytics
-  firebase_crashlytics: ^4.3.9      # Error and crash reporting
-  cloud_firestore: ^5.6.11          # NoSQL database
-  firebase_storage: ^12.4.9         # File storage service
+  firebase_core: ^4.2.1          # Firebase SDK'nın temel yapı taşı
+  firebase_auth: ^6.1.2           # Kimlik doğrulama
+  firebase_analytics: ^12.0.4      # Kullanıcı davranış analizi
+  firebase_crashlytics: ^5.0.5      # Hata ve çökme raporlama
+  cloud_firestore: ^6.1.0         # NoSQL veritabanı
+  firebase_storage: ^13.0.4 
 
   # -------------------- UI & Navigation --------------------
   cupertino_icons: ^1.0.8           # iOS style icons
@@ -41,7 +41,7 @@ dependencies:
   dropdown_search: ^6.0.2           # Enhanced dropdown search
   url_launcher: ^6.3.1              # Launch URLs and external apps
   package_info_plus: ^8.3.0              # App package information
-  fluttertoast: ^8.2.12             # Toast notifications
+  fluttertoast: ^9.0.0            # Toast notifications
   store_redirect: ^2.0.4            # App store redirection
   intl: ^0.18.1                     # Internationalization
   sizer: ^3.0.5                     # Responsive design utility
@@ -49,13 +49,13 @@ dependencies:
   # -------------------- Chat & Communication --------------------
   dash_chat_2: ^0.0.20              # Chat interface components
 
-  liquid_glass_renderer: ^0.1.1-dev.10
-  flex_color_scheme: ^8.2.0
+  liquid_glass_renderer: ^0.2.0-dev.4
+  flex_color_scheme: ^8.3.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0             # Linting rules for better code quality
+  flutter_lints: ^6.0.0             # Linting rules for better code quality
 
 flutter:
   uses-material-design: true
