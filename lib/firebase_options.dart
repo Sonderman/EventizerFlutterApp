@@ -26,10 +26,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -60,4 +57,15 @@ class DefaultFirebaseOptions {
     databaseURL: 'https://eventizer-app.firebaseio.com',
     storageBucket: 'eventizer-app.appspot.com',
   );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyAHwbEl5tfhCYpBOmcgcxDOrOnzhNHPDYM',
+    appId: '1:889544210683:ios:c6196b75ba9120895cd85e',
+    messagingSenderId: '889544210683',
+    projectId: 'eventizer-app',
+    databaseURL: 'https://eventizer-app.firebaseio.com',
+    storageBucket: 'eventizer-app.appspot.com',
+    iosBundleId: 'com.eventizerapps.eventizer',
+  );
+
 }

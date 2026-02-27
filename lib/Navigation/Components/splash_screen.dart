@@ -18,7 +18,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  authChecking(BuildContext context) {
+  void authChecking(BuildContext context) {
     Future.delayed(const Duration(seconds: 2), () {
       String? userID = locator<AuthService>().getUserUid();
 

@@ -282,11 +282,11 @@ class SignUpPage extends GetView<SignUpController> {
     );
   }
 
-  menColor() {
+  Color menColor() {
     return MyColors.blueContainer;
   }
 
-  womenColor() {
+  MaterialAccentColor womenColor() {
     return Colors.pinkAccent;
   }
 }

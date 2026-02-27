@@ -31,7 +31,7 @@ class _SettingsPageState extends State<SettingsPage> {
   bool loading = false;
   String? _name, _surname, _phoneNumber, _city;
 
-  get city => _city;
+  String? get city => _city;
 
   set city(value) {
     _city = value;
@@ -107,10 +107,17 @@ class _SettingsPageState extends State<SettingsPage> {
       decoration: InputDecoration(
         border: InputBorder.none,
         hintText: "Hakkımda",
-        hintStyle: TextStyle(fontFamily: "Zona", color: MyColors.loginGreyColor),
+        hintStyle: TextStyle(
+          fontFamily: "Zona",
+          color: MyColors.loginGreyColor,
+        ),
         alignLabelWithHint: true,
-        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: MyColors.loginGreyColor)),
-        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: MyColors.loginGreyColor)),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: MyColors.loginGreyColor),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: MyColors.loginGreyColor),
+        ),
       ),
       style: TextStyle(
         fontSize: heightSize(2.5),
@@ -122,20 +129,20 @@ class _SettingsPageState extends State<SettingsPage> {
 
   // ANCHOR kameradan foto almaya yarar
   Future<Uint8List?> _getImageFromCamera() async {
-    XFile? image = await ImagePicker.platform.getImageFromSource(source: ImageSource.camera);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.camera);
     if (image != null) {
-    } else {
-      return null;
+      return await image.readAsBytes();
     }
     return null;
   }
 
   // ANCHOR galeriden foto almaya yarar
   Future<Uint8List?> _getImageFromGallery() async {
-    XFile? image = await ImagePicker.platform.getImageFromSource(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
-    } else {
-      return null;
+      return await image.readAsBytes();
     }
     return null;
   }
@@ -186,7 +193,10 @@ class _SettingsPageState extends State<SettingsPage> {
     });
     userService?.userModelUpdater(userModel!).then((value) async {
       if (value) {
-        if (await Provider.of<UserService>(context, listen: false).userModelSync()) {
+        if (await Provider.of<UserService>(
+          context,
+          listen: false,
+        ).userModelSync()) {
           NavigationManager(context).popPage();
         }
 
@@ -256,7 +266,10 @@ class _SettingsPageState extends State<SettingsPage> {
             decoration: InputDecoration(
               hintText: "Ad*",
               border: InputBorder.none,
-              hintStyle: TextStyle(fontFamily: "Zona", color: MyColors.loginGreyColor),
+              hintStyle: TextStyle(
+                fontFamily: "Zona",
+                color: MyColors.loginGreyColor,
+              ),
               alignLabelWithHint: true,
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: MyColors.loginGreyColor),
@@ -282,7 +295,10 @@ class _SettingsPageState extends State<SettingsPage> {
             decoration: InputDecoration(
               border: InputBorder.none,
               hintText: "Soyad*",
-              hintStyle: TextStyle(fontFamily: "Zona", color: MyColors.loginGreyColor),
+              hintStyle: TextStyle(
+                fontFamily: "Zona",
+                color: MyColors.loginGreyColor,
+              ),
               alignLabelWithHint: true,
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: MyColors.loginGreyColor),
@@ -311,7 +327,10 @@ class _SettingsPageState extends State<SettingsPage> {
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: "Email*",
-            hintStyle: TextStyle(fontFamily: "Zona", color: MyColors.loginGreyColor),
+            hintStyle: TextStyle(
+              fontFamily: "Zona",
+              color: MyColors.loginGreyColor,
+            ),
             alignLabelWithHint: true,
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: MyColors.loginGreyColor),
@@ -374,7 +393,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget telephoneNumber() {
     return TextFormField(
-      initialValue: userModel!.getUserTelNo() == 0 ? null : userModel!.getUserTelNo().toString(),
+      initialValue: userModel!.getUserTelNo() == 0
+          ? null
+          : userModel!.getUserTelNo().toString(),
       onChanged: (phone) => _phoneNumber = phone,
       textAlign: TextAlign.left,
       keyboardType: TextInputType.number,
@@ -383,10 +404,17 @@ class _SettingsPageState extends State<SettingsPage> {
       decoration: InputDecoration(
         border: InputBorder.none,
         hintText: "Telefon Numarası",
-        hintStyle: TextStyle(fontFamily: "Zona", color: MyColors.loginGreyColor),
+        hintStyle: TextStyle(
+          fontFamily: "Zona",
+          color: MyColors.loginGreyColor,
+        ),
         alignLabelWithHint: true,
-        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: MyColors.loginGreyColor)),
-        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: MyColors.loginGreyColor)),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: MyColors.loginGreyColor),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: MyColors.loginGreyColor),
+        ),
       ),
       style: TextStyle(
         fontSize: heightSize(2.5),
@@ -498,7 +526,8 @@ class _SettingsPageState extends State<SettingsPage> {
           });
           if (!await userService!.updateProfilePhoto(_image)) {
             Fluttertoast.showToast(
-              msg: " Resim Güncellenemedi,İnternet bağlantınızı kontrol ediniz!",
+              msg:
+                  " Resim Güncellenemedi,İnternet bağlantınızı kontrol ediniz!",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
@@ -559,7 +588,11 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.palette, color: MyColors.globalTextColor, size: heightSize(2.5)),
+            Icon(
+              Icons.palette,
+              color: MyColors.globalTextColor,
+              size: heightSize(2.5),
+            ),
             SizedBox(width: widthSize(2)),
             Text(
               "Tema Ayarları",

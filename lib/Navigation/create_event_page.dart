@@ -45,7 +45,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
   TextEditingController controllerLocation = TextEditingController();
   TextEditingController participantNumberController = TextEditingController();
   List<String> categoryItems = locator<EventSettings>().categoryItems ?? [];
-  List<List<String>> subCategoryItems = locator<EventSettings>().subCategoryItems ?? [];
+  List<List<String>> subCategoryItems =
+      locator<EventSettings>().subCategoryItems ?? [];
   MaterialLocalizations? localizations;
   String? subCategory,
       mainCategory,
@@ -92,7 +93,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
         children:
             <Widget>[PageView(controller: _pageController, children: pages())] +
             (loadingOverLay!
-                ? <Widget>[PageComponents(context).loadingOverlay(backgroundColor: Colors.white)]
+                ? <Widget>[
+                    PageComponents(
+                      context,
+                    ).loadingOverlay(backgroundColor: Colors.white),
+                  ]
                 : <Widget>[]),
       ),
     );
@@ -232,7 +237,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     isStartDateSelected = true;
                     eventFinishDate = null;
                     isFinishDateSelected = false;
-                    eventStartDate = "${datePick.day}/${datePick.month}/${datePick.year}";
+                    eventStartDate =
+                        "${datePick.day}/${datePick.month}/${datePick.year}";
                   });
                 }
               },
@@ -247,7 +253,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         child: Image.asset("assets/icons/startDate.png"),
                       ),
                       Text(
-                        eventStartDate == null ? "Başlangıç" : "$eventStartDate",
+                        eventStartDate == null
+                            ? "Başlangıç"
+                            : "$eventStartDate",
                         style: TextStyle(
                           fontFamily: "Zona",
                           fontSize: heightSize(2),
@@ -278,7 +286,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 if (datePick != null) {
                   setState(() {
                     isFinishDateSelected = true;
-                    eventFinishDate = "${datePick.day}/${datePick.month}/${datePick.year}";
+                    eventFinishDate =
+                        "${datePick.day}/${datePick.month}/${datePick.year}";
                   });
                 }
               },
@@ -328,16 +337,19 @@ class _CreateEventPageState extends State<CreateEventPage> {
             ),
             child: InkWell(
               onTap: () async {
-                await showTimePicker(context: context, initialTime: TimeOfDay.now()).then((
-                  timePick,
-                ) {
+                await showTimePicker(
+                  context: context,
+                  initialTime: TimeOfDay.now(),
+                ).then((timePick) {
                   if (timePick != null) {
                     eventStartTimeOfDay = timePick;
                     setState(() {
                       isStartTimeSelected = true;
                       eventFinishTime = null;
                       isFinishTimeSelected = false;
-                      eventStartTime = localizations!.formatTimeOfDay(eventStartTimeOfDay!);
+                      eventStartTime = localizations!.formatTimeOfDay(
+                        eventStartTimeOfDay!,
+                      );
                     });
                   }
                 });
@@ -353,7 +365,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         child: Image.asset("assets/icons/startTime.png"),
                       ),
                       Text(
-                        eventStartTime == null ? "Başlangıç" : "$eventStartTime",
+                        eventStartTime == null
+                            ? "Başlangıç"
+                            : "$eventStartTime",
                         style: TextStyle(
                           fontFamily: "Zona",
                           fontSize: heightSize(2),
@@ -376,14 +390,17 @@ class _CreateEventPageState extends State<CreateEventPage> {
             child: InkWell(
               onTap: () async {
                 if (eventStartTimeOfDay != null) {
-                  await showTimePicker(context: context, initialTime: eventStartTimeOfDay!).then((
-                    timePick,
-                  ) {
+                  await showTimePicker(
+                    context: context,
+                    initialTime: eventStartTimeOfDay!,
+                  ).then((timePick) {
                     if (timePick != null) {
                       eventFinishTimeOfDay = timePick;
                       setState(() {
                         isFinishTimeSelected = true;
-                        eventFinishTime = localizations!.formatTimeOfDay(eventFinishTimeOfDay!);
+                        eventFinishTime = localizations!.formatTimeOfDay(
+                          eventFinishTimeOfDay!,
+                        );
                       });
                     }
                   });
@@ -444,7 +461,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     ),
                   ),
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontFamily: "Zona", color: MyColors.globalTextColor),
+                  style: TextStyle(
+                    fontFamily: "Zona",
+                    color: MyColors.globalTextColor,
+                  ),
                 ),
               ),
             ),
@@ -471,7 +491,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       color: MyColors.globalTextColor,
                     ),
                   ),
-                  style: TextStyle(fontFamily: "ZonaLight", color: MyColors.globalTextColor),
+                  style: TextStyle(
+                    fontFamily: "ZonaLight",
+                    color: MyColors.globalTextColor,
+                  ),
                 ),
               ),
             ),
@@ -547,8 +570,14 @@ class _CreateEventPageState extends State<CreateEventPage> {
             return null;
           }
 
-          final eventManager = Provider.of<EventService>(context, listen: false);
-          final userID = Provider.of<UserService>(context, listen: false).userModel!.getUserId();
+          final eventManager = Provider.of<EventService>(
+            context,
+            listen: false,
+          );
+          final userID = Provider.of<UserService>(
+            context,
+            listen: false,
+          ).userModel!.getUserId();
           Map<String, dynamic> eventData = {
             // REVIEW Veri tabanında yazılan yer burası , burası için bir çözüm bul
             "OrganizerID": userID,
@@ -573,12 +602,18 @@ class _CreateEventPageState extends State<CreateEventPage> {
             print("Event oluşturma başarılı");
             //ANCHOR Event oluşturma başarılıysa profilepage e gidiyor.
             NavigationManager(context).pushPage(
-              ProfilePage(userID: userService!.userModel!.getUserId(), isFromEvent: false),
+              ProfilePage(
+                userID: userService!.userModel!.getUserId(),
+                isFromEvent: false,
+              ),
               refresh: false,
             );
-            NavigationManager(
-              context,
-            ).pushPage(MyEventsPage(userID: userService!.userModel!.getUserId(), isOld: false));
+            NavigationManager(context).pushPage(
+              MyEventsPage(
+                userID: userService!.userModel!.getUserId(),
+                isOld: false,
+              ),
+            );
 
             Fluttertoast.showToast(
               msg: "Etkinlik Oluşturuldu",
@@ -628,7 +663,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SizedBox(height: heightSize(4), child: Image.asset("assets/icons/addEvent.png")),
+                SizedBox(
+                  height: heightSize(4),
+                  child: Image.asset("assets/icons/addEvent.png"),
+                ),
                 SizedBox(width: widthSize(3)),
                 Text(
                   "ETKİNLİK OLUŞTUR",
@@ -680,12 +718,17 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       enableInteractiveSelection: false,
                       controller: participantNumberController,
                       expands: false,
-                      inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                       decoration: InputDecoration(
                         counterText: "",
                         border: InputBorder.none,
                         hintText: "0",
-                        hintStyle: TextStyle(fontFamily: "Zona", color: MyColors.globalTextColor),
+                        hintStyle: TextStyle(
+                          fontFamily: "Zona",
+                          color: MyColors.globalTextColor,
+                        ),
                         alignLabelWithHint: true,
                       ),
                       style: TextStyle(
@@ -788,7 +831,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   ),
                 ),
                 value: mainCategory,
-                items: categoryItems.map<DropdownMenuItem<String>>((String value) {
+                items: categoryItems.map<DropdownMenuItem<String>>((
+                  String value,
+                ) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(
@@ -820,7 +865,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
   }
 
   Widget selectSubCategory() {
-    int selectedMainCategoryIndex = categoryItems.indexWhere((element) => element == mainCategory);
+    int selectedMainCategoryIndex = categoryItems.indexWhere(
+      (element) => element == mainCategory,
+    );
     return Column(
       children: <Widget>[
         Padding(
@@ -845,21 +892,21 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   ),
                 ),
                 value: subCategory,
-                items: subCategoryItems[selectedMainCategoryIndex].map<DropdownMenuItem<String>>((
-                  String value,
-                ) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: TextStyle(
-                        fontFamily: "Zona",
-                        fontSize: heightSize(2),
-                        color: MyColors.globalTextColor,
-                      ),
-                    ),
-                  );
-                }).toList(),
+                items: subCategoryItems[selectedMainCategoryIndex]
+                    .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: TextStyle(
+                            fontFamily: "Zona",
+                            fontSize: heightSize(2),
+                            color: MyColors.globalTextColor,
+                          ),
+                        ),
+                      );
+                    })
+                    .toList(),
                 onChanged: (chosen) {
                   setState(() {
                     subCategory = chosen;
@@ -875,11 +922,25 @@ class _CreateEventPageState extends State<CreateEventPage> {
   }
 
   void getImageFromCamera() async {
-    await ImagePicker.platform.getImageFromSource(source: ImageSource.camera).then((image) {});
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+    if (image != null) {
+      final Uint8List imageBytes = await image.readAsBytes();
+      setState(() {
+        _image = imageBytes;
+      });
+    }
   }
 
   void getImageFromGallery() async {
-    await ImagePicker.platform.getImageFromSource(source: ImageSource.gallery).then((image) {});
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      final Uint8List imageBytes = await image.readAsBytes();
+      setState(() {
+        _image = imageBytes;
+      });
+    }
   }
 
   Widget location() {
@@ -1070,7 +1131,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
               SizedBox(height: heightSize(3)),
               eventTitleAndDetails(),
               SizedBox(height: heightSize(3)),
-              constraints.maxWidth < 400 ? cityAndCountryLittle() : cityAndCountry(),
+              constraints.maxWidth < 400
+                  ? cityAndCountryLittle()
+                  : cityAndCountry(),
               SizedBox(height: heightSize(3)),
               location(),
               SizedBox(height: heightSize(3)),
@@ -1086,8 +1149,14 @@ class _CreateEventPageState extends State<CreateEventPage> {
       Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children:
-            <Widget>[numberOfParticipants(), selectGender(), selectMainCategory()] +
-            (isMainCategorySelected! ? <Widget>[selectSubCategory()] : <Widget>[]) +
+            <Widget>[
+              numberOfParticipants(),
+              selectGender(),
+              selectMainCategory(),
+            ] +
+            (isMainCategorySelected!
+                ? <Widget>[selectSubCategory()]
+                : <Widget>[]) +
             <Widget>[createEventButton()],
       ),
     ];

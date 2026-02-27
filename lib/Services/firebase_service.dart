@@ -232,7 +232,10 @@ class DatabaseWorks {
     }
   }
 
-  Future<String?> createEvent(String userId, Map<String, dynamic> eventData) async {
+  Future<String?> createEvent(
+    String userId,
+    Map<String, dynamic> eventData,
+  ) async {
     String generatedID = AutoIdGenerator.autoId();
     //print("2.url:" + eventData['EventImageUrl'].toString());
     eventData['eventID'] = generatedID;
@@ -262,7 +265,9 @@ class DatabaseWorks {
     }
   }
 
-  Future<List<Map<String, dynamic>>?> fetchListOfUserEvents(String userID) async {
+  Future<List<Map<String, dynamic>>?> fetchListOfUserEvents(
+    String userID,
+  ) async {
     try {
       List<Map<String, dynamic>> eventList = [];
       return await ref
@@ -286,7 +291,10 @@ class DatabaseWorks {
     }
   }
 
-  Future<List<Map<String, dynamic>>?> fetchEventListsForUser(String organizerID, bool isOld) async {
+  Future<List<Map<String, dynamic>>?> fetchEventListsForUser(
+    String organizerID,
+    bool isOld,
+  ) async {
     try {
       List<Map<String, dynamic>> eventList = [];
       if (isOld) {
@@ -298,7 +306,8 @@ class DatabaseWorks {
             .get()
             .then((docs) {
               for (var event in docs.docs) {
-                if (event.data()["Status"] != "Deleted" && event.data()["Status"] == "Finished") {
+                if (event.data()["Status"] != "Deleted" &&
+                    event.data()["Status"] == "Finished") {
                   eventList.add(event.data());
                 }
               }
@@ -313,7 +322,8 @@ class DatabaseWorks {
             .get()
             .then((docs) {
               for (var event in docs.docs) {
-                if (event.data()["Status"] != "Deleted" && event.data()["Status"] != "Finished") {
+                if (event.data()["Status"] != "Deleted" &&
+                    event.data()["Status"] != "Finished") {
                   eventList.add(event.data());
                 }
               }
@@ -352,7 +362,9 @@ class DatabaseWorks {
     }
   }
 
-  Future<List<Map<String, dynamic>>?> fetchActiveEventListsByCategory(String subCategory) async {
+  Future<List<Map<String, dynamic>>?> fetchActiveEventListsByCategory(
+    String subCategory,
+  ) async {
     try {
       List<Map<String, dynamic>> eventList = [];
       return await ref
@@ -396,7 +408,11 @@ class DatabaseWorks {
   }
 
   //ANCHOR burada sadece 1 veride değişiklik yapar
-  Future<void> updateSingleInfo(String userId, String maptext, String changedtext) async {
+  Future<void> updateSingleInfo(
+    String userId,
+    String maptext,
+    String changedtext,
+  ) async {
     if (changedtext == "timeStamp") {
       await ref
           .collection(settings.firebaseAppName)
@@ -433,7 +449,9 @@ class DatabaseWorks {
     }
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getMessagesSnapshot(String chatID) {
+  Stream<QuerySnapshot<Map<String, dynamic>>> getMessagesSnapshot(
+    String chatID,
+  ) {
     return ref
         .collection(settings.firebaseAppName)
         .doc(settings.getServer())
@@ -443,7 +461,9 @@ class DatabaseWorks {
         .snapshots();
   }
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>> getChatPoolSnapshot(String chatID) {
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getChatPoolSnapshot(
+    String chatID,
+  ) {
     return ref
         .collection(settings.firebaseAppName)
         .doc(settings.getServer())
@@ -532,7 +552,11 @@ class DatabaseWorks {
     }
   }
 
-  Future sendImageMessage(ChatMessage message, String time, String chatID) async {
+  Future sendImageMessage(
+    ChatMessage message,
+    String time,
+    String chatID,
+  ) async {
     var messageRef = ref
         .collection(settings.firebaseAppName)
         .doc(settings.getServer())
@@ -546,7 +570,9 @@ class DatabaseWorks {
     });
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getUserChatsSnapshots(String currentUser) {
+  Stream<QuerySnapshot<Map<String, dynamic>>> getUserChatsSnapshots(
+    String currentUser,
+  ) {
     return ref
         .collection(settings.firebaseAppName)
         .doc(settings.getServer())
@@ -679,7 +705,11 @@ class DatabaseWorks {
     }
   }
 
-  Future<bool> sendComment(String eventID, String userID, String comment) async {
+  Future<bool> sendComment(
+    String eventID,
+    String userID,
+    String comment,
+  ) async {
     try {
       return await ref
           .collection(settings.firebaseAppName)
@@ -797,11 +827,13 @@ class DatabaseWorks {
 
   Future<String?> getServerVersion() async {
     try {
-      return await ref.collection(settings.firebaseAppName).doc(settings.getServer()).get().then((
-        value,
-      ) {
-        return value.data()!["Version"];
-      });
+      return await ref
+          .collection(settings.firebaseAppName)
+          .doc(settings.getServer())
+          .get()
+          .then((value) {
+            return value.data()!["Version"];
+          });
     } catch (e) {
       print(e);
       return null;
@@ -856,15 +888,29 @@ class StorageWorks {
     String chatID,
     String time,
   ) async {
-    final storageRef = ref.ref().child("users").child(currentUser).child("images").child(time);
+    final storageRef = ref
+        .ref()
+        .child("users")
+        .child(currentUser)
+        .child("images")
+        .child(time);
 
-    UploadTask uploadTask = storageRef.putFile(image, SettableMetadata(contentType: 'image/jpg'));
+    UploadTask uploadTask = storageRef.putFile(
+      image,
+      SettableMetadata(contentType: 'image/jpg'),
+    );
     TaskSnapshot download = await uploadTask.then((task) => task);
     return await download.ref.getDownloadURL().then((url) {
       ChatMessage message = ChatMessage(
         text: "",
         user: user,
-        medias: [ChatMedia(url: url, fileName: "Profile Picture", type: MediaType.image)],
+        medias: [
+          ChatMedia(
+            url: url,
+            fileName: "Profile Picture",
+            type: MediaType.image,
+          ),
+        ],
         createdAt: DateTime.now(),
       );
       return message;
@@ -880,9 +926,11 @@ class StorageWorks {
         .child('${AutoIdGenerator.autoId()}.jpeg')
         .putData(image);
 
-    StreamSubscription<TaskSnapshot> streamSubscription = uploadTask.asStream().listen((event) {
-      print('UpdatingProfile Image :${event.bytesTransferred}');
-    });
+    StreamSubscription<TaskSnapshot> streamSubscription = uploadTask
+        .asStream()
+        .listen((event) {
+          print('UpdatingProfile Image :${event.bytesTransferred}');
+        });
 
     return await uploadTask
         .then((onValue) {
@@ -895,6 +943,7 @@ class StorageWorks {
         })
         .catchError((e) {
           print(e);
+          return "";
         });
   }
 }
