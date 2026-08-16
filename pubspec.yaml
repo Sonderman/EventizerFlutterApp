@@ -5,51 +5,51 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 0.1.5+6
 
 environment:
-  sdk: ^3.11.0
+  sdk: ^3.13.0
 
 dependencies:
   flutter:
     sdk: flutter
 
   # -------------------- Firebase Integration --------------------
-  firebase_core: ^4.4.0          # Firebase SDK'nın temel yapı taşı
-  firebase_auth: ^6.1.4           # Kimlik doğrulama
-  firebase_analytics: ^12.1.2      # Kullanıcı davranış analizi
-  firebase_crashlytics: ^5.0.7      # Hata ve çökme raporlama
-  cloud_firestore: ^6.1.2         # NoSQL veritabanı
-  firebase_storage: ^13.0.6 
+  firebase_core: ^4.13.0          # Firebase SDK'nın temel yapı taşı
+  firebase_auth: ^6.5.7           # Kimlik doğrulama
+  firebase_analytics: ^12.4.6      # Kullanıcı davranış analizi
+  firebase_crashlytics: ^5.2.7      # Hata ve çökme raporlama
+  cloud_firestore: ^6.8.0         # NoSQL veritabanı
+  firebase_storage: ^13.4.6 
 
   # -------------------- UI & Navigation --------------------
-  cupertino_icons: ^1.0.8           # iOS style icons
+  cupertino_icons: ^1.0.9           # iOS style icons
   fancy_bottom_navigation_2: ^0.3.5 # Bottom navigation bar
-  font_awesome_flutter: ^10.12.0     # Font Awesome icons
+  font_awesome_flutter: ^11.0.0     # Font Awesome icons
   flutter_spinkit: ^5.2.2           # Loading animations
-  simple_animations: ^5.2.0         # Animation utilities
+  simple_animations: ^5.3.0         # Animation utilities
 
   # -------------------- State Management --------------------
-  provider: ^6.1.5                  # State management solution
+  provider: ^6.1.5+1                # State management solution
   get_it: ^9.2.1                    # Service locator
   get: ^4.7.3
   get_storage: ^2.1.1
 
   # -------------------- Image & Media --------------------
-  image_picker: ^1.2.1              # Image selection from gallery/camera
+  image_picker: ^1.2.3              # Image selection from gallery/camera
   image_editor: ^1.6.0              # Image editing capabilities
-  extended_image: ^10.0.1           # Advanced image widget
+  extended_image: ^10.1.0           # Advanced image widget
 
   # -------------------- Utilities --------------------
-  dropdown_search: ^6.0.2           # Enhanced dropdown search
+  dropdown_search: ^7.0.0           # Enhanced dropdown search
   url_launcher: ^6.3.2              # Launch URLs and external apps
-  package_info_plus: ^9.0.0              # App package information
-  fluttertoast: ^9.0.0            # Toast notifications
+  package_info_plus: ^10.2.1              # App package information
+  fluttertoast: ^10.0.0            # Toast notifications
   store_redirect: ^2.0.4            # App store redirection
-  intl: ^0.19.0                     # Internationalization
-  sizer: ^3.0.5                     # Responsive design utility
+  intl: ^0.19.0                     # dash_chat_2 ^0.19.0 kısıtı nedeniyle 0.20.x'e çıkamıyor
+  sizer: ^3.1.3                     # Responsive design utility
   
   # -------------------- Chat & Communication --------------------
   dash_chat_2: ^0.0.21              # Chat interface components
 
-  liquid_glass_renderer: ^0.2.0-dev.4
+  liquid_glass_widgets: ^0.29.6
   flex_color_scheme: ^8.4.0
 
 dev_dependencies:
@@ -62,6 +62,7 @@ flutter:
 
   # -------------------- Assets --------------------
   assets:
+    - assets/      # Application logo
     - assets/images/                 # Application images
     - assets/icons/                  # Application icons
 

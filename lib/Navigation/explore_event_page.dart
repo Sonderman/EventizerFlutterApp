@@ -1,5 +1,6 @@
 import 'package:eventizer/navigation/Components/Event_Item.dart';
-import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/components/liquidglass_widgets.dart';
+import 'package:eventizer/services/repository.dart';
 import 'package:eventizer/data/themes.dart';
 import 'package:eventizer/navigation/components/custom_scroll.dart';
 import 'package:eventizer/tools/page_components.dart';
@@ -29,15 +30,20 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurpleAccent,
+      backgroundColor: Colors.transparent,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            // textField(),
-            subCategoryList(),
-            Expanded(child: eventList()),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: MyLiquidGlass.standartContainer(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                // textField(),
+                subCategoryList(),
+                Expanded(child: eventList()),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -56,14 +62,41 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
           SizedBox(height: heightSize(2)),
           //ANCHOR event list start are here---------------------------------------------
           Expanded(
-            child: Container(
-              child: FutureBuilder(
-                future: (category == null || category == "Hepsi")
-                    ? eventManager.fetchActiveEventLists()
-                    : eventManager.fetchActiveEventListsByCategory(category!),
-                builder: (BuildContext context, AsyncSnapshot fetchedlist) {
-                  if (fetchedlist.connectionState == ConnectionState.done) {
-                    List<Map<String, dynamic>> listofMaps = fetchedlist.data;
+            child: FutureBuilder<List<Map<String, dynamic>>?>(
+              future: (category == null || category == "Hepsi")
+                  ? eventManager.fetchActiveEventLists()
+                  : eventManager.fetchActiveEventListsByCategory(category!),
+              builder:
+                  (
+                    BuildContext context,
+                    AsyncSnapshot<List<Map<String, dynamic>>?> fetchedlist,
+                  ) {
+                    if (fetchedlist.connectionState != ConnectionState.done) {
+                      return Center(
+                        child: PageComponents(
+                          context,
+                        ).loadingCustomOverlay(spinColor: Colors.white),
+                      );
+                    }
+
+                    if (fetchedlist.hasError) {
+                      return Center(
+                        child: Text(
+                          "Etkinlikler yüklenemedi.\nLütfen tekrar deneyin.",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: widthSize(4.2),
+                          ),
+                        ),
+                      );
+                    }
+
+                    // Generated safety guard: Firestore null/error response should not crash UI.
+                    final List<Map<String, dynamic>> listofMaps =
+                        fetchedlist.data ?? <Map<String, dynamic>>[];
+
                     if (listofMaps.isEmpty) {
                       return Center(
                         child: Text(
@@ -75,27 +108,22 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                           ),
                         ),
                       );
-                    } else {
-                      return ScrollConfiguration(
-                        behavior: NoScrollEffectBehavior(),
-                        child: ListView.separated(
-                          separatorBuilder:
-                              //ANCHOR ayıraç burada
-                              (BuildContext context, int index) => SizedBox(height: heightSize(3)),
-                          itemCount: listofMaps.length,
-                          itemBuilder: (context, index) {
-                            return eventItem(context, listofMaps[index], true);
-                          },
-                        ),
-                      );
                     }
-                  } else {
-                    return Center(
-                      child: PageComponents(context).loadingCustomOverlay(spinColor: Colors.white),
+
+                    return ScrollConfiguration(
+                      behavior: NoScrollEffectBehavior(),
+                      child: ListView.separated(
+                        separatorBuilder:
+                            //ANCHOR ayıraç burada
+                            (BuildContext context, int index) =>
+                                SizedBox(height: heightSize(3)),
+                        itemCount: listofMaps.length,
+                        itemBuilder: (context, index) {
+                          return eventItem(context, listofMaps[index], true);
+                        },
+                      ),
                     );
-                  }
-                },
-              ),
+                  },
             ),
           ),
           SizedBox(height: heightSize(4)),
@@ -175,18 +203,24 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             SizedBox(
                               height: heightSize(4),
-                              child: Image.asset("assets/icons/birthdayCategory.png"),
+                              child: Image.asset(
+                                "assets/icons/birthdayCategory.png",
+                              ),
                             ),
-                            Text(
-                              "Doğum Günü",
-                              style: TextStyle(
-                                fontFamily: "Zona",
-                                fontSize: heightSize(2),
-                                color: MyColors.globalTextColor,
+                            SizedBox(width: widthSize(1.5)),
+                            Expanded(
+                              child: Text(
+                                "Doğum Günü",
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontFamily: "Zona",
+                                  fontSize: heightSize(2),
+                                  color: MyColors.globalTextColor,
+                                ),
                               ),
                             ),
                           ],
@@ -213,18 +247,24 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             SizedBox(
                               height: heightSize(4),
-                              child: Image.asset("assets/icons/travelCategory.png"),
+                              child: Image.asset(
+                                "assets/icons/travelCategory.png",
+                              ),
                             ),
-                            Text(
-                              "Yurtiçi Gezi",
-                              style: TextStyle(
-                                fontFamily: "Zona",
-                                fontSize: heightSize(2),
-                                color: MyColors.globalTextColor,
+                            SizedBox(width: widthSize(1.5)),
+                            Expanded(
+                              child: Text(
+                                "Yurtiçi Gezi",
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontFamily: "Zona",
+                                  fontSize: heightSize(2),
+                                  color: MyColors.globalTextColor,
+                                ),
                               ),
                             ),
                           ],
@@ -251,18 +291,24 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             SizedBox(
                               height: heightSize(4),
-                              child: Image.asset("assets/icons/worldtravelCategory.png"),
+                              child: Image.asset(
+                                "assets/icons/worldtravelCategory.png",
+                              ),
                             ),
-                            Text(
-                              "Yurtdışı Gezisi",
-                              style: TextStyle(
-                                fontFamily: "Zona",
-                                fontSize: heightSize(2),
-                                color: MyColors.globalTextColor,
+                            SizedBox(width: widthSize(1.5)),
+                            Expanded(
+                              child: Text(
+                                "Yurtdışı Gezisi",
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontFamily: "Zona",
+                                  fontSize: heightSize(2),
+                                  color: MyColors.globalTextColor,
+                                ),
                               ),
                             ),
                           ],
@@ -289,18 +335,24 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             SizedBox(
                               height: heightSize(4),
-                              child: Image.asset("assets/icons/cameraCategory.png"),
+                              child: Image.asset(
+                                "assets/icons/cameraCategory.png",
+                              ),
                             ),
-                            Text(
-                              "Doğa Fotoğraflama",
-                              style: TextStyle(
-                                fontFamily: "Zona",
-                                fontSize: heightSize(2),
-                                color: MyColors.globalTextColor,
+                            SizedBox(width: widthSize(1.5)),
+                            Expanded(
+                              child: Text(
+                                "Doğa Fotoğraflama",
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontFamily: "Zona",
+                                  fontSize: heightSize(2),
+                                  color: MyColors.globalTextColor,
+                                ),
                               ),
                             ),
                           ],
@@ -327,18 +379,24 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             SizedBox(
                               height: heightSize(4),
-                              child: Image.asset("assets/icons/conferenceCategory.png"),
+                              child: Image.asset(
+                                "assets/icons/conferenceCategory.png",
+                              ),
                             ),
-                            Text(
-                              "Konferans",
-                              style: TextStyle(
-                                fontFamily: "Zona",
-                                fontSize: heightSize(2),
-                                color: MyColors.globalTextColor,
+                            SizedBox(width: widthSize(1.5)),
+                            Expanded(
+                              child: Text(
+                                "Konferans",
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontFamily: "Zona",
+                                  fontSize: heightSize(2),
+                                  color: MyColors.globalTextColor,
+                                ),
                               ),
                             ),
                           ],
@@ -365,18 +423,24 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             SizedBox(
                               height: heightSize(4),
-                              child: Image.asset("assets/icons/campCategory.png"),
+                              child: Image.asset(
+                                "assets/icons/campCategory.png",
+                              ),
                             ),
-                            Text(
-                              "Kamp",
-                              style: TextStyle(
-                                fontFamily: "Zona",
-                                fontSize: heightSize(2),
-                                color: MyColors.globalTextColor,
+                            SizedBox(width: widthSize(1.5)),
+                            Expanded(
+                              child: Text(
+                                "Kamp",
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontFamily: "Zona",
+                                  fontSize: heightSize(2),
+                                  color: MyColors.globalTextColor,
+                                ),
                               ),
                             ),
                           ],
@@ -410,12 +474,19 @@ class _ExploreEventPageState extends State<ExploreEventPage> {
           child: TextFormField(
             decoration: InputDecoration(
               border: InputBorder.none,
-              prefixIcon: Icon(Icons.search, color: MyColors.globalTextColor, size: heightSize(4)),
+              prefixIcon: Icon(
+                Icons.search,
+                color: MyColors.globalTextColor,
+                size: heightSize(4),
+              ),
               hintText: "Arama",
               hintStyle: TextStyle(color: MyColors.globalTextColor),
             ),
             textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: "Zona", color: MyColors.globalTextColor),
+            style: TextStyle(
+              fontFamily: "Zona",
+              color: MyColors.globalTextColor,
+            ),
           ),
         ),
       ),

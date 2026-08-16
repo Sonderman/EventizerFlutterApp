@@ -358,7 +358,8 @@ class DatabaseWorks {
       if (kDebugMode) {
         print(e);
       }
-      return null;
+      // Generated fallback: prevent UI type-cast crashes when Firestore read fails.
+      return <Map<String, dynamic>>[];
     }
   }
 
@@ -384,7 +385,8 @@ class DatabaseWorks {
       if (kDebugMode) {
         print(e);
       }
-      return null;
+      // Generated fallback: prevent UI type-cast crashes when Firestore read fails.
+      return <Map<String, dynamic>>[];
     }
   }
 
@@ -584,43 +586,102 @@ class DatabaseWorks {
 
   //NOTE Burası EventSettings
   Future<List<String>> getEventCategories() async {
-    List<String> categories = [];
-    return await ref
-        .collection(settings.firebaseAppName)
-        .doc(settings.getServer())
-        .collection('Settings')
-        .doc('Event')
-        .get()
-        .then((eventSettings) {
-          Map<String, dynamic> temp;
-          temp = eventSettings.data()!['Category'];
-          temp.forEach((key, value) {
-            categories.add(key);
-          });
-          if (kDebugMode) {
-            print(categories);
-          }
-          return categories;
-        });
+    // Generated fallback defaults: used when Firestore settings are not readable.
+    const Map<String, List<String>> fallbackCategoryMap =
+        <String, List<String>>{
+          "Doğum Günü": <String>["Doğum Günü"],
+          "Yurtiçi Gezisi": <String>["Yurtiçi Gezi"],
+          "Yurtdışı Gezisi": <String>["Yurtdışı Gezisi"],
+          "Doğa Fotoğraflama": <String>["Doğa Fotoğraflama"],
+          "Konferans&Seminer": <String>["Konferans"],
+          "Kamp": <String>["Kamp"],
+        };
+
+    try {
+      final DocumentSnapshot<Map<String, dynamic>> eventSettings = await ref
+          .collection(settings.firebaseAppName)
+          .doc(settings.getServer())
+          .collection('Settings')
+          .doc('Event')
+          .get();
+
+      final dynamic rawCategory = eventSettings.data()?['Category'];
+      if (rawCategory is! Map<String, dynamic>) {
+        return fallbackCategoryMap.keys.toList();
+      }
+
+      final List<String> categories = <String>[];
+      rawCategory.forEach((key, value) {
+        categories.add(key);
+      });
+
+      if (categories.isEmpty) {
+        return fallbackCategoryMap.keys.toList();
+      }
+
+      if (kDebugMode) {
+        print(categories);
+      }
+      return categories;
+    } catch (e) {
+      if (kDebugMode) {
+        print("getEventCategories fallback: $e");
+      }
+      return fallbackCategoryMap.keys.toList();
+    }
   }
 
   //NOTE Burası EventSettings
   Future<List<List<String>>> getEventSubCategories() async {
-    List<List<String>> subCategories = [];
-    return await ref
-        .collection(settings.firebaseAppName)
-        .doc(settings.getServer())
-        .collection('Settings')
-        .doc('Event')
-        .get()
-        .then((eventSettings) {
-          Map<String, dynamic> temp;
-          temp = eventSettings.data()!['Category'];
-          temp.forEach((key, value) {
-            subCategories.add(List<String>.from(value));
-          });
-          return subCategories;
-        });
+    // Generated fallback defaults: used when Firestore settings are not readable.
+    const Map<String, List<String>> fallbackCategoryMap =
+        <String, List<String>>{
+          "Doğum Günü": <String>["Doğum Günü"],
+          "Yurtiçi Gezisi": <String>["Yurtiçi Gezi"],
+          "Yurtdışı Gezisi": <String>["Yurtdışı Gezisi"],
+          "Doğa Fotoğraflama": <String>["Doğa Fotoğraflama"],
+          "Konferans&Seminer": <String>["Konferans"],
+          "Kamp": <String>["Kamp"],
+        };
+
+    try {
+      final DocumentSnapshot<Map<String, dynamic>> eventSettings = await ref
+          .collection(settings.firebaseAppName)
+          .doc(settings.getServer())
+          .collection('Settings')
+          .doc('Event')
+          .get();
+
+      final dynamic rawCategory = eventSettings.data()?['Category'];
+      if (rawCategory is! Map<String, dynamic>) {
+        return fallbackCategoryMap.values
+            .map((value) => List<String>.from(value))
+            .toList();
+      }
+
+      final List<List<String>> subCategories = <List<String>>[];
+      rawCategory.forEach((key, value) {
+        if (value is List) {
+          subCategories.add(
+            value.map((item) => item.toString()).toList(growable: false),
+          );
+        }
+      });
+
+      if (subCategories.isEmpty) {
+        return fallbackCategoryMap.values
+            .map((value) => List<String>.from(value))
+            .toList();
+      }
+      return subCategories;
+    } catch (e) {
+      if (kDebugMode) {
+        print("getEventSubCategories fallback: $e");
+      }
+      return fallbackCategoryMap.values
+          .map((value) => List<String>.from(value))
+          .toList();
+    }
   }
 
   Future<bool> joinEvent(String userID, String eventID) async {

@@ -11,8 +11,7 @@ plugins {
 
 android {
     namespace = "com.eventizerapps.eventizer"
-    compileSdk = 36
-    buildToolsVersion = "36.0.0"
+    compileSdk = 37
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
@@ -28,7 +27,7 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 29
-        targetSdk = 36
+        targetSdk = 37
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }

@@ -27,11 +27,13 @@ class UserService with ChangeNotifier {
 
   Future<bool> userModelSync() async {
     try {
-      return await firebaseDatabaseWorks.findUserbyID(userModel!.getUserId()).then((map) {
-        userModel!.parseMap(map!);
-        //refresh();
-        return true;
-      });
+      return await firebaseDatabaseWorks
+          .findUserbyID(userModel!.getUserId())
+          .then((map) {
+            userModel!.parseMap(map!);
+            //refresh();
+            return true;
+          });
     } catch (e) {
       print(e);
       return false;
@@ -39,7 +41,10 @@ class UserService with ChangeNotifier {
   }
 
   Future<bool> sendFeedback(String text) async {
-    return await firebaseDatabaseWorks.sendFeedback(text, userModel!.getUserId());
+    return await firebaseDatabaseWorks.sendFeedback(
+      text,
+      userModel!.getUserId(),
+    );
   }
 
   Future<Map<String, dynamic>?> findUserByID(String userID) {
@@ -48,7 +53,10 @@ class UserService with ChangeNotifier {
 
   Future<bool> updateProfilePhoto(Uint8List? image) async {
     if (image == null) return false;
-    return await firebaseStorageWorks.updateProfilePhoto(userModel!.userID, image);
+    return await firebaseStorageWorks.updateProfilePhoto(
+      userModel!.userID,
+      image,
+    );
   }
 
   Future<bool> userModelUpdater(UserModel model) async {
@@ -67,22 +75,30 @@ class UserService with ChangeNotifier {
   }
 
   Future<bool> increaseNofEvents() async {
-    return await firebaseDatabaseWorks.increaseNofEvents(userModel!.getUserId()).then((value) {
-      if (value) {
-        userModelSync();
-        return true;
-      } else {
-        return false;
-      }
-    });
+    return await firebaseDatabaseWorks
+        .increaseNofEvents(userModel!.getUserId())
+        .then((value) {
+          if (value) {
+            userModelSync();
+            return true;
+          } else {
+            return false;
+          }
+        });
   }
 
   Future<bool?> followToggle(String otherUserID) async {
-    return await firebaseDatabaseWorks.followToggle(userModel!.userID, otherUserID);
+    return await firebaseDatabaseWorks.followToggle(
+      userModel!.userID,
+      otherUserID,
+    );
   }
 
   Future<bool> amIFollowing(String otherUserID) async {
-    return await firebaseDatabaseWorks.amIFollowing(userModel!.userID, otherUserID);
+    return await firebaseDatabaseWorks.amIFollowing(
+      userModel!.userID,
+      otherUserID,
+    );
   }
 
   Future<String?> registerUser(
@@ -91,11 +107,14 @@ class UserService with ChangeNotifier {
     List<String?> datalist,
     Uint8List image,
   ) async {
+    final phoneRaw = (datalist[3] ?? '').trim();
+    final parsedPhone = int.tryParse(phoneRaw) ?? 0;
+
     Map<String, dynamic> data = {
       "Name": datalist[0],
       "Surname": datalist[1],
       "Email": datalist[2],
-      "PhoneNumber": int.parse(datalist[3]!),
+      "PhoneNumber": parsedPhone,
       "Gender": datalist[4],
       "BirthDay": datalist[5],
       "NickName": datalist[6],
@@ -111,11 +130,15 @@ class UserService with ChangeNotifier {
       return await auth.signUp(eposta, sifre).then((userId) async {
         data['UserID'] = userId;
 
-        await firebaseDatabaseWorks.newUser(data).then((value) async {
-          if (value) {
-            await firebaseStorageWorks.updateProfilePhoto(userId, image);
-          }
-        });
+        final isUserSaved = await firebaseDatabaseWorks.newUser(data);
+        if (!isUserSaved) {
+          // Keep auth and database consistent.
+          await auth.deleteCurrentUser();
+          return null;
+        }
+
+        // Profile image is secondary; user doc must still be available even if this fails.
+        await firebaseStorageWorks.updateProfilePhoto(userId, image);
         //auth.sendEmailVerification();
         return userId;
       });
@@ -159,9 +182,15 @@ class EventService with ChangeNotifier {
   }
 
   //ANCHOR Etkinlik oluşturur
-  Future<bool> createEvent(String userId, Map<String, dynamic> eventData, Uint8List image) async {
+  Future<bool> createEvent(
+    String userId,
+    Map<String, dynamic> eventData,
+    Uint8List image,
+  ) async {
     String? eventID;
-    eventData['EventImageUrl'] = await firebaseStorageWorks.sendEventImage(image);
+    eventData['EventImageUrl'] = await firebaseStorageWorks.sendEventImage(
+      image,
+    );
     //print("1.url:" + eventData['EventImageUrl'].toString());
     eventID = await firebaseDatabaseWorks.createEvent(userId, eventData);
     //ANCHOR etkinlik oluştuğunda kullanıcıyı direk katılımcı yapar
@@ -176,16 +205,25 @@ class EventService with ChangeNotifier {
     return firebaseDatabaseWorks.fetchActiveEventLists();
   }
 
-  Future<List<Map<String, dynamic>>?> fetchActiveEventListsByCategory(String category) {
+  Future<List<Map<String, dynamic>>?> fetchActiveEventListsByCategory(
+    String category,
+  ) {
     return firebaseDatabaseWorks.fetchActiveEventListsByCategory(category);
   }
 
-  Future<List<Map<String, dynamic>>?> fetchEventListsForUser(String organizerID, bool isOld) {
+  Future<List<Map<String, dynamic>>?> fetchEventListsForUser(
+    String organizerID,
+    bool isOld,
+  ) {
     return firebaseDatabaseWorks.fetchEventListsForUser(organizerID, isOld);
   }
 
   //ANCHOR Yapılan yorumu firestore da event içerisine kaydeder
-  Future<bool> sendComment(String eventID, String userID, String comment) async {
+  Future<bool> sendComment(
+    String eventID,
+    String userID,
+    String comment,
+  ) async {
     return await firebaseDatabaseWorks.sendComment(eventID, userID, comment);
   }
 
@@ -209,7 +247,12 @@ class MessagingService with ChangeNotifier {
     String currentUser,
     String otherUser,
   ) async {
-    return await firebaseDatabaseWorks.sendMessage(message, chatID, currentUser, otherUser);
+    return await firebaseDatabaseWorks.sendMessage(
+      message,
+      chatID,
+      currentUser,
+      otherUser,
+    );
   }
 
   Future sendImageMessage(
@@ -220,25 +263,43 @@ class MessagingService with ChangeNotifier {
     String time,
   ) async {
     await firebaseDatabaseWorks.sendImageMessage(
-      await firebaseStorageWorks.sendImageMessage(image, user, currentUser, chatID, time),
+      await firebaseStorageWorks.sendImageMessage(
+        image,
+        user,
+        currentUser,
+        chatID,
+        time,
+      ),
       time,
       chatID,
     );
   }
 
-  Future<String> checkConversation(String currentUserID, String otherUserID) async {
-    return await firebaseDatabaseWorks.checkConversation(currentUserID, otherUserID);
+  Future<String> checkConversation(
+    String currentUserID,
+    String otherUserID,
+  ) async {
+    return await firebaseDatabaseWorks.checkConversation(
+      currentUserID,
+      otherUserID,
+    );
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getMessagesSnapshot(String chatID) {
+  Stream<QuerySnapshot<Map<String, dynamic>>> getMessagesSnapshot(
+    String chatID,
+  ) {
     return firebaseDatabaseWorks.getMessagesSnapshot(chatID);
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getUserChatsSnapshot(String currentUser) {
+  Stream<QuerySnapshot<Map<String, dynamic>>> getUserChatsSnapshot(
+    String currentUser,
+  ) {
     return firebaseDatabaseWorks.getUserChatsSnapshots(currentUser);
   }
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>> getChatPoolSnapshot(String chatID) {
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getChatPoolSnapshot(
+    String chatID,
+  ) {
     return firebaseDatabaseWorks.getChatPoolSnapshot(chatID);
   }
 }

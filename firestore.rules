@@ -1,0 +1,92 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Generated rules update: keep authenticated access for app runtime collections.
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Generated rules update: splash version check reads /EventizerApp/{env} before auth state is resolved.
+    match /EventizerApp/{env} {
+      allow read: if true;
+    }
+
+    match /EventizerApp/{env}/users/{userId} {
+      allow create: if isOwner(userId);
+      allow read: if isSignedIn();
+      allow update, delete: if isOwner(userId);
+
+      match /following/{otherUserId} {
+        allow read: if isSignedIn();
+        allow create, delete: if isOwner(userId);
+      }
+
+      match /followers/{otherUserId} {
+        allow read: if isSignedIn();
+        allow create, delete: if isSignedIn(); // Users can follow others
+      }
+
+      match /messages/{chatId} {
+        allow read: if isOwner(userId);
+        allow create: if isSignedIn(); // Needed for starting a chat
+        allow update, delete: if isOwner(userId);
+      }
+
+      match /events/{eventId} {
+        allow read: if isSignedIn();
+        allow create, update, delete: if isOwner(userId);
+      }
+    }
+
+    match /EventizerApp/{env}/messagePool/{chatId} {
+      allow read, write: if isSignedIn();
+
+      match /messages/{messageId} {
+        allow read, write: if isSignedIn();
+      }
+    }
+
+    // Generated rules update: Explore/Create pages read this document after login.
+    match /EventizerApp/{env}/Settings/{docId} {
+      allow read: if isSignedIn();
+    }
+
+    match /EventizerApp/{env}/Events/{eventId} {
+      // Generated rules update: authenticated users can list and view events.
+      allow read: if isSignedIn();
+
+      // Generated rules update: only organizer can create/delete its event document.
+      allow create: if isSignedIn() &&
+        request.resource.data.OrganizerID == request.auth.uid;
+      allow delete: if isSignedIn() &&
+        resource.data.OrganizerID == request.auth.uid;
+
+      // Generated rules update:
+      // organizer can edit the event, participants can only change participant count field.
+      allow update: if isSignedIn() && (
+        resource.data.OrganizerID == request.auth.uid ||
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'CurrentParticipantNumber'
+        ])
+      );
+
+      // Generated rules update: users can join/leave with their own uid document.
+      match /Participants/{participantId} {
+        allow read: if isSignedIn();
+        allow create, delete: if isSignedIn() &&
+          request.auth.uid == participantId;
+      }
+
+      // Generated rules update: authenticated users can read comments and write their own.
+      match /Comments/{commentId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn() &&
+          request.resource.data.CommentOwnerID == request.auth.uid;
+      }
+    }
+  }
+}

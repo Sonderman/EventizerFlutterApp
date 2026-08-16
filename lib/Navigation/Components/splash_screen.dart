@@ -1,6 +1,7 @@
 import 'package:eventizer/navigation/home_page/home_page.dart';
 import 'package:eventizer/navigation/login_page/login_page_view.dart';
 import 'package:eventizer/locator.dart';
+import 'package:eventizer/components/liquidglass_widgets.dart';
 import 'package:eventizer/services/auth_service.dart';
 import 'package:eventizer/services/repository.dart';
 import 'package:flutter/foundation.dart';
@@ -26,30 +27,38 @@ class _SplashScreenState extends State<SplashScreen> {
         if (kDebugMode) {
           print("UserID:$userID");
         }
-        Provider.of<UserService>(context, listen: false).userInitializer(userID).then((value) {
+        Provider.of<UserService>(
+          context,
+          listen: false,
+        ).userInitializer(userID).then((value) {
           if (value) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (BuildContext context) => const HomePage()),
+              MaterialPageRoute(
+                builder: (BuildContext context) => const HomePage(),
+              ),
             );
           }
         });
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (BuildContext context) => const LoginPage()),
+          MaterialPageRoute(
+            builder: (BuildContext context) => const LoginPage(),
+          ),
         );
       }
     });
   }
 
-  Future<bool?> checkUpdate() async {
+  Future<bool> checkUpdate() async {
     String? appVersion;
     String? serverVersion;
-    List<String> temp, temp2;
     bool needToUpdate = false;
     try {
-      appVersion = await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      appVersion = await PackageInfo.fromPlatform().then((
+        PackageInfo packageInfo,
+      ) {
         if (kDebugMode) {
           print("appVersion:${packageInfo.version}");
         }
@@ -57,19 +66,36 @@ class _SplashScreenState extends State<SplashScreen> {
       });
       serverVersion = await locator<DatabaseWorks>().getServerVersion();
       if (kDebugMode) {
-        print("serverVersion:${serverVersion!}");
+        print("serverVersion:$serverVersion");
       }
-      temp = appVersion!.split(".");
-      temp2 = serverVersion!.split(".");
-      for (int i = 0; i < 3; i++) {
-        if (int.parse(temp2[i]) > int.parse(temp[i])) needToUpdate = true;
+
+      // Generated safeguard: if version payload is missing, skip forced-update flow.
+      if (appVersion == null || serverVersion == null) {
+        return false;
+      }
+
+      final List<String> temp = appVersion.split(".");
+      final List<String> temp2 = serverVersion.split(".");
+      final int loopLength = temp.length < temp2.length
+          ? temp.length
+          : temp2.length;
+
+      for (int i = 0; i < loopLength; i++) {
+        final int serverPart = int.tryParse(temp2[i]) ?? 0;
+        final int appPart = int.tryParse(temp[i]) ?? 0;
+        if (serverPart > appPart) {
+          needToUpdate = true;
+          break;
+        } else if (serverPart < appPart) {
+          break;
+        }
       }
       return needToUpdate;
     } catch (e) {
       if (kDebugMode) {
         print(e);
       }
-      return null;
+      return false;
     }
   }
 
@@ -80,7 +106,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (kDebugMode) {
         print(value);
       }
-      if (!value!) {
+      if (!value) {
         authChecking(context);
       } else {
         Navigator.pushReplacement(
@@ -88,19 +114,24 @@ class _SplashScreenState extends State<SplashScreen> {
           MaterialPageRoute(
             builder: (BuildContext context) => Scaffold(
               body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const Text("Lütfen Uygulamayı Güncelleyin!"),
-                    const SizedBox(height: 50),
-                    MaterialButton(
-                      color: Colors.green,
-                      onPressed: () {
-                        StoreRedirect.redirect();
-                      },
-                      child: const Text("Güncelle"),
+                child: MyLiquidGlass.standartDialog(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        const Text("Lütfen Uygulamayı Güncelleyin!"),
+                        const SizedBox(height: 20),
+                        MaterialButton(
+                          color: Colors.green,
+                          onPressed: () {
+                            StoreRedirect.redirect();
+                          },
+                          child: const Text("Güncelle"),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -112,48 +143,45 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // ANCHOR  background image icin renk karisimini saglayan bir ozellik
-      // ANCHOR  2 den fazla renk eklenebilir https://alligator.io/flutter/flutter-gradient/
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Colors.blue, Colors.red],
+    return Center(
+      child: MyLiquidGlass.standartContainer(
+        child: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 32, vertical: 40),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                "Eventizer",
+                style: TextStyle(
+                  decoration: TextDecoration.none,
+                  fontFamily: 'IndieFlower',
+                  fontSize: 50,
+                  letterSpacing: 2.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(height: 40.0),
+              SpinKitFoldingCube(
+                color: Colors.white,
+                size: 100.0,
+                duration: Duration(seconds: 2),
+              ),
+              SizedBox(height: 30.0),
+              Text(
+                "Loading",
+                style: TextStyle(
+                  decoration: TextDecoration.none,
+                  fontFamily: 'IndieFlower',
+                  color: Colors.white,
+                  fontSize: 20,
+                  letterSpacing: 2.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-      child: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            "Eventizer",
-            style: TextStyle(
-              decoration: TextDecoration.none,
-              fontFamily: 'IndieFlower',
-              fontSize: 50,
-              letterSpacing: 2.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-          // ANCHOR  text ile loading isareti arasina 200 height birakir
-          SizedBox(height: 200.0),
-          // ANCHOR bu nedir çok kullanım görünüyor bunun için "Flutter Performance" ekranında?
-          // ANCHOR  spinkit package kullanildi https://pub.dev/packages/flutter_spinkit
-          SpinKitFoldingCube(color: Colors.white, size: 100.0, duration: Duration(seconds: 2)),
-          SizedBox(height: 50.0),
-          Text(
-            "Loading",
-            style: TextStyle(
-              decoration: TextDecoration.none,
-              fontFamily: 'IndieFlower',
-              color: Colors.white,
-              fontSize: 20,
-              letterSpacing: 2.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
       ),
     );
   }

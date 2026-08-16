@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:eventizer/components/liquidglass_widgets.dart';
 import '../services/theme_service.dart';
 
 /// Theme settings page for changing app theme and color scheme
@@ -18,8 +19,7 @@ class ThemeSettingsPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Theme Mode Section
-            Card(
-              elevation: 2,
+            MyLiquidGlass.standartContainer(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -86,8 +86,7 @@ class ThemeSettingsPage extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Color Scheme Section
-            Card(
-              elevation: 2,
+            MyLiquidGlass.standartContainer(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -129,7 +128,7 @@ class ThemeSettingsPage extends StatelessWidget {
                                 border: Border.all(
                                   color: isSelected
                                       ? Theme.of(context).colorScheme.primary
-                                      : Colors.grey.withOpacity(0.3),
+                                      : Colors.grey.withValues(alpha: 0.3),
                                   width: isSelected ? 3 : 1,
                                 ),
                               ),
@@ -155,13 +154,19 @@ class ThemeSettingsPage extends StatelessWidget {
             // Reset Button
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  _showResetDialog(context, themeService);
-                },
-                icon: const Icon(Icons.refresh),
-                label: const Text('Varsayılan Ayarlara Dön'),
-                style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 12)),
+              child: MyLiquidGlass.standartButton(
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    _showResetDialog(context, themeService);
+                  },
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Varsayılan Ayarlara Dön'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                ),
               ),
             ),
           ],

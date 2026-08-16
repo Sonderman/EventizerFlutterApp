@@ -10,10 +10,20 @@ class EventSettings {
     getSubCategories();
   }
   void getCategories() async {
-    categoryItems = await firebaseDatabaseWorks.getEventCategories();
+    try {
+      categoryItems = await firebaseDatabaseWorks.getEventCategories();
+    } catch (_) {
+      // Generated safeguard: keep settings initialization resilient against remote fetch failures.
+      categoryItems = <String>[];
+    }
   }
 
   void getSubCategories() async {
-    subCategoryItems = await firebaseDatabaseWorks.getEventSubCategories();
+    try {
+      subCategoryItems = await firebaseDatabaseWorks.getEventSubCategories();
+    } catch (_) {
+      // Generated safeguard: keep settings initialization resilient against remote fetch failures.
+      subCategoryItems = <List<String>>[];
+    }
   }
 }

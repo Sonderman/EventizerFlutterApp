@@ -1,5 +1,6 @@
 import 'package:eventizer/firebase_options.dart';
 import 'package:eventizer/locator.dart';
+import 'package:eventizer/components/liquidglass_widgets.dart';
 import 'package:eventizer/services/navigation_provider.dart';
 import 'package:eventizer/services/repository.dart';
 import 'package:eventizer/services/theme_service.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -29,9 +31,49 @@ Future<void> main() async {
   );
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Liquid Glass shader'larını önceden derle
+  await LiquidGlassWidgets.initialize();
+
   setupLocator();
   setupServices();
-  return runApp(const MyApp());
+  return runApp(
+    LiquidGlassWidgets.wrap(
+      child: const MyApp(),
+      adaptiveQuality: true,
+      brightnessResolver: Theme.maybeBrightnessOf,
+      theme: GlassThemeData(
+        light: GlassThemeVariant(
+          settings: GlassThemeSettings(
+            blur: 0,
+            glassColor: Color(0x00000000),
+            thickness: 8,
+            lightAngle: 0.75 * 3.141592653589793,
+            lightIntensity: 0.9,
+            ambientStrength: 0.12,
+            refractiveIndex: 0.82,
+            saturation: 1.0,
+            chromaticAberration: 0.008,
+            specularSharpness: GlassSpecularSharpness.medium,
+          ),
+        ),
+        dark: GlassThemeVariant(
+          settings: GlassThemeSettings(
+            blur: 0,
+            glassColor: Color(0x00000000),
+            thickness: 8,
+            lightAngle: 0.75 * 3.141592653589793,
+            lightIntensity: 0.9,
+            ambientStrength: 0.12,
+            refractiveIndex: 0.82,
+            saturation: 1.0,
+            chromaticAberration: 0.008,
+            specularSharpness: GlassSpecularSharpness.medium,
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -46,17 +88,28 @@ class MyApp extends StatelessWidget {
       builder: (context, orientation, deviceType) {
         return MultiProvider(
           providers: [
-            ChangeNotifierProvider<EventService>(create: (context) => EventService()),
-            ChangeNotifierProvider<MessagingService>(create: (context) => MessagingService()),
-            ChangeNotifierProvider<NavigationProvider>(create: (context) => NavigationProvider()),
-            ChangeNotifierProvider<UserService>(create: (context) => UserService()),
+            ChangeNotifierProvider<EventService>(
+              create: (context) => EventService(),
+            ),
+            ChangeNotifierProvider<MessagingService>(
+              create: (context) => MessagingService(),
+            ),
+            ChangeNotifierProvider<NavigationProvider>(
+              create: (context) => NavigationProvider(),
+            ),
+            ChangeNotifierProvider<UserService>(
+              create: (context) => UserService(),
+            ),
           ],
           child: Obx(
             () => GetMaterialApp(
               title: 'Eventizer',
               debugShowMaterialGrid: false,
               debugShowCheckedModeBanner: false,
-              supportedLocales: const <Locale>[Locale('en', 'US'), Locale('tr', 'TR')],
+              supportedLocales: const <Locale>[
+                Locale('en', 'US'),
+                Locale('tr', 'TR'),
+              ],
 
               // GetX routing configuration
               initialRoute: AppPages.initial,
@@ -78,6 +131,11 @@ class MyApp extends StatelessWidget {
               highContrastDarkTheme: themeService.getDarkTheme().copyWith(
                 brightness: Brightness.dark,
               ),
+              builder: (context, child) {
+                return MyLiquidGlass.appShell(
+                  child: child ?? const SizedBox.shrink(),
+                );
+              },
             ),
           ),
         );

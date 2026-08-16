@@ -1,1 +1,30 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"eventizer-app","appId":"1:889544210683:android:aa2eb2c38a7cf4f35cd85e","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"eventizer-app","configurations":{"android":"1:889544210683:android:aa2eb2c38a7cf4f35cd85e","ios":"1:889544210683:ios:c6196b75ba9120895cd85e"}}},"ios":{"default":{"projectId":"eventizer-app","appId":"1:889544210683:ios:c6196b75ba9120895cd85e","uploadDebugSymbols":true,"fileOutput":"ios/Runner/GoogleService-Info.plist"}}}}}
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "eventizer-app",
+                    "appId": "1:889544210683:android:aa2eb2c38a7cf4f35cd85e",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "eventizer-app",
+                    "configurations": {
+                        "android": "1:889544210683:android:aa2eb2c38a7cf4f35cd85e",
+                        "ios": "1:889544210683:ios:c6196b75ba9120895cd85e"
+                    }
+                }
+            },
+            "ios": {
+                "default": {
+                    "projectId": "eventizer-app",
+                    "appId": "1:889544210683:ios:c6196b75ba9120895cd85e",
+                    "uploadDebugSymbols": true,
+                    "fileOutput": "ios/Runner/GoogleService-Info.plist"
+                }
+            }
+        }
+    }
+}

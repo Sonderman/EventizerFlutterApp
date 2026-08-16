@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:eventizer/components/liquidglass_widgets.dart';
 import 'package:eventizer/data/themes.dart';
 import 'package:eventizer/services/repository.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +13,8 @@ class SignUpController extends GetxController {
   final TextEditingController surnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController passwordConfirmController = TextEditingController();
+  final TextEditingController passwordConfirmController =
+      TextEditingController();
   final TextEditingController phoneController = TextEditingController();
 
   // Observable variables
@@ -48,74 +48,90 @@ class SignUpController extends GetxController {
 
   /// Pick image from gallery or camera
   Future<void> pickImage(ImageSource source) async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: source);
-    if (image != null) {
-      profileImage.value = await image.readAsBytes();
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(source: source);
+      if (image != null) {
+        profileImage.value = await image.readAsBytes();
+      }
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: "Fotoğraf seçilemedi: $e",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
     }
   }
 
   /// Show image source selection dialog
   void showImagePickerDialog() {
-    Get.dialog(
-      AlertDialog(
-        backgroundColor: Colors.transparent,
-        content: MyLiquidGlass.standartDialog(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.h),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              spacing: 2.h,
-              children: [
-                Text(
-                  'Select Image Source',
+    Get.bottomSheet(
+      SafeArea(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFF1E2E47),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            border: Border.all(color: Colors.white24),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Select Image Source',
+                style: TextStyle(
+                  fontFamily: "Zona",
+                  fontSize: 2.h,
+                  color: MyColors.globalTextColor,
+                ),
+              ),
+              SizedBox(height: 2.h),
+              ListTile(
+                leading: Icon(
+                  Icons.photo_library,
+                  color: MyColors.globalTextColor,
+                ),
+                visualDensity: VisualDensity.compact,
+                title: Text(
+                  'Gallery',
                   style: TextStyle(
                     fontFamily: "Zona",
                     fontSize: 2.h,
                     color: MyColors.globalTextColor,
                   ),
                 ),
-                MyLiquidGlass.standartButton(
-                  child: ListTile(
-                    leading: Icon(Icons.photo_library, color: MyColors.globalTextColor),
-                    visualDensity: VisualDensity.compact,
-                    title: Text(
-                      'Gallery',
-                      style: TextStyle(
-                        fontFamily: "Zona",
-                        fontSize: 2.h,
-                        color: MyColors.globalTextColor,
-                      ),
-                    ),
-                    onTap: () {
-                      pickImage(ImageSource.gallery);
-                      Get.back();
-                    },
+                onTap: () async {
+                  Get.back();
+                  await pickImage(ImageSource.gallery);
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.camera_alt,
+                  color: MyColors.globalTextColor,
+                ),
+                visualDensity: VisualDensity.compact,
+                title: Text(
+                  'Camera',
+                  style: TextStyle(
+                    fontFamily: "Zona",
+                    fontSize: 2.h,
+                    color: MyColors.globalTextColor,
                   ),
                 ),
-                MyLiquidGlass.standartButton(
-                  child: ListTile(
-                    leading: Icon(Icons.camera_alt, color: MyColors.globalTextColor),
-                    visualDensity: VisualDensity.compact,
-                    title: Text(
-                      'Camera',
-                      style: TextStyle(
-                        fontFamily: "Zona",
-                        fontSize: 2.h,
-                        color: MyColors.globalTextColor,
-                      ),
-                    ),
-                    onTap: () {
-                      pickImage(ImageSource.camera);
-                      Get.back();
-                    },
-                  ),
-                ),
-              ],
-            ),
+                onTap: () async {
+                  Get.back();
+                  await pickImage(ImageSource.camera);
+                },
+              ),
+            ],
           ),
         ),
       ),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
     );
   }
 
@@ -165,9 +181,13 @@ class SignUpController extends GetxController {
       );
 
       if (userID != null) {
-        await userService!.userInitializer(userID);
+        final isInitialized = await userService!.userInitializer(userID);
+        if (!isInitialized) {
+          throw Exception('User profile could not be loaded after signup');
+        }
         Fluttertoast.showToast(
-          msg: "Hesabınız başarıyla oluşturuldu. Lütfen mailinizi doğrulayınız.",
+          msg:
+              "Hesabınız başarıyla oluşturuldu. Lütfen mailinizi doğrulayınız.",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 2,
@@ -176,11 +196,15 @@ class SignUpController extends GetxController {
           fontSize: 18.0,
         );
         Get.back();
+        navigateToLogin();
       } else {
         throw Exception('Signup failed');
       }
     } catch (e) {
-      Fluttertoast.showToast(msg: "Signup failed: $e", backgroundColor: Colors.red);
+      Fluttertoast.showToast(
+        msg: "Signup failed: $e",
+        backgroundColor: Colors.red,
+      );
     } finally {
       isLoading.value = false;
     }
@@ -189,23 +213,46 @@ class SignUpController extends GetxController {
   /// Validate form fields
   bool validateForm() {
     if (profileImage.value == null) {
-      Fluttertoast.showToast(msg: 'Please select a profile image', backgroundColor: Colors.red);
+      Fluttertoast.showToast(
+        msg: 'Please select a profile image',
+        backgroundColor: Colors.red,
+      );
       return false;
     }
     if (nameController.text.isEmpty || surnameController.text.isEmpty) {
-      Fluttertoast.showToast(msg: 'Please enter name and surname', backgroundColor: Colors.red);
+      Fluttertoast.showToast(
+        msg: 'Please enter name and surname',
+        backgroundColor: Colors.red,
+      );
       return false;
     }
     if (emailController.text.isEmpty || passwordController.text.isEmpty) {
-      Fluttertoast.showToast(msg: 'Please enter email and password', backgroundColor: Colors.red);
+      Fluttertoast.showToast(
+        msg: 'Please enter email and password',
+        backgroundColor: Colors.red,
+      );
+      return false;
+    }
+    if (phoneController.text.trim().isNotEmpty &&
+        int.tryParse(phoneController.text.trim()) == null) {
+      Fluttertoast.showToast(
+        msg: 'Please enter a valid phone number',
+        backgroundColor: Colors.red,
+      );
       return false;
     }
     if (passwordController.text != passwordConfirmController.text) {
-      Fluttertoast.showToast(msg: 'Passwords do not match', backgroundColor: Colors.red);
+      Fluttertoast.showToast(
+        msg: 'Passwords do not match',
+        backgroundColor: Colors.red,
+      );
       return false;
     }
     if (birthday.value.isEmpty) {
-      Fluttertoast.showToast(msg: 'Please select birthday', backgroundColor: Colors.red);
+      Fluttertoast.showToast(
+        msg: 'Please select birthday',
+        backgroundColor: Colors.red,
+      );
       return false;
     }
     return true;
@@ -213,6 +260,9 @@ class SignUpController extends GetxController {
 
   /// Navigate back to login
   void navigateToLogin() {
-    pageController.previousPage(duration: const Duration(seconds: 1), curve: Curves.easeInOutCubic);
+    pageController.previousPage(
+      duration: const Duration(seconds: 1),
+      curve: Curves.easeInOutCubic,
+    );
   }
 }

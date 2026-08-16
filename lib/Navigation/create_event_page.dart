@@ -3,6 +3,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:eventizer/data/themes.dart';
 import 'package:eventizer/data/cities.dart';
 import 'package:eventizer/models/user_model.dart';
+import 'package:eventizer/components/liquidglass_widgets.dart';
 import 'package:eventizer/locator.dart';
 import 'package:eventizer/navigation/my_events_page.dart';
 import 'package:eventizer/navigation/profile_page.dart';
@@ -88,17 +89,73 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Widget build(BuildContext context) {
     localizations = MaterialLocalizations.of(context);
     return Scaffold(
-      backgroundColor: Colors.deepPurpleAccent,
+      backgroundColor: Colors.transparent,
       body: Stack(
         children:
-            <Widget>[PageView(controller: _pageController, children: pages())] +
+            <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(12), // Slightly smaller padding
+                child: MyLiquidGlass.standartContainer(
+                  child: PageView(
+                    controller: _pageController,
+                    physics: const BouncingScrollPhysics(),
+                    children: pages(),
+                  ),
+                ),
+              ),
+            ] +
             (loadingOverLay!
                 ? <Widget>[
-                    PageComponents(
-                      context,
-                    ).loadingOverlay(backgroundColor: Colors.white),
+                    PageComponents(context).loadingOverlay(
+                      backgroundColor: Colors.white.withValues(alpha: 0.1),
+                    ),
                   ]
                 : <Widget>[]),
+      ),
+    );
+  }
+
+  Widget _buildCompactButton({
+    required String iconPath,
+    required String label,
+    required VoidCallback onTap,
+    EdgeInsets? padding,
+    double? height,
+  }) {
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: MyLiquidGlass.section(
+          glassColor: MyColors.blackOpacityContainer,
+          borderRadius: 20,
+          child: Padding(
+            padding: padding ?? const EdgeInsets.symmetric(horizontal: 12),
+            child: SizedBox(
+              height: height ?? heightSize(7),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset(iconPath, height: heightSize(3.2)),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        label,
+                        style: TextStyle(
+                          fontFamily: "Zona",
+                          fontSize: heightSize(1.8),
+                          color: MyColors.globalTextColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -109,9 +166,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          SizedBox(height: heightSize(10)),
+          SizedBox(height: heightSize(3)), // Reduced top spacing
           ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            borderRadius: const BorderRadius.all(Radius.circular(24)),
             child: Container(
               color: MyColors.blackOpacityContainer,
               width: widthSize(100),
@@ -121,75 +178,19 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   : Image.memory(_image!, fit: BoxFit.fill),
             ),
           ),
-          SizedBox(height: heightSize(2)),
+          SizedBox(height: heightSize(1.5)),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Container(
-                width: widthSize(43),
-                height: heightSize(8),
-                decoration: BoxDecoration(
-                  color: MyColors.blackOpacityContainer,
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
-                ),
-                child: InkWell(
-                  onTap: getImageFromCamera,
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          SizedBox(
-                            height: heightSize(4),
-                            child: Image.asset("assets/icons/camera.png"),
-                          ),
-                          Text(
-                            "Kamera",
-                            style: TextStyle(
-                              fontFamily: "Zona",
-                              fontSize: heightSize(2),
-                              color: MyColors.globalTextColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+              _buildCompactButton(
+                iconPath: "assets/icons/camera.png",
+                label: "Kamera",
+                onTap: getImageFromCamera,
               ),
-              Container(
-                width: widthSize(43),
-                height: heightSize(8),
-                decoration: BoxDecoration(
-                  color: MyColors.blackOpacityContainer,
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
-                ),
-                child: InkWell(
-                  onTap: getImageFromGallery,
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          SizedBox(
-                            height: heightSize(4),
-                            child: Image.asset("assets/icons/gallery.png"),
-                          ),
-                          Text(
-                            "Galeri",
-                            style: TextStyle(
-                              fontFamily: "Zona",
-                              fontSize: heightSize(2),
-                              color: MyColors.globalTextColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+              const SizedBox(width: 12),
+              _buildCompactButton(
+                iconPath: "assets/icons/gallery.png",
+                label: "Galeri",
+                onTap: getImageFromGallery,
               ),
             ],
           ),
@@ -202,120 +203,64 @@ class _CreateEventPageState extends State<CreateEventPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Container(
-            width: widthSize(43),
-            height: heightSize(8),
-            decoration: BoxDecoration(
-              color: MyColors.blackOpacityContainer,
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
-            ),
-            child: InkWell(
-              onTap: () async {
-                final datePick = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(DateTime.now().year),
-                  lastDate: DateTime(DateTime.now().year + 2),
-                  selectableDayPredicate: (DateTime currentDate) {
-                    if (currentDate.month > DateTime.now().month &&
-                        currentDate.year >= DateTime.now().year) {
-                      return true;
-                    } else if (currentDate.day >= DateTime.now().day &&
-                        currentDate.month >= DateTime.now().month) {
-                      return true;
-                    } else if (currentDate.year > DateTime.now().year)
-                      return true;
-                    else
-                      return false;
-                  },
-                );
-                if (datePick != null) {
-                  eventStartDateTime = datePick;
-                  setState(() {
-                    isStartDateSelected = true;
-                    eventFinishDate = null;
-                    isFinishDateSelected = false;
-                    eventStartDate =
-                        "${datePick.day}/${datePick.month}/${datePick.year}";
-                  });
-                }
-              },
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      SizedBox(
-                        height: heightSize(4),
-                        child: Image.asset("assets/icons/startDate.png"),
-                      ),
-                      Text(
-                        eventStartDate == null
-                            ? "Başlangıç"
-                            : "$eventStartDate",
-                        style: TextStyle(
-                          fontFamily: "Zona",
-                          fontSize: heightSize(2),
-                          color: MyColors.globalTextColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+          _buildCompactButton(
+            iconPath: "assets/icons/startDate.png",
+            label: eventStartDate ?? "Başlangıç",
+            onTap: () async {
+              final datePick = await showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(DateTime.now().year),
+                lastDate: DateTime(DateTime.now().year + 2),
+                selectableDayPredicate: (DateTime currentDate) {
+                  if (currentDate.month > DateTime.now().month &&
+                      currentDate.year >= DateTime.now().year) {
+                    return true;
+                  } else if (currentDate.day >= DateTime.now().day &&
+                      currentDate.month >= DateTime.now().month) {
+                    return true;
+                  } else if (currentDate.year > DateTime.now().year)
+                    return true;
+                  else
+                    return false;
+                },
+              );
+              if (datePick != null) {
+                eventStartDateTime = datePick;
+                setState(() {
+                  isStartDateSelected = true;
+                  eventFinishDate = null;
+                  isFinishDateSelected = false;
+                  eventStartDate =
+                      "${datePick.day}/${datePick.month}/${datePick.year}";
+                });
+              }
+            },
           ),
-          Container(
-            width: widthSize(43),
-            height: heightSize(8),
-            decoration: BoxDecoration(
-              color: MyColors.blackOpacityContainer,
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
-            ),
-            child: InkWell(
-              onTap: () async {
-                final datePick = await showDatePicker(
-                  context: context,
-                  initialDate: eventStartDateTime!,
-                  firstDate: eventStartDateTime!,
-                  lastDate: DateTime(eventStartDateTime!.year + 2),
-                );
-                if (datePick != null) {
-                  setState(() {
-                    isFinishDateSelected = true;
-                    eventFinishDate =
-                        "${datePick.day}/${datePick.month}/${datePick.year}";
-                  });
-                }
-              },
-              child: Center(
-                child: Padding(
-                  padding: eventFinishDate == null
-                      ? const EdgeInsets.symmetric(horizontal: 40)
-                      : const EdgeInsets.symmetric(horizontal: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      SizedBox(
-                        height: heightSize(4),
-                        child: Image.asset("assets/icons/end_date.png"),
-                      ),
-                      Text(
-                        eventFinishDate == null ? "Bitiş" : "$eventFinishDate",
-                        style: TextStyle(
-                          fontFamily: "Zona",
-                          fontSize: heightSize(2),
-                          color: MyColors.globalTextColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+          const SizedBox(width: 12),
+          _buildCompactButton(
+            iconPath: "assets/icons/end_date.png",
+            label: eventFinishDate ?? "Bitiş",
+            onTap: () async {
+              if (eventStartDateTime == null) {
+                Fluttertoast.showToast(msg: "Önce başlangıç tarihini seçin");
+                return;
+              }
+              final datePick = await showDatePicker(
+                context: context,
+                initialDate: eventStartDateTime!,
+                firstDate: eventStartDateTime!,
+                lastDate: DateTime(eventStartDateTime!.year + 2),
+              );
+              if (datePick != null) {
+                setState(() {
+                  isFinishDateSelected = true;
+                  eventFinishDate =
+                      "${datePick.day}/${datePick.month}/${datePick.year}";
+                });
+              }
+            },
           ),
         ],
       ),
@@ -326,111 +271,53 @@ class _CreateEventPageState extends State<CreateEventPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Container(
-            width: widthSize(43),
-            height: heightSize(8),
-            decoration: BoxDecoration(
-              color: MyColors.blackOpacityContainer,
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
-            ),
-            child: InkWell(
-              onTap: () async {
-                await showTimePicker(
-                  context: context,
-                  initialTime: TimeOfDay.now(),
-                ).then((timePick) {
-                  if (timePick != null) {
-                    eventStartTimeOfDay = timePick;
-                    setState(() {
-                      isStartTimeSelected = true;
-                      eventFinishTime = null;
-                      isFinishTimeSelected = false;
-                      eventStartTime = localizations!.formatTimeOfDay(
-                        eventStartTimeOfDay!,
-                      );
-                    });
-                  }
-                });
-              },
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      SizedBox(
-                        height: heightSize(4),
-                        child: Image.asset("assets/icons/startTime.png"),
-                      ),
-                      Text(
-                        eventStartTime == null
-                            ? "Başlangıç"
-                            : "$eventStartTime",
-                        style: TextStyle(
-                          fontFamily: "Zona",
-                          fontSize: heightSize(2),
-                          color: MyColors.globalTextColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Container(
-            width: widthSize(43),
-            height: heightSize(8),
-            decoration: BoxDecoration(
-              color: MyColors.blackOpacityContainer,
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
-            ),
-            child: InkWell(
-              onTap: () async {
-                if (eventStartTimeOfDay != null) {
-                  await showTimePicker(
-                    context: context,
-                    initialTime: eventStartTimeOfDay!,
-                  ).then((timePick) {
-                    if (timePick != null) {
-                      eventFinishTimeOfDay = timePick;
-                      setState(() {
-                        isFinishTimeSelected = true;
-                        eventFinishTime = localizations!.formatTimeOfDay(
-                          eventFinishTimeOfDay!,
-                        );
-                      });
-                    }
+          _buildCompactButton(
+            iconPath: "assets/icons/startTime.png",
+            label: eventStartTime ?? "Başlangıç",
+            onTap: () async {
+              await showTimePicker(
+                context: context,
+                initialTime: TimeOfDay.now(),
+              ).then((timePick) {
+                if (timePick != null) {
+                  eventStartTimeOfDay = timePick;
+                  setState(() {
+                    isStartTimeSelected = true;
+                    eventFinishTime = null;
+                    isFinishTimeSelected = false;
+                    eventStartTime = localizations!.formatTimeOfDay(
+                      eventStartTimeOfDay!,
+                    );
                   });
                 }
-              },
-              child: Center(
-                child: Padding(
-                  padding: eventFinishTime == null
-                      ? const EdgeInsets.symmetric(horizontal: 40)
-                      : const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      SizedBox(
-                        height: heightSize(4),
-                        child: Image.asset("assets/icons/endTime.png"),
-                      ),
-                      Text(
-                        eventFinishTime == null ? "Bitiş" : "$eventFinishTime",
-                        style: TextStyle(
-                          fontFamily: "Zona",
-                          fontSize: heightSize(2),
-                          color: MyColors.globalTextColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+              });
+            },
+          ),
+          const SizedBox(width: 12),
+          _buildCompactButton(
+            iconPath: "assets/icons/endTime.png",
+            label: eventFinishTime ?? "Bitiş",
+            onTap: () async {
+              if (eventStartTimeOfDay == null) {
+                Fluttertoast.showToast(msg: "Önce başlangıç saatini seçin");
+                return;
+              }
+              await showTimePicker(
+                context: context,
+                initialTime: eventStartTimeOfDay!,
+              ).then((timePick) {
+                if (timePick != null) {
+                  eventFinishTimeOfDay = timePick;
+                  setState(() {
+                    isFinishTimeSelected = true;
+                    eventFinishTime = localizations!.formatTimeOfDay(
+                      eventFinishTimeOfDay!,
+                    );
+                  });
+                }
+              });
+            },
           ),
         ],
       ),
@@ -442,59 +329,59 @@ class _CreateEventPageState extends State<CreateEventPage> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: <Widget>[
-          ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(20)),
-            child: Container(
-              color: MyColors.blackOpacityContainer,
-              width: widthSize(100),
-              height: heightSize(8),
+          MyLiquidGlass.section(
+            borderRadius: 20,
+            glassColor: MyColors.blackOpacityContainer,
+            child: SizedBox(
+              height: heightSize(7), // More compact
               child: Center(
                 child: TextFormField(
                   validator: (value) => value!.isEmpty ? 'boş olamaz' : null,
                   controller: controllerTitle,
                   decoration: InputDecoration(
+                    contentPadding: EdgeInsets.zero,
                     border: InputBorder.none,
                     hintText: "Etkinlik başlığı...",
                     hintStyle: TextStyle(
-                      fontSize: heightSize(2.5),
+                      fontSize: heightSize(2.2),
                       color: MyColors.globalTextColor,
                     ),
                   ),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: "Zona",
+                    fontSize: heightSize(2.2),
                     color: MyColors.globalTextColor,
                   ),
                 ),
               ),
             ),
           ),
-          SizedBox(height: heightSize(1.5)),
-          ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(20)),
-            child: Container(
-              color: MyColors.blackOpacityContainer,
-              width: widthSize(100),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 8),
-                child: TextFormField(
-                  controller: controllerDetail,
-                  minLines: 2,
-                  maxLines: 10,
-                  keyboardType: TextInputType.multiline,
-                  enableInteractiveSelection: true,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Etkinlik detayı...",
-                    hintStyle: TextStyle(
-                      fontSize: heightSize(2.5),
-                      color: MyColors.globalTextColor,
-                    ),
-                  ),
-                  style: TextStyle(
-                    fontFamily: "ZonaLight",
+          SizedBox(height: heightSize(1)), // Reduced gap
+          MyLiquidGlass.section(
+            borderRadius: 20,
+            glassColor: MyColors.blackOpacityContainer,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: TextFormField(
+                controller: controllerDetail,
+                minLines: 2,
+                maxLines: 6, // Reduced max lines for better fit
+                keyboardType: TextInputType.multiline,
+                enableInteractiveSelection: true,
+                decoration: InputDecoration(
+                  isDense: true,
+                  border: InputBorder.none,
+                  hintText: "Etkinlik detayı...",
+                  hintStyle: TextStyle(
+                    fontSize: heightSize(2.1),
                     color: MyColors.globalTextColor,
                   ),
+                ),
+                style: TextStyle(
+                  fontFamily: "ZonaLight",
+                  fontSize: heightSize(2.1),
+                  color: MyColors.globalTextColor,
                 ),
               ),
             ),
@@ -512,22 +399,25 @@ class _CreateEventPageState extends State<CreateEventPage> {
           curve: Curves.easeInOutCubic,
         );
       },
+      borderRadius: BorderRadius.circular(20),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Container(
-          width: widthSize(50),
-          height: heightSize(8),
-          decoration: BoxDecoration(
-            color: MyColors.purpleContainer,
-            borderRadius: const BorderRadius.all(Radius.circular(20)),
-          ),
-          child: Center(
-            child: Text(
-              "Devam Et",
-              style: TextStyle(
-                fontFamily: "Zona",
-                fontSize: heightSize(2.5),
-                color: MyColors.globalTextColor,
+        child: MyLiquidGlass.section(
+          borderRadius: 20,
+          glassColor: MyColors.purpleContainer,
+          child: SizedBox(
+            width: widthSize(50),
+            height: heightSize(7), // More compact
+            child: Center(
+              child: Text(
+                "Devam Et",
+                style: TextStyle(
+                  fontFamily: "Zona",
+                  fontSize: heightSize(
+                    2.2,
+                  ), // Slightly smaller font for compact feel
+                  color: MyColors.globalTextColor,
+                ),
               ),
             ),
           ),
@@ -539,6 +429,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Widget createEventButton() {
     return InkWell(
       onTap: () async {
+        // ... (onTap logic remains same)
         int maxParticipantNumber;
         if (participantNumberController.text == "") {
           maxParticipantNumber = 2;
@@ -554,7 +445,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
             subCategory != null &&
             mainCategory != null &&
             city != null &&
-            //country != null &&
             eventStartDate != null &&
             eventStartTime != null &&
             eventFinishDate != null &&
@@ -579,7 +469,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
             listen: false,
           ).userModel!.getUserId();
           Map<String, dynamic> eventData = {
-            // REVIEW Veri tabanında yazılan yer burası , burası için bir çözüm bul
             "OrganizerID": userID,
             "Title": controllerTitle.text,
             "MaxParticipantNumber": maxParticipantNumber,
@@ -587,20 +476,16 @@ class _CreateEventPageState extends State<CreateEventPage> {
             "MainCategory": mainCategory,
             "SubCategory": subCategory,
             "City": city,
-            //"Country": country,
             "StartDate": eventStartDate,
             "FinishDate": eventFinishDate,
             "StartTime": eventStartTime,
             "FinishTime": eventFinishTime,
             "Detail": controllerDetail.text,
             "Location": controllerLocation.text,
-            //ANCHOR Erkek izin verildiyse "10", kadın izin verildiyse "01" , ikiside izin verildiyse "11"
             "AllowedGenders": allowedGenders(),
             "Status": "New",
           };
           if (await eventManager.createEvent(userID, eventData, _image!)) {
-            print("Event oluşturma başarılı");
-            //ANCHOR Event oluşturma başarılıysa profilepage e gidiyor.
             NavigationManager(context).pushPage(
               ProfilePage(
                 userID: userService!.userModel!.getUserId(),
@@ -615,68 +500,43 @@ class _CreateEventPageState extends State<CreateEventPage> {
               ),
             );
 
-            Fluttertoast.showToast(
-              msg: "Etkinlik Oluşturuldu",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 4,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 18.0,
-            );
+            Fluttertoast.showToast(msg: "Etkinlik Oluşturuldu");
           } else {
             setState(() {
               loadingOverLay = false;
             });
-            Fluttertoast.showToast(
-              msg: "İnternet Bağlantınızı kontrol ediniz!",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 3,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 18.0,
-            );
+            Fluttertoast.showToast(msg: "Bağlantınızı kontrol ediniz!");
           }
         } else {
-          Fluttertoast.showToast(
-            msg: "Eksik Alanları Doldurunuz!",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 3,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 18.0,
-          );
+          Fluttertoast.showToast(msg: "Eksik Alanları Doldurunuz!");
         }
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Container(
-          width: widthSize(100),
-          height: heightSize(8),
-          decoration: BoxDecoration(
-            color: MyColors.blackOpacityContainer,
-            borderRadius: const BorderRadius.all(Radius.circular(20)),
-          ),
-          child: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: heightSize(4),
-                  child: Image.asset("assets/icons/addEvent.png"),
-                ),
-                SizedBox(width: widthSize(3)),
-                Text(
-                  "ETKİNLİK OLUŞTUR",
-                  style: TextStyle(
-                    fontFamily: "Zona",
-                    fontSize: heightSize(2),
-                    color: MyColors.globalTextColor,
+        child: MyLiquidGlass.section(
+          borderRadius: 20,
+          glassColor: MyColors.purpleContainer,
+          child: SizedBox(
+            height: heightSize(7),
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset(
+                    "assets/icons/addEvent.png",
+                    height: heightSize(3),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 8),
+                  Text(
+                    "ETKİNLİK OLUŞTUR",
+                    style: TextStyle(
+                      fontFamily: "Zona",
+                      fontSize: heightSize(1.9),
+                      color: MyColors.globalTextColor,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -689,21 +549,18 @@ class _CreateEventPageState extends State<CreateEventPage> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: <Widget>[
-          Container(
-            width: widthSize(100),
-            height: heightSize(8),
-            decoration: BoxDecoration(
-              color: MyColors.blackOpacityContainer,
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+          MyLiquidGlass.section(
+            borderRadius: 20,
+            glassColor: MyColors.blackOpacityContainer,
+            child: Container(
+              height: heightSize(7),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: <Widget>[
                   Text(
                     "Katılım Sınırı:",
                     style: TextStyle(
-                      fontSize: heightSize(2.5),
+                      fontSize: heightSize(2.1),
                       fontFamily: "Zona",
                       color: MyColors.globalTextColor,
                     ),
@@ -717,11 +574,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       maxLength: 3,
                       enableInteractiveSelection: false,
                       controller: participantNumberController,
-                      expands: false,
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.digitsOnly,
                       ],
                       decoration: InputDecoration(
+                        isDense: true,
                         counterText: "",
                         border: InputBorder.none,
                         hintText: "0",
@@ -729,10 +586,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                           fontFamily: "Zona",
                           color: MyColors.globalTextColor,
                         ),
-                        alignLabelWithHint: true,
                       ),
                       style: TextStyle(
-                        fontSize: heightSize(2.5),
+                        fontSize: heightSize(2.1),
                         fontFamily: "Zona",
                         color: MyColors.globalTextColor,
                       ),
@@ -742,7 +598,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
               ),
             ),
           ),
-          SizedBox(height: heightSize(3)),
+          SizedBox(height: heightSize(1.5)),
         ],
       ),
     );
@@ -771,37 +627,51 @@ class _CreateEventPageState extends State<CreateEventPage> {
               oppositeGender = !oppositeGender!;
             });
           },
-          child: Container(
-            width: widthSize(43),
-            height: heightSize(5),
-            decoration: BoxDecoration(
-              color: getOppositeGenderColor(),
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Text(
-                  userGender! ? "Kadın" : "Erkek",
-                  style: TextStyle(
-                    fontFamily: "Zona",
-                    fontSize: heightSize(2),
-                    color: MyColors.globalTextColor,
+          borderRadius: BorderRadius.circular(20),
+          child: MyLiquidGlass.section(
+            borderRadius: 20,
+            glassColor: getOppositeGenderColor(),
+            child: Container(
+              width: widthSize(50),
+              height: heightSize(6), // Compact
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Text(
+                    userGender! ? "Kadın" : "Erkek",
+                    style: TextStyle(
+                      fontFamily: "Zona",
+                      fontSize: heightSize(1.9),
+                      color: MyColors.globalTextColor,
+                    ),
                   ),
-                ),
-                Checkbox(
-                  value: oppositeGender,
-                  onChanged: (check) {
-                    setState(() {
-                      oppositeGender = check;
-                    });
-                  },
-                ),
-              ],
+                  Checkbox(
+                    value: oppositeGender,
+                    activeColor: Colors.white,
+                    checkColor: getOppositeGenderColor(),
+                    onChanged: (check) {
+                      setState(() {
+                        oppositeGender = check;
+                      });
+                    },
+                  ),
+                  Text(
+                    oppositeGender!
+                        ? (userGender! ? "Erkek" : "Kadın")
+                        : "Sadece",
+                    style: TextStyle(
+                      fontFamily: "Zona",
+                      fontSize: heightSize(1.9),
+                      color: MyColors.globalTextColor,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-        SizedBox(height: heightSize(3)),
+        SizedBox(height: heightSize(1.5)),
       ],
     );
   }
@@ -977,68 +847,85 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Widget cityAndCountry() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
-        child: Container(
-          height: heightSize(10),
-          //TODO responsive yap
-          color: MyColors.blackOpacityContainer,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: DropdownSearch<String>(
-                  items: (String filter, dynamic loadProps) => citiesTR,
-                  decoratorProps: const DropDownDecoratorProps(
-                    decoration: InputDecoration(
-                      labelText: "Şehir seçiniz",
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelStyle: TextStyle(color: Colors.black),
+      child: MyLiquidGlass.section(
+        borderRadius: 20,
+        glassColor: MyColors.blackOpacityContainer,
+        child: SizedBox(
+          height: heightSize(7),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: DropdownSearch<String>(
+              items: (String filter, dynamic loadProps) => citiesTR,
+              dropdownBuilder: (context, selectedItem) {
+                return Text(
+                  selectedItem ?? "Şehir seçiniz",
+                  style: TextStyle(
+                    fontFamily: "Zona",
+                    fontSize: heightSize(2.2),
+                    color: MyColors.globalTextColor,
+                  ),
+                );
+              },
+              decoratorProps: DropDownDecoratorProps(
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.zero,
+                ),
+                baseStyle: TextStyle(
+                  fontFamily: "Zona",
+                  fontSize: heightSize(2.2),
+                  color: MyColors.globalTextColor,
+                ),
+              ),
+              popupProps: PopupProps.menu(
+                showSearchBox: true,
+                menuProps: MenuProps(
+                  backgroundColor: MyColors.blackOpacityContainer,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                searchFieldProps: TextFieldProps(
+                  style: TextStyle(fontFamily: "Zona", color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: "Şehir ara...",
+                    hintStyle: TextStyle(
+                      fontFamily: "ZonaLite",
+                      color: Colors.white70,
+                    ),
+                    prefixIcon: Icon(Icons.search, color: Colors.white70),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide(color: Colors.white24),
                     ),
                   ),
-                  onChanged: (value) {
-                    if (value != null) {
-                      setState(() {
-                        city = value;
-                        print("CITY:${city!}");
-                      });
-                    }
-                  },
-                  selectedItem: citiesTR.first,
                 ),
-
-                /*SearchableDropdown.single(
-                  iconEnabledColor: MyColors.whiteTextColor,
-                  underline: SizedBox(),
-                  clearIcon: Icon(Icons.delete),
-                  menuBackgroundColor: MyColors.yellowContainer,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: heightSize(2.5),
-                      fontFamily: "Zona"),
-                  hint: Text("Şehir Seçin",
+                itemBuilder: (context, item, isSelected, isHighlighted) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    child: Text(
+                      item,
                       style: TextStyle(
-                          color: Colors.white,
-                          fontSize: heightSize(2.5),
-                          fontFamily: "Zona")),
-                  items: sehirler,
-                  searchHint: "Şehir Seçin",
-                  onChanged: (value) {
-                    if (value != 0 && value != null) {
-                      setState(() {
-                        city = value;
-                        print("CITY:" + city!);
-                      });
-                    }
-                  },
-                  displayClearIcon: true,
-                  isExpanded: true,
-                ),*/
+                        fontFamily: "Zona",
+                        fontSize: heightSize(2),
+                        color: isSelected
+                            ? MyColors.blueThemeColor
+                            : Colors.white,
+                      ),
+                    ),
+                  );
+                },
               ),
-            ],
+              onSelected: (value) {
+                if (value != null) {
+                  setState(() {
+                    city = value;
+                  });
+                }
+              },
+              selectedItem: city,
+            ),
           ),
         ),
       ),
@@ -1048,68 +935,85 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Widget cityAndCountryLittle() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
-        child: Container(
-          height: heightSize(13),
-          //TODO responsive yap
-          color: MyColors.blackOpacityContainer,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: DropdownSearch<String>(
-                  items: (String filter, dynamic loadProps) => citiesTR,
-                  decoratorProps: const DropDownDecoratorProps(
-                    decoration: InputDecoration(
-                      labelText: "Şehir seçiniz",
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelStyle: TextStyle(color: Colors.black),
+      child: MyLiquidGlass.section(
+        borderRadius: 20,
+        glassColor: MyColors.blackOpacityContainer,
+        child: SizedBox(
+          height: heightSize(6),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: DropdownSearch<String>(
+              items: (String filter, dynamic loadProps) => citiesTR,
+              dropdownBuilder: (context, selectedItem) {
+                return Text(
+                  selectedItem ?? "Şehir seçiniz",
+                  style: TextStyle(
+                    fontFamily: "Zona",
+                    fontSize: heightSize(1.9),
+                    color: MyColors.globalTextColor,
+                  ),
+                );
+              },
+              decoratorProps: DropDownDecoratorProps(
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.zero,
+                ),
+                baseStyle: TextStyle(
+                  fontFamily: "Zona",
+                  fontSize: heightSize(1.9),
+                  color: MyColors.globalTextColor,
+                ),
+              ),
+              popupProps: PopupProps.menu(
+                showSearchBox: true,
+                menuProps: MenuProps(
+                  backgroundColor: MyColors.blackOpacityContainer,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                searchFieldProps: TextFieldProps(
+                  style: TextStyle(fontFamily: "Zona", color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: "Şehir ara...",
+                    hintStyle: TextStyle(
+                      fontFamily: "ZonaLite",
+                      color: Colors.white70,
+                    ),
+                    prefixIcon: Icon(Icons.search, color: Colors.white70),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide(color: Colors.white24),
                     ),
                   ),
-                  onChanged: (value) {
-                    if (value != null) {
-                      setState(() {
-                        city = value;
-                        print("CITY:${city!}");
-                      });
-                    }
-                  },
-                  selectedItem: citiesTR.first,
                 ),
-
-                /*SearchableDropdown.single(
-                  iconEnabledColor: MyColors.whiteTextColor,
-                  underline: SizedBox(),
-                  clearIcon: Icon(Icons.delete),
-                  menuBackgroundColor: MyColors.yellowContainer,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: heightSize(2.5),
-                      fontFamily: "Zona"),
-                  hint: Text("Şehir Seçin",
+                itemBuilder: (context, item, isSelected, isHighlighted) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    child: Text(
+                      item,
                       style: TextStyle(
-                          color: Colors.white,
-                          fontSize: heightSize(2.5),
-                          fontFamily: "Zona")),
-                  items: sehirler,
-                  searchHint: "Şehir Seçin",
-                  onChanged: (value) {
-                    if (value != 0 && value != null) {
-                      setState(() {
-                        city = value;
-                        print("CITY:" + city!);
-                      });
-                    }
-                  },
-                  displayClearIcon: true,
-                  isExpanded: true,
-                ),*/
+                        fontFamily: "Zona",
+                        fontSize: heightSize(1.8),
+                        color: isSelected
+                            ? MyColors.blueThemeColor
+                            : Colors.white,
+                      ),
+                    ),
+                  );
+                },
               ),
-            ],
+              onSelected: (value) {
+                if (value != null) {
+                  setState(() {
+                    city = value;
+                  });
+                }
+              },
+              selectedItem: city,
+            ),
           ),
         ),
       ),

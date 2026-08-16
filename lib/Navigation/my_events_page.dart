@@ -1,4 +1,5 @@
 import 'package:eventizer/data/themes.dart';
+import 'package:eventizer/components/liquidglass_widgets.dart';
 import 'package:eventizer/navigation/components/custom_scroll.dart';
 import 'package:eventizer/navigation/components/event_item.dart';
 import 'package:eventizer/services/repository.dart';
@@ -40,11 +41,16 @@ class _MyEventsPageState extends State<MyEventsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurpleAccent,
+      backgroundColor: Colors.transparent,
       body: SafeArea(
-        child: PageView(
-          controller: _pageController,
-          children: <Widget>[eventList(false), eventList(true)],
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: MyLiquidGlass.standartContainer(
+            child: PageView(
+              controller: _pageController,
+              children: <Widget>[eventList(false), eventList(true)],
+            ),
+          ),
         ),
       ),
     );
@@ -54,7 +60,10 @@ class _MyEventsPageState extends State<MyEventsPage> {
     var eventManager = Provider.of<EventService>(context);
 
     String userID = widget.userID == null
-        ? Provider.of<UserService>(context, listen: false).userModel!.getUserId()
+        ? Provider.of<UserService>(
+            context,
+            listen: false,
+          ).userModel!.getUserId()
         : widget.userID!;
 
     return Padding(
@@ -74,23 +83,33 @@ class _MyEventsPageState extends State<MyEventsPage> {
                 if (fetchedlist.connectionState == ConnectionState.done) {
                   List<Map<String, dynamic>> listofMaps = fetchedlist.data;
                   if (listofMaps.isEmpty) {
-                    return const Center(child: Card(child: Text("Etkinlik Yok")));
+                    return const Center(
+                      child: Card(child: Text("Etkinlik Yok")),
+                    );
                   } else {
                     return ScrollConfiguration(
                       behavior: NoScrollEffectBehavior(),
                       child: ListView.separated(
                         separatorBuilder:
                             //ANCHOR ayıraç burada
-                            (BuildContext context, int index) => SizedBox(height: heightSize(3)),
+                            (BuildContext context, int index) =>
+                                SizedBox(height: heightSize(3)),
                         itemCount: listofMaps.length,
                         itemBuilder: (context, index) {
-                          return eventItem(context, listofMaps[index], false, parentState: this);
+                          return eventItem(
+                            context,
+                            listofMaps[index],
+                            false,
+                            parentState: this,
+                          );
                         },
                       ),
                     );
                   }
                 } else {
-                  return PageComponents(context).loadingOverlay(spinColor: Colors.white);
+                  return PageComponents(
+                    context,
+                  ).loadingOverlay(spinColor: Colors.white);
                 }
               },
             ),
@@ -138,7 +157,10 @@ class _MyEventsPageState extends State<MyEventsPage> {
                   child: Center(
                     child: Text(
                       "Hepsi",
-                      style: TextStyle(fontFamily: "Zona", color: MyColors.globalTextColor),
+                      style: TextStyle(
+                        fontFamily: "Zona",
+                        color: MyColors.globalTextColor,
+                      ),
                     ),
                   ),
                 ),
@@ -158,11 +180,16 @@ class _MyEventsPageState extends State<MyEventsPage> {
                         children: <Widget>[
                           SizedBox(
                             height: heightSize(4),
-                            child: Image.asset("assets/icons/birthdayCategory.png"),
+                            child: Image.asset(
+                              "assets/icons/birthdayCategory.png",
+                            ),
                           ),
                           Text(
                             "Doğum Günü",
-                            style: TextStyle(fontFamily: "Zona", color: MyColors.globalTextColor),
+                            style: TextStyle(
+                              fontFamily: "Zona",
+                              color: MyColors.globalTextColor,
+                            ),
                           ),
                         ],
                       ),
@@ -185,11 +212,16 @@ class _MyEventsPageState extends State<MyEventsPage> {
                         children: <Widget>[
                           SizedBox(
                             height: heightSize(4),
-                            child: Image.asset("assets/icons/travelCategory.png"),
+                            child: Image.asset(
+                              "assets/icons/travelCategory.png",
+                            ),
                           ),
                           Text(
                             "Gezi Turu",
-                            style: TextStyle(fontFamily: "Zona", color: MyColors.globalTextColor),
+                            style: TextStyle(
+                              fontFamily: "Zona",
+                              color: MyColors.globalTextColor,
+                            ),
                           ),
                         ],
                       ),
@@ -212,11 +244,16 @@ class _MyEventsPageState extends State<MyEventsPage> {
                         children: <Widget>[
                           SizedBox(
                             height: heightSize(4),
-                            child: Image.asset("assets/icons/worldtravelCategory.png"),
+                            child: Image.asset(
+                              "assets/icons/worldtravelCategory.png",
+                            ),
                           ),
                           Text(
                             "Dünya Turu",
-                            style: TextStyle(fontFamily: "Zona", color: MyColors.globalTextColor),
+                            style: TextStyle(
+                              fontFamily: "Zona",
+                              color: MyColors.globalTextColor,
+                            ),
                           ),
                         ],
                       ),
@@ -241,7 +278,10 @@ class _MyEventsPageState extends State<MyEventsPage> {
                         ),
                         Text(
                           "Doğa Fotoğrafçılığı",
-                          style: TextStyle(fontFamily: "Zona", color: MyColors.globalTextColor),
+                          style: TextStyle(
+                            fontFamily: "Zona",
+                            color: MyColors.globalTextColor,
+                          ),
                         ),
                       ],
                     ),
@@ -263,11 +303,16 @@ class _MyEventsPageState extends State<MyEventsPage> {
                         children: <Widget>[
                           SizedBox(
                             height: heightSize(4),
-                            child: Image.asset("assets/icons/conferenceCategory.png"),
+                            child: Image.asset(
+                              "assets/icons/conferenceCategory.png",
+                            ),
                           ),
                           Text(
                             "Konferans",
-                            style: TextStyle(fontFamily: "Zona", color: MyColors.globalTextColor),
+                            style: TextStyle(
+                              fontFamily: "Zona",
+                              color: MyColors.globalTextColor,
+                            ),
                           ),
                         ],
                       ),
@@ -294,7 +339,10 @@ class _MyEventsPageState extends State<MyEventsPage> {
                           ),
                           Text(
                             "Kamp",
-                            style: TextStyle(fontFamily: "Zona", color: MyColors.globalTextColor),
+                            style: TextStyle(
+                              fontFamily: "Zona",
+                              color: MyColors.globalTextColor,
+                            ),
                           ),
                         ],
                       ),

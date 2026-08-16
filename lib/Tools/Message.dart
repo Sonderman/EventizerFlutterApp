@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:dash_chat_2/dash_chat_2.dart';
-import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/services/repository.dart';
+import 'package:eventizer/components/liquidglass_widgets.dart';
 import 'package:eventizer/data/themes.dart';
 import 'package:eventizer/tools/page_components.dart';
 import 'package:flutter/foundation.dart';
@@ -12,7 +13,11 @@ class Message extends StatefulWidget {
   final String otherUserID;
   final String otherUserName;
 
-  const Message({super.key, required this.otherUserID, required this.otherUserName});
+  const Message({
+    super.key,
+    required this.otherUserID,
+    required this.otherUserName,
+  });
 
   @override
   State<Message> createState() => _MessageState();
@@ -62,7 +67,10 @@ class _MessageState extends State<Message> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: MyColors.blueThemeColor,
-        title: Text(widget.otherUserName, style: const TextStyle(color: Colors.white)),
+        title: Text(
+          widget.otherUserName,
+          style: const TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -72,47 +80,55 @@ class _MessageState extends State<Message> {
           if (kDebugMode) {
             print("Control Future");
           }
-          if (snapshot.connectionState == ConnectionState.done || runFutureOnce) {
+          if (snapshot.connectionState == ConnectionState.done ||
+              runFutureOnce) {
             // ANCHOR bu Future builder in birden çok defa çalışması textfield a tıklandığında
             //bütün widgetin rebuild olması sebebiyle keyboardın sürekli sıfırlanamsına sebep olmakta.
             runFutureOnce = true;
-            if (!snapshot.hasError && snapshot.hasData && snapshot.data != "bos") {
+            if (!snapshot.hasError &&
+                snapshot.hasData &&
+                snapshot.data != "bos") {
               if (chatID == "temp") chatID = snapshot.data;
             }
 
             if (messageStream == null && chatID != "temp") {
-              messageStream = messageService.getMessagesSnapshot(chatID).listen((snapshot) {
-                if (kDebugMode) {
-                  print("Subscribe oldu");
-                }
-                setState(() {
-                  messages = snapshot.docs
-                      .map((i) => ChatMessage.fromJson(i.data()))
-                      .toList()
-                      .reversed
-                      .toList();
-                });
-              });
+              messageStream = messageService.getMessagesSnapshot(chatID).listen(
+                (snapshot) {
+                  if (kDebugMode) {
+                    print("Subscribe oldu");
+                  }
+                  setState(() {
+                    messages = snapshot.docs
+                        .map((i) => ChatMessage.fromJson(i.data()))
+                        .toList()
+                        .reversed
+                        .toList();
+                  });
+                },
+              );
             }
 
             if (kDebugMode) {
               print("ChatID:$chatID");
             }
-            return DashChat(
-              // key: _chatViewKey,
-              currentUser: user!,
-              onSend: (ChatMessage message) {
-                messageService.sendMessage(chatID, message, currentUserID, otherUserID!).then((id) {
-                  if (messages == null) {
-                    print("ilkmesaj");
-                    setState(() {
-                      chatID = id;
-                    });
-                  }
-                });
-              },
-              messages: messages ?? [],
-              /*
+            return MyLiquidGlass.standartContainer(
+              child: DashChat(
+                // key: _chatViewKey,
+                currentUser: user!,
+                onSend: (ChatMessage message) {
+                  messageService
+                      .sendMessage(chatID, message, currentUserID, otherUserID!)
+                      .then((id) {
+                        if (messages == null) {
+                          print("ilkmesaj");
+                          setState(() {
+                            chatID = id;
+                          });
+                        }
+                      });
+                },
+                messages: messages ?? [],
+                /*
               shouldShowLoadEarlier: true,
               showLoadEarlierWidget: () => const CircularProgressIndicator(),
               onLoadEarlier: () {
@@ -172,9 +188,12 @@ class _MessageState extends State<Message> {
                   },
                 )
               ],*/
+              ),
             );
           } else {
-            return PageComponents(context).loadingOverlay(spinColor: Colors.blue);
+            return PageComponents(
+              context,
+            ).loadingOverlay(spinColor: Colors.blue);
           }
         },
       ),

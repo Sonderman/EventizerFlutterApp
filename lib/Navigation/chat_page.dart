@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/services/repository.dart';
 import 'package:eventizer/Tools/Message.dart';
+import 'package:eventizer/components/liquidglass_widgets.dart';
 import 'package:eventizer/data/themes.dart';
 import 'package:eventizer/navigation/components/custom_scroll.dart';
 import 'package:eventizer/tools/page_components.dart';
@@ -33,19 +34,24 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          children: <Widget>[
-            /*
-            SizedBox(
-              height: heightSize(10),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: MyLiquidGlass.standartContainer(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Column(
+              children: <Widget>[
+                /*
+                SizedBox(
+                  height: heightSize(10),
+                ),
+                groupChatButtons(),
+                */
+                SizedBox(height: heightSize(5)),
+                chatRows(),
+                SizedBox(height: heightSize(5)),
+              ],
             ),
-            groupChatButtons(),
-            */
-            SizedBox(height: heightSize(5)),
-            chatRows(),
-            SizedBox(height: heightSize(5)),
-          ],
+          ),
         ),
       ),
     );
@@ -69,10 +75,14 @@ class _ChatPageState extends State<ChatPage> {
           SizedBox(height: heightSize(3)),
           Expanded(
             child: StreamBuilder(
-              stream: messageService.getUserChatsSnapshot(userService.userModel!.getUserId()),
+              stream: messageService.getUserChatsSnapshot(
+                userService.userModel!.getUserId(),
+              ),
               builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                 if (!snapshot.hasData) {
-                  return PageComponents(context).loadingOverlay(backgroundColor: Colors.white);
+                  return PageComponents(
+                    context,
+                  ).loadingOverlay(backgroundColor: Colors.white);
                 } else {
                   final items = snapshot.data!.docs;
                   int itemLength = items.length;
@@ -97,88 +107,130 @@ class _ChatPageState extends State<ChatPage> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (BuildContext context) => Message(
-                                          otherUserID: otherUserID,
-                                          otherUserName: userName,
-                                        ),
+                                        builder: (BuildContext context) =>
+                                            Message(
+                                              otherUserID: otherUserID,
+                                              otherUserName: userName,
+                                            ),
                                       ),
                                     );
                                   },
                                   child: StreamBuilder(
-                                    stream: messageService.getChatPoolSnapshot(chatID),
+                                    stream: messageService.getChatPoolSnapshot(
+                                      chatID,
+                                    ),
                                     builder:
                                         (
                                           _,
-                                          AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+                                          AsyncSnapshot<
+                                            DocumentSnapshot<
+                                              Map<String, dynamic>
+                                            >
+                                          >
                                           lastMessageSnap,
                                         ) {
                                           if (lastMessageSnap.hasData) {
-                                            DocumentSnapshot<Map<String, dynamic>> lastMessagemap =
+                                            DocumentSnapshot<
+                                              Map<String, dynamic>
+                                            >
+                                            lastMessagemap =
                                                 lastMessageSnap.data!;
                                             String message =
                                                 lastMessagemap["LastMessage"]["Message"];
                                             String createdAt =
                                                 lastMessagemap["LastMessage"]["createdAt"];
-                                            String formattedTime = DateFormat('kk:mm').format(
-                                              DateTime.fromMillisecondsSinceEpoch(
-                                                int.parse(createdAt),
-                                              ),
-                                            );
-
-                                            return Row(
-                                              children: <Widget>[
-                                                Container(
-                                                  height: heightSize(7),
-                                                  width: widthSize(14),
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    image: DecorationImage(
-                                                      fit: BoxFit.cover,
-                                                      image: NetworkImage(url),
-                                                    ),
+                                            String formattedTime =
+                                                DateFormat('kk:mm').format(
+                                                  DateTime.fromMillisecondsSinceEpoch(
+                                                    int.parse(createdAt),
                                                   ),
-                                                ),
-                                                SizedBox(width: widthSize(3)),
-                                                Column(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                );
+
+                                            return MyLiquidGlass.standartContainer(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 8,
+                                                    ),
+                                                child: Row(
                                                   children: <Widget>[
-                                                    Text(
-                                                      userName,
-                                                      style: TextStyle(
-                                                        fontFamily: "Zona",
-                                                        fontSize: heightSize(2.5),
-                                                        color: MyColors.loginGreyColor,
+                                                    Container(
+                                                      height: heightSize(7),
+                                                      width: widthSize(14),
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        image: DecorationImage(
+                                                          fit: BoxFit.cover,
+                                                          image: NetworkImage(
+                                                            url,
+                                                          ),
+                                                        ),
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                      width: widthSize(62),
-                                                      child: Text(
-                                                        message,
-                                                        overflow: TextOverflow.ellipsis,
-                                                        style: TextStyle(
-                                                          fontWeight: FontWeight.bold,
-                                                          height: heightSize(0.2),
-                                                          fontFamily: "ZonaLight",
-                                                          fontSize: heightSize(2),
-                                                          color: MyColors.greyTextColor,
+                                                      width: widthSize(3),
+                                                    ),
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          userName,
+                                                          style: TextStyle(
+                                                            fontFamily: "Zona",
+                                                            fontSize:
+                                                                heightSize(2.5),
+                                                            color: MyColors
+                                                                .loginGreyColor,
+                                                          ),
                                                         ),
+                                                        SizedBox(
+                                                          width: widthSize(58),
+                                                          child: Text(
+                                                            message,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              height:
+                                                                  heightSize(
+                                                                    0.2,
+                                                                  ),
+                                                              fontFamily:
+                                                                  "ZonaLight",
+                                                              fontSize:
+                                                                  heightSize(2),
+                                                              color: MyColors
+                                                                  .greyTextColor,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const Spacer(),
+                                                    Text(
+                                                      formattedTime,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        height: heightSize(0.2),
+                                                        fontFamily: "ZonaLight",
+                                                        fontSize: heightSize(2),
+                                                        color: MyColors
+                                                            .greyTextColor,
                                                       ),
                                                     ),
                                                   ],
                                                 ),
-                                                const Spacer(),
-                                                Text(
-                                                  formattedTime,
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    height: heightSize(0.2),
-                                                    fontFamily: "ZonaLight",
-                                                    fontSize: heightSize(2),
-                                                    color: MyColors.greyTextColor,
-                                                  ),
-                                                ),
-                                              ],
+                                              ),
                                             );
                                           } else {
                                             return const Text("null");
@@ -190,12 +242,16 @@ class _ChatPageState extends State<ChatPage> {
                               case ConnectionState.none:
                                 return const Center(child: Text("Hata"));
                               case ConnectionState.waiting:
-                                return PageComponents(context).loadingCustomOverlay(
+                                return PageComponents(
+                                  context,
+                                ).loadingCustomOverlay(
                                   spinColor: MyColors.blueThemeColor,
                                   spinSize: 40,
                                 );
                               default:
-                                return const Center(child: Text("Beklenmedik durum"));
+                                return const Center(
+                                  child: Text("Beklenmedik durum"),
+                                );
                             }
                           },
                         );
@@ -224,14 +280,21 @@ class _ChatPageState extends State<ChatPage> {
               width: widthSize(30),
               height: heightSize(20),
               decoration: BoxDecoration(
-                border: Border.all(color: MyColors.blackOpacityContainer, width: 2),
+                border: Border.all(
+                  color: MyColors.blackOpacityContainer,
+                  width: 2,
+                ),
                 borderRadius: const BorderRadius.all(Radius.circular(10)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Icon(Icons.add, size: heightSize(6), color: MyColors.greyTextColor),
+                  Icon(
+                    Icons.add,
+                    size: heightSize(6),
+                    color: MyColors.greyTextColor,
+                  ),
                   SizedBox(height: heightSize(2)),
                   Text(
                     "Yeni grup konuşması",

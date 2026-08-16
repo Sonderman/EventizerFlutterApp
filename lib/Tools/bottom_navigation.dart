@@ -1,6 +1,6 @@
 import 'package:eventizer/navigation/chat_page.dart';
 import 'package:eventizer/navigation/explore_event_page.dart';
-import 'package:eventizer/Services/Repository.dart';
+import 'package:eventizer/services/repository.dart';
 import 'package:eventizer/data/themes.dart';
 import 'package:eventizer/navigation/create_event_page.dart';
 import 'package:eventizer/navigation/profile_page.dart';

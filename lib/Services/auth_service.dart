@@ -12,8 +12,9 @@ class AuthService {
     User? user;
     try {
       user = (await _firebaseAuth.signInWithEmailAndPassword(
-              email: email, password: password))
-          .user;
+        email: email,
+        password: password,
+      )).user;
     } catch (e) {
       print('Error: Giriş işleminde Hata!: $e');
       return null;
@@ -23,9 +24,17 @@ class AuthService {
 
   Future<String> signUp(String email, String password) async {
     User? user = (await _firebaseAuth.createUserWithEmailAndPassword(
-            email: email, password: password))
-        .user;
+      email: email,
+      password: password,
+    )).user;
     return user!.uid;
+  }
+
+  Future<void> deleteCurrentUser() async {
+    final user = _firebaseAuth.currentUser;
+    if (user != null) {
+      await user.delete();
+    }
   }
 
   User? getCurrentUser() => _firebaseAuth.currentUser;
@@ -69,9 +78,9 @@ class AuthService {
   Future<bool> checkPassword(String email, String password) async {
     try {
       (await _firebaseAuth.signInWithEmailAndPassword(
-              email: email, password: password))
-          .user!
-          .uid;
+        email: email,
+        password: password,
+      )).user!.uid;
       return true;
     } catch (e) {
       return false;

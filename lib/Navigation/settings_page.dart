@@ -3,6 +3,7 @@ import 'package:eventizer/data/themes.dart';
 import 'package:eventizer/data/cities.dart';
 import 'package:eventizer/models/user_model.dart';
 import 'package:eventizer/routes/app_routes.dart';
+import 'package:eventizer/components/liquidglass_widgets.dart';
 import 'package:eventizer/services/repository.dart';
 import 'package:eventizer/tools/loading.dart';
 import 'package:eventizer/tools/navigation_manager.dart';
@@ -66,30 +67,38 @@ class _SettingsPageState extends State<SettingsPage> {
             body: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(height: heightSize(5)),
-                    addPhoto(),
-                    SizedBox(height: heightSize(1)),
-                    nameSurname(),
-                    /*
-                    SizedBox(
-                      height: heightSize(1),
+                child: MyLiquidGlass.standartContainer(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
                     ),
-                    emailField(),
-                     */
-                    SizedBox(height: heightSize(1)),
-                    detailField(),
-                    SizedBox(height: heightSize(2)),
-                    telephoneNumber(),
-                    SizedBox(height: heightSize(2)),
-                    cityField(),
-                    SizedBox(height: heightSize(2)),
-                    saveChangesButton(),
-                    SizedBox(height: heightSize(2)),
-                    themeSettingsButton(),
-                    SizedBox(height: heightSize(2)),
-                  ],
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(height: heightSize(5)),
+                        addPhoto(),
+                        SizedBox(height: heightSize(1)),
+                        nameSurname(),
+                        /*
+                        SizedBox(
+                          height: heightSize(1),
+                        ),
+                        emailField(),
+                         */
+                        SizedBox(height: heightSize(1)),
+                        detailField(),
+                        SizedBox(height: heightSize(2)),
+                        telephoneNumber(),
+                        SizedBox(height: heightSize(2)),
+                        cityField(),
+                        SizedBox(height: heightSize(2)),
+                        saveChangesButton(),
+                        SizedBox(height: heightSize(2)),
+                        themeSettingsButton(),
+                        SizedBox(height: heightSize(2)),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -152,34 +161,40 @@ class _SettingsPageState extends State<SettingsPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Colors.transparent,
           title: const Text('Bir Seçim Yapınız'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                GestureDetector(
-                  child: const Text('Galeri'),
-                  onTap: () {
-                    _getImageFromGallery().then((value) {
-                      setState(() {
-                        _image = value;
-                        Navigator.pop(context);
-                      });
-                    });
-                  },
+          content: MyLiquidGlass.standartDialog(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    GestureDetector(
+                      child: const Text('Galeri'),
+                      onTap: () {
+                        _getImageFromGallery().then((value) {
+                          setState(() {
+                            _image = value;
+                            Navigator.pop(context);
+                          });
+                        });
+                      },
+                    ),
+                    const Padding(padding: EdgeInsets.all(8.0)),
+                    GestureDetector(
+                      child: const Text('Kamera'),
+                      onTap: () {
+                        _getImageFromCamera().then((value) {
+                          setState(() {
+                            _image = value;
+                            Navigator.pop(context);
+                          });
+                        });
+                      },
+                    ),
+                  ],
                 ),
-                const Padding(padding: EdgeInsets.all(8.0)),
-                GestureDetector(
-                  child: const Text('Kamera'),
-                  onTap: () {
-                    _getImageFromCamera().then((value) {
-                      setState(() {
-                        _image = value;
-                        Navigator.pop(context);
-                      });
-                    });
-                  },
-                ),
-              ],
+              ),
             ),
           ),
         );
@@ -446,11 +461,11 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             //popupItemDisabled: (String s) => s.startsWith('I'),
-            onChanged: (value) {
+            onSelected: (value) {
               if (value != null) {
                 setState(() {
                   city = value;
-                  print("CITY:" + city!);
+                  print("CITY:${city!}");
                 });
               }
             },

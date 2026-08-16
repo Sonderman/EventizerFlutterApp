@@ -1,4 +1,5 @@
 import 'package:eventizer/data/themes.dart';
+import 'package:eventizer/components/liquidglass_widgets.dart';
 import 'package:eventizer/services/repository.dart';
 import 'package:eventizer/tools/page_components.dart';
 import 'package:extended_image/extended_image.dart';
@@ -52,7 +53,8 @@ class _ProfileListItemInternal extends StatefulWidget {
   const _ProfileListItemInternal({this.name, this.image, this.comment});
 
   @override
-  _ProfileListItemInternalState createState() => _ProfileListItemInternalState();
+  _ProfileListItemInternalState createState() =>
+      _ProfileListItemInternalState();
 }
 
 class _ProfileListItemInternalState extends State<_ProfileListItemInternal> {
@@ -79,60 +81,64 @@ class _ProfileListItemInternalState extends State<_ProfileListItemInternal> {
           isOpen = !isOpen;
         });
       },
-      child: Container(
-        //        height: _height,
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          color: MyColors.lightGreen,
-        ),
-        child: Row(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                height: heightSize(7),
-                width: widthSize(14),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: ExtendedNetworkImageProvider(widget.image!, cache: true),
+      child: MyLiquidGlass.standartContainer(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+          child: Row(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Container(
+                  height: heightSize(7),
+                  width: widthSize(14),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: ExtendedNetworkImageProvider(
+                        widget.image!,
+                        cache: true,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(width: widthSize(3)),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  //username
-                  Text(
-                    widget.name!,
-                    style: TextStyle(
-                      fontFamily: "Zona",
-                      fontSize: heightSize(2.5),
-                      color: MyColors.darkblueText,
+              SizedBox(width: widthSize(3)),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      widget.name!,
+                      style: TextStyle(
+                        fontFamily: "Zona",
+                        fontSize: heightSize(2.5),
+                        color: MyColors.darkblueText,
+                      ),
                     ),
-                  ),
-                  Divider(endIndent: 15, height: 15, color: MyColors.darkblueText, thickness: 1),
-                  Text(
-                    widget.comment!,
-                    maxLines: isOpen ? 2000 : 2,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: true,
-                    style: TextStyle(
-                      fontFamily: "ZonaLight",
-                      fontSize: heightSize(2),
+                    Divider(
+                      endIndent: 15,
+                      height: 15,
                       color: MyColors.darkblueText,
+                      thickness: 1,
                     ),
-                  ),
-                ],
+                    Text(
+                      widget.comment!,
+                      maxLines: isOpen ? 2000 : 2,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
+                      style: TextStyle(
+                        fontFamily: "ZonaLight",
+                        fontSize: heightSize(2),
+                        color: MyColors.darkblueText,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

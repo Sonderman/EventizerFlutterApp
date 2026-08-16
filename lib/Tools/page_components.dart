@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 class PageComponents {
   final BuildContext context;
@@ -29,15 +30,42 @@ class PageComponents {
     );
   }
 
-  Widget loadingOverlay(
-      {Color backgroundColor = Colors.transparent,
-      Color spinColor = Colors.blue,
-      double spinSize = 75}) {
-    return Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        color: backgroundColor,
-        child: SpinKitRing(size: spinSize, color: spinColor));
+  Widget loadingOverlay({
+    Color backgroundColor = Colors.transparent,
+    Color spinColor = Colors.white,
+    double spinSize = 60,
+  }) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        // Hafif karartma
+        Container(color: backgroundColor),
+        // Hafif blur + koyu overlay
+        Positioned.fill(
+          child: ColoredBox(color: Colors.black.withValues(alpha: 0.28)),
+        ),
+        // Cam spinner kutusu
+        Center(
+          child: GlassContainer(
+            shape: const LiquidRoundedSuperellipse(borderRadius: 24),
+            padding: const EdgeInsets.all(24),
+            useOwnLayer: true,
+            settings: const LiquidGlassSettings(
+              blur: 0,
+              thickness: 11,
+              glassColor: Color(0x124A90E2),
+              lightAngle: 0.75 * 3.141592653589793,
+              lightIntensity: 0.98,
+              ambientStrength: 0.18,
+              saturation: 1.0,
+              chromaticAberration: 0.01,
+              specularSharpness: GlassSpecularSharpness.medium,
+            ),
+            child: SpinKitRing(size: spinSize, color: spinColor),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget underConstruction() {

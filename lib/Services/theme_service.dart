@@ -139,25 +139,35 @@ class ThemeService extends GetxController {
   }
 
   /// Get current color scheme
-  FlexScheme get currentColorScheme => _availableSchemes[_colorSchemeIndex.value];
+  FlexScheme get currentColorScheme =>
+      _availableSchemes[_colorSchemeIndex.value];
 
   /// Get all available color schemes with names
   List<Map<String, dynamic>> get availableColorSchemes {
     return _availableSchemes.asMap().entries.map((entry) {
       final index = entry.key;
       final scheme = entry.value;
-      return {'index': index, 'scheme': scheme, 'name': _getColorSchemeName(scheme)};
+      return {
+        'index': index,
+        'scheme': scheme,
+        'name': _getColorSchemeName(scheme),
+      };
     }).toList();
   }
 
   /// Get color scheme name
   String _getColorSchemeName(FlexScheme scheme) {
-    return scheme.toString().split('.').last.replaceAll(RegExp(r'([A-Z])'), ' \$1').trim();
+    return scheme
+        .toString()
+        .split('.')
+        .last
+        .replaceAll(RegExp(r'([A-Z])'), ' \$1')
+        .trim();
   }
 
   /// Generate light theme using FlexColorScheme
   ThemeData getLightTheme() {
-    return FlexThemeData.light(
+    final theme = FlexThemeData.light(
       scheme: currentColorScheme,
       surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
       blendLevel: 7,
@@ -175,11 +185,20 @@ class ThemeService extends GetxController {
       // Custom font configuration
       fontFamily: 'Zona',
     );
+    return theme.copyWith(
+      scaffoldBackgroundColor: Colors.transparent,
+      canvasColor: Colors.transparent,
+      cardColor: Colors.white.withValues(alpha: 0.12),
+      appBarTheme: theme.appBarTheme.copyWith(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ), dialogTheme: DialogThemeData(backgroundColor: Colors.white.withValues(alpha: 0.16)),
+    );
   }
 
   /// Generate dark theme using FlexColorScheme
   ThemeData getDarkTheme() {
-    return FlexThemeData.dark(
+    final theme = FlexThemeData.dark(
       scheme: currentColorScheme,
       surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
       blendLevel: 13,
@@ -195,6 +214,15 @@ class ThemeService extends GetxController {
       swapLegacyOnMaterial3: true,
       // Custom font configuration
       fontFamily: 'Zona',
+    );
+    return theme.copyWith(
+      scaffoldBackgroundColor: Colors.transparent,
+      canvasColor: Colors.transparent,
+      cardColor: Colors.white.withValues(alpha: 0.08),
+      appBarTheme: theme.appBarTheme.copyWith(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ), dialogTheme: DialogThemeData(backgroundColor: Colors.white.withValues(alpha: 0.12)),
     );
   }
 

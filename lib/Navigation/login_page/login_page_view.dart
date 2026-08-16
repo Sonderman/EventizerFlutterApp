@@ -1,12 +1,13 @@
 import 'package:eventizer/app_settings.dart';
+import 'package:eventizer/components/glass_action_button.dart';
+import 'package:eventizer/components/glass_inputs.dart';
 import 'package:eventizer/components/liquidglass_widgets.dart';
-import 'package:eventizer/data/themes.dart';
-import 'package:eventizer/navigation/login_page/login_components.dart';
 import 'package:eventizer/navigation/login_page/login_controller.dart';
 import 'package:eventizer/navigation/sign_up_page/sign_up_page.dart';
 import 'package:eventizer/tools/page_components.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:sizer/sizer.dart';
 
 class LoginPage extends GetView<LoginController> {
@@ -19,185 +20,187 @@ class LoginPage extends GetView<LoginController> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
-        // Background image with overlay
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/login_background.jpg'),
-            fit: BoxFit.cover,
+        // Koyu lacivert zemin (kDarkBackdrop) — resmin altında
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF0C1220), Color(0xFF16243A), Color(0xFF253B59)],
           ),
         ),
-        child: Container(
-          // Semi-transparent overlay for better text readability
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.black.withOpacity(0.3),
-                MyColors.purpleContainer.withOpacity(0.4),
-                Colors.black.withOpacity(0.5),
-              ],
-              stops: const [0.0, 0.5, 1.0],
+        child: Stack(
+          children: [
+            // Arka plan resmi — ekrana tam oturur (fit: cover)
+            Positioned.fill(
+              child: Image.asset('assets/images/login_background.jpg', fit: BoxFit.cover, alignment: Alignment.center),
             ),
-          ),
-          child: Obx(
-            () => Stack(
-              children: <Widget>[
-                PageView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  controller: controller.pageController,
-                  children: <Widget>[
-                    // Login page with modern design
-                    SafeArea(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 6.w),
-                        child: Column(
-                          children: <Widget>[
-                            SizedBox(height: 8.h),
-                            _buildModernHeader(),
-                            SizedBox(height: 6.h),
-                            _buildModernLoginCard(),
-                            const Spacer(),
-                            _buildModernButtons(),
-                            SizedBox(height: 8.h),
-                          ],
+            // Sol üstte cyan glow küresi (katalogdaki orb)
+            Positioned(
+              top: -80,
+              left: -100,
+              child: Container(
+                width: 420,
+                height: 420,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      const Color(0xFF1BC8D9).withValues(alpha: 0.30),
+                      const Color(0xFF1BC8D9).withValues(alpha: 0.08),
+                      const Color(0x00000000),
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                  ),
+                ),
+              ),
+            ),
+            // Sağ altta mor glow küresi
+            Positioned(
+              bottom: -100,
+              right: -80,
+              child: Container(
+                width: 460,
+                height: 460,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      const Color(0xFF8358D8).withValues(alpha: 0.22),
+                      const Color(0xFF3B4FA4).withValues(alpha: 0.08),
+                      const Color(0x00000000),
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                  ),
+                ),
+              ),
+            ),
+            // Hafif karartma — metin ve cam yüzeylerin okunurluğu için
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.black.withValues(alpha: 0.15), Colors.black.withValues(alpha: 0.30)],
+                ),
+              ),
+            ),
+            Obx(
+              () => Stack(
+                children: <Widget>[
+                  PageView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    controller: controller.pageController,
+                    children: <Widget>[
+                      SafeArea(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 6.w),
+                          child: Column(
+                            children: <Widget>[
+                              SizedBox(height: 6.h),
+                              _buildHeader(),
+                              SizedBox(height: 5.h),
+                              _buildLoginForm(),
+                              const Spacer(),
+                              _buildButtons(),
+                              SizedBox(height: 3.h),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    // SignUp page
-                    SignUpPage(controller.pageController),
-                  ],
-                ),
-                if (controller.isLoading.value)
-                  PageComponents(context).loadingOverlay(backgroundColor: Colors.black26),
-              ],
+                      SignUpPage(controller.pageController),
+                    ],
+                  ),
+                  if (controller.isLoading.value)
+                    PageComponents(context).loadingOverlay(backgroundColor: Colors.black26),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildModernHeader() {
+  // ---------------------------------------------------------------------------
+  // Header: logo + uygulama adı — net cam kartlar
+  // ---------------------------------------------------------------------------
+  Widget _buildHeader() {
     return Column(
       children: <Widget>[
-        // Modern app logo/title area
-        MyLiquidGlass.standartContainer(
-          child: Container(
-            padding: EdgeInsets.all(4.w),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white.withOpacity(0.2)),
-            ),
-            child: Icon(Icons.event_available, size: 12.w, color: Colors.white),
-          ),
+        GlassCard(
+          shape: const LiquidRoundedSuperellipse(borderRadius: 24),
+          padding: EdgeInsets.all(5.w),
+          settings: MyLiquidGlass.overlay,
+          useOwnLayer: true,
+          child: Image.asset('assets/eventizer_logo-nobg.png', width: 25.w, height: 25.w),
         ),
-        SizedBox(height: 3.h),
-        MyLiquidGlass.standartContainer(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              AppSettings.appName,
-              style: TextStyle(
-                fontFamily: "Zona",
-                fontSize: 24.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+        SizedBox(height: 2.5.h),
+        GlassCard(
+          shape: const LiquidRoundedSuperellipse(borderRadius: 22),
+          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 1.6.h),
+          settings: MyLiquidGlass.overlay,
+          useOwnLayer: true,
+          child: Text(
+            AppSettings.appName,
+            style: TextStyle(
+              fontFamily: "Zona",
+              fontSize: 28.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              letterSpacing: -0.5,
             ),
           ),
         ),
-        SizedBox(height: 1.h),
+        SizedBox(height: 1.2.h),
         Obx(
           () => Text(
             controller.isPasswordVisible.value == false ? "Password Reset" : "Welcome Back",
-            style: TextStyle(fontFamily: "ZonaLight", fontSize: 15.sp, color: Colors.white),
+            style: TextStyle(
+              fontFamily: "ZonaLight",
+              fontSize: 15.sp,
+              color: Colors.white,
+              shadows: const [Shadow(color: Color(0x40000000), blurRadius: 6, offset: Offset(0, 1))],
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildModernLoginCard() {
-    return MyLiquidGlass.standartContainer(
-      child: Padding(
-        padding: EdgeInsets.all(15.sp),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _buildModernEmailField(),
-            SizedBox(height: 3.h),
-            _buildModernPasswordSection(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildModernEmailField() {
+  // ---------------------------------------------------------------------------
+  // Form: net cam alanlar + hata + küçük aksiyonlar
+  // ---------------------------------------------------------------------------
+  Widget _buildLoginForm() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          "Email",
-          style: TextStyle(
-            fontFamily: "Zona",
-            fontSize: 13.sp,
-            color: MyColors.globalTextColor,
-            fontWeight: FontWeight.w600,
-          ),
+        GlassInputField(controller: controller.emailController, hint: 'example@email.com', label: 'Email'),
+        SizedBox(height: 2.2.h),
+        GlassPasswordInput(controller: controller.passwordController, hint: 'Password', label: 'Password'),
+        // Validation / error message
+        Obx(
+          () => controller.errorText.value.isEmpty
+              ? const SizedBox.shrink()
+              : Padding(
+                  padding: EdgeInsets.only(top: 1.2.h),
+                  child: Text(
+                    controller.errorText.value,
+                    style: TextStyle(fontFamily: "Zona", fontSize: 12.sp, color: Colors.redAccent),
+                  ),
+                ),
         ),
         SizedBox(height: 1.h),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15.sp),
-            border: Border.all(color: Colors.grey.shade200),
-          ),
-          child: TextFormField(
-            controller: controller.emailController,
-            decoration: InputDecoration(
-              hintText: "example@email.com",
-              hintStyle: TextStyle(
-                fontFamily: "ZonaLight",
-                color: MyColors.iconColor,
-                fontSize: 12.sp,
-              ),
-              prefixIcon: Icon(Icons.email_outlined, color: MyColors.globalTextColor, size: 5.w),
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-            ),
-            cursorColor: MyColors.globalTextColor,
-            style: TextStyle(fontSize: 13.sp, color: MyColors.globalTextColor),
-          ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: _buildSmallAction(label: "Forgot Password?", onTap: controller.forgetPassword),
         ),
+        SizedBox(height: 1.5.h),
         Obx(
           () => Visibility(
             visible: controller.isShowLogin.value,
-            child: Container(
-              margin: EdgeInsets.only(top: 2.h),
+            child: Align(
               alignment: Alignment.centerRight,
-              child: GestureDetector(
-                onTap: controller.rememberPassword,
-                child: MyLiquidGlass.standartButton(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
-                    decoration: BoxDecoration(
-                      color: MyColors.innerContainerColor,
-                      borderRadius: BorderRadius.circular(2.w),
-                    ),
-                    child: Text(
-                      "Already have an account?",
-                      style: TextStyle(
-                        fontFamily: "Zona",
-                        fontSize: 12.sp,
-                        color: MyColors.globalTextColor,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              child: _buildSmallAction(label: "Already have an account?", onTap: controller.rememberPassword),
             ),
           ),
         ),
@@ -205,107 +208,55 @@ class LoginPage extends GetView<LoginController> {
     );
   }
 
-  Widget _buildModernPasswordSection() {
-    return Obx(
-      () => Visibility(
-        visible: controller.isPasswordVisible.value,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              "Password",
-              style: TextStyle(
-                fontFamily: "Zona",
-                fontSize: 13.sp,
-                color: MyColors.whiteThemeColor,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            SizedBox(height: 1.h),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15.sp),
-                border: Border.all(color: Colors.grey.shade200),
-              ),
-              child: PasswordField(controller: controller),
-            ),
-            SizedBox(height: 2.h),
-            Align(
-              alignment: Alignment.centerRight,
-              child: GestureDetector(
-                onTap: controller.forgetPassword,
-                child: MyLiquidGlass.standartButton(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
-                    decoration: BoxDecoration(
-                      color: MyColors.innerContainerColor,
-                      borderRadius: BorderRadius.circular(2.w),
-                    ),
-                    child: Text(
-                      "Forgot Password?",
-                      style: TextStyle(
-                        fontFamily: "Zona",
-                        fontSize: 12.sp,
-                        color: MyColors.globalTextColor,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+  // ---------------------------------------------------------------------------
+  // Küçük cam aksiyon chip'i
+  // ---------------------------------------------------------------------------
+  Widget _buildSmallAction({required String label, required VoidCallback onTap}) {
+    return GlassChip(
+      label: label,
+      onTap: onTap,
+      settings: MyLiquidGlass.interactive,
+      useOwnLayer: true,
+      labelStyle: TextStyle(fontFamily: "Zona", fontSize: 13.sp, color: Colors.white, fontWeight: FontWeight.w500),
+      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.2.h),
     );
   }
 
-  Widget _buildModernButtons() {
+  // ---------------------------------------------------------------------------
+  // Ana aksiyon butonları
+  // ---------------------------------------------------------------------------
+  Widget _buildButtons() {
     return Column(
       children: <Widget>[
-        // Main action button
-        MyLiquidGlass.standartButton(
-          child: SizedBox(
-            height: 7.h,
-            child: InkWell(
-              onTap: controller.handleMainAction,
-              child: Center(
-                child: Obx(
-                  () => Text(
-                    controller.sendPasswordMailText.value,
-                    style: TextStyle(
-                      fontFamily: "Zona",
-                      fontSize: 16.sp,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+        GlassActionButton(
+          label: Obx(
+            () => Text(
+              controller.sendPasswordMailText.value,
+              style: TextStyle(
+                fontFamily: "Zona",
+                fontSize: 17.sp,
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.3,
               ),
             ),
           ),
+          onTap: controller.handleMainAction,
+          primary: true,
         ),
-        SizedBox(height: 3.h),
-        // Secondary button
-        MyLiquidGlass.standartButton(
-          child: SizedBox(
-            width: double.infinity,
-            height: 7.h,
-            child: InkWell(
-              onTap: controller.navigateToSignUp,
-              child: Center(
-                child: Text(
-                  "Create Account",
-                  style: TextStyle(
-                    fontFamily: "Zona",
-                    fontSize: 16.sp,
-                    color: MyColors.whiteThemeColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+        SizedBox(height: 2.5.h),
+        GlassActionButton(
+          label: Text(
+            "Create Account",
+            style: TextStyle(
+              fontFamily: "Zona",
+              fontSize: 17.sp,
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.3,
             ),
           ),
+          onTap: controller.navigateToSignUp,
         ),
       ],
     );

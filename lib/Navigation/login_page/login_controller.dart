@@ -47,7 +47,10 @@ class LoginController extends GetxController {
       isLoading.value = true;
       var auth = locator<AuthService>();
 
-      final result = await auth.signIn(emailController.text, passwordController.text);
+      final result = await auth.signIn(
+        emailController.text,
+        passwordController.text,
+      );
 
       if (result == null) {
         isLoading.value = false;
@@ -124,7 +127,10 @@ class LoginController extends GetxController {
 
   /// Navigate to signup page
   void navigateToSignUp() {
-    pageController.nextPage(duration: const Duration(seconds: 1), curve: Curves.easeInOutCubic);
+    pageController.nextPage(
+      duration: const Duration(seconds: 1),
+      curve: Curves.easeInOutCubic,
+    );
   }
 
   /// Handle main action button press (login or password reset)

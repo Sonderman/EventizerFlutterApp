@@ -20,6 +20,7 @@ A Flutter-based mobile application that allows users to create, discover, and jo
 - **Framework**: Flutter
 - **Backend**: Firebase (Authentication, Firestore Database, Storage, Analytics, Crashlytics)
 - **State Management**: A combination of `Provider` for dependency injection of services, `Get` (GetX) for route management, and `GetIt` as a service locator.
+- **UI**: `liquid_glass_widgets` (iOS 26-style liquid glass) — "net cam" (blur 0, şeffaf glassColor) presets, `LiquidGlassWidgets.wrap()` ile global glass theme.
 - **Architecture**: The project follows a service-oriented architecture where functionalities are separated into different services (e.g., `AuthService`, `FirebaseService`, `UserService`). The UI (View) is separated from the business logic.
 
 ## 5. Project Structure
@@ -28,6 +29,7 @@ A Flutter-based mobile application that allows users to create, discover, and jo
 EventizerFlutterApp/
 ├── lib/
 │   ├── assets/         # App-specific assets like colors
+│   ├── components/     # Glass UI components (GlassActionButton, GlassInputField, GlassPasswordInput, MyLiquidGlass presets)
 │   ├── controllers/    # GetX controllers
 │   ├── models/         # Data models (UserModel, Event)
 │   ├── navigation/     # UI screens/pages
@@ -87,4 +89,11 @@ While there is a basic `Event` class, the application primarily uses a `Map<Stri
 1. Ensure you have Flutter SDK installed.
 2. Configure a Firebase project and place the `google-services.json` (for Android) and `GoogleService-Info.plist` (for iOS) in the appropriate directories.
 3. Run `flutter pub get` to install dependencies.
-4. Run `flutter run` to start the application. 
+4. Run `flutter run` to start the application.
+
+## 8. Recent Changes
+- **Liquid glass UI geçişi**: `liquid_glass_renderer` kaldırıldı, `liquid_glass_widgets ^0.29.6` eklendi. `LiquidGlassWidgets.initialize()` + `wrap()` (adaptiveQuality, brightnessResolver, GlassThemeData blur 0) `main.dart`'ta kuruldu.
+- **Net cam presets**: `MyLiquidGlass` (lib/components/liquidglass_widgets.dart) — katalog projesindeki `kClearGlass*` değerleriyle: blur 0, şeffaf glassColor, rim/refraction vurgulu (standard, interactive, overlay, input, button).
+- **Yeni glass component'leri**: `GlassActionButton` (GestureDetector + GlassContainer, Material/InkWell yok), `GlassInputField`, `GlassPasswordInput` (kilit + göz ikonları beyaz, label destekli).
+- **Login/Register yeniden yazıldı**: component tabanlı mimari, koyu lacivert zemin (kDarkBackdrop) + cyan/mor glow küreleri + `login_background.jpg`, etiketli alanlar, metinler olabildiğince beyaz (koyu tema).
+- **Paket güncellemeleri**: firebase_* serisi, dropdown_search 6→7 (`onChanged`→`onSelected`), font_awesome 10→11, package_info_plus 9→10.2.1, fluttertoast 10, sizer 3.1.3 vb. (`intl` 0.19.0'da kaldı — dash_chat_2 kısıtı).
