@@ -43,7 +43,10 @@ TextStyle glassLabelStyle() => TextStyle(
 );
 
 /// Katalogdaki `inputs_section.dart` ile birebir — sade, ikonsuz net cam alan.
-class GlassInputField extends StatelessWidget {
+///
+/// Cam yüzeyin herhangi bir yerine dokunulduğunda alan focus alır;
+/// CupertinoTextField yalnızca kendi metin kutusuna gelen dokunuşları işler.
+class GlassInputField extends StatefulWidget {
   const GlassInputField({
     super.key,
     required this.controller,
@@ -66,29 +69,51 @@ class GlassInputField extends StatelessWidget {
   final int? maxLength;
 
   @override
+  State<GlassInputField> createState() => _GlassInputFieldState();
+}
+
+class _GlassInputFieldState extends State<GlassInputField> {
+  // GlassTextField'a dışarıdan verilir; cam boşluğuna dokunulduğunda
+  // manuel requestFocus yapabilmek için tutuyoruz.
+  late final FocusNode _focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final field = GlassTextField(
-      controller: controller,
-      placeholder: hint,
-      obscureText: obscureText,
-      keyboardType: keyboardType,
-      inputFormatters: inputFormatters,
-      maxLength: maxLength,
-      shape: const LiquidRoundedRectangle(borderRadius: 20),
-      settings: kGlassInputSettings,
-      useOwnLayer: true,
-      interactionBehavior: GlassInteractionBehavior.none,
-      textStyle: glassInputTextStyle(),
-      placeholderStyle: glassPlaceholderStyle(),
+    final field = GestureDetector(
+      // Cam yüzeyin tamamını dokunulabilir yapar; metnin kendisine dokununca
+      // içteki CupertinoTextField kazanır (imleç konumlama bozulmaz).
+      behavior: HitTestBehavior.opaque,
+      onTap: _focusNode.requestFocus,
+      child: GlassTextField(
+        controller: widget.controller,
+        focusNode: _focusNode,
+        placeholder: widget.hint,
+        obscureText: widget.obscureText,
+        keyboardType: widget.keyboardType,
+        inputFormatters: widget.inputFormatters,
+        maxLength: widget.maxLength,
+        shape: const LiquidRoundedRectangle(borderRadius: 20),
+        settings: kGlassInputSettings,
+        useOwnLayer: true,
+        interactionBehavior: GlassInteractionBehavior.none,
+        textStyle: glassInputTextStyle(),
+        placeholderStyle: glassPlaceholderStyle(),
+      ),
     );
 
-    if (label == null) {
+    if (widget.label == null) {
       return field;
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label!, style: glassLabelStyle()),
+        Text(widget.label!, style: glassLabelStyle()),
         const SizedBox(height: 8),
         field,
       ],
@@ -118,36 +143,53 @@ class GlassPasswordInput extends StatefulWidget {
 class _GlassPasswordInputState extends State<GlassPasswordInput> {
   bool _obscure = true;
 
+  // GlassTextField'a dışarıdan verilir; cam boşluğuna dokunulduğunda
+  // manuel requestFocus yapabilmek için tutuyoruz.
+  late final FocusNode _focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final field = GlassTextField(
-      controller: widget.controller,
-      placeholder: widget.hint,
-      obscureText: _obscure,
-      // Kilit + göz ikonları — tam beyaz (paketin soluk secondaryLabel'ı yerine)
-      prefixIcon: const Icon(
-        Icons.lock,
-        size: 20,
-        color: Colors.white,
+    final field = GestureDetector(
+      // Cam yüzeyin tamamını dokunulabilir yapar; göz ikonuna dokununca
+      // içteki GestureDetector kazanır (_obscure değişimi bozulmaz).
+      behavior: HitTestBehavior.opaque,
+      onTap: _focusNode.requestFocus,
+      child: GlassTextField(
+        controller: widget.controller,
+        focusNode: _focusNode,
+        placeholder: widget.hint,
+        obscureText: _obscure,
+        // Kilit + göz ikonları — tam beyaz (paketin soluk secondaryLabel'ı yerine)
+        prefixIcon: const Icon(
+          Icons.lock,
+          size: 20,
+          color: Colors.white,
+        ),
+        suffixIcon: Icon(
+          _obscure ? Icons.visibility : Icons.visibility_off,
+          size: 20,
+          color: Colors.white,
+        ),
+        onSuffixTap: () {
+          setState(() {
+            _obscure = !_obscure;
+          });
+        },
+        // GlassPasswordField height kabul etmiyor; padding ile büyütüyoruz.
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        shape: const LiquidRoundedRectangle(borderRadius: 20),
+        settings: kGlassInputSettings,
+        useOwnLayer: true,
+        interactionBehavior: GlassInteractionBehavior.none,
+        textStyle: glassInputTextStyle(),
+        placeholderStyle: glassPlaceholderStyle(),
       ),
-      suffixIcon: Icon(
-        _obscure ? Icons.visibility : Icons.visibility_off,
-        size: 20,
-        color: Colors.white,
-      ),
-      onSuffixTap: () {
-        setState(() {
-          _obscure = !_obscure;
-        });
-      },
-      // GlassPasswordField height kabul etmiyor; padding ile büyütüyoruz.
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-      shape: const LiquidRoundedRectangle(borderRadius: 20),
-      settings: kGlassInputSettings,
-      useOwnLayer: true,
-      interactionBehavior: GlassInteractionBehavior.none,
-      textStyle: glassInputTextStyle(),
-      placeholderStyle: glassPlaceholderStyle(),
     );
 
     if (widget.label == null) {

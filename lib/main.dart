@@ -24,10 +24,7 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   //ANCHOR Makes status bar transparent
   SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarBrightness: Brightness.light,
-    ),
+    const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarBrightness: Brightness.light),
   );
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -88,28 +85,17 @@ class MyApp extends StatelessWidget {
       builder: (context, orientation, deviceType) {
         return MultiProvider(
           providers: [
-            ChangeNotifierProvider<EventService>(
-              create: (context) => EventService(),
-            ),
-            ChangeNotifierProvider<MessagingService>(
-              create: (context) => MessagingService(),
-            ),
-            ChangeNotifierProvider<NavigationProvider>(
-              create: (context) => NavigationProvider(),
-            ),
-            ChangeNotifierProvider<UserService>(
-              create: (context) => UserService(),
-            ),
+            ChangeNotifierProvider<EventService>(create: (context) => EventService()),
+            ChangeNotifierProvider<MessagingService>(create: (context) => MessagingService()),
+            ChangeNotifierProvider<NavigationProvider>(create: (context) => NavigationProvider()),
+            ChangeNotifierProvider<UserService>(create: (context) => UserService()),
           ],
           child: Obx(
             () => GetMaterialApp(
               title: 'Eventizer',
               debugShowMaterialGrid: false,
               debugShowCheckedModeBanner: false,
-              supportedLocales: const <Locale>[
-                Locale('en', 'US'),
-                Locale('tr', 'TR'),
-              ],
+              supportedLocales: const <Locale>[Locale('en', 'US'), Locale('tr', 'TR')],
 
               // GetX routing configuration
               initialRoute: AppPages.initial,
@@ -125,16 +111,10 @@ class MyApp extends StatelessWidget {
               themeMode: themeService.themeMode,
 
               // High contrast theme support
-              highContrastTheme: themeService.getLightTheme().copyWith(
-                brightness: Brightness.light,
-              ),
-              highContrastDarkTheme: themeService.getDarkTheme().copyWith(
-                brightness: Brightness.dark,
-              ),
+              highContrastTheme: themeService.getLightTheme().copyWith(brightness: Brightness.light),
+              highContrastDarkTheme: themeService.getDarkTheme().copyWith(brightness: Brightness.dark),
               builder: (context, child) {
-                return MyLiquidGlass.appShell(
-                  child: child ?? const SizedBox.shrink(),
-                );
+                return MyLiquidGlass.appShell(child: child ?? const SizedBox.shrink());
               },
             ),
           ),

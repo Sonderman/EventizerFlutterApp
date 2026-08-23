@@ -18,7 +18,9 @@ class LoginPage extends GetView<LoginController> {
     final LoginController controller = Get.put(LoginController());
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      // Klavye açıldığında gövde küçülür; orta blok kaydırılabilir olduğu
+      // için içerik ekrana sığmadığında RenderFlex overflow yaşanmaz.
+      resizeToAvoidBottomInset: true,
       body: Container(
         // Koyu lacivert zemin (kDarkBackdrop) — resmin altında
         decoration: const BoxDecoration(
@@ -96,11 +98,21 @@ class LoginPage extends GetView<LoginController> {
                           padding: EdgeInsets.symmetric(horizontal: 6.w),
                           child: Column(
                             children: <Widget>[
-                              SizedBox(height: 6.h),
-                              _buildHeader(),
-                              SizedBox(height: 5.h),
-                              _buildLoginForm(),
-                              const Spacer(),
+                              Expanded(
+                                // Orta blok kaydırılabilir — "Password Reset"
+                                // modundaki ek satırlar ve klavye açıldığında
+                                // Column taşması (RenderFlex overflow) olmaz.
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    children: <Widget>[
+                                      SizedBox(height: 6.h),
+                                      _buildHeader(),
+                                      SizedBox(height: 5.h),
+                                      _buildLoginForm(),
+                                    ],
+                                  ),
+                                ),
+                              ),
                               _buildButtons(),
                               SizedBox(height: 3.h),
                             ],
@@ -156,10 +168,13 @@ class LoginPage extends GetView<LoginController> {
           () => Text(
             controller.isPasswordVisible.value == false ? "Password Reset" : "Welcome Back",
             style: TextStyle(
-              fontFamily: "ZonaLight",
-              fontSize: 15.sp,
+              fontFamily: "Zona",
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.2,
               color: Colors.white,
-              shadows: const [Shadow(color: Color(0x40000000), blurRadius: 6, offset: Offset(0, 1))],
+              // Açık zeminli arka plan görselinde okunurluk için güçlü gölge
+              shadows: const [Shadow(color: Color(0x8A000000), blurRadius: 10, offset: Offset(0, 2))],
             ),
           ),
         ),
@@ -190,9 +205,17 @@ class LoginPage extends GetView<LoginController> {
                 ),
         ),
         SizedBox(height: 1.h),
-        Align(
-          alignment: Alignment.centerRight,
-          child: _buildSmallAction(label: "Forgot Password?", onTap: controller.forgetPassword),
+        // İki chip asla aynı anda gösterilmez — reset modunda "Forgot Password?"
+        // gizlenir, yerine "Already have an account?" gelir. Böylece alttaki
+        // butonun arkasında kalan chip sorunu oluşmaz.
+        Obx(
+          () => Visibility(
+            visible: !controller.isShowLogin.value,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: _buildSmallAction(label: "Forgot Password?", onTap: controller.forgetPassword),
+            ),
+          ),
         ),
         SizedBox(height: 1.5.h),
         Obx(
