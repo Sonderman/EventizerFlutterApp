@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:eventizer/data/themes.dart';
+import 'package:eventizer/services/auth_service.dart';
 import 'package:eventizer/services/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -24,6 +25,11 @@ class SignUpController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxBool showPassword = true.obs;
 
+  /// Alan bazlı hata mesajları — her alanın altında inline gösterilir.
+  /// Anahtar: 'name' | 'surname' | 'email' | 'password' | 'passwordConfirm'
+  ///         | 'phone' | 'birthday' | 'gender' | 'profileImage'
+  final RxMap<String, String> fieldErrors = <String, String>{}.obs;
+
   // User service
   UserService? userService;
   final PageController pageController;
@@ -46,6 +52,13 @@ class SignUpController extends GetxController {
     super.onClose();
   }
 
+  /// Alan adına göre hata metnini döndürür (inline gösterim için).
+  String? errorFor(String field) => fieldErrors[field];
+
+  void _clearError(String field) {
+    if (fieldErrors.containsKey(field)) fieldErrors.remove(field);
+  }
+
   /// Pick image from gallery or camera
   Future<void> pickImage(ImageSource source) async {
     try {
@@ -53,6 +66,7 @@ class SignUpController extends GetxController {
       final XFile? image = await picker.pickImage(source: source);
       if (image != null) {
         profileImage.value = await image.readAsBytes();
+        _clearError('profileImage');
       }
     } catch (e) {
       Fluttertoast.showToast(
@@ -80,7 +94,7 @@ class SignUpController extends GetxController {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Select Image Source',
+                'Fotoğraf Kaynağı Seç',
                 style: TextStyle(
                   fontFamily: "Zona",
                   fontSize: 2.h,
@@ -95,7 +109,7 @@ class SignUpController extends GetxController {
                 ),
                 visualDensity: VisualDensity.compact,
                 title: Text(
-                  'Gallery',
+                  'Galeri',
                   style: TextStyle(
                     fontFamily: "Zona",
                     fontSize: 2.h,
@@ -114,7 +128,7 @@ class SignUpController extends GetxController {
                 ),
                 visualDensity: VisualDensity.compact,
                 title: Text(
-                  'Camera',
+                  'Kamera',
                   style: TextStyle(
                     fontFamily: "Zona",
                     fontSize: 2.h,
@@ -135,6 +149,12 @@ class SignUpController extends GetxController {
     );
   }
 
+  /// Cinsiyet seçimi — seçim yapılınca alan hatası temizlenir.
+  void selectGender(bool male) {
+    isMale.value = male;
+    _clearError('gender');
+  }
+
   /// Select birth date
   Future<void> selectBirthday() async {
     final DateTime? picked = await showDatePicker(
@@ -147,6 +167,7 @@ class SignUpController extends GetxController {
       // Format the birthday as DD/MM/YYYY with leading zeros for day and month
       birthday.value =
           "${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}";
+      _clearError('birthday');
     }
   }
 
@@ -164,17 +185,18 @@ class SignUpController extends GetxController {
     try {
       // Create user data list
       List<String> dataList = [
-        nameController.text,
-        surnameController.text,
-        emailController.text,
-        phoneController.text,
-        isMale.value == true ? "Man" : "Woman",
+        nameController.text.trim(),
+        surnameController.text.trim(),
+        emailController.text.trim(),
+        phoneController.text.trim(),
+        // Cinsiyet artık zorunlu — null olamaz (validateForm kontrol ediyor)
+        isMale.value! == true ? "Man" : "Woman",
         birthday.value,
-        generateNickname(nameController.text),
+        generateNickname(nameController.text.trim()),
       ];
 
       final userID = await userService!.registerUser(
-        emailController.text,
+        emailController.text.trim(),
         passwordController.text,
         dataList,
         profileImage.value!,
@@ -202,7 +224,7 @@ class SignUpController extends GetxController {
       }
     } catch (e) {
       Fluttertoast.showToast(
-        msg: "Signup failed: $e",
+        msg: "Kayıt başarısız: ${AuthService.authErrorMessage(e)}",
         backgroundColor: Colors.red,
       );
     } finally {
@@ -210,58 +232,71 @@ class SignUpController extends GetxController {
     }
   }
 
-  /// Validate form fields
+  /// Basit e-posta format kontrolü.
+  static final RegExp _emailRegex = RegExp(r'^[\w\.\-+]+@[\w\-]+(\.[\w\-]+)+$');
+
+  /// Validate form fields — tost yerine her alanın altında inline hata.
   bool validateForm() {
+    fieldErrors.clear();
+
+    // Profil fotoğrafı zorunlu
     if (profileImage.value == null) {
-      Fluttertoast.showToast(
-        msg: 'Please select a profile image',
-        backgroundColor: Colors.red,
-      );
-      return false;
+      fieldErrors['profileImage'] = 'Lütfen bir profil fotoğrafı seçin';
     }
-    if (nameController.text.isEmpty || surnameController.text.isEmpty) {
-      Fluttertoast.showToast(
-        msg: 'Please enter name and surname',
-        backgroundColor: Colors.red,
-      );
-      return false;
+
+    // Ad / Soyad
+    if (nameController.text.trim().isEmpty) {
+      fieldErrors['name'] = 'Adınızı girin';
     }
-    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
-      Fluttertoast.showToast(
-        msg: 'Please enter email and password',
-        backgroundColor: Colors.red,
-      );
-      return false;
+    if (surnameController.text.trim().isEmpty) {
+      fieldErrors['surname'] = 'Soyadınızı girin';
     }
-    if (phoneController.text.trim().isNotEmpty &&
-        int.tryParse(phoneController.text.trim()) == null) {
-      Fluttertoast.showToast(
-        msg: 'Please enter a valid phone number',
-        backgroundColor: Colors.red,
-      );
-      return false;
+
+    // E-posta — boş + format
+    final email = emailController.text.trim();
+    if (email.isEmpty) {
+      fieldErrors['email'] = 'E-posta adresinizi girin';
+    } else if (!_emailRegex.hasMatch(email)) {
+      fieldErrors['email'] = 'Geçerli bir e-posta adresi girin';
     }
-    if (passwordController.text != passwordConfirmController.text) {
-      Fluttertoast.showToast(
-        msg: 'Passwords do not match',
-        backgroundColor: Colors.red,
-      );
-      return false;
+
+    // Şifre — boş + minimum uzunluk
+    if (passwordController.text.isEmpty) {
+      fieldErrors['password'] = 'Şifrenizi girin';
+    } else if (passwordController.text.length < 6) {
+      fieldErrors['password'] = 'Şifre en az 6 karakter olmalı';
     }
+
+    // Şifre tekrarı
+    if (passwordConfirmController.text.isEmpty) {
+      fieldErrors['passwordConfirm'] = 'Şifrenizi tekrar girin';
+    } else if (passwordController.text != passwordConfirmController.text) {
+      fieldErrors['passwordConfirm'] = 'Şifreler eşleşmiyor';
+    }
+
+    // Telefon — dolu ise geçerlilik kontrolü
+    final phone = phoneController.text.trim();
+    if (phone.isNotEmpty && int.tryParse(phone) == null) {
+      fieldErrors['phone'] = 'Geçerli bir telefon numarası girin';
+    }
+
+    // Cinsiyet artık zorunlu — varsayılan "Woman" tuzağı kapalı
+    if (isMale.value == null) {
+      fieldErrors['gender'] = 'Lütfen cinsiyetinizi seçin';
+    }
+
+    // Doğum tarihi
     if (birthday.value.isEmpty) {
-      Fluttertoast.showToast(
-        msg: 'Please select birthday',
-        backgroundColor: Colors.red,
-      );
-      return false;
+      fieldErrors['birthday'] = 'Lütfen doğum tarihinizi seçin';
     }
-    return true;
+
+    return fieldErrors.isEmpty;
   }
 
   /// Navigate back to login
   void navigateToLogin() {
     pageController.previousPage(
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOutCubic,
     );
   }

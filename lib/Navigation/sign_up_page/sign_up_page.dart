@@ -14,6 +14,26 @@ class SignUpPage extends GetView<SignUpController> {
   const SignUpPage(this.pageController, {super.key});
   final PageController pageController;
 
+  /// Inline hata metni — alan altında, cam üstünde okunur kırmızı.
+  Widget _errorText(String field) {
+    return Obx(() {
+      final String? error = controller.errorFor(field);
+      if (error == null) return const SizedBox.shrink();
+      return Padding(
+        padding: EdgeInsets.only(top: 1.h),
+        child: Text(
+          error,
+          style: TextStyle(
+            fontFamily: "Zona",
+            fontSize: 12.sp,
+            color: Colors.redAccent,
+            shadows: const [Shadow(color: Color(0x8A000000), blurRadius: 6, offset: Offset(0, 1))],
+          ),
+        ),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SignUpController>(
@@ -32,33 +52,37 @@ class SignUpPage extends GetView<SignUpController> {
                     child: ScrollConfiguration(
                       behavior: NoScrollEffectBehavior(),
                       child: SingleChildScrollView(
-                        child: Column(
-                          children: <Widget>[
-                            addPhoto(context),
-                            SizedBox(height: 3.h),
-                            nameSurname(),
-                            SizedBox(height: 2.h),
-                            GlassInputField(
-                              controller: controller.emailController,
-                              hint: "Email*",
-                            ),
-                            SizedBox(height: 2.h),
-                            passwordFields(),
-                            SizedBox(height: 2.h),
-                            GlassInputField(
-                              controller: controller.phoneController,
-                              hint: "Phone Number",
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                              maxLength: 10,
-                            ),
-                            SizedBox(height: 2.h),
-                            countryAndBirthDate(),
-                            SizedBox(height: 2.h),
-                            selectGender(),
-                            SizedBox(height: 3.h),
-                            signUpButton(),
-                          ],
+                        child: AutofillGroup(
+                          child: Column(
+                            children: <Widget>[
+                              addPhoto(context),
+                              // Fotoğraf hata metni — halkanın hemen altında
+                              _errorText('profileImage'),
+                              SizedBox(height: 2.h),
+                              nameSurname(),
+                              SizedBox(height: 2.h),
+                              GlassInputField(
+                                controller: controller.emailController,
+                                hint: "E-posta*",
+                                keyboardType: TextInputType.emailAddress,
+                                textInputAction: TextInputAction.next,
+                                onSubmitted: (_) => FocusScope.of(Get.context!).nextFocus(),
+                              ),
+                              _errorText('email'),
+                              SizedBox(height: 2.h),
+                              passwordFields(),
+                              SizedBox(height: 2.h),
+                              phoneField(),
+                              SizedBox(height: 2.h),
+                              countryAndBirthDate(),
+                              _errorText('birthday'),
+                              SizedBox(height: 2.h),
+                              selectGender(),
+                              _errorText('gender'),
+                              SizedBox(height: 3.h),
+                              signUpButton(),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -69,24 +93,44 @@ class SignUpPage extends GetView<SignUpController> {
     );
   }
 
+  /// Profil fotoğrafı seçici — cyan→mor gradient ince halka çevreler.
   Widget addPhoto(BuildContext context) {
     return Center(
       child: GestureDetector(
         onTap: controller.showImagePickerDialog,
-        child: GlassContainer(
-          shape: const LiquidOval(),
-          padding: EdgeInsets.all(5.w),
-          width: 32.w,
-          height: 32.w,
-          settings: MyLiquidGlass.interactive,
-          useOwnLayer: true,
-          child: Center(
-            child: Obx(
-              () => controller.profileImage.value == null
-                  ? Icon(Icons.person_add_alt_1, size: 14.w, color: Colors.white)
-                  : ClipOval(
-                      child: Image.memory(controller.profileImage.value!, width: 32.w, height: 32.w, fit: BoxFit.cover),
-                    ),
+        child: Container(
+          // Gradient halka: dıştaki ince çerçeve
+          padding: const EdgeInsets.all(3),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF1BC8D9), Color(0xFF8358D8)],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF1BC8D9).withValues(alpha: 0.35),
+                blurRadius: 18,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: GlassContainer(
+            shape: const LiquidOval(),
+            padding: EdgeInsets.all(4.w),
+            width: 32.w,
+            height: 32.w,
+            settings: MyLiquidGlass.interactive,
+            useOwnLayer: true,
+            child: Center(
+              child: Obx(
+                () => controller.profileImage.value == null
+                    ? Icon(Icons.person_add_alt_1, size: 14.w, color: Colors.white)
+                    : ClipOval(
+                        child: Image.memory(controller.profileImage.value!, width: 32.w, height: 32.w, fit: BoxFit.cover),
+                      ),
+              ),
             ),
           ),
         ),
@@ -95,20 +139,35 @@ class SignUpPage extends GetView<SignUpController> {
   }
 
   Widget nameSurname() {
-    return Row(
+    return Column(
       children: <Widget>[
-        Expanded(
-          child: GlassInputField(
-            controller: controller.nameController,
-            hint: "Name*",
-          ),
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: GlassInputField(
+                controller: controller.nameController,
+                hint: "Ad*",
+                textInputAction: TextInputAction.next,
+                onSubmitted: (_) => FocusScope.of(Get.context!).nextFocus(),
+              ),
+            ),
+            SizedBox(width: 3.w),
+            Expanded(
+              child: GlassInputField(
+                controller: controller.surnameController,
+                hint: "Soyad*",
+                textInputAction: TextInputAction.next,
+                onSubmitted: (_) => FocusScope.of(Get.context!).nextFocus(),
+              ),
+            ),
+          ],
         ),
-        SizedBox(width: 3.w),
-        Expanded(
-          child: GlassInputField(
-            controller: controller.surnameController,
-            hint: "Surname*",
-          ),
+        Row(
+          children: <Widget>[
+            Expanded(child: _errorText('name')),
+            SizedBox(width: 3.w),
+            Expanded(child: _errorText('surname')),
+          ],
         ),
       ],
     );
@@ -119,13 +178,48 @@ class SignUpPage extends GetView<SignUpController> {
       children: <Widget>[
         GlassPasswordInput(
           controller: controller.passwordController,
-          hint: "Password*",
+          hint: "Şifre*",
+          textInputAction: TextInputAction.next,
+          onSubmitted: (_) => FocusScope.of(Get.context!).nextFocus(),
         ),
+        _errorText('password'),
         SizedBox(height: 2.h),
         GlassPasswordInput(
           controller: controller.passwordConfirmController,
-          hint: "Password Confirm*",
+          hint: "Şifre Tekrar*",
+          textInputAction: TextInputAction.done,
+          onSubmitted: (_) => controller.signUp(),
         ),
+        _errorText('passwordConfirm'),
+      ],
+    );
+  }
+
+  Widget phoneField() {
+    return Column(
+      children: <Widget>[
+        GlassInputField(
+          controller: controller.phoneController,
+          hint: "Telefon Numarası",
+          keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          maxLength: 10,
+          // Sol tarafta ülke kodu ipucu
+          prefixIcon: Padding(
+            padding: const EdgeInsets.only(left: 16, right: 4),
+            child: Center(
+              child: Text(
+                "+90",
+                style: TextStyle(
+                  fontFamily: "Zona",
+                  fontSize: 14.sp,
+                  color: Colors.white.withValues(alpha: 0.72),
+                ),
+              ),
+            ),
+          ),
+        ),
+        _errorText('phone'),
       ],
     );
   }
@@ -133,15 +227,24 @@ class SignUpPage extends GetView<SignUpController> {
   Widget countryAndBirthDate() {
     return GlassActionButton(
       label: Obx(
-        () => Text(
-          controller.birthday.value.isNotEmpty ? controller.birthday.value : "Your Birthday",
-          style: TextStyle(
-            fontFamily: "Zona",
-            fontSize: 17.sp,
-            color: Colors.white,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 0.3,
-          ),
+        () => Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Icon(Icons.calendar_month, size: 22, color: Colors.white),
+            SizedBox(width: 2.w),
+            Text(
+              controller.birthday.value.isNotEmpty
+                  ? "Doğum Tarihi: ${controller.birthday.value}"
+                  : "Doğum Tarihiniz",
+              style: TextStyle(
+                fontFamily: "Zona",
+                fontSize: 17.sp,
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.3,
+              ),
+            ),
+          ],
         ),
       ),
       onTap: controller.selectBirthday,
@@ -154,12 +257,10 @@ class SignUpPage extends GetView<SignUpController> {
         Expanded(
           child: Obx(
             () => _genderChip(
-              label: "Male",
+              label: "Erkek",
               selected: controller.isMale.value == true,
               tint: const Color(0x124A90E2),
-              onTap: () {
-                controller.isMale.value = true;
-              },
+              onTap: () => controller.selectGender(true),
             ),
           ),
         ),
@@ -167,12 +268,10 @@ class SignUpPage extends GetView<SignUpController> {
         Expanded(
           child: Obx(
             () => _genderChip(
-              label: "Female",
+              label: "Kadın",
               selected: controller.isMale.value == false,
               tint: const Color(0x12B968C7),
-              onTap: () {
-                controller.isMale.value = false;
-              },
+              onTap: () => controller.selectGender(false),
             ),
           ),
         ),
@@ -217,41 +316,46 @@ class SignUpPage extends GetView<SignUpController> {
   }
 
   Widget signUpButton() {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: GlassActionButton(
-            label: Text(
-              "GO BACK",
-              style: TextStyle(
-                fontFamily: "Zona",
-                fontSize: 16.sp,
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.3,
+    return Obx(
+      () => Row(
+        children: <Widget>[
+          Expanded(
+            child: GlassActionButton(
+              label: Text(
+                "GERİ",
+                style: TextStyle(
+                  fontFamily: "Zona",
+                  fontSize: 16.sp,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.3,
+                ),
               ),
+              onTap: controller.navigateToLogin,
+              // Yükleme sırasında geri dönüş de kilitli (form yeniden açılır)
+              enabled: !controller.isLoading.value,
             ),
-            onTap: controller.navigateToLogin,
           ),
-        ),
-        SizedBox(width: 3.w),
-        Expanded(
-          child: GlassActionButton(
-            label: Text(
-              "SIGN UP",
-              style: TextStyle(
-                fontFamily: "Zona",
-                fontSize: 16.sp,
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.3,
+          SizedBox(width: 3.w),
+          Expanded(
+            child: GlassActionButton(
+              label: Text(
+                "KAYDOL",
+                style: TextStyle(
+                  fontFamily: "Zona",
+                  fontSize: 16.sp,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.3,
+                ),
               ),
+              onTap: controller.signUp,
+              primary: true,
+              enabled: !controller.isLoading.value,
             ),
-            onTap: controller.signUp,
-            primary: true,
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

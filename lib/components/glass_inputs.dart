@@ -56,17 +56,27 @@ class GlassInputField extends StatefulWidget {
     this.keyboardType,
     this.inputFormatters,
     this.maxLength,
+    this.textInputAction,
+    this.onSubmitted,
+    this.prefixIcon,
   });
 
   final TextEditingController controller;
   final String hint;
 
-  /// Alanın üstünde gösterilen küçük etiket (ör. "Email").
+  /// Alanın üstünde gösterilen küçük etiket (ör. "E-posta").
   final String? label;
   final bool obscureText;
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final int? maxLength;
+
+  /// Klavye "next"/"done" zinciri için.
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onSubmitted;
+
+  /// Sol tarafta ikon/metin (ör. "+90").
+  final Widget? prefixIcon;
 
   @override
   State<GlassInputField> createState() => _GlassInputFieldState();
@@ -98,6 +108,9 @@ class _GlassInputFieldState extends State<GlassInputField> {
         keyboardType: widget.keyboardType,
         inputFormatters: widget.inputFormatters,
         maxLength: widget.maxLength,
+        textInputAction: widget.textInputAction,
+        onSubmitted: widget.onSubmitted,
+        prefixIcon: widget.prefixIcon,
         shape: const LiquidRoundedRectangle(borderRadius: 20),
         settings: kGlassInputSettings,
         useOwnLayer: true,
@@ -128,13 +141,19 @@ class GlassPasswordInput extends StatefulWidget {
     required this.controller,
     required this.hint,
     this.label,
+    this.textInputAction,
+    this.onSubmitted,
   });
 
   final TextEditingController controller;
   final String hint;
 
-  /// Alanın üstünde gösterilen küçük etiket (ör. "Password").
+  /// Alanın üstünde gösterilen küçük etiket (ör. "Şifre").
   final String? label;
+
+  /// Klavye "next"/"done" zinciri için.
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onSubmitted;
 
   @override
   State<GlassPasswordInput> createState() => _GlassPasswordInputState();
@@ -181,6 +200,8 @@ class _GlassPasswordInputState extends State<GlassPasswordInput> {
             _obscure = !_obscure;
           });
         },
+        textInputAction: widget.textInputAction,
+        onSubmitted: widget.onSubmitted,
         // GlassPasswordField height kabul etmiyor; padding ile büyütüyoruz.
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
         shape: const LiquidRoundedRectangle(borderRadius: 20),

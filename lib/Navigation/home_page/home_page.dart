@@ -1,10 +1,12 @@
 import 'package:eventizer/tools/getx_bottom_navigation.dart';
 import 'package:eventizer/tools/dialogs.dart';
 import 'package:eventizer/tools/page_components.dart';
+import 'package:eventizer/components/glass_action_button.dart';
 import 'package:eventizer/components/liquidglass_widgets.dart';
 import 'package:eventizer/navigation/home_page/home_controller.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:store_redirect/store_redirect.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:get/get.dart';
@@ -33,105 +35,133 @@ class _HomePageState extends State<HomePage> {
         drawerEnableOpenDragGesture: true,
         drawer: Drawer(
           backgroundColor: Colors.transparent,
-          child: MyLiquidGlass.standartContainer(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(height: responsive.heightSize(20)),
-                Center(
-                  child: RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "Bu uygulama\n",
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFF0C1220), Color(0xFF16243A), Color(0xFF253B59)],
+              ),
+            ),
+            child: GlassCard(
+              shape: const LiquidRoundedSuperellipse(borderRadius: 30),
+              margin: const EdgeInsets.all(10),
+              settings: MyLiquidGlass.overlay,
+              useOwnLayer: true,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(height: responsive.heightSize(20)),
+                  Center(
+                    child: RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Bu uygulama\n",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: responsive.widthSize(4),
+                            ),
+                          ),
+                          TextSpan(
+                            text: "Ali Haydar AYAR\n",
+                            style: TextStyle(
+                              color: const Color(0xFF1BC8D9),
+                              decoration: TextDecoration.underline,
+                              fontSize: responsive.widthSize(4),
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () async {
+                                const url =
+                                    'https://www.linkedin.com/in/alihaydar-ayar-b45a4315b/';
+                                if (await canLaunchUrl(Uri.parse(url))) {
+                                  await launchUrl(Uri.parse(url));
+                                }
+                              },
+                          ),
+                          TextSpan(
+                            text: " Ve\n",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: responsive.widthSize(4),
+                            ),
+                          ),
+                          TextSpan(
+                            style: TextStyle(
+                              color: const Color(0xFF1BC8D9),
+                              decoration: TextDecoration.underline,
+                              fontSize: responsive.widthSize(4),
+                            ),
+                            text: "Murat ALTINTAŞ\n",
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () async {
+                                const url =
+                                    'https://www.linkedin.com/in/murat-alt%C4%B1nta%C5%9F-bb58b4145/';
+                                if (await canLaunchUrl(Uri.parse(url))) {
+                                  await launchUrl(Uri.parse(url));
+                                }
+                              },
+                          ),
+                          TextSpan(
+                            text: "tarafından geliştirilmiştir.\n\n",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: responsive.widthSize(4),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  GlassActionButton(
+                    label: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(Icons.play_arrow, color: Colors.white),
+                        Text(
+                          "Play Store",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: responsive.widthSize(4),
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
-                        TextSpan(
-                          text: "Ali Haydar AYAR\n",
-                          style: TextStyle(
-                            color: Colors.lightBlueAccent,
-                            decoration: TextDecoration.underline,
-                            fontSize: responsive.widthSize(4),
+                      ],
+                    ),
+                    onTap: () {
+                      StoreRedirect.redirect();
+                    },
+                  ),
+                  const Spacer(),
+                  GestureDetector(
+                    onTap: () {
+                      feedbackDialog(context);
+                    },
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.feedback,
+                            size: 40,
+                            color: Color(0xFF1BC8D9),
                           ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () async {
-                              const url =
-                                  'https://www.linkedin.com/in/alihaydar-ayar-b45a4315b/';
-                              if (await canLaunchUrl(Uri.parse(url))) {
-                                await launchUrl(Uri.parse(url));
-                              }
-                            },
                         ),
-                        TextSpan(
-                          text: " Ve\n",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: responsive.widthSize(4),
-                          ),
-                        ),
-                        TextSpan(
-                          style: TextStyle(
-                            color: Colors.lightBlueAccent,
-                            decoration: TextDecoration.underline,
-                            fontSize: responsive.widthSize(4),
-                          ),
-                          text: "Murat ALTINTAŞ\n",
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () async {
-                              const url =
-                                  'https://www.linkedin.com/in/murat-alt%C4%B1nta%C5%9F-bb58b4145/';
-                              if (await canLaunchUrl(Uri.parse(url))) {
-                                await launchUrl(Uri.parse(url));
-                              }
-                            },
-                        ),
-                        TextSpan(
-                          text: "tarafından geliştirilmiştir.\n\n",
+                        Text(
+                          "Sorun Bildir",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: responsive.widthSize(4),
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-                MaterialButton(
-                  color: Colors.green,
-                  onPressed: () {
-                    StoreRedirect.redirect();
-                  },
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(Icons.play_arrow),
-                      Text("Play Store"),
-                    ],
-                  ),
-                ),
-                const Spacer(),
-                GestureDetector(
-                  onTap: () {
-                    feedbackDialog(context);
-                  },
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Icon(Icons.feedback, size: 40),
-                      ),
-                      Text("Sorun Bildir"),
-                    ],
-                  ),
-                ),
-                SizedBox(height: responsive.heightSize(10)),
-              ],
+                  SizedBox(height: responsive.heightSize(10)),
+                ],
+              ),
             ),
           ),
         ),

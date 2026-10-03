@@ -2,8 +2,9 @@ import 'package:eventizer/locator.dart';
 import 'package:eventizer/navigation/home_page/home_page.dart';
 import 'package:eventizer/services/auth_service.dart';
 import 'package:eventizer/services/repository.dart';
+import 'package:eventizer/utils/navigation_utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 class LoginController extends GetxController {
@@ -18,9 +19,6 @@ class LoginController extends GetxController {
   final RxString userId = RxString('');
   final RxString errorText = RxString('');
   final RxBool isLoading = false.obs;
-  final RxBool isPasswordVisible = true.obs;
-  final RxBool isShowLogin = false.obs;
-  final RxString sendPasswordMailText = "Login".obs;
 
   // User service
   UserService? userService;
@@ -43,107 +41,62 @@ class LoginController extends GetxController {
 
   /// Handle login button press
   Future<void> loginButton() async {
+    // Boş alan kontrolü — ekrandaki hata metnini kullan (toast değil).
+    if (emailController.text.trim().isEmpty) {
+      errorText.value = 'E-posta adresinizi girin';
+      return;
+    }
+    if (passwordController.text.isEmpty) {
+      errorText.value = 'Şifrenizi girin';
+      return;
+    }
+    errorText.value = '';
+
     try {
       isLoading.value = true;
       var auth = locator<AuthService>();
 
       final result = await auth.signIn(
-        emailController.text,
+        emailController.text.trim(),
         passwordController.text,
       );
+      userId.value = result;
 
-      if (result == null) {
+      // E-posta doğrulanmamışsa girişe izin verme — kullanıcıya doğrulama
+      // maili gönder, oturumu kapat (Firebase oturum açtığı için).
+      if (auth.isEmailVerified() != true) {
+        await auth.sendEmailVerification();
+        await auth.signOut();
         isLoading.value = false;
-        Fluttertoast.showToast(
-          msg: "Wrong password or email!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 18.0,
-        );
-      } else {
-        userId.value = result;
-        await userService!.userInitializer(result);
-        await userService!.updateSingleInfo("LastLoggedIn", "timeStamp");
-
-        // Navigate to home page using GetX navigation
-        Get.offAll(() => const HomePage());
+        errorText.value =
+            'E-postanız henüz doğrulanmamış. Doğrulama maili tekrar gönderildi — lütfen gelen kutunuzu kontrol edin.';
+        return;
       }
+
+      await userService!.userInitializer(result);
+      await userService!.updateSingleInfo("LastLoggedIn", "timeStamp");
+
+      // Navigate to home page using GetX navigation
+      Get.offAll(() => const HomePage());
+    } on FirebaseAuthException catch (e) {
+      isLoading.value = false;
+      errorText.value = AuthService.authErrorMessage(e);
     } catch (e) {
       isLoading.value = false;
-      Fluttertoast.showToast(
-        msg: "An error occurred: $e",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
-    }
-  }
-
-  /// Handle forget password functionality
-  void forgetPassword() {
-    isPasswordVisible.value = !isPasswordVisible.value;
-    sendPasswordMailText.value = "Send Password";
-    isShowLogin.value = true;
-  }
-
-  /// Send password reset email
-  Future<void> passwordReset() async {
-    try {
-      var auth = locator<AuthService>();
-      // TODO: Uncomment when releasing
-      // await auth.sendPasswordResetEmail(emailController.text);
-      debugPrint("Şifre sıfırlama maili gönderildi");
-
-      Fluttertoast.showToast(
-        msg: "Şifre sıfırlama maili gönderildi",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-      );
-    } catch (e) {
-      Fluttertoast.showToast(
-        msg: "An error occurred while sending the password reset email",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
-    }
-  }
-
-  /// Handle remember password functionality
-  void rememberPassword() {
-    if (isPasswordVisible.value == false) {
-      sendPasswordMailText.value = "Login";
-      isPasswordVisible.value = true;
-      isShowLogin.value = false;
+      errorText.value = AuthService.authErrorMessage(e);
     }
   }
 
   /// Navigate to signup page
   void navigateToSignUp() {
     pageController.nextPage(
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOutCubic,
     );
   }
 
-  /// Handle main action button press (login or password reset)
-  void handleMainAction() {
-    if (isPasswordVisible.value == true) {
-      loginButton();
-    } else {
-      passwordReset();
-    }
-  }
-
-  /// Toggle password visibility
-  void togglePasswordVisibility() {
-    // This will be handled by a separate observable in the password field
+  /// Şifre sıfırlama artık ayrı sayfada — NavigationUtils üzerinden.
+  void goToForgetPassword() {
+    NavigationUtils.toForgotPassword();
   }
 }

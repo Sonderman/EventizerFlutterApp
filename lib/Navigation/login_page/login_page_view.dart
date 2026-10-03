@@ -36,45 +36,24 @@ class LoginPage extends GetView<LoginController> {
             Positioned.fill(
               child: Image.asset('assets/images/login_background.jpg', fit: BoxFit.cover, alignment: Alignment.center),
             ),
-            // Sol üstte cyan glow küresi (katalogdaki orb)
-            Positioned(
+            // Sol üstte cyan glow küresi — yavaş "nefes" animasyonlu
+            _BreathingGlow(
               top: -80,
               left: -100,
-              child: Container(
-                width: 420,
-                height: 420,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      const Color(0xFF1BC8D9).withValues(alpha: 0.30),
-                      const Color(0xFF1BC8D9).withValues(alpha: 0.08),
-                      const Color(0x00000000),
-                    ],
-                    stops: const [0.0, 0.5, 1.0],
-                  ),
-                ),
-              ),
+              size: 420,
+              color: const Color(0xFF1BC8D9),
+              baseOpacity: 0.30,
+              duration: const Duration(seconds: 6),
             ),
-            // Sağ altta mor glow küresi
-            Positioned(
+            // Sağ altta mor glow küresi — ters fazda nefes alır
+            _BreathingGlow(
               bottom: -100,
               right: -80,
-              child: Container(
-                width: 460,
-                height: 460,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      const Color(0xFF8358D8).withValues(alpha: 0.22),
-                      const Color(0xFF3B4FA4).withValues(alpha: 0.08),
-                      const Color(0x00000000),
-                    ],
-                    stops: const [0.0, 0.5, 1.0],
-                  ),
-                ),
-              ),
+              size: 460,
+              color: const Color(0xFF8358D8),
+              baseOpacity: 0.22,
+              duration: const Duration(seconds: 7),
+              reverse: true,
             ),
             // Hafif karartma — metin ve cam yüzeylerin okunurluğu için
             Container(
@@ -99,8 +78,7 @@ class LoginPage extends GetView<LoginController> {
                           child: Column(
                             children: <Widget>[
                               Expanded(
-                                // Orta blok kaydırılabilir — "Password Reset"
-                                // modundaki ek satırlar ve klavye açıldığında
+                                // Orta blok kaydırılabilir — klavye açıldığında
                                 // Column taşması (RenderFlex overflow) olmaz.
                                 child: SingleChildScrollView(
                                   child: Column(
@@ -164,18 +142,16 @@ class LoginPage extends GetView<LoginController> {
           ),
         ),
         SizedBox(height: 1.2.h),
-        Obx(
-          () => Text(
-            controller.isPasswordVisible.value == false ? "Password Reset" : "Welcome Back",
-            style: TextStyle(
-              fontFamily: "Zona",
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.2,
-              color: Colors.white,
-              // Açık zeminli arka plan görselinde okunurluk için güçlü gölge
-              shadows: const [Shadow(color: Color(0x8A000000), blurRadius: 10, offset: Offset(0, 2))],
-            ),
+        Text(
+          "Tekrar Hoş Geldin",
+          style: TextStyle(
+            fontFamily: "Zona",
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.2,
+            color: Colors.white,
+            // Açık zeminli arka plan görselinde okunurluk için güçlü gölge
+            shadows: const [Shadow(color: Color(0x8A000000), blurRadius: 10, offset: Offset(0, 2))],
           ),
         ),
       ],
@@ -186,48 +162,50 @@ class LoginPage extends GetView<LoginController> {
   // Form: net cam alanlar + hata + küçük aksiyonlar
   // ---------------------------------------------------------------------------
   Widget _buildLoginForm() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        GlassInputField(controller: controller.emailController, hint: 'example@email.com', label: 'Email'),
-        SizedBox(height: 2.2.h),
-        GlassPasswordInput(controller: controller.passwordController, hint: 'Password', label: 'Password'),
-        // Validation / error message
-        Obx(
-          () => controller.errorText.value.isEmpty
-              ? const SizedBox.shrink()
-              : Padding(
-                  padding: EdgeInsets.only(top: 1.2.h),
-                  child: Text(
-                    controller.errorText.value,
-                    style: TextStyle(fontFamily: "Zona", fontSize: 12.sp, color: Colors.redAccent),
+    return AutofillGroup(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          GlassInputField(
+            controller: controller.emailController,
+            hint: 'ornek@mail.com',
+            label: 'E-posta',
+            keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
+            onSubmitted: (_) => FocusScope.of(Get.context!).nextFocus(),
+          ),
+          SizedBox(height: 2.2.h),
+          GlassPasswordInput(
+            controller: controller.passwordController,
+            hint: '••••••••',
+            label: 'Şifre',
+            textInputAction: TextInputAction.done,
+            onSubmitted: (_) => controller.loginButton(),
+          ),
+          // Validation / error message — gerçek hata metni controller'dan gelir
+          Obx(
+            () => controller.errorText.value.isEmpty
+                ? const SizedBox.shrink()
+                : Padding(
+                    padding: EdgeInsets.only(top: 1.2.h),
+                    child: Text(
+                      controller.errorText.value,
+                      style: TextStyle(
+                        fontFamily: "Zona",
+                        fontSize: 12.sp,
+                        color: Colors.redAccent,
+                        shadows: const [Shadow(color: Color(0x8A000000), blurRadius: 6, offset: Offset(0, 1))],
+                      ),
+                    ),
                   ),
-                ),
-        ),
-        SizedBox(height: 1.h),
-        // İki chip asla aynı anda gösterilmez — reset modunda "Forgot Password?"
-        // gizlenir, yerine "Already have an account?" gelir. Böylece alttaki
-        // butonun arkasında kalan chip sorunu oluşmaz.
-        Obx(
-          () => Visibility(
-            visible: !controller.isShowLogin.value,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: _buildSmallAction(label: "Forgot Password?", onTap: controller.forgetPassword),
-            ),
           ),
-        ),
-        SizedBox(height: 1.5.h),
-        Obx(
-          () => Visibility(
-            visible: controller.isShowLogin.value,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: _buildSmallAction(label: "Already have an account?", onTap: controller.rememberPassword),
-            ),
+          SizedBox(height: 1.h),
+          Align(
+            alignment: Alignment.centerRight,
+            child: _buildSmallAction(label: "Şifremi Unuttum?", onTap: controller.goToForgetPassword),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -251,10 +229,10 @@ class LoginPage extends GetView<LoginController> {
   Widget _buildButtons() {
     return Column(
       children: <Widget>[
-        GlassActionButton(
-          label: Obx(
-            () => Text(
-              controller.sendPasswordMailText.value,
+        Obx(
+          () => GlassActionButton(
+            label: Text(
+              "Giriş Yap",
               style: TextStyle(
                 fontFamily: "Zona",
                 fontSize: 17.sp,
@@ -263,14 +241,15 @@ class LoginPage extends GetView<LoginController> {
                 letterSpacing: 0.3,
               ),
             ),
+            onTap: controller.loginButton,
+            primary: true,
+            enabled: !controller.isLoading.value,
           ),
-          onTap: controller.handleMainAction,
-          primary: true,
         ),
         SizedBox(height: 2.5.h),
         GlassActionButton(
           label: Text(
-            "Create Account",
+            "Hesap Oluştur",
             style: TextStyle(
               fontFamily: "Zona",
               fontSize: 17.sp,
@@ -282,6 +261,97 @@ class LoginPage extends GetView<LoginController> {
           onTap: controller.navigateToSignUp,
         ),
       ],
+    );
+  }
+}
+
+/// Arka plan glow küresi — yavaşça büyüyüp küçülerek "nefes alır".
+/// Refraction'ı canlı tutar; statik kürelerin verdiği donukluk olmaz.
+class _BreathingGlow extends StatefulWidget {
+  const _BreathingGlow({
+    this.top,
+    this.left,
+    this.bottom,
+    this.right,
+    required this.size,
+    required this.color,
+    required this.baseOpacity,
+    this.duration = const Duration(seconds: 6),
+    this.reverse = false,
+  });
+
+  final double? top;
+  final double? left;
+  final double? bottom;
+  final double? right;
+  final double size;
+  final Color color;
+  final double baseOpacity;
+  final Duration duration;
+  final bool reverse;
+
+  @override
+  State<_BreathingGlow> createState() => _BreathingGlowState();
+}
+
+class _BreathingGlowState extends State<_BreathingGlow>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: widget.duration,
+  )..repeat(reverse: true);
+  late final Animation<double> _t = CurvedAnimation(
+    parent: _controller,
+    curve: Curves.easeInOutSine,
+  );
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: widget.top,
+      left: widget.left,
+      bottom: widget.bottom,
+      right: widget.right,
+      // Nefes hareketi yalnızca bu katmanı yeniden boyar — cam shader'ı
+      // her karede tüm arka planı yakaladığı için küreler küçük olsun.
+      child: RepaintBoundary(
+        child: AnimatedBuilder(
+          animation: _t,
+          builder: (context, child) {
+            // reverse: true ise faz 180° kayar (küreler zıt nefes alır)
+            final t = widget.reverse ? (1.0 - _t.value) : _t.value;
+            final scale = 1.0 + 0.06 * t;
+            final opacity = widget.baseOpacity + 0.08 * (t - 0.5);
+            return Transform.scale(
+              scale: scale,
+              child: Opacity(
+                opacity: opacity.clamp(0.0, 0.6),
+                child: Container(
+                  width: widget.size,
+                  height: widget.size,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: RadialGradient(
+                      colors: [
+                        widget.color.withValues(alpha: opacity.clamp(0.0, 0.6)),
+                        widget.color.withValues(alpha: opacity.clamp(0.0, 0.6) * 0.25),
+                        const Color(0x00000000),
+                      ],
+                      stops: const [0.0, 0.5, 1.0],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

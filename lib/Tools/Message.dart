@@ -1,11 +1,13 @@
 import 'dart:async';
-import 'package:dash_chat_2/dash_chat_2.dart';
-import 'package:eventizer/services/repository.dart';
-import 'package:eventizer/components/liquidglass_widgets.dart';
+import 'dart:io';
+import 'package:eventizer/components/glass_inputs.dart';
 import 'package:eventizer/data/themes.dart';
+import 'package:eventizer/models/chat_message.dart';
+import 'package:eventizer/services/repository.dart';
 import 'package:eventizer/tools/page_components.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Message extends StatefulWidget {
@@ -28,13 +30,17 @@ class _MessageState extends State<Message> {
   StreamSubscription? messageStream;
   late UserService userService;
   late MessagingService messageService;
-  List<ChatMessage>? m;
-  var scrollController = ScrollController();
+
+  // reverse: true liste ile mesajlar en alttan başlar; yeni mesaj geldiğinde
+  // offset 0'da kalındığı için otomatik olarak en alt görünür kalır.
+  final ScrollController scrollController = ScrollController();
+
+  final TextEditingController messageController = TextEditingController();
+
   String chatID = "temp";
   String currentUserID = "";
   String? otherUserID;
   String? currentUserPhotoUrl;
-  var i = 0;
   bool runFutureOnce = false;
   ChatUser? user;
 
@@ -58,8 +64,56 @@ class _MessageState extends State<Message> {
 
   @override
   void dispose() {
-    if (messageStream != null) messageStream!.cancel();
+    messageStream?.cancel();
+    scrollController.dispose();
+    messageController.dispose();
     super.dispose();
+  }
+
+  /// Metin mesajı gönderir; konuşma yoksa önce oluşturulur.
+  Future<void> _sendTextMessage() async {
+    final text = messageController.text.trim();
+    if (text.isEmpty || user == null) return;
+
+    final message = ChatMessage(
+      user: user!,
+      text: text,
+      createdAt: DateTime.now(),
+    );
+
+    messageController.clear();
+    setState(() {});
+
+    final id = await messageService
+        .sendMessage(chatID, message, currentUserID, otherUserID!);
+    if (chatID == "temp") {
+      //ANCHOR İlk mesaj: konuşma oluşturuldu, gerçek chatID geldi.
+      if (mounted) {
+        setState(() {
+          chatID = id;
+        });
+      }
+    }
+  }
+
+  /// Galeriden foto seçip Storage'a yükleyip mesaj olarak gönderir.
+  Future<void> _sendImageMessage() async {
+    final XFile? result = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 100,
+      maxHeight: 300,
+      maxWidth: 300,
+    );
+    if (result == null || user == null) return;
+
+    final String time = DateTime.now().millisecondsSinceEpoch.toString();
+    await messageService.sendImageMessage(
+      File(result.path),
+      user!,
+      currentUserID,
+      chatID,
+      time,
+    );
   }
 
   @override
@@ -77,9 +131,6 @@ class _MessageState extends State<Message> {
       body: FutureBuilder(
         future: messageService.checkConversation(currentUserID, otherUserID!),
         builder: (context, AsyncSnapshot snapshot) {
-          if (kDebugMode) {
-            print("Control Future");
-          }
           if (snapshot.connectionState == ConnectionState.done ||
               runFutureOnce) {
             // ANCHOR bu Future builder in birden çok defa çalışması textfield a tıklandığında
@@ -94,101 +145,38 @@ class _MessageState extends State<Message> {
             if (messageStream == null && chatID != "temp") {
               messageStream = messageService.getMessagesSnapshot(chatID).listen(
                 (snapshot) {
-                  if (kDebugMode) {
-                    print("Subscribe oldu");
+                  if (mounted) {
+                    setState(() {
+                      //ANCHOR Firestore sıralaması en eski → en yeni; reverse: true
+                      //listede en yeni (ilk öğe) en altta görünür.
+                      messages = snapshot.docs
+                          .map((i) => ChatMessage.fromJson(i.data()))
+                          .toList()
+                          .reversed
+                          .toList();
+                    });
                   }
-                  setState(() {
-                    messages = snapshot.docs
-                        .map((i) => ChatMessage.fromJson(i.data()))
-                        .toList()
-                        .reversed
-                        .toList();
-                  });
                 },
               );
             }
 
-            if (kDebugMode) {
-              print("ChatID:$chatID");
-            }
-            return MyLiquidGlass.standartContainer(
-              child: DashChat(
-                // key: _chatViewKey,
-                currentUser: user!,
-                onSend: (ChatMessage message) {
-                  messageService
-                      .sendMessage(chatID, message, currentUserID, otherUserID!)
-                      .then((id) {
-                        if (messages == null) {
-                          print("ilkmesaj");
-                          setState(() {
-                            chatID = id;
-                          });
-                        }
-                      });
-                },
-                messages: messages ?? [],
-                /*
-              shouldShowLoadEarlier: true,
-              showLoadEarlierWidget: () => const CircularProgressIndicator(),
-              onLoadEarlier: () {
-                print("loading...");
-              },
-              scrollController: scrollController,
-              inputDecoration:
-                  const InputDecoration.collapsed(hintText: "Mesaj gönderin"),
-              dateFormat: DateFormat('yyyy-MMM-dd'),
-              timeFormat: DateFormat('HH:mm'),
-              
-              showUserAvatar: false,
-              showAvatarForEveryMessage: false,
-              onPressAvatar: (ChatUser user) {
-                print("OnPressAvatar: ${user.name}");
-              },
-              onLongPressAvatar: (ChatUser user) {
-                print("OnLongPressAvatar: ${user.name}");
-              },
-              inputMaxLines: 5,
-              messageContainerPadding:
-                  const EdgeInsets.only(left: 5.0, right: 5.0),
-              inputTextStyle: const TextStyle(fontSize: 16.0),
-              inputContainerStyle: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(width: 0.0),
-                color: Colors.white,
-              ),
-              //REVIEW ScrolltoBottom problemini çöz
-              scrollToBottom: false,
-              //TODO Gerçek emoji mesajları gönderebilmeyi sağla
-              leading: <Widget>[
-                IconButton(
-                    icon: Icon(
-                      FontAwesomeIcons.smile,
-                      color: Colors.deepOrange[700],
-                    ),
-                    onPressed: () {})
+            return Column(
+              children: <Widget>[
+                Expanded(
+                  child: messages == null
+                      ? PageComponents(context)
+                          .loadingOverlay(spinColor: Colors.blue)
+                      : messages!.isEmpty
+                          ? const Center(
+                              child: Text(
+                                "İlk mesajı sen yaz!",
+                                style: TextStyle(color: Colors.white70),
+                              ),
+                            )
+                          : messagesList(),
+                ),
+                messageInputBar(),
               ],
-              inputCursorColor: MyColors.blueThemeColor,
-              trailing: <Widget>[
-                IconButton(
-                  icon: const Icon(Icons.photo),
-                  onPressed: () async {
-                    PickedFile? result = await ImagePicker.platform.pickImage(
-                      source: ImageSource.gallery,
-                      imageQuality: 100,
-                      maxHeight: 300,
-                      maxWidth: 300,
-                    );
-                    if (result != null) {
-                      String time =
-                          DateTime.now().millisecondsSinceEpoch.toString();
-                      await messageService.sendImageMessage(File(result.path),
-                          user!, currentUserID!, chatID, time);
-                    }
-                  },
-                )
-              ],*/
-              ),
             );
           } else {
             return PageComponents(
@@ -196,6 +184,134 @@ class _MessageState extends State<Message> {
             ).loadingOverlay(spinColor: Colors.blue);
           }
         },
+      ),
+    );
+  }
+
+  /// Mesaj balonları — giden sağda mavi, gelen solda koyu cam.
+  Widget messagesList() {
+    return ListView.builder(
+      controller: scrollController,
+      reverse: true,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      itemCount: messages!.length,
+      itemBuilder: (context, index) {
+        final ChatMessage message = messages![index];
+        final bool isMine = message.user.id == currentUserID;
+        return messageBubble(message, isMine);
+      },
+    );
+  }
+
+  Widget messageBubble(ChatMessage message, bool isMine) {
+    final bool hasMedia = (message.medias?.isNotEmpty ?? false);
+    final timeText = DateFormat('HH:mm').format(message.createdAt);
+
+    final bubble = Container(
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width * 0.72,
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: isMine
+            ? MyColors.blueThemeColor
+            : Colors.white.withValues(alpha: 0.13),
+        borderRadius: BorderRadius.only(
+          topLeft: const Radius.circular(18),
+          topRight: const Radius.circular(18),
+          bottomLeft: Radius.circular(isMine ? 18 : 4),
+          bottomRight: Radius.circular(isMine ? 4 : 18),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          if (hasMedia)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                message.medias!.first.url,
+                width: 220,
+                height: 220,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  width: 220,
+                  height: 150,
+                  color: Colors.white10,
+                  child: const Icon(Icons.broken_image,
+                      color: Colors.white54, size: 40),
+                ),
+              ),
+            ),
+          if (message.text.isNotEmpty)
+            Padding(
+              padding: EdgeInsets.only(top: hasMedia ? 8 : 0),
+              child: Text(
+                message.text,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontFamily: "Zona",
+                ),
+              ),
+            ),
+          const SizedBox(height: 4),
+          Text(
+            timeText,
+            style: TextStyle(
+              fontSize: 10,
+              color: Colors.white.withValues(alpha: 0.6),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment:
+            isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
+        children: <Widget>[bubble],
+      ),
+    );
+  }
+
+  /// Alt giriş çubuğu — cam input + foto + gönder.
+  Widget messageInputBar() {
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 6, 12, 10),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: GlassInputField(
+                controller: messageController,
+                hint: "Mesajınızı yazın...",
+              ),
+            ),
+            const SizedBox(width: 8),
+            GestureDetector(
+              onTap: _sendImageMessage,
+              child: Icon(
+                Icons.photo,
+                size: 28,
+                color: Colors.white.withValues(alpha: 0.85),
+              ),
+            ),
+            const SizedBox(width: 6),
+            GestureDetector(
+              onTap: _sendTextMessage,
+              child: Icon(
+                Icons.send,
+                size: 28,
+                color: MyColors.blueThemeColor,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
